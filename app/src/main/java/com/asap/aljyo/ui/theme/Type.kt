@@ -2,33 +2,45 @@ package com.asap.aljyo.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.asap.aljyo.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+val pretendardFamily = FontFamily(
+    Font(R.font.pretendard_regular, FontWeight.Normal),
+    Font(R.font.pretendard_medium, FontWeight.Medium),
+    Font(R.font.pretendard_semibold, FontWeight.SemiBold),
+    Font(R.font.pretendard_bold, FontWeight.Bold),
 )
+
+val letterSpacing = 0.2.sp
+
+val Typography = Typography(
+    // Pretendard Bold
+    headlineMedium = TextStyle(
+        fontFamily = pretendardFamily,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = letterSpacing
+    ),
+    // Pretendard SemiBold
+    titleMedium = TextStyle(
+        fontFamily = pretendardFamily,
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = letterSpacing
+    ),
+    // Pretendard Medium
+    bodyMedium = TextStyle(
+        fontFamily = pretendardFamily,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = letterSpacing
+    ),
+    //Pretendard Regular
+    labelMedium = TextStyle(
+        fontFamily = pretendardFamily,
+        fontWeight = FontWeight.Normal,
+        letterSpacing = letterSpacing,
+    ),
+)
+

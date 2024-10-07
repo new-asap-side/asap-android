@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kapt)
 }
 
 android {
@@ -47,6 +48,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -61,6 +65,9 @@ dependencies {
     implementation(libs.androidx.material3)
     /// splash screen api
     implementation(libs.androidx.core.splashscreen)
+    /// hilt
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -13,10 +13,11 @@ val Black03 = Color(0xFF888888)
 val Black04 = Color(0xFFB8B8B8)
 
 // Grey scale
-val Title = Color(0xFFF2F2F2)
-val Body01 = Color(0xFFE3E3E3)
-val Body02 = Color(0xFFCCCCCC)
-val Disable = Color(0xFFAAAAAA)
+val White = Color(0xFFFFFFFF)
+val Grey01 = Color(0xFFF2F2F2)
+val Grey02 = Color(0xFFE3E3E3)
+val Grey03 = Color(0xFFCCCCCC)
+val Grey04 = Color(0xFFAAAAAA)
 
 // Additional
 val Error = Color(0xFFDE0000)

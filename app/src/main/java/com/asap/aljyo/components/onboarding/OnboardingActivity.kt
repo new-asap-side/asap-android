@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import com.asap.aljyo.ui.composable.onboarding.OnboardingPager
 import com.asap.aljyo.ui.theme.White
@@ -21,7 +23,9 @@ class OnboardingActivity : ComponentActivity() {
             )
         )
         setContent {
-            OnboardingPager()
+            OnboardingPager(
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.ui.composable.common.pager.PagerIndicator
@@ -30,12 +31,14 @@ fun OnboardingPager(modifier: Modifier = Modifier) {
             state = pagerState,
             modifier = modifier
         ) { page ->
+            val currentConfig = LocalConfiguration.current
+            val screenHeight = currentConfig.screenHeightDp
             when (page) {
                 0 -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .offset(y = 138.dp)
+                            .offset(y = (screenHeight * 0.1725).dp)
                     ) {
                         OnboardingMain()
                     }

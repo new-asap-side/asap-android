@@ -13,12 +13,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.ui.composable.common.pager.PagerIndicator
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 
 @Composable
@@ -27,12 +27,14 @@ fun OnboardingPager(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
     ) {
+        val currentConfig = LocalConfiguration.current
+        val screenHeight = currentConfig.screenHeightDp
+
         HorizontalPager(
             state = pagerState,
             modifier = modifier
         ) { page ->
-            val currentConfig = LocalConfiguration.current
-            val screenHeight = currentConfig.screenHeightDp
+
             when (page) {
                 0 -> {
                     Box(
@@ -41,6 +43,36 @@ fun OnboardingPager(modifier: Modifier = Modifier) {
                             .offset(y = (screenHeight * 0.1725).dp)
                     ) {
                         OnboardingMain()
+                    }
+                }
+
+                1 -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(y = (screenHeight * 0.1463).dp)
+                    ) {
+                        OnboardingHardObjective(imageHeight = (screenHeight * 0.5175).dp)
+                    }
+                }
+
+                2 -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(y = (screenHeight * 0.1463).dp)
+                    ) {
+                        OnboardingReleaseAlarm()
+                    }
+                }
+
+                3 -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(y = (screenHeight * 0.1463).dp)
+                    ) {
+                        OnboardingGoodToday()
                     }
                 }
 
@@ -60,8 +92,7 @@ fun OnboardingPager(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = 180.dp),
+                .offset(y = (screenHeight * 0.725).dp),
         ) {
             repeat(pagerState.pageCount) { currentPage ->
                 val isSelected = pagerState.currentPage == currentPage
@@ -75,5 +106,7 @@ fun OnboardingPager(modifier: Modifier = Modifier) {
 @Preview(showBackground = true, widthDp = 360, heightDp = 800)
 @Composable
 fun OnboardingPagerPreview() {
-    OnboardingPager(Modifier.fillMaxSize())
+    AljyoTheme {
+        OnboardingPager(Modifier.fillMaxSize())
+    }
 }

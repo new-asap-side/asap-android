@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import com.asap.aljyo.ui.composable.onboarding.OnboardingPager
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,9 +24,11 @@ class OnboardingActivity : ComponentActivity() {
             )
         )
         setContent {
-            OnboardingPager(
-                modifier = Modifier.fillMaxSize()
-            )
+            AljyoTheme {
+                OnboardingPager(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }

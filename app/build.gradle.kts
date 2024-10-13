@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.asap.aljyo"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,6 +69,11 @@ dependencies {
     /// hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
+    // navigation with compose
+    implementation(libs.navigation.compose)
+    // retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -47,6 +47,10 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
 
+    // hilt testing
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptTest(libs.hilt.compiler)
+
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)

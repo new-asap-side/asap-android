@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "aljyo"
 include(":app")
+include(":data")

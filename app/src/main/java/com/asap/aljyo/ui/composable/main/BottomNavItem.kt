@@ -29,6 +29,27 @@ import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
 
+sealed class BottomNavItem(
+    val icon: Int,
+    val label: Int? = null,
+    val route: String
+) {
+    data object Home : BottomNavItem(
+        icon = R.drawable.ic_home,
+        route = MainRoute.Home.route,
+    )
+    data object AlarmList : BottomNavItem(
+        icon = R.drawable.ic_alarm_list,
+        label = R.string.alarm_list,
+        route = MainRoute.AlarmList.route
+    )
+    data object MyPage : BottomNavItem(
+        icon = R.drawable.ic_my_page,
+        label = R.string.my_page,
+        route = MainRoute.MyPage.route
+    )
+}
+
 @Composable
 fun BottomNavItemMain() {
     Box(

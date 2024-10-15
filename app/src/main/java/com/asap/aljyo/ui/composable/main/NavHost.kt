@@ -16,15 +16,15 @@ fun MainNavHost(
         navController = navController,
         startDestination = MainRoute.Home.route
     ) {
-        composable(route = MainRoute.Home.route) {
+        composable(route = BottomNavItem.Home.route) {
             HomeScreen()
         }
 
-        composable(route = MainRoute.AlarmList.route) {
+        composable(route = BottomNavItem.AlarmList.route) {
             AlarmListScreen()
         }
 
-        composable(route = MainRoute.MyPage.route) {
+        composable(route = BottomNavItem.MyPage.route) {
             MyPageScreen()
         }
     }

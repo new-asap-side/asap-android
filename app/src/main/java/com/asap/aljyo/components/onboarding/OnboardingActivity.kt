@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingPager
 import com.asap.aljyo.ui.composable.onboarding.SocialLogin
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -24,6 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class OnboardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
                 White.toArgb(),

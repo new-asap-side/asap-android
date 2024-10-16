@@ -1,9 +1,64 @@
 package com.asap.aljyo.ui.composable.main.home
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.asap.aljyo.R
+import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Grey03
+import com.asap.aljyo.ui.theme.White
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
-    Text("Home")
+    AljyoTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    windowInsets = WindowInsets(0.dp),
+                    modifier = Modifier
+                        .height(44.dp)
+                        .background(White)
+                        .padding(top = 8.dp, bottom = 8.dp, start = 20.dp),
+                    title = {
+                        Image(
+                            painter = painterResource(R.drawable.ic_aljo),
+                            contentDescription = "Title bar icon",
+                            contentScale = ContentScale.FillHeight
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = White)
+                )
+            },
+        ) { paddingValues ->
+            Surface(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxWidth(),
+                color = Grey03
+            ) {
+                HomeTabScreen()
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen()
 }

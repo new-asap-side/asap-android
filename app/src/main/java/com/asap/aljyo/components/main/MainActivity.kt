@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.ui.composable.main.BottomNavigationBar
 import com.asap.aljyo.ui.composable.main.MainNavHost
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,19 +33,21 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             val navController = rememberNavController()
-            Scaffold(
-                bottomBar = {
-                    BottomNavigationBar(
-                        modifier = Modifier
-                            .navigationBarsPadding()
-                            .fillMaxWidth()
-                            .height(66.dp),
-                        navController = navController
-                    )
-                }
-            ) { padding ->
-                Box(Modifier.padding(padding)) {
-                    MainNavHost(navController)
+            AljyoTheme {
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigationBar(
+                            modifier = Modifier
+                                .navigationBarsPadding()
+                                .fillMaxWidth()
+                                .height(66.dp),
+                            navController = navController
+                        )
+                    }
+                ) { padding ->
+                    Box(Modifier.padding(padding)) {
+                        MainNavHost(navController)
+                    }
                 }
             }
         }

@@ -12,4 +12,8 @@
     <string name="home">홈</string>
     <string name="alarm_list">알람 리스트</string>
     <string name="my_page">마이 페이지</string>
+    <!-- Home Screen -->
+    <string name="main">메인</string>
+    <string name="sorted_by_populrity">인기순</string>
+    <string name="sorted_by_latest">최신순</string>
 </resources>

@@ -37,7 +37,7 @@ private val bottomNavItems = listOf(
 )
 
 private val margin = 6.dp
-private val radius = 18.dp
+private val radius = 36.dp
 private val centerBezierGap = 22.dp
 
 @Composable

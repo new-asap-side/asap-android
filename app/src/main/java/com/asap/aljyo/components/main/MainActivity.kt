@@ -38,8 +38,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .navigationBarsPadding()
                             .fillMaxWidth()
-                            .height(90.dp)
-                            .background(White),
+                            .height(66.dp),
                         navController = navController
                     )
                 }

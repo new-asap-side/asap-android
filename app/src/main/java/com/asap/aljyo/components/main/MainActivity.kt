@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.ui.composable.main.BottomNavigationBar
+import com.asap.aljyo.ui.composable.main.MainNavHost
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,9 +43,9 @@ class MainActivity : ComponentActivity() {
                         navController = navController
                     )
                 }
-            ) { innerPadding ->
-                Box(Modifier.padding(innerPadding)) {
-
+            ) { padding ->
+                Box(Modifier.padding(padding)) {
+                    MainNavHost(navController)
                 }
             }
         }

@@ -24,8 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Grey03
@@ -58,7 +56,7 @@ sealed class BottomNavItem(
 }
 
 @Composable
-fun BottomNavItemMain(navController: NavController) {
+fun BottomNavItemMain() {
     IconButton(
         onClick = {
 
@@ -82,8 +80,7 @@ fun BottomNavItemMain(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun BottomNavItemMainPreview() {
-    val navController = rememberNavController()
-    BottomNavItemMain(navController = navController)
+    BottomNavItemMain()
 }
 
 @Composable
@@ -91,11 +88,11 @@ fun BottomNavItemSub(
     isSelected: Boolean = false,
     icon: Int,
     label: Int,
-    navController: NavController,
+    onClick: () -> Unit,
 ) {
     val tint = if (isSelected) Red01 else Grey03
     TextButton(
-        onClick = {},
+        onClick = onClick,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -126,18 +123,17 @@ fun BottomNavItemSub(
 @Composable
 fun BottomNavItemSubPreview() {
     AljyoTheme {
-        val navController = rememberNavController()
         Row {
             BottomNavItemSub(
                 icon = BottomNavItem.AlarmList.icon,
                 label = BottomNavItem.AlarmList.label,
-                navController = navController
+                onClick = {}
             )
             Spacer(Modifier.width(10.dp))
             BottomNavItemSub(
                 icon = BottomNavItem.MyPage.icon,
                 label = BottomNavItem.MyPage.label,
-                navController = navController
+                onClick = {},
             )
         }
     }

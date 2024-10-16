@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -23,6 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.asap.aljyo.ui.theme.White
 
 sealed class MainRoute(val route: String) {
@@ -103,7 +102,7 @@ fun BottomNavigationBarBackground(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun BottomNavigationBackgroundPreview() {
     BottomNavigationBarBackground(
@@ -118,8 +117,8 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    val selectedItem by remember { mutableIntStateOf(1) }
-    val currentRoute by remember { mutableStateOf(BottomNavItem.Home.route) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     val density = LocalDensity.current
     val marginPx = density.run {
@@ -149,12 +148,25 @@ fun BottomNavigationBar(
     ) {
         bottomNavItems.forEach { item ->
             if (item.route == MainRoute.Home.route) {
-                BottomNavItemMain(navController = navController)
+                BottomNavItemMain(
+
+                )
             } else {
                 BottomNavItemSub(
                     icon = item.icon,
                     label = item.label,
-                    navController = navController
+                    isSelected = currentRoute == item.route,
+                    onClick = {
+                        navController.navigate(item.route) {
+                            navController.graph.startDestinationRoute?.let {
+                                popUpTo(it) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
                 )
             }
         }

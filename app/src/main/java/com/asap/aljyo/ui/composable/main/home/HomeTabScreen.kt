@@ -15,6 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +26,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 
 sealed class TabItem(val titleId: Int) {
@@ -56,6 +61,20 @@ fun HomeTabScreen(modifier: Modifier = Modifier) {
         ) {
             tabItems.forEachIndexed { index, item ->
                 val selected = index == tabIndex
+                val badge = if (index == 2) " NEW!" else ""
+
+                val annotatedString = buildAnnotatedString {
+                    append(text = stringResource(item.titleId))
+                    withStyle(
+                        style = SpanStyle(
+                            color = Red01,
+                            fontSize = 11.sp,
+                            baselineShift = BaselineShift(0.3f)
+                        ),
+                    ) {
+                        append(text = badge)
+                    }
+                }
                 Tab(
                     modifier = Modifier.height(48.dp),
                     selected = selected,
@@ -66,19 +85,20 @@ fun HomeTabScreen(modifier: Modifier = Modifier) {
                     },
                 ) {
                     Text(
-                        text = stringResource(item.titleId),
+                        text = annotatedString,
                         style = if (selected) {
                             MaterialTheme.typography.headlineMedium.copy(
                                 fontSize = 15.sp
                             )
                         } else {
                             MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
                             )
                         }
                     )
                 }
             }
+
         }
     }
 }

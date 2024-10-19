@@ -46,4 +46,10 @@ dependencies {
     /// hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
+    // retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    // moshi
+    implementation(libs.moshi)
+    kapt(libs.moshi.code.gen)
 }

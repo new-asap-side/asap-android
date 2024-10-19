@@ -72,9 +72,6 @@ dependencies {
     kapt(libs.hilt.compiler)
     // navigation with compose
     implementation(libs.navigation.compose)
-    // retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

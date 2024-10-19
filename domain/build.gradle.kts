@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -49,7 +49,6 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
-    // moshi
-    implementation(libs.moshi)
-    kapt(libs.moshi.code.gen)
+    implementation(libs.moshi.kotlin)
+
 }

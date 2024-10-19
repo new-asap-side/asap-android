@@ -1,4 +1,4 @@
-package com.asap.domain.entity.main.home
+package com.asap.domain.entity
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

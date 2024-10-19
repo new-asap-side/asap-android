@@ -54,4 +54,7 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
+
+    // domain module
+    implementation(project(":domain"))
 }

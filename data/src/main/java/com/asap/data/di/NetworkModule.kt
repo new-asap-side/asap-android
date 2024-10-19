@@ -1,12 +1,12 @@
 package com.asap.data.di
 
-import com.asap.data.network.service.LoginService
+import com.asap.data.remote.service.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 internal const val baseUrl = "http://aljo.shop/docs"
@@ -19,14 +19,15 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .baseUrl(baseUrl)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideLoginApiService(retrofit: Retrofit): LoginService {
-        return retrofit.create(LoginService::class.java)
+    fun provideLoginApiService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
+
 }

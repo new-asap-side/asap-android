@@ -17,6 +17,7 @@ jetbrainsKotlinJvm = "1.9.0"
 appcompat = "1.7.0"
 material = "1.12.0"
 moshi = "1.12.0"
+placeholder = "1.0.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 # moshi
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+# placeholder
+compose-placeholder-material = { group = "com.eygraber", name = "compose-placeholder-material", version.ref = "placeholder" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

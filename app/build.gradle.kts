@@ -73,6 +73,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     // navigation with compose
     implementation(libs.navigation.compose)
+    // compose placeholder
+    implementation(libs.compose.placeholder.material)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     /// hilt
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
     // navigation with compose
     implementation(libs.navigation.compose)
@@ -82,5 +83,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // module
+    implementation(project(":domain"))
     implementation(project(":data"))
 }

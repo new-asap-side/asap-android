@@ -30,6 +30,10 @@ class MainActivity : ComponentActivity() {
                 White.toArgb(),
                 White.toArgb()
             ),
+            navigationBarStyle = SystemBarStyle.light(
+                White.toArgb(),
+                White.toArgb(),
+            )
         )
         setContent {
             val navController = rememberNavController()

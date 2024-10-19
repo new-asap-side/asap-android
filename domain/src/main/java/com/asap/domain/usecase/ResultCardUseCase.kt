@@ -1,7 +1,7 @@
 package com.asap.domain.usecase
 
 import com.asap.domain.entity.ResultCard
-import com.asap.domain.repository.UserInfoRepository
+import com.asap.domain.repository.UserRepository
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ interface ResultCardUseCase {
 }
 
 class ResultCardUseCaseImpl @Inject constructor(
-    private val userInfoRepository: UserInfoRepository
+    private val userInfoRepository: UserRepository
 ) : ResultCardUseCase {
     override suspend fun invoke(): Response<ResultCard> {
         return userInfoRepository.fetchResultCardData()

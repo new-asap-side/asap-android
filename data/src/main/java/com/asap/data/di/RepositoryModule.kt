@@ -1,7 +1,7 @@
 package com.asap.data.di
 
 import com.asap.data.repository.UserRepositoryImpl
-import com.asap.domain.repository.UserInfoRepository
+import com.asap.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,9 +10,10 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
+interface RepositoryModule {
     @Binds
-    abstract fun bindUserRepository(
-        userInfoRepositoryImpl: UserRepositoryImpl
-    ) : UserInfoRepository
+    fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 }
+

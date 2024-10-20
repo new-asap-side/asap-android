@@ -12,7 +12,7 @@ import com.asap.aljyo.ui.theme.Grey01
 @Composable
 fun HomeMainScreen() {
     Column {
-        ResultCard(
+        ResultCardWrapper(
             modifier = Modifier
                 .background(color = Grey01)
                 .padding(vertical = 32.dp, horizontal = 20.dp)

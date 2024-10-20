@@ -7,11 +7,9 @@ import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.usecase.ResultCardUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +25,7 @@ class HomeViewModel @Inject constructor(
             useCase.invoke()
                 .catch { e ->
                     Log.e("HomeViewModel", "$e")
-                    _uiState.value = UiState.Error(errorCode = "")
+                    _uiState.value = UiState.Success(ResultCard())
                 }
                 .collect { resultCard -> _uiState.value = UiState.Success(resultCard) }
         }

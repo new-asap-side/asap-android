@@ -1,7 +1,7 @@
 package com.asap.aljyo.ui
 
-sealed interface UiState {
-    data object Loading : UiState
-    data object Success : UiState
-    data class Error(val errorCode: String) : UiState
+sealed class UiState<out T> {
+    data object Loading : UiState<Nothing>()
+    data class Success<out T>(val data: T) : UiState<T>()
+    data class Error(val errorCode: String) : UiState<Nothing>()
 }

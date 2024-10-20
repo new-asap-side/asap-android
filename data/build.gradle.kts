@@ -54,6 +54,8 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
+    implementation(libs.moshi.kotlin)
+
 
     // domain module
     implementation(project(":domain"))

@@ -22,13 +22,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.components.main.home.HomeViewModel
+import com.asap.aljyo.ui.composable.main.home.main_tab.HomeMainScreen
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
-import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 
 sealed class TabItem(val titleId: Int) {
@@ -46,7 +44,6 @@ private val tabItems = listOf(
 @Composable
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel()
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
     Column {
@@ -72,7 +69,7 @@ fun HomeTabScreen(
                     append(text = stringResource(item.titleId))
                     withStyle(
                         style = SpanStyle(
-                            color = Red01,
+                            color = MaterialTheme.colorScheme.primary,
                             fontSize = 11.sp,
                             baselineShift = BaselineShift(0.3f)
                         ),
@@ -103,7 +100,9 @@ fun HomeTabScreen(
                     )
                 }
             }
-
+        }
+        when (tabIndex) {
+            0 -> HomeMainScreen()
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.main.home.main_tab
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,7 +12,9 @@ import com.asap.aljyo.ui.theme.Grey01
 
 @Composable
 fun HomeMainScreen() {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
         ResultCardWrapper(
             modifier = Modifier
                 .background(color = Grey01)

@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
-internal const val baseUrl = "http://aljo.shop/docs/"
+internal const val baseUrl = "http://aljo.shop/"
 
 @Module
 @InstallIn(SingletonComponent::class)

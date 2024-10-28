@@ -1,5 +1,6 @@
 package com.asap.aljyo.components.onboarding
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -15,11 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
+import com.asap.aljyo.components.main.MainActivity
 import com.asap.aljyo.ui.composable.onboarding.OnboardingPager
 import com.asap.aljyo.ui.composable.onboarding.SocialLogin
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OnboardingActivity : ComponentActivity() {
@@ -54,6 +59,12 @@ class OnboardingActivity : ComponentActivity() {
                         }
                     }
                 }
+            }
+        }
+        lifecycleScope.launch {
+            delay(1000)
+            Intent(this@OnboardingActivity, MainActivity::class.java).also {
+                startActivity(it)
             }
         }
     }

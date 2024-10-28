@@ -58,6 +58,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -68,12 +69,12 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     /// hilt
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
     // navigation with compose
     implementation(libs.navigation.compose)
-    // retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
+    // compose placeholder
+    implementation(libs.compose.placeholder.material)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -84,5 +85,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // module
+    implementation(project(":domain"))
     implementation(project(":data"))
 }

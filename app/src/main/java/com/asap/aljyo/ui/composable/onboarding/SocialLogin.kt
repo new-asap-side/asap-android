@@ -19,7 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.components.onboarding.OnboardingViewModel
 import com.asap.aljyo.ui.theme.AljyoTheme
 
 @Composable
@@ -33,9 +35,13 @@ fun SocialLogin(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun KakaoLoginButton() {
+fun KakaoLoginButton(
+    viewModel: OnboardingViewModel = hiltViewModel()
+) {
     TextButton(
-        onClick = {},
+        onClick = {
+            viewModel.requestKakaoLogin()
+        },
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFFFEE400),

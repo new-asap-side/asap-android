@@ -7,7 +7,11 @@ import androidx.room.PrimaryKey
 @Entity
 data class User(
     @PrimaryKey
-    val accessToken: String,
+    val kakaoId: String,
     @ColumnInfo(name = "user_id")
-    val userId: String
+    val userId: String,
+    @ColumnInfo(name = "access_token")
+    val accessToken: String,
+    @ColumnInfo(name = "refresh_token")
+    val refreshoken: String
 )

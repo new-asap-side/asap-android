@@ -8,8 +8,8 @@ import com.asap.domain.entity.local.User
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM User")
-    suspend fun getAll(): List<User>
+    @Query("SELECT EXISTS(SELECT * FROM User WHERE User.kakaoId == user.kakaoId)")
+    suspend fun isCached(user: User): Boolean
 
     @Insert
     suspend fun insert(vararg user: User)

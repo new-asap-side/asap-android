@@ -11,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -22,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.components.onboarding.OnboardingViewModel
+import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 
 @Composable
@@ -38,6 +42,10 @@ fun SocialLogin(modifier: Modifier = Modifier) {
 fun KakaoLoginButton(
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.state.collectAsState()
+    if (uiState == RequestState.Loading) {
+        LoadingDialog {  }
+    }
     TextButton(
         onClick = {
             viewModel.requestKakaoLogin()

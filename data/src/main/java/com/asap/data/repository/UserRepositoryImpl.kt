@@ -19,7 +19,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun cacheUserInfo(user: User) {
         val userDao = localDataSource.userDao()
-        if (userDao.isCached(user)) {
+        if (userDao.isCached(user.kakaoId)) {
             return
         }
 

@@ -18,6 +18,8 @@ appcompat = "1.7.0"
 material = "1.12.0"
 moshi = "1.12.0"
 placeholder = "1.0.8"
+room = "2.6.1"
+ksp = "1.9.20-1.0.14"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +55,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 # placeholder
 compose-placeholder-material = { group = "com.eygraber", name = "compose-placeholder-material", version.ref = "placeholder" }
+# room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -61,4 +68,5 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 

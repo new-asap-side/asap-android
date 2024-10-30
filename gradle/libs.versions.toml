@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+coilCompose = "3.0.0-rc01"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -10,6 +11,7 @@ activityCompose = "1.9.2"
 splashScreen = "1.0.1"
 composeBom = "2024.09.03"
 hilt = "2.51.1"
+hiltNavigationCompose = "1.2.0"
 navigation = "2.8.2"
 retrofit = "2.9.0"
 jetbrainsKotlinJvm = "1.9.0"
@@ -18,6 +20,7 @@ material = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -35,6 +38,7 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 # Hilt
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose"}
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt"}
 # navigation
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation"}

@@ -68,12 +68,16 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     /// hilt
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
     // navigation with compose
     implementation(libs.navigation.compose)
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    // coil
+    implementation(libs.coil.compose)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

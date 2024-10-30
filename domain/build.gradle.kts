@@ -1,12 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
-    namespace = "com.asap.data"
+    namespace = "com.asap.domain"
     compileSdk = 34
 
     defaultConfig {
@@ -34,8 +34,8 @@ android {
     }
 }
 
-
 dependencies {
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -46,17 +46,9 @@ dependencies {
     /// hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
-
-    // hilt testing
-    androidTestImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.compiler)
-
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
     implementation(libs.moshi.kotlin)
 
-
-    // domain module
-    implementation(project(":domain"))
 }

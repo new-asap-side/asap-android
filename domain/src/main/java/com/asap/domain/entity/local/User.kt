@@ -5,13 +5,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class User(
+data class KakaoUser(
     @PrimaryKey
-    val kakaoId: String,
-    @ColumnInfo(name = "user_id")
-    val userId: String,
     @ColumnInfo(name = "access_token")
     val accessToken: String,
     @ColumnInfo(name = "refresh_token")
-    val refreshoken: String
+    val refreshToken: String,
+    @ColumnInfo(name = "id_token")
+    val idToken: String?
 )

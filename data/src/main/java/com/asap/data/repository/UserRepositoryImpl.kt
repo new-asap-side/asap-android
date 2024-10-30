@@ -2,10 +2,10 @@ package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
 import com.asap.data.remote.UserRemoteDataSource
-import com.asap.domain.entity.KakaoLoginResponse
 import com.asap.domain.entity.ResultCard
-import com.asap.domain.entity.local.User
+import com.asap.domain.entity.local.KakaoUser
 import com.asap.domain.repository.UserRepository
+import com.kakao.sdk.auth.model.OAuthToken
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,15 +15,15 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
     private val localDataSource: AppDatabase
 ) : UserRepository {
-    override suspend fun kakaoLogin(): Flow<KakaoLoginResponse?> = remoteDataSource.kakaoLogin()
-
-    override suspend fun cacheUserInfo(user: User) {
+    override suspend fun cacheKakaoUserInfo(token: OAuthToken) {
         val userDao = localDataSource.userDao()
-        if (userDao.isCached(user.kakaoId)) {
-            return
-        }
-
-        userDao.insert(user)
+        userDao.insert(
+            KakaoUser(
+                accessToken = token.accessToken,
+                refreshToken = token.refreshToken,
+                idToken = token.idToken
+            )
+        )
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =

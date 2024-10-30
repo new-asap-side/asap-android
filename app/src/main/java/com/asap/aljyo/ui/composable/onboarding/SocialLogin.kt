@@ -1,5 +1,8 @@
 package com.asap.aljyo.ui.composable.onboarding
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -15,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -23,10 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.components.main.MainActivity
 import com.asap.aljyo.components.onboarding.OnboardingViewModel
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 
 @Composable
 fun SocialLogin(modifier: Modifier = Modifier) {
@@ -42,13 +51,20 @@ fun SocialLogin(modifier: Modifier = Modifier) {
 fun KakaoLoginButton(
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.state.collectAsState()
-    if (uiState == RequestState.Loading) {
-        LoadingDialog {  }
+    val state by viewModel.state.collectAsState()
+    if (state == RequestState.Loading) {
+        LoadingDialog { }
     }
+    val context = LocalContext.current
+    if (state is RequestState.Success) {
+        Intent(context, MainActivity::class.java).also {
+            context.startActivity(it)
+        }
+    }
+
     TextButton(
         onClick = {
-            viewModel.requestKakaoLogin()
+            kakaoLogin(context, viewModel)
         },
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
@@ -73,6 +89,36 @@ fun KakaoLoginButton(
             )
         )
     }
+}
+
+private fun kakaoLogin(context: Context, viewModel: OnboardingViewModel) {
+    val callback: (OAuthToken?, Throwable?) -> Unit = { token, e ->
+        if (e != null) {
+            viewModel.kakaoLoginFailed()
+        }
+
+        if (token != null) {
+            viewModel.kakaoLoginSuccess(token = token)
+        }
+    }
+    val available = UserApiClient.instance.isKakaoTalkLoginAvailable(context)
+    if (available) {
+        viewModel.kakaoLoginLoading()
+        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+            if (error != null) {
+                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                    return@loginWithKakaoTalk
+                }
+                Log.i("SocialLogin", "error : $error")
+                UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+            } else if (token != null) {
+                Log.i("SocialLogin", "token: $token")
+                viewModel.kakaoLoginSuccess(token = token)
+            }
+        }
+        return
+    }
+    UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
 }
 
 @Preview(showBackground = true, widthDp = 300, heightDp = 50)

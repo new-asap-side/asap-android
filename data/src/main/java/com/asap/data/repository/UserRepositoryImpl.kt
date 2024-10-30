@@ -15,6 +15,11 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
     private val localDataSource: AppDatabase
 ) : UserRepository {
+    override suspend fun isCached(): Boolean {
+        val userDao = localDataSource.userDao()
+        return userDao.isCached()
+    }
+
     override suspend fun cacheKakaoUserInfo(token: OAuthToken) {
         val userDao = localDataSource.userDao()
         userDao.insert(

@@ -7,8 +7,8 @@ import com.asap.domain.entity.local.KakaoUser
 
 @Dao
 interface UserDao {
-    @Query("SELECT EXISTS(SELECT * FROM KakaoUser WHERE KakaoUser.access_token == :accessToken)")
-    suspend fun isCached(accessToken: String): Boolean
+    @Query("SELECT EXISTS(SELECT * FROM KakaoUser)")
+    suspend fun isCached(): Boolean
 
     @Insert
     suspend fun insert(vararg user: KakaoUser)

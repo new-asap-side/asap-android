@@ -33,17 +33,8 @@ fun OnboardingMain() {
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Image(
-            painterResource(R.drawable.onboarding_main_title),
+            painterResource(R.drawable.img_onboarding_main),
             contentDescription = "onboarding main title"
-        )
-        Image(
-            painterResource(R.drawable.onboarding_main_image),
-            contentDescription = "onboarding main title",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.size(
-                width = 320.dp,
-                height = 257.dp
-            )
         )
     }
 }

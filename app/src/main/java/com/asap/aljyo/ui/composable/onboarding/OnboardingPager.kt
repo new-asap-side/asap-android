@@ -40,7 +40,7 @@ fun OnboardingPager(modifier: Modifier = Modifier) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .offset(y = (screenHeight * 0.1725).dp)
+                            .offset(y = (screenHeight * 0.1975).dp)
                     ) {
                         OnboardingMain()
                     }

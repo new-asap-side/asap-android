@@ -62,6 +62,9 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
 
+    // kakao
+    implementation(libs.kakao.login)
+
     // domain module
     implementation(project(":domain"))
 }

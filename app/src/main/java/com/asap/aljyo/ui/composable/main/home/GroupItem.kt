@@ -23,7 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,6 +35,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Grey01
 
 private val dummyDates = listOf("월", "화", "수", "목", "금", "토", "일")
@@ -63,6 +67,11 @@ fun GroupItem(modifier: Modifier = Modifier) {
             GreyBackgroundText(dates)
             GreyBackgroundText("21:00")
         }
+        Spacer(modifier = Modifier.height(4.dp))
+        GroupCounting(
+            currentCount = 2,
+            totalCount = 8
+        )
     }
 }
 
@@ -135,6 +144,37 @@ fun GreyBackgroundText(text: String) {
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = 12.sp,
                 color = Black02
+            )
+        )
+    }
+}
+
+@Composable
+fun GroupCounting(currentCount: Int, totalCount: Int) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_people),
+            contentDescription = "People"
+        )
+        Spacer(modifier = Modifier.width(2.dp))
+        Text(
+            buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = Black01,
+                        fontFamily = MaterialTheme.typography.bodyMedium.fontFamily,
+                        fontSize = 12.sp
+                    )
+                ) {
+                    append(currentCount.toString())
+                }
+                append("/${stringResource(R.string.counting_people, totalCount)}")
+            },
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = Black03,
+                fontSize = 12.sp
             )
         )
     }

@@ -21,6 +21,7 @@ placeholder = "1.0.8"
 room = "2.6.1"
 ksp = "1.9.20-1.0.14"
 kakao = "2.20.6"
+coil = "3.0.0-rc02"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -62,6 +63,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 # kakao
 kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+# coil
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 
 [plugins]

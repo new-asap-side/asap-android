@@ -77,6 +77,9 @@ dependencies {
     implementation(libs.compose.placeholder.material)
     // kakao SDK
     implementation(libs.kakao.login)
+    // coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

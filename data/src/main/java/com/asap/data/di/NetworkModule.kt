@@ -1,5 +1,6 @@
 package com.asap.data.di
 
+import com.asap.data.remote.service.GroupService
 import com.asap.data.remote.service.UserService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -33,6 +34,12 @@ object NetworkModule {
     @Provides
     fun provideLoginApiService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmGroupService(retrofit: Retrofit): GroupService {
+        return retrofit.create(GroupService::class.java)
     }
 
 }

@@ -1,7 +1,7 @@
 package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
-import com.asap.data.remote.UserRemoteDataSource
+import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.KakaoUser
 import com.asap.domain.repository.UserRepository

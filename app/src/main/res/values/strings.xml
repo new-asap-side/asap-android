@@ -24,4 +24,6 @@
     <string name="participating_group">참여중인 그룹</string>
     <string name="counting">%d개</string>
     <string name="see_more">더보기</string>
+    <string name="public_group">공개</string>
+    <string name="private_group">비공개</string>
 </resources>

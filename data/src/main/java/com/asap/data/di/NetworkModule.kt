@@ -1,5 +1,6 @@
 package com.asap.data.di
 
+import com.asap.data.remote.HeaderInterceptor
 import com.asap.data.remote.service.GroupService
 import com.asap.data.remote.service.UserService
 import com.squareup.moshi.Moshi
@@ -8,6 +9,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -20,11 +23,23 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
+    fun provideOkHttpClient(): OkHttpClient {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(HeaderInterceptor())
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+        return client.build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
         return Retrofit.Builder()
+            .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .baseUrl(baseUrl)
             .build()

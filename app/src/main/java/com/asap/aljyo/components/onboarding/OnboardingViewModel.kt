@@ -3,18 +3,21 @@ package com.asap.aljyo.components.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
-import com.asap.domain.usecase.KakaoLoginUseCase
+import com.asap.domain.usecase.user.AuthKakaoUseCase
+import com.asap.domain.usecase.user.CacheUserUseCase
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    private val kakaoLoginUseCase: KakaoLoginUseCase,
+    private val authKakaoUseCase: AuthKakaoUseCase,
+    private val cacheUserUseCase: CacheUserUseCase,
     private val checkCacheUserCase: CheckCacheUserCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RequestState<Unit?>>(RequestState.Initial)
@@ -39,7 +42,16 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun kakaoLoginSuccess(token: OAuthToken) = viewModelScope.launch {
-        kakaoLoginUseCase.invoke(token = token)
-        _state.value = RequestState.Success(null)
+        authKakaoUseCase.invoke(token.accessToken).catch { _ ->
+            _state.value = RequestState.Error()
+        }.collect { response ->
+            // 서버 토큰 Room DB 저장
+            if(response != null) {
+                cacheUserUseCase.invoke(response)
+                _state.value = RequestState.Success(null)
+                return@collect
+            }
+            _state.value = RequestState.Error()
+        }
     }
 }

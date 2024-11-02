@@ -1,8 +1,8 @@
 package com.asap.data.remote.datasource
 
-import android.util.Log
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
+import com.asap.domain.entity.remote.AuthKakaoResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -12,11 +12,13 @@ class UserRemoteDataSource @Inject constructor(
 ) {
     val resultCard: Flow<ResultCard?> = flow {
         val response = userService.fetchResultCard()
-        Log.d(TAG, "response: $response")
         emit(response.body())
     }
 
-    companion object {
-        const val TAG = "UserRemoteDataSource"
+    suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> = flow {
+        val response = userService.authKakao(
+            hashMapOf("kakaoAccessToken" to kakaoAccessToken)
+        )
+        emit(response.body())
     }
 }

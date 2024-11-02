@@ -3,9 +3,9 @@ package com.asap.data.repository
 import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.domain.entity.ResultCard
-import com.asap.domain.entity.local.KakaoUser
+import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.asap.domain.repository.UserRepository
-import com.kakao.sdk.auth.model.OAuthToken
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,18 +15,23 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
     private val localDataSource: AppDatabase
 ) : UserRepository {
+    override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> {
+        return remoteDataSource.authKakao(kakaoAccessToken)
+    }
+
     override suspend fun isCached(): Boolean {
         val userDao = localDataSource.userDao()
         return userDao.isCached()
     }
 
-    override suspend fun cacheKakaoUserInfo(token: OAuthToken) {
+    override suspend fun cacheKakaoUserInfo(response: AuthKakaoResponse) {
         val userDao = localDataSource.userDao()
         userDao.insert(
-            KakaoUser(
-                accessToken = token.accessToken,
-                refreshToken = token.refreshToken,
-                idToken = token.idToken
+            User(
+                userId = response.userId,
+                kakaoId = response.kakaoId,
+                accessToken = response.accessToken,
+                refreshToken = response.refreshToken,
             )
         )
     }

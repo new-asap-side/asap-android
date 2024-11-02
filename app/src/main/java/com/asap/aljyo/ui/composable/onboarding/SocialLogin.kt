@@ -2,7 +2,6 @@ package com.asap.aljyo.ui.composable.onboarding
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -109,10 +108,8 @@ private fun kakaoLogin(context: Context, viewModel: OnboardingViewModel) {
                 if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                     return@loginWithKakaoTalk
                 }
-                Log.i("SocialLogin", "error : $error")
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             } else if (token != null) {
-                Log.i("SocialLogin", "token: $token")
                 viewModel.kakaoLoginSuccess(token = token)
             }
         }

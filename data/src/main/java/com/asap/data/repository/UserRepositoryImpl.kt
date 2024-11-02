@@ -36,6 +36,11 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getUserInfo(): User {
+        val dao = localDataSource.userDao()
+        return dao.selectAll().first()
+    }
+
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
         remoteDataSource.resultCard
 }

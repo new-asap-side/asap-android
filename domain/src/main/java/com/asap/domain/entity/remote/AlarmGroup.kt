@@ -1,4 +1,4 @@
-package com.asap.domain.entity
+package com.asap.domain.entity.remote
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -12,7 +12,7 @@ data class AlarmGroup(
     @Json(name = "title")
     val title: String,
     @Json(name = "alarmDate")
-    val alarmDate: String,
+    val alarmDate: List<String>,
     @Json(name = "alarmTime")
     val alarmTime: String,
     @Json(name = "number")

@@ -46,7 +46,6 @@ fun ResultCardWrapper(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Log.d("ResultCard composable", "UiState: $uiState")
 
     when (uiState) {
         UiState.Loading -> {

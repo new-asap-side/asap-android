@@ -56,11 +56,11 @@ sealed class BottomNavItem(
 }
 
 @Composable
-fun BottomNavItemMain() {
+fun BottomNavItemMain(
+    onClick: () -> Unit
+) {
     IconButton(
-        onClick = {
-
-        },
+        onClick = onClick,
         modifier = Modifier
             .size(60.dp)
             .clip(CircleShape)
@@ -80,7 +80,9 @@ fun BottomNavItemMain() {
 @Preview(showBackground = true)
 @Composable
 fun BottomNavItemMainPreview() {
-    BottomNavItemMain()
+    BottomNavItemMain {
+
+    }
 }
 
 @Composable

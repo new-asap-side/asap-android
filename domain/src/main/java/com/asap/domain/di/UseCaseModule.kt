@@ -1,9 +1,13 @@
 package com.asap.domain.di
 
-import com.asap.domain.usecase.KakaoLoginUseCase
-import com.asap.domain.usecase.KakaoLoginUseCaseImpl
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.user.AuthKakaoUseCase
+import com.asap.domain.usecase.user.AuthKakaoUseCaseImpl
+import com.asap.domain.usecase.user.CacheUserUseCase
+import com.asap.domain.usecase.user.CacheUserUseCaseImpl
+import com.asap.domain.usecase.user.CheckCacheUserCase
+import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,8 +18,18 @@ import dagger.hilt.components.SingletonComponent
 interface UseCaseModule {
     @Binds
     fun bindKakaoLoginUseCase(
-        kakaoLoginUseCaseImpl: KakaoLoginUseCaseImpl
-    ): KakaoLoginUseCase
+        kakaoLoginUseCaseImpl: AuthKakaoUseCaseImpl
+    ): AuthKakaoUseCase
+
+    @Binds
+    fun bindCacheKakaoUserUseCase(
+        cacheUserUseCaseImpl: CacheUserUseCaseImpl
+    ): CacheUserUseCase
+
+    @Binds
+    fun bindCheckCacheUseCase(
+        checkCacheUserCaseImpl: CheckCacheUserCaseImpl
+    ): CheckCacheUserCase
 
     @Binds
     fun bindResultCardUseCase(

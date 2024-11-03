@@ -19,7 +19,7 @@ class UserSettingViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateNickname(nickname: String) {
-        val error = if (nickname.length !in 2..8) "한글 2-8글자로 입력해주세요" else null
+        val error = if (nickname.length !in 2..8) UserSettingErrorType.LengthError else UserSettingErrorType.None
         _userSettingState.value = _userSettingState.value.copy(
             nickname = nickname,
             errorMsg = error

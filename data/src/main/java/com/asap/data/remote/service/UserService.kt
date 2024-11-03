@@ -13,5 +13,8 @@ interface UserService {
 
     @GET("/")
     suspend fun fetchResultCard(): Response<ResultCard>
+
+    @POST("/profile/check-nick-name")
+    suspend fun checkNickname(@Body body: Map<String, String>): Response<Boolean>
 }
 

@@ -1,6 +1,7 @@
 package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
+import com.asap.data.local.dao.UserDao
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
@@ -43,4 +44,8 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
         remoteDataSource.resultCard
+
+    override suspend fun checkNickname(nickname: String): Boolean {
+        return remoteDataSource.checkNickname(nickname)
+    }
 }

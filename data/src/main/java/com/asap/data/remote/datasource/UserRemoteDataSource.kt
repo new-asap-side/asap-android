@@ -21,4 +21,10 @@ class UserRemoteDataSource @Inject constructor(
         )
         emit(response.body())
     }
+
+    suspend fun checkNickname(nickname: String): Boolean {
+        return userService.checkNickname(
+            hashMapOf("nickName" to nickname)
+        ).body() ?: false
+    }
 }

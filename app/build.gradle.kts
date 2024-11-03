@@ -65,9 +65,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    /// splash screen api
+    // splash screen api
     implementation(libs.androidx.core.splashscreen)
-    /// hilt
+    // hilt
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
@@ -75,9 +75,11 @@ dependencies {
     implementation(libs.navigation.compose)
     // compose placeholder
     implementation(libs.compose.placeholder.material)
+    // kakao SDK
+    implementation(libs.kakao.login)
     // coil
     implementation(libs.coil.compose)
-
+    implementation(libs.coil.network.okhttp)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

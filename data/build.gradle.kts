@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -56,6 +57,13 @@ dependencies {
     implementation(libs.retrofit.moshi)
     implementation(libs.moshi.kotlin)
 
+    // room
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+
+    // kakao
+    implementation(libs.kakao.login)
 
     // domain module
     implementation(project(":domain"))

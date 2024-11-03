@@ -147,26 +147,26 @@ fun BottomNavigationBar(
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         bottomNavItems.forEach { item ->
-            if (item.route == MainRoute.Home.route) {
-                BottomNavItemMain(
+            val onClick = {
+                navController.navigate(item.route) {
+                    navController.graph.startDestinationRoute?.let {
+                        popUpTo(it) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            }
 
-                )
+            if (item.route == MainRoute.Home.route) {
+                BottomNavItemMain(onClick = onClick)
             } else {
                 BottomNavItemSub(
                     icon = item.icon,
                     label = item.label,
                     isSelected = currentRoute == item.route,
-                    onClick = {
-                        navController.navigate(item.route) {
-                            navController.graph.startDestinationRoute?.let {
-                                popUpTo(it) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    }
+                    onClick = onClick
                 )
             }
         }

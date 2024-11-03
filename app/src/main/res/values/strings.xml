@@ -8,11 +8,13 @@
     <string name="with_aljyo">알죠와 함께</string>
     <string name="good_today">오늘 하루를\n의미있게 보내봐요!</string>
     <string name="start_with_kakao">카카오로 시작하기</string>
+    <string name="kakao_native_app_key">d660673b614325c5987061bfd74d5393</string>
     <!-- Bottom navigation -->
     <string name="home">홈</string>
     <string name="alarm_list">알람 리스트</string>
     <string name="my_page">마이 페이지</string>
     <!-- Home Screen -->
+    <!-- Main Tab -->
     <string name="main">메인</string>
     <string name="sorted_by_populrity">인기순</string>
     <string name="sorted_by_latest">최신순</string>
@@ -22,4 +24,10 @@
     <string name="start_lively_today">오늘 하루도 활기차게 시작해요!</string>
     <string name="participating_group">참여중인 그룹</string>
     <string name="counting">%d개</string>
+    <string name="see_more">더보기</string>
+    <string name="public_group">공개</string>
+    <string name="private_group">비공개</string>
+    <string name="everyday">매일</string>
+    <string name="counting_people">%d명</string>
+    <string name="today_popular_group_title">오늘의 인기 그룹은?</string>
 </resources>

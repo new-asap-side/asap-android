@@ -1,10 +1,9 @@
 package com.asap.aljyo.components.usersetting
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,14 +22,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
-import androidx.compose.ui.graphics.Color.Companion.Magenta
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.CustomButton
-import com.asap.aljyo.ui.composable.common.NicknameEditText
+import com.asap.aljyo.ui.composable.common.NicknameTextField
 import com.asap.aljyo.ui.composable.common.ProfileImagePicker
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Red01
@@ -64,10 +60,13 @@ fun UserSettingScreen (
     val buttonState by remember {
         derivedStateOf {
             userSettingState.run {
-                nickname.length in 2..8 && errorMsg == null && selectedProfileImage != null
+//                nickname.length in 2..8 && errorMsg == null && selectedProfileImage != null
+                true
             }
         }
     }
+
+    val context = LocalContext.current // Context 가져오기
 
     Scaffold(
         containerColor = White,
@@ -118,11 +117,12 @@ fun UserSettingScreen (
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            NicknameEditText(
+            NicknameTextField(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 nickname = userSettingState.nickname,
                 onNicknameChange = { userSettingViewModel.updateNickname(it) },
                 onFocusChange = { userSettingViewModel.updateNickname(userSettingState.nickname)},
+                onNicknameCheck =  { },
                 errorMsg = userSettingState.errorMsg
             )
 

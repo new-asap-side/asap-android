@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,19 +31,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.asap.aljyo.components.usersetting.UserSettingErrorType
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Red01
+import kotlinx.coroutines.delay
 
 @Composable
-fun NicknameEditText(
+fun NicknameTextField(
     modifier: Modifier = Modifier,
     nickname: String,
     onNicknameChange: (String) -> Unit,
     onFocusChange: () -> Unit,
-    errorMsg: String? = null
+    onNicknameCheck: (String) -> Unit,
+    errorMsg: UserSettingErrorType = UserSettingErrorType.None,
 ) {
     var isFirstFocus by remember { mutableStateOf(false)}
+
+    LaunchedEffect(nickname) {
+        delay(500)
+        if (errorMsg != UserSettingErrorType.LengthError && isFirstFocus) {
+            onNicknameCheck(nickname)
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -127,14 +138,14 @@ fun NicknameEditText(
                 .fillMaxWidth()
                 .padding(top = 4.dp)
                 .height(2.dp)
-                .background(if (errorMsg != null) Color.Red else Color.Gray)
+                .background(if (errorMsg != UserSettingErrorType.None) Color.Red else Color.Gray)
         )
 
-        errorMsg?.let {
+        if (errorMsg != UserSettingErrorType.None) {
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp),
-                text = it,
+                text = errorMsg.msg,
                 style = TextStyle(
                     color = Color.Red,
                     fontSize = 12.sp
@@ -149,15 +160,17 @@ private fun isNicknameValid(nickname: String): Boolean {
     return !nickname.contains("\\s".toRegex()) // 공백을 포함하지 않도록
             && nicknameRegex.matches(nickname)
 }
+
 @Composable
 @Preview
 fun PreviewNickNameEditText() {
-    NicknameEditText(
+    NicknameTextField(
         nickname = "",
         onNicknameChange = {
 
         },
-        errorMsg = null,
-        onFocusChange = {}
+        errorMsg = UserSettingErrorType.None,
+        onFocusChange = {},
+        onNicknameCheck =  {}
     )
 }

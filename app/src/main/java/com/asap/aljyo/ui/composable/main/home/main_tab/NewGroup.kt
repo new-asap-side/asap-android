@@ -26,6 +26,8 @@ fun NewGroupList(modifier: Modifier = Modifier) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.heightIn(max = 1000.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
             userScrollEnabled = false
         ) {
             items(6) {

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,7 +46,8 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .navigationBarsPadding()
                                 .fillMaxWidth()
-                                .height(66.dp),
+                                .height(66.dp)
+                                .background(color = White),
                             navController = navController
                         )
                     },

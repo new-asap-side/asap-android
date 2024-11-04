@@ -1,6 +1,10 @@
 package com.asap.aljyo.ui.composable.main.home
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
@@ -27,6 +31,7 @@ import com.asap.aljyo.ui.composable.main.home.main_tab.HomeMainScreen
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
 
 sealed class TabItem(val titleId: Int) {
@@ -46,7 +51,7 @@ fun HomeTabScreen(
     modifier: Modifier = Modifier,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
-    Column {
+    Column(modifier = modifier) {
         ScrollableTabRow(
             modifier = modifier,
             selectedTabIndex = tabIndex,
@@ -101,6 +106,13 @@ fun HomeTabScreen(
                 }
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Grey01)
+        )
+        Spacer(modifier = Modifier.height(32.dp))
         when (tabIndex) {
             0 -> HomeMainScreen()
         }

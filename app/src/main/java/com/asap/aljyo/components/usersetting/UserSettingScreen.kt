@@ -1,7 +1,6 @@
 package com.asap.aljyo.components.usersetting
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,7 +44,7 @@ import com.asap.aljyo.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserSettingScreen (
+fun UserSettingScreen(
     userSettingViewModel: UserSettingViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit
@@ -57,27 +56,21 @@ fun UserSettingScreen (
         }
     )
     val userSettingState by userSettingViewModel.userSettingState.collectAsStateWithLifecycle()
-    val buttonState by remember {
-        derivedStateOf {
-            userSettingState.run {
-//                nickname.length in 2..8 && errorMsg == null && selectedProfileImage != null
-                true
-            }
+    val buttonState = userSettingState.run {
+            msg == UserSettingMsgType.Success && selectedProfileImage != null
         }
-    }
-
-    val context = LocalContext.current // Context 가져오기
 
     Scaffold(
         containerColor = White,
         topBar = {
             TopAppBar(
-                title = { Text(text = "")},
+                title = { Text(text = "") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "BACK")
+                            contentDescription = "BACK"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -121,9 +114,9 @@ fun UserSettingScreen (
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 nickname = userSettingState.nickname,
                 onNicknameChange = { userSettingViewModel.updateNickname(it) },
-                onFocusChange = { userSettingViewModel.updateNickname(userSettingState.nickname)},
-                onNicknameCheck =  { },
-                errorMsg = userSettingState.errorMsg
+                onFocusChange = { userSettingViewModel.updateNickname(userSettingState.nickname) },
+                onNicknameCheck = { userSettingViewModel.checkNickname(it) },
+                msg = userSettingState.msg
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -150,6 +143,4 @@ fun HomeScreenPreview() {
         )
     }
 }
-
-// TODO: 앨범 커스텀 ( 추후에 수정? ), 컴포즈 Navigation 공부 ( 온보딩에서 유저세팅으로 이동 및 앨범 커스텀 한다면 앨범 화면으로도 이동 )
 

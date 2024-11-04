@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
-import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +48,7 @@ fun HomeScreen() {
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxWidth(),
-                color = Grey03
+                color = White
             ) {
                 HomeTabScreen()
             }

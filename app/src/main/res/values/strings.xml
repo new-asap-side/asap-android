@@ -30,4 +30,6 @@
     <string name="everyday">매일</string>
     <string name="counting_people">%d명</string>
     <string name="today_popular_group_title">오늘의 인기 그룹은?</string>
+    <string name="default_banner_sub_title">알죠는 처음이죠?</string>
+    <string name="default_banner_title">한눈에 알아보는 알죠 사용법</string>
 </resources>

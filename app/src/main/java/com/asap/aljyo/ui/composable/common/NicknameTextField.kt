@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.asap.aljyo.components.usersetting.UserSettingErrorType
+import com.asap.aljyo.components.usersetting.UserSettingMsgType
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Red01
@@ -44,13 +44,13 @@ fun NicknameTextField(
     onNicknameChange: (String) -> Unit,
     onFocusChange: () -> Unit,
     onNicknameCheck: (String) -> Unit,
-    errorMsg: UserSettingErrorType = UserSettingErrorType.None,
+    msg: UserSettingMsgType = UserSettingMsgType.None,
 ) {
     var isFirstFocus by remember { mutableStateOf(false)}
 
     LaunchedEffect(nickname) {
         delay(500)
-        if (errorMsg != UserSettingErrorType.LengthError && isFirstFocus) {
+        if (msg != UserSettingMsgType.LengthError && isFirstFocus) {
             onNicknameCheck(nickname)
         }
     }
@@ -86,7 +86,6 @@ fun NicknameTextField(
                         .fillMaxWidth()
                         .height(26.dp)
                 ) {
-                    //PlaceHolder Text ( Hint )
                     if (nickname.isEmpty()) {
                         Text(
                             text = "닉네임",
@@ -138,14 +137,14 @@ fun NicknameTextField(
                 .fillMaxWidth()
                 .padding(top = 4.dp)
                 .height(2.dp)
-                .background(if (errorMsg != UserSettingErrorType.None) Color.Red else Color.Gray)
+                .background(if (msg != UserSettingMsgType.None) Color.Red else Color.Gray)
         )
 
-        if (errorMsg != UserSettingErrorType.None) {
+        if (msg != UserSettingMsgType.None) {
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp),
-                text = errorMsg.msg,
+                text = msg.msg,
                 style = TextStyle(
                     color = Color.Red,
                     fontSize = 12.sp
@@ -169,7 +168,7 @@ fun PreviewNickNameEditText() {
         onNicknameChange = {
 
         },
-        errorMsg = UserSettingErrorType.None,
+        msg = UserSettingMsgType.None,
         onFocusChange = {},
         onNicknameCheck =  {}
     )

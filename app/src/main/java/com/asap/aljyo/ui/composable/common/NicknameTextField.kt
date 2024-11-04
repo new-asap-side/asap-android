@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.components.usersetting.UserSettingMsgType
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black04
+import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Red01
 import kotlinx.coroutines.delay
 
@@ -146,7 +148,7 @@ fun NicknameTextField(
                     .padding(top = 8.dp),
                 text = msg.msg,
                 style = TextStyle(
-                    color = Color.Red,
+                    color = if (msg == UserSettingMsgType.Success) Black02 else Error,
                     fontSize = 12.sp
                 )
             )

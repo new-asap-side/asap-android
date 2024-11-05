@@ -2,6 +2,7 @@ package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.dao.UserDao
+import com.asap.data.local.source.TokenDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
@@ -14,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
-    private val localDataSource: AppDatabase
+    private val localDataSource: AppDatabase,
+    private val tokenDataSource: TokenDataSource
 ) : UserRepository {
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> {
         return remoteDataSource.authKakao(kakaoAccessToken)
@@ -35,6 +37,9 @@ class UserRepositoryImpl @Inject constructor(
                 refreshToken = response.refreshToken,
             )
         )
+        // TokenDataStore 저장
+        tokenDataSource.updateAccessToken(response.accessToken)
+        tokenDataSource.updateAccessToken(response.refreshToken)
     }
 
     override suspend fun getUserInfo(): User {

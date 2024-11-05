@@ -1,4 +1,4 @@
-package com.asap.aljyo.ui.composable.main.home.main_tab
+package com.asap.aljyo.ui.composable.main.home.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

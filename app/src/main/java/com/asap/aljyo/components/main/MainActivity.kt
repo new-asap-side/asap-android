@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.ui.composable.main.BottomNavigationBar
 import com.asap.aljyo.ui.composable.main.MainNavHost
-import com.asap.aljyo.ui.composable.main.home.main_tab.NewGroupButton
+import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint

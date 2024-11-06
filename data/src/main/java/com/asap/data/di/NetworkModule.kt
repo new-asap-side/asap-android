@@ -23,9 +23,11 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        headerInterceptor: HeaderInterceptor
+    ): OkHttpClient {
         val client = OkHttpClient.Builder()
-            .addInterceptor(HeaderInterceptor())
+            .addInterceptor(headerInterceptor)
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
@@ -38,9 +40,10 @@ object NetworkModule {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
+
         return Retrofit.Builder()
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
             .baseUrl(baseUrl)
             .build()
     }

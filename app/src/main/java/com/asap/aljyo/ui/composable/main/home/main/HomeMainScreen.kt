@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-fun HomeMainScreen() {
+fun HomeMainScreen(tabChange: (Int) -> Unit) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier.verticalScroll(scrollState),
@@ -30,7 +30,8 @@ fun HomeMainScreen() {
         TodayPopularGroup(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp)
+                .padding(start = 20.dp),
+            tabChange = tabChange
         )
         Banner(
             modifier = Modifier
@@ -41,7 +42,8 @@ fun HomeMainScreen() {
         NewGroupList(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp),
+            tabChange = tabChange
         )
     }
 }

@@ -14,7 +14,10 @@ import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.main.home.GroupItem
 
 @Composable
-fun NewGroupList(modifier: Modifier = Modifier) {
+fun NewGroupList(
+    modifier: Modifier = Modifier,
+    tabChange: (Int) -> Unit
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -22,7 +25,9 @@ fun NewGroupList(modifier: Modifier = Modifier) {
         SeeMoreTitle(
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.new_group_title)
-        ) { }
+        ) {
+            tabChange(2)
+        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.heightIn(max = 1000.dp),

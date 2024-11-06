@@ -24,7 +24,10 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TodayPopularGroup(modifier: Modifier = Modifier) {
+fun TodayPopularGroup(
+    modifier: Modifier = Modifier,
+    tabChange: (Int) -> Unit
+) {
     val coroutineScope = rememberCoroutineScope()
     val popularListState = rememberLazyListState()
     val overscrollEffect = remember(coroutineScope) {
@@ -38,7 +41,9 @@ fun TodayPopularGroup(modifier: Modifier = Modifier) {
         SeeMoreTitle(
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.today_popular_group_title)
-        ) { }
+        ) {
+            tabChange(1)
+        }
         LazyRow(
             state = popularListState,
             userScrollEnabled = false,
@@ -63,6 +68,6 @@ fun TodayPopularGroup(modifier: Modifier = Modifier) {
 @Composable
 fun TodayPopularGroupPreview() {
     AljyoTheme {
-        TodayPopularGroup()
+        TodayPopularGroup {}
     }
 }

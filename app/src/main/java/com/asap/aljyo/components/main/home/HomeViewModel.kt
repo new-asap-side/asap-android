@@ -15,10 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCase: ResultCardUseCase
+    private val useCase: ResultCardUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
     val uiState get() = _uiState.asStateFlow()
+
+    private val _scrollPositionMap = mutableMapOf(
+        MAIN_TAB_SCROLL_KEY to Pair(0, 0),
+        POPULAR_TAB_SCROLL_KEY to Pair(0, 0),
+        LATEST_TAB_SCROLL_KEY to Pair(0, 0),
+    )
+    val scrollPositionMap get() = _scrollPositionMap
 
     init {
         viewModelScope.launch {
@@ -29,5 +36,15 @@ class HomeViewModel @Inject constructor(
                 }
                 .collect { resultCard -> _uiState.value = UiState.Success(resultCard) }
         }
+    }
+
+    fun saveScrollPosition(key: String, index: Int, offset: Int) {
+        _scrollPositionMap[key] = Pair(index, offset)
+    }
+
+    companion object {
+        const val MAIN_TAB_SCROLL_KEY = "main"
+        const val POPULAR_TAB_SCROLL_KEY = "popular"
+        const val LATEST_TAB_SCROLL_KEY = "latest"
     }
 }

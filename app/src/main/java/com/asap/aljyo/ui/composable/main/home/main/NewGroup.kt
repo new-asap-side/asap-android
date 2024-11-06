@@ -17,7 +17,7 @@ import com.asap.aljyo.ui.composable.main.home.GroupItem
 @Composable
 fun NewGroupList(
     modifier: Modifier = Modifier,
-    tabChange: (Int) -> Unit
+    tabChange: (Int) -> Unit,
 ) {
     Column(
         modifier = modifier,

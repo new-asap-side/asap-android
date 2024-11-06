@@ -7,6 +7,6 @@ class CheckNicknameUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(nickname: String): Boolean {
-        return userRepository.checkNickname(nickname)
+        return userRepository.checkNickname(nickname) ?: false
     }
 }

@@ -17,5 +17,5 @@ interface UserRepository {
 
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 
-    suspend fun checkNickname(nickname: String): Boolean
+    suspend fun checkNickname(nickname: String): Boolean?
 }

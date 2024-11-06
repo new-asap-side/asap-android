@@ -1,5 +1,6 @@
 package com.asap.data.remote.datasource
 
+import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.AuthKakaoResponse
@@ -22,9 +23,9 @@ class UserRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun checkNickname(nickname: String): Boolean {
+    suspend fun checkNickname(nickname: String): CheckNicknameResponse? {
         return userService.checkNickname(
             hashMapOf("nickName" to nickname)
-        ).body() ?: false
+        ).body()
     }
 }

@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.main.home.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +59,11 @@ fun TodayPopularGroup(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(5) {
-                GroupItem(modifier = Modifier.width(148.dp))
+                GroupItem(
+                    modifier = Modifier
+                        .width(148.dp)
+                        .clickable { }
+                )
             }
         }
     }

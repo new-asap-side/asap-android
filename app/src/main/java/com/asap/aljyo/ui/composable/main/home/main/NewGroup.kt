@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.main.home.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +37,9 @@ fun NewGroupList(
             userScrollEnabled = false
         ) {
             items(6) {
-                GroupItem()
+                GroupItem(
+                    modifier = Modifier.clickable {  }
+                )
             }
         }
     }

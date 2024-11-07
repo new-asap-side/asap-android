@@ -38,17 +38,23 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Grey01
+import com.asap.domain.entity.remote.AlarmGroup
 
-private val dummyDates = listOf("월", "화", "수", "목", "금", "토", "일")
 private const val everyDay = 7
 
 @Composable
-fun GroupItem(modifier: Modifier = Modifier) {
+fun GroupItem(
+    modifier: Modifier = Modifier,
+    alarmGroup: AlarmGroup = AlarmGroup.dummy()
+) {
     Column(modifier = modifier) {
-        GroupThumbnail()
+        GroupThumbnail(
+            thumbnailUrl = alarmGroup.thumbnailUrl,
+            isPublic = alarmGroup.isPublic
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "그룹 타이틀그룹 타이틀그룹 타이틀그룹 타이틀그룹 타이틀",
+            alarmGroup.title,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = 14.sp,
                 color = Black01
@@ -60,18 +66,18 @@ fun GroupItem(modifier: Modifier = Modifier) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val dates = if (dummyDates.size == everyDay)
+            val dates = if (alarmGroup.alarmDates.size == everyDay)
                 stringResource(R.string.everyday)
-            else dummyDates.joinToString(
+            else alarmGroup.alarmDates.joinToString(
                 separator = " "
             )
             GreyBackgroundText(dates)
-            GreyBackgroundText("21:00")
+            GreyBackgroundText(alarmGroup.alarmTime)
         }
         Spacer(modifier = Modifier.height(4.dp))
         GroupCounting(
-            currentCount = 2,
-            totalCount = 8
+            currentCount = alarmGroup.currentNumber,
+            totalCount = alarmGroup.totalNumber
         )
     }
 }
@@ -85,12 +91,15 @@ fun GroupItemPreview() {
 }
 
 @Composable
-fun GroupThumbnail() {
+fun GroupThumbnail(
+    thumbnailUrl: String,
+    isPublic: Boolean
+) {
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         AsyncImage(
-            model = "",
+            model = thumbnailUrl,
             modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
             contentDescription = "Group thumbnail",
@@ -104,11 +113,10 @@ fun GroupThumbnail() {
                 .padding(4.dp, 2.dp, 6.dp, 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val publicGroup = false
-            val painter = if (publicGroup) painterResource(R.drawable.ic_hello)
+            val painter = if (isPublic) painterResource(R.drawable.ic_hello)
             else painterResource(R.drawable.ic_lock)
 
-            val text = if (publicGroup) stringResource(R.string.public_group)
+            val text = if (isPublic) stringResource(R.string.public_group)
             else stringResource(R.string.private_group)
 
             Icon(

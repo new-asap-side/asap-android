@@ -51,7 +51,7 @@
         <activity
             android:name=".components.group_details.GroupDetailsActivity"
             android:exported="true"
-            android:theme="@style/Theme.Aljyo"/>
+            android:theme="@style/Theme.Aljyo.Overlap"/>
 
     </application>
 

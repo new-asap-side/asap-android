@@ -1,7 +1,7 @@
 package com.asap.data.di
 
-import com.asap.data.local.source.TokenDataSource
-import com.asap.data.local.source.TokenDataSourceImpl
+import com.asap.data.local.source.SessionLocalDataSource
+import com.asap.data.local.source.SessionLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface LocalModule {
     @Singleton
     @Binds
-    fun bindTokenDataSource(tokenDatasource: TokenDataSourceImpl) : TokenDataSource
+    fun bindTokenDataSource(tokenDatasource: SessionLocalDataSourceImpl) : SessionLocalDataSource
 }

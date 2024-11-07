@@ -1,39 +1,37 @@
 package com.asap.data.local.source
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class TokenDataSourceImpl @Inject constructor(
-    private val tokenDataStore: DataStore<Preferences>
-): TokenDataSource {
+class SessionLocalDataSourceImpl @Inject constructor(
+    private val sessionDataStore: DataStore<Preferences>
+): SessionLocalDataSource {
 
     override suspend fun getAccessToken(): String? {
-        return tokenDataStore.data.map { pref ->
+        return sessionDataStore.data.map { pref ->
             pref[ACCESS_TOKEN]
         }.firstOrNull()
     }
 
     override suspend fun getRefreshToken(): String? {
-        return tokenDataStore.data.map { pref ->
+        return sessionDataStore.data.map { pref ->
             pref[REFRESH_TOKEN]
         }.firstOrNull()
     }
 
     override suspend fun updateAccessToken(accessToken: String) {
-        tokenDataStore.edit {
+        sessionDataStore.edit {
             it[ACCESS_TOKEN] = accessToken
         }
     }
 
     override suspend fun updateRefreshToken(refreshToken: String) {
-        tokenDataStore.edit {
+        sessionDataStore.edit {
             it[REFRESH_TOKEN] = refreshToken
         }
     }

@@ -34,7 +34,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDateStore(@ApplicationContext context: Context): DataStore<Preferences> {
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create (
             produceFile = { context.preferencesDataStoreFile(BuildConfig.TOKEN_DATASTORE_NAME) }
         )

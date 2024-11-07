@@ -41,7 +41,6 @@ object CustomOverscroll {
         ): Offset {
             val deltaX = delta.x
             val sameDirection = sameDirection(deltaX, overscroll.value)
-            Log.d("HorizontalClamping", "[delta - $deltaX overscroll value - ${overscroll.value}]")
 
             val undoOverscroll = if (overscroll.value.valid() && !sameDirection) {
                 val oldOverscroll = overscroll.value

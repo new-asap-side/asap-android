@@ -3,7 +3,7 @@ package com.asap.aljyo.ui.composable.main.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +26,7 @@ import com.asap.aljyo.ui.theme.White
 fun HomeScreen() {
     AljyoTheme {
         Scaffold(
+            containerColor = White,
             topBar = {
                 TopAppBar(
                     windowInsets = WindowInsets(0.dp),
@@ -47,7 +48,7 @@ fun HomeScreen() {
             Surface(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
                 color = White
             ) {
                 HomeTabScreen()

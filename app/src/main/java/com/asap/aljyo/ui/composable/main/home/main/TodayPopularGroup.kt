@@ -1,10 +1,12 @@
-package com.asap.aljyo.ui.composable.main.home.main_tab
+package com.asap.aljyo.ui.composable.main.home.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +25,10 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TodayPopularGroup(modifier: Modifier = Modifier) {
+fun TodayPopularGroup(
+    modifier: Modifier = Modifier,
+    tabChange: (Int) -> Unit
+) {
     val coroutineScope = rememberCoroutineScope()
     val popularListState = rememberLazyListState()
     val overscrollEffect = remember(coroutineScope) {
@@ -35,8 +40,11 @@ fun TodayPopularGroup(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SeeMoreTitle(
+            modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.today_popular_group_title)
-        ) { }
+        ) {
+            tabChange(1)
+        }
         LazyRow(
             state = popularListState,
             userScrollEnabled = false,
@@ -51,7 +59,11 @@ fun TodayPopularGroup(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(5) {
-                GroupItem(modifier = Modifier.width(148.dp))
+                GroupItem(
+                    modifier = Modifier
+                        .width(148.dp)
+                        .clickable { }
+                )
             }
         }
     }
@@ -61,6 +73,6 @@ fun TodayPopularGroup(modifier: Modifier = Modifier) {
 @Composable
 fun TodayPopularGroupPreview() {
     AljyoTheme {
-        TodayPopularGroup()
+        TodayPopularGroup {}
     }
 }

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.ui.composable.main.BottomNavigationBar
 import com.asap.aljyo.ui.composable.main.MainNavHost
+import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,9 +46,13 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .navigationBarsPadding()
                                 .fillMaxWidth()
-                                .height(66.dp),
+                                .height(66.dp)
+                                .background(color = White),
                             navController = navController
                         )
+                    },
+                    floatingActionButton = {
+                        NewGroupButton()
                     }
                 ) { padding ->
                     Box(Modifier.padding(padding)) {

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -86,12 +87,12 @@ fun GroupItemPreview() {
 @Composable
 fun GroupThumbnail() {
     Box(
-        modifier = Modifier.size(148.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         AsyncImage(
             model = "",
-            modifier = Modifier.size(148.dp),
-            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
             contentDescription = "Group thumbnail",
             error = painterResource(R.drawable.ic_my_page)
         )

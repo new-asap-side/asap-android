@@ -7,10 +7,13 @@ class SaveUserProfileUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(
-        userId: Int,
         nickname: String,
-        profileImg: String
+        profileImg: String?
     ) {
-        userRepository.saveProfile(userId, nickname, profileImg)
+        val userId = userRepository.getUserInfo().userId.toInt()
+        
+        profileImg?.let {
+            userRepository.saveProfile(userId, nickname, it)
+        }
     }
 }

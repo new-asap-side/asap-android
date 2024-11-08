@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.domain.usecase.user.CheckNicknameUseCase
+import com.asap.domain.usecase.user.SaveUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserSettingViewModel @Inject constructor(
-    private val checkNicknameUseCase: CheckNicknameUseCase
+    private val checkNicknameUseCase: CheckNicknameUseCase,
+    private val saveUserProfileUseCase: SaveUserProfileUseCase
 ) : ViewModel() {
     private val _userSettingState = MutableStateFlow(UserSettingState())
     val userSettingState: StateFlow<UserSettingState> = _userSettingState
@@ -40,4 +42,14 @@ class UserSettingViewModel @Inject constructor(
         }
     }
 
+    fun saveUserProfile() {
+        viewModelScope.launch {
+            val nickname = _userSettingState.value.nickname
+            val profileImage = _userSettingState.value.selectedProfileImage
+
+            profileImage?.let {
+                saveUserProfileUseCase(nickname, UriUtil.getStringFromUri(it))
+            }
+        }
+    }
 }

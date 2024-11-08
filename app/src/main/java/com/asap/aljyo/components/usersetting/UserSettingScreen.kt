@@ -127,7 +127,7 @@ fun UserSettingScreen(
                 text = "확인",
                 textColor = Color.White,
                 backgroundColor = Red01,
-                onClick = {},
+                onClick = {userSettingViewModel.saveUserProfile()},
                 enable = buttonState
             )
         }

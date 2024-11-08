@@ -66,6 +66,7 @@ fun ProfileImagePicker(
             AsyncImage(
                 model = profileImage ?: R.drawable.ic_profile_default,
                 contentDescription = "Profile Image",
+                contentScale = if (profileImage == null) ContentScale.Fit else ContentScale.Crop,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .then(if(profileImage == null) Modifier.offset(y = 12.dp) else Modifier)

@@ -139,7 +139,7 @@ fun NicknameTextField(
                 .fillMaxWidth()
                 .padding(top = 4.dp)
                 .height(2.dp)
-                .background(if (msg != UserSettingMsgType.None) Color.Red else Color.Gray)
+                .background(if (msg == UserSettingMsgType.None || msg == UserSettingMsgType.Success) Black02 else Error)
         )
 
         if (msg != UserSettingMsgType.None) {

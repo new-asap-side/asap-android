@@ -34,8 +34,18 @@ class UserSettingViewModel @Inject constructor(
     }
 
     fun checkNickname(nickname: String) {
+        val nicknameRegex =  "[ㄱ-ㅎㅏ-ㅣ]".toRegex()
+
+        if (nicknameRegex.containsMatchIn(nickname)) {
+            _userSettingState.value = _userSettingState.value.copy(
+                msg = UserSettingMsgType.FormatError
+            )
+            return
+        }
+
         viewModelScope.launch {
             val msg = if (checkNicknameUseCase(nickname)) UserSettingMsgType.Success else UserSettingMsgType.DuplicateNicknameError
+
             _userSettingState.value = _userSettingState.value.copy(
                 msg = msg
             )

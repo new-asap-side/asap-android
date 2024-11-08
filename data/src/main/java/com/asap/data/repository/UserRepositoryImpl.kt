@@ -1,10 +1,8 @@
 package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
-import com.asap.data.local.dao.UserDao
-import com.asap.data.local.source.TokenDataSource
+import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
-import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AuthKakaoResponse
@@ -17,7 +15,7 @@ import javax.inject.Singleton
 class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
     private val localDataSource: AppDatabase,
-    private val tokenDataSource: TokenDataSource
+    private val sessionLocalDataSource: SessionLocalDataSource
 ) : UserRepository {
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> {
         return remoteDataSource.authKakao(kakaoAccessToken)
@@ -39,8 +37,8 @@ class UserRepositoryImpl @Inject constructor(
             )
         )
         // TokenDataStore 저장
-        tokenDataSource.updateAccessToken(response.accessToken)
-        tokenDataSource.updateAccessToken(response.refreshToken)
+        sessionLocalDataSource.updateAccessToken(response.accessToken)
+        sessionLocalDataSource.updateAccessToken(response.refreshToken)
     }
 
     override suspend fun getUserInfo(): User {
@@ -53,5 +51,17 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun checkNickname(nickname: String): Boolean? {
         return remoteDataSource.checkNickname(nickname)?.isPossible
+    }
+
+    override suspend fun saveProfile(
+        userId: Int,
+        nickname: String,
+        profileImg: String
+    ) {
+        // profileImg를 DB에 저장시키면
+        remoteDataSource.saveProfile(userId, nickname, profileImg)
+            .also {
+                localDataSource.userDao().updateProfileImg(it?.profileImageUrl, userId)
+            }
     }
 }

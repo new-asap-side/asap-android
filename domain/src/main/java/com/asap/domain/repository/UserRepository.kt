@@ -4,6 +4,7 @@ import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.kakao.sdk.auth.model.OAuthToken
+import com.squareup.moshi.Json
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -18,4 +19,10 @@ interface UserRepository {
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 
     suspend fun checkNickname(nickname: String): Boolean?
+
+    suspend fun saveProfile(
+        userId: Int,
+        nickname: String,
+        profileImg: String
+    )
 }

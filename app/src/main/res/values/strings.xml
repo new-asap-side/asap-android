@@ -36,4 +36,6 @@
     <!-- GroupDetails Screen -->
     <string name="next_alarm_timer_title">다음 알람까지</string>
     <string name="particularting_personnel">%d명이 참여하고 있어요!</string>
+    <string name="details">상세정보</string>
+    <string name="private_setting">개인설정</string>
 </resources>

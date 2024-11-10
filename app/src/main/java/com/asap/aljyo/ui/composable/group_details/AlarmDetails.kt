@@ -25,6 +25,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.White
 
 sealed class AlarmDetailsTabItem(val titleId: Int) {
     data object Details : AlarmDetailsTabItem(titleId = R.string.details)
@@ -44,6 +45,7 @@ fun AlarmDetails(modifier: Modifier = Modifier) {
     ) {
         TabRow(
             selectedTabIndex = tabIndex,
+            containerColor = White,
             contentColor = Black01,
             indicator = { positions ->
                 Box(
@@ -53,7 +55,8 @@ fun AlarmDetails(modifier: Modifier = Modifier) {
                         .height(2.dp)
                         .background(Black01)
                 )
-            }
+            },
+            divider = {}
         ) {
             tabItems.forEachIndexed { index, item ->
                 val selected = tabIndex == index

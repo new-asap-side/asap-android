@@ -36,16 +36,16 @@ import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
 
-sealed class TabItem(val titleId: Int) {
-    data object MainTabItem : TabItem(titleId = R.string.main)
-    data object SortedByPopularity : TabItem(titleId = R.string.sorted_by_populrity)
-    data object SortedByLatest : TabItem(titleId = R.string.sorted_by_latest)
+sealed class HomeTabItem(val titleId: Int) {
+    data object MainHomeTabItem : HomeTabItem(titleId = R.string.main)
+    data object SortedByPopularity : HomeTabItem(titleId = R.string.sorted_by_populrity)
+    data object SortedByLatest : HomeTabItem(titleId = R.string.sorted_by_latest)
 }
 
-private val tabItems = listOf(
-    TabItem.MainTabItem,
-    TabItem.SortedByPopularity,
-    TabItem.SortedByLatest,
+private val homeTabItems = listOf(
+    HomeTabItem.MainHomeTabItem,
+    HomeTabItem.SortedByPopularity,
+    HomeTabItem.SortedByLatest,
 )
 
 @Composable
@@ -68,7 +68,7 @@ fun HomeTabScreen(
             },
             divider = {}
         ) {
-            tabItems.forEachIndexed { index, item ->
+            homeTabItems.forEachIndexed { index, item ->
                 val selected = index == tabIndex
                 val badge = if (index == 2) " NEW!" else ""
 

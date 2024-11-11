@@ -38,4 +38,9 @@
     <string name="particularting_personnel">%d명이 참여하고 있어요!</string>
     <string name="details">상세정보</string>
     <string name="private_setting">개인설정</string>
+    <string name="alarm_information">알람 정보</string>
+    <string name="alarm_time">알람 시간</string>
+    <string name="alarm_period">알람 기간</string>
+    <string name="alarm_group_participants">참가 인원</string>
+    <string name="alarm_pulbic_or_private">공개/비공개</string>
 </resources>

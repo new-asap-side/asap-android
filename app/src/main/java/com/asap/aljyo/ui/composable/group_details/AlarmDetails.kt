@@ -1,8 +1,12 @@
 package com.asap.aljyo.ui.composable.group_details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.White
 
@@ -87,6 +92,23 @@ fun AlarmDetails(modifier: Modifier = Modifier) {
                 }
             }
         }
+        when (tabIndex) {
+            0 -> AlarmDetailsContent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 24.dp
+                    )
+            )
+
+            1 -> PrivateSetting(
+                modifier = Modifier.padding(
+                    horizontal = 20.dp,
+                    vertical = 24.dp
+                )
+            )
+        }
     }
 }
 
@@ -95,6 +117,82 @@ fun AlarmDetails(modifier: Modifier = Modifier) {
 fun AlarmDetailsPreview() {
     AljyoTheme {
         AlarmDetails(
+        )
+    }
+}
+
+@Composable
+fun AlarmDetailsContent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.alarm_information),
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontSize = 16.sp,
+                color = Black01
+            )
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_time),
+                content = "오전 9:00\n월 화 수 목 금 토 일"
+            )
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_period),
+                content = "2024.02.11 ~ 2025.03.11"
+            )
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_group_participants),
+                content = "현재 2명 / 최대 8명"
+            )
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_pulbic_or_private),
+                content = "공개"
+            )
+        }
+    }
+}
+
+@Composable
+fun PrivateSetting(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+
+    }
+}
+
+@Composable
+private fun RowText(
+    modifier: Modifier = Modifier,
+    title: String,
+    content: String,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = horizontalArrangement
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 15.sp,
+                color = Black03
+            )
+        )
+        Text(
+            text = content,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 15.sp,
+                lineHeight = 24.sp,
+                color = Black02
+            ),
+            textAlign = TextAlign.End
         )
     }
 }

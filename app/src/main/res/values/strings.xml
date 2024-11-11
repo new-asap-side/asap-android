@@ -43,4 +43,9 @@
     <string name="alarm_period">알람 기간</string>
     <string name="alarm_group_participants">참가 인원</string>
     <string name="alarm_pulbic_or_private">공개/비공개</string>
+    <string name="alarm_setting">알람 설정</string>
+    <string name="alarm_release_content">해제 컨텐츠</string>
+    <string name="alarm_method">알람 방식</string>
+    <string name="alarm_music">알람 음악</string>
+    <string name="alarm_sound">알람 음량</string>
 </resources>

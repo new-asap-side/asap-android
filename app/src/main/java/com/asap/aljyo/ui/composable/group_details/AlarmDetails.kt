@@ -103,10 +103,12 @@ fun AlarmDetails(modifier: Modifier = Modifier) {
             )
 
             1 -> PrivateSetting(
-                modifier = Modifier.padding(
-                    horizontal = 20.dp,
-                    vertical = 24.dp
-                )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 24.dp
+                    )
             )
         }
     }
@@ -116,8 +118,7 @@ fun AlarmDetails(modifier: Modifier = Modifier) {
 @Composable
 fun AlarmDetailsPreview() {
     AljyoTheme {
-        AlarmDetails(
-        )
+        AlarmDetails()
     }
 }
 
@@ -163,7 +164,39 @@ fun AlarmDetailsContent(modifier: Modifier = Modifier) {
 @Composable
 fun PrivateSetting(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-
+        Text(
+            text = stringResource(R.string.alarm_information),
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontSize = 16.sp,
+                color = Black01
+            )
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_release_content),
+                content = "아이트래커"
+            )
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_method),
+                content = "소리"
+            )
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_music),
+                content = "IU - Love wins all"
+            )
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_sound),
+                content = "39%"
+            )
+        }
     }
 }
 

@@ -3,6 +3,7 @@ package com.asap.aljyo.ui.composable.group_details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,18 @@ fun GroupDetailsScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(White)
+            )
+        }
+        item {
+            GroupMembers(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(White)
+                    .padding(
+                        vertical = 24.dp,
+                        horizontal = 20.dp
+                    ),
+                count = 3
             )
         }
     }

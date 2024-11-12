@@ -2,6 +2,10 @@
 
 package com.asap.aljyo.ui.composable.group_details
 
+import android.graphics.Color
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,15 +26,38 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
 @Composable
 fun GroupDetailsScreen() {
+    val navController = rememberNavController()
+    val context = LocalContext.current
+    SideEffect {
+        val activity = (context as ComponentActivity)
+        activity.enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                White.toArgb(),
+                White.toArgb(),
+            )
+        )
+        val window = activity.window
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+    }
+
     AljyoTheme {
         Scaffold(
             topBar = {
@@ -58,7 +85,9 @@ fun GroupDetailsScreen() {
                     },
                     actions = {
                         IconButton(
-                            onClick = { }
+                            onClick = {
+
+                            }
                         ) {
                             Icon(
                                 Icons.Default.MoreVert,
@@ -69,7 +98,9 @@ fun GroupDetailsScreen() {
                     },
                     navigationIcon = {
                         IconButton(
-                            onClick = {}
+                            onClick = {
+                                navController.popBackStack()
+                            }
                         ) {
                             Icon(
                                 Icons.AutoMirrored.Filled.KeyboardArrowLeft,

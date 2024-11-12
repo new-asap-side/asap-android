@@ -16,18 +16,6 @@
         android:theme="@style/Theme.Aljyo"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".components.onboarding.OnboardingActivity"
-            android:exported="true"
-            android:theme="@style/Theme.SplashScreen.Custom">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -44,14 +32,21 @@
         </activity>
 
         <activity
-            android:name=".components.main.MainActivity"
+            android:name=".components.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Aljyo" />
+            android:theme="@style/Theme.SplashScreen.Custom">
 
-        <activity
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--<activity
             android:name=".components.group_details.GroupDetailsActivity"
             android:exported="true"
-            android:theme="@style/Theme.Aljyo.Overlap"/>
+            android:theme="@style/Theme.Aljyo.Overlap"/>-->
 
     </application>
 

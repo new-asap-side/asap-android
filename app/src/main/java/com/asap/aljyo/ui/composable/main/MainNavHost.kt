@@ -10,14 +10,15 @@ import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 
 @Composable
 fun MainNavHost(
-    navController: NavHostController,
+    appNavController: NavHostController,
+    mainNavController: NavHostController,
 ) {
     NavHost(
-        navController = navController,
+        navController = mainNavController,
         startDestination = MainRoute.Home.route
     ) {
         composable(route = BottomNavItem.Home.route) {
-            HomeScreen()
+            HomeScreen(appNavController = appNavController)
         }
 
         composable(route = BottomNavItem.AlarmList.route) {

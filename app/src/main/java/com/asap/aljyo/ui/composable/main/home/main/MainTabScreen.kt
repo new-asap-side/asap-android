@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.main.home.main
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +17,9 @@ import com.asap.aljyo.components.main.home.HomeViewModel
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-fun HomeMainScreen(
+fun MainTabScreen(
     tabChange: (Int) -> Unit,
+    navigate: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.MAIN_TAB_SCROLL_KEY] ?: Pair(0, 0)
@@ -56,7 +56,8 @@ fun HomeMainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 20.dp),
-                tabChange = tabChange
+                tabChange = tabChange,
+                navigate = navigate
             )
         }
         item {
@@ -72,7 +73,8 @@ fun HomeMainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                tabChange = tabChange
+                tabChange = tabChange,
+                navigate = navigate
             )
         }
     }

@@ -1,7 +1,6 @@
 package com.asap.aljyo.ui.composable.onboarding
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -25,8 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.asap.aljyo.R
-import com.asap.aljyo.components.main.MainActivity
+import com.asap.aljyo.components.AppRoute
 import com.asap.aljyo.components.onboarding.OnboardingViewModel
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
@@ -37,17 +37,26 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 
 @Composable
-fun SocialLogin(modifier: Modifier = Modifier) {
+fun SocialLogin(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+    val onLoginSuccess = {
+        navController.navigate(AppRoute.Main.route)
+    }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        KakaoLoginButton()
+        KakaoLoginButton(
+            onLoginSuccess = onLoginSuccess
+        )
     }
 }
 
 @Composable
 fun KakaoLoginButton(
+    onLoginSuccess: () -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -56,9 +65,7 @@ fun KakaoLoginButton(
     }
     val context = LocalContext.current
     if (state is RequestState.Success) {
-        Intent(context, MainActivity::class.java).also {
-            context.startActivity(it)
-        }
+        onLoginSuccess()
     }
 
     TextButton(
@@ -122,6 +129,6 @@ private fun kakaoLogin(context: Context, viewModel: OnboardingViewModel) {
 @Composable
 fun KakaoLoginButtonPreview() {
     AljyoTheme {
-        KakaoLoginButton()
+        KakaoLoginButton(onLoginSuccess = {})
     }
 }

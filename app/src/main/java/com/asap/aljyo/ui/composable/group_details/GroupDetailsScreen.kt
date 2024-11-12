@@ -37,6 +37,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.UserGroupType
 
 @Composable
 fun GroupDetailsScreen(
@@ -99,9 +100,7 @@ fun GroupDetailsScreen(
                     },
                     navigationIcon = {
                         IconButton(
-                            onClick = {
-                                navController.popBackStack()
-                            }
+                            onClick = { navController.popBackStack() }
                         ) {
                             Icon(
                                 Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -112,6 +111,15 @@ fun GroupDetailsScreen(
                     }
                 )
             },
+            bottomBar = {
+                GroupBottomNavBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(White)
+                        .padding(20.dp),
+                    userGroupType = UserGroupType.Leader
+                )
+            }
         ) { padding ->
             Surface(
                 modifier = Modifier

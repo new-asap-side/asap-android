@@ -49,4 +49,7 @@
     <string name="alarm_music">알람 음악</string>
     <string name="alarm_sound">알람 음량</string>
     <string name="member">멤버</string>
+    <string name="modifiy">수정</string>
+    <string name="ranking">랭킹</string>
+    <string name="participate">참여하기</string>
 </resources>

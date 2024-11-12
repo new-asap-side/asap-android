@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.asap.aljyo.components.main.home.HomeViewModel
+import com.asap.aljyo.components.main.HomeViewModel
 import com.asap.aljyo.ui.theme.White
 
 @Composable

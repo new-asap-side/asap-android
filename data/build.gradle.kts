@@ -65,6 +65,10 @@ dependencies {
     // kakao
     implementation(libs.kakao.login)
 
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+
     // domain module
     implementation(project(":domain"))
 }

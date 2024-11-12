@@ -31,7 +31,7 @@ internal fun AppNavHost(
         }
 
         composable(route = AppRoute.GroupDetails.route) {
-            GroupDetailsScreen()
+            GroupDetailsScreen(navController = navController)
         }
     }
 }

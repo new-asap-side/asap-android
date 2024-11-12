@@ -34,13 +34,15 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import com.asap.aljyo.components.AppRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-fun GroupDetailsScreen() {
-    val navController = rememberNavController()
+fun GroupDetailsScreen(
+    navController: NavHostController
+) {
     val context = LocalContext.current
     SideEffect {
         val activity = (context as ComponentActivity)

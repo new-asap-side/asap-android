@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_details
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,15 +12,25 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
+import kotlin.math.roundToInt
 
 
 @Composable
@@ -27,6 +38,10 @@ internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType,
 ) {
+    val px = LocalDensity.current.run {
+        20.dp.toPx()
+    }
+    Log.d("BottomBar", "20dp - pixel: $px")
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -35,6 +50,7 @@ internal fun GroupBottomNavBar(
             UserGroupType.NonParticipant -> NonParticipantBottomBar(
                 modifier = Modifier.weight(1f)
             )
+
             else -> ParticipantBottomBar(
                 modifier = Modifier.weight(1f)
             )
@@ -47,7 +63,11 @@ internal fun GroupBottomNavBar(
 private fun ParticipantBottomBar(
     modifier: Modifier = Modifier
 ) {
-    Button (
+    var showPopup by remember { mutableStateOf(true) }
+    var popupWidth by remember { mutableStateOf(0) }
+    var popupOffset by remember { mutableStateOf(IntOffset.Zero) }
+
+    Button(
         modifier = modifier,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(10),
@@ -64,10 +84,35 @@ private fun ParticipantBottomBar(
         )
     }
     Button(
-        modifier = modifier,
+        modifier = modifier.onGloballyPositioned { coordinates ->
+            val y = coordinates.positionInRoot().y.roundToInt()
+            val btnHeight = coordinates.size.height
+
+            val rootBounds = coordinates.boundsInRoot()
+
+            val popupX = rootBounds.right.toInt() - popupWidth
+            val popupY = y - btnHeight
+
+            popupOffset = IntOffset(
+                x = popupX,
+                y = popupY
+            )
+
+        },
         shape = RoundedCornerShape(10),
         onClick = {}
     ) {
+        if (showPopup) {
+            ConfirmRankingPopUp(
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    popupWidth = coordinates.size.width
+                },
+                onDismiss = {
+                    showPopup = false
+                },
+                offset = popupOffset
+            )
+        }
         Text(
             text = stringResource(R.string.ranking),
             style = MaterialTheme.typography.titleMedium.copy(

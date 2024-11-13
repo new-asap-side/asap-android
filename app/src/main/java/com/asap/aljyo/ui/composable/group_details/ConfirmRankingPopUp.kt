@@ -20,9 +20,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.shape.SpeechBubble
 import com.asap.aljyo.ui.shape.TailArrangement
@@ -32,12 +37,21 @@ import com.asap.aljyo.ui.theme.White
 import kotlin.math.roundToInt
 
 @Composable
-internal fun ConfirmRankingDialog(
+internal fun ConfirmRankingPopUp(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+    offset: IntOffset,
 ) {
-    Dialog(
+    Popup(
         onDismissRequest = onDismiss,
+        popupPositionProvider = object : PopupPositionProvider {
+            override fun calculatePosition(
+                anchorBounds: IntRect,
+                windowSize: IntSize,
+                layoutDirection: LayoutDirection,
+                popupContentSize: IntSize
+            ): IntOffset = offset
+        }
     ) {
         val tailHeight = LocalDensity.current.run {
             10.dp.toPx()
@@ -52,7 +66,7 @@ internal fun ConfirmRankingDialog(
                         arrangement = TailArrangement.End
                     )
                 )
-                .background(Black01),
+                .background(Black01)
         ) {
             Row(
                 modifier = Modifier
@@ -96,8 +110,8 @@ internal fun ConfirmRankingDialog(
 @Composable
 private fun ConfirmRankingDialogPreview() {
     AljyoTheme {
-        ConfirmRankingDialog(
-            onDismiss = {}
-        )
+//        ConfirmRankingDialog(
+//            onDismiss = {}
+//        )
     }
 }

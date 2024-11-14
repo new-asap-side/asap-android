@@ -1,6 +1,10 @@
 package com.asap.aljyo.ui.composable.onboarding
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -23,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
@@ -41,9 +46,25 @@ fun SocialLogin(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {}
+
     val onLoginSuccess = {
+        val permission = Manifest.permission.POST_NOTIFICATIONS
+
+        val checkPermssion = ContextCompat.checkSelfPermission(context, permission)
+        val granted = checkPermssion == PackageManager.PERMISSION_GRANTED
+
+        if (!granted) {
+            // 알람 권한 요청
+            launcher.launch(permission)
+        }
+
         navController.navigate(AppRoute.Main.route)
     }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp)

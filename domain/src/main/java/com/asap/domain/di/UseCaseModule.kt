@@ -2,6 +2,8 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.group.JoinGroupUseCase
+import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.user.AuthKakaoUseCase
 import com.asap.domain.usecase.user.AuthKakaoUseCaseImpl
 import com.asap.domain.usecase.user.CacheUserUseCase
@@ -42,4 +44,9 @@ interface UseCaseModule {
     fun bindFetchFCMTokenUseCase(
         fetchFCMTokenUseCaseImpl: FetchFCMTokenUseCaseImpl
     ): FetchFCMTokenUseCase
+
+    @Binds
+    fun bindPostJoinGroupUseCase(
+        joinGroupUseCaseImpl: JoinGroupUseCaseImpl
+    ): JoinGroupUseCase
 }

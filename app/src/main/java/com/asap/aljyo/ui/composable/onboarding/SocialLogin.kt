@@ -3,8 +3,10 @@ package com.asap.aljyo.ui.composable.onboarding
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -41,6 +43,7 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SocialLogin(
     modifier: Modifier = Modifier,
@@ -52,14 +55,16 @@ fun SocialLogin(
     ) {}
 
     val onLoginSuccess = {
-        val permission = Manifest.permission.POST_NOTIFICATIONS
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = Manifest.permission.POST_NOTIFICATIONS
 
-        val checkPermssion = ContextCompat.checkSelfPermission(context, permission)
-        val granted = checkPermssion == PackageManager.PERMISSION_GRANTED
+            val checkPermssion = ContextCompat.checkSelfPermission(context, permission)
+            val granted = checkPermssion == PackageManager.PERMISSION_GRANTED
 
-        if (!granted) {
-            // 알람 권한 요청
-            launcher.launch(permission)
+            if (!granted) {
+                // 알람 권한 요청
+                launcher.launch(permission)
+            }
         }
 
         navController.navigate(AppRoute.Main.route)

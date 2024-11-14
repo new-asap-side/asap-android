@@ -8,6 +8,8 @@ import com.asap.domain.usecase.user.CacheUserUseCase
 import com.asap.domain.usecase.user.CacheUserUseCaseImpl
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
+import com.asap.domain.usecase.user.FetchFCMTokenUseCase
+import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -35,4 +37,9 @@ interface UseCaseModule {
     fun bindResultCardUseCase(
         resultCardUseCaseImpl: ResultCardUseCaseImpl
     ): ResultCardUseCase
+
+    @Binds
+    fun bindFetchFCMTokenUseCase(
+        fetchFCMTokenUseCaseImpl: FetchFCMTokenUseCaseImpl
+    ): FetchFCMTokenUseCase
 }

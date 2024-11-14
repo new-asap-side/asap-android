@@ -16,4 +16,6 @@ interface UserRepository {
     suspend fun getUserInfo(): User
 
     suspend fun fetchResultCardData(): Flow<ResultCard?>
+
+    suspend fun fetchFCMToken()
 }

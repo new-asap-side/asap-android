@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.main.home
+package com.asap.aljyo.components.main
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.usecase.ResultCardUseCase
+import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCase: ResultCardUseCase,
+    private val resultCardUseCase: ResultCardUseCase,
+    private val fetchFCMTokenUseCase: FetchFCMTokenUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
     val uiState get() = _uiState.asStateFlow()
@@ -29,12 +31,14 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            useCase.invoke()
+            resultCardUseCase.invoke()
                 .catch { e ->
                     Log.e("HomeViewModel", "$e")
                     _uiState.value = UiState.Success(ResultCard())
                 }
                 .collect { resultCard -> _uiState.value = UiState.Success(resultCard) }
+
+            fetchFCMTokenUseCase.invoke()
         }
     }
 

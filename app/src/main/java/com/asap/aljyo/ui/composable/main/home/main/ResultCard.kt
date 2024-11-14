@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.components.main.home.HomeViewModel
+import com.asap.aljyo.components.main.HomeViewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03

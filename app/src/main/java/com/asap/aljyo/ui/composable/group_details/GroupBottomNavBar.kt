@@ -2,32 +2,45 @@ package com.asap.aljyo.ui.composable.group_details
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 import kotlin.math.roundToInt
@@ -51,8 +64,14 @@ internal fun GroupBottomNavBar(
                 modifier = Modifier.weight(1f)
             )
 
-            else -> ParticipantBottomBar(
-                modifier = Modifier.weight(1f)
+            UserGroupType.Leader -> ParticipantBottomBar(
+                modifier = Modifier.weight(1f),
+                isLeader = true
+            )
+
+            UserGroupType.Participant -> ParticipantBottomBar(
+                modifier = Modifier.weight(1f),
+                isLeader = false
             )
         }
 
@@ -61,11 +80,89 @@ internal fun GroupBottomNavBar(
 
 @Composable
 private fun ParticipantBottomBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLeader: Boolean,
 ) {
     var showPopup by remember { mutableStateOf(true) }
-    var popupWidth by remember { mutableStateOf(0) }
+    var popupWidth by remember { mutableIntStateOf(0) }
     var popupOffset by remember { mutableStateOf(IntOffset.Zero) }
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    if (showBottomSheet) {
+        BottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.edit_alarm),
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontSize = 18.sp,
+                            color = Black01
+                        )
+                    )
+                    IconButton(
+                        onClick = { showBottomSheet = false }
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "close"
+                        )
+                    }
+                }
+            }
+        ) {
+            if (isLeader) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            // 그룹 수정 화면으로 이동
+                        }
+                        .padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_edit),
+                        contentDescription = "Edit group"
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = stringResource(R.string.edit_group),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.sp,
+                            color = Black02
+                        )
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        // 개인 설정 화면으로 이동
+                    }
+                    .padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_setting),
+                    contentDescription = "Edit setting"
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = stringResource(R.string.edit_private_setting),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 16.sp,
+                        color = Black02
+                    )
+                )
+            }
+        }
+    }
 
     Button(
         modifier = modifier,
@@ -74,7 +171,9 @@ private fun ParticipantBottomBar(
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary,
         ),
-        onClick = {}
+        onClick = {
+            showBottomSheet = true
+        }
     ) {
         Text(
             text = stringResource(R.string.modifiy),
@@ -134,7 +233,8 @@ private fun ParticipantBottomBarPreview() {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ParticipantBottomBar(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isLeader = true
             )
         }
     }

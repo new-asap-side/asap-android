@@ -3,6 +3,7 @@ package com.asap.data.repository
 import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.UserRemoteDataSource
+import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AuthKakaoResponse
@@ -55,8 +56,7 @@ class UserRepositoryImpl @Inject constructor(
                     return@OnCompleteListener
                 }
 
-                val token = task.result
-                Log.d(TAG, "FCM token $token")
+                FCMTokenManager.token = task.result
             }
         )
     }

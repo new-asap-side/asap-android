@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.components.navigation.MainScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
@@ -39,19 +40,19 @@ sealed class BottomNavItem(
     data object Home : BottomNavItem(
         icon = R.drawable.ic_home,
         label = R.string.home,
-        route = MainRoute.Home.route,
+        route = MainScreenRoute.Home.route,
     )
 
     data object AlarmList : BottomNavItem(
         icon = R.drawable.ic_alarm_list,
         label = R.string.alarm_list,
-        route = MainRoute.AlarmList.route
+        route = MainScreenRoute.AlarmList.route
     )
 
     data object MyPage : BottomNavItem(
         icon = R.drawable.ic_my_page,
         label = R.string.my_page,
-        route = MainRoute.MyPage.route
+        route = MainScreenRoute.MyPage.route
     )
 }
 

@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.components.navigation.AppNavHost
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,8 +27,7 @@ class MainActivity : ComponentActivity() {
             )
         )
         setContent {
-            val navController = rememberNavController()
-            AppNavHost(navController = navController)
+            AppNavHost()
         }
     }
 }

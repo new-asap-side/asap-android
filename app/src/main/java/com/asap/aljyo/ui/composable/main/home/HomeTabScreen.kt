@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.main.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,10 +27,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
-import com.asap.aljyo.components.AppRoute
 import com.asap.aljyo.ui.composable.main.home.latest.LatestScreen
 import com.asap.aljyo.ui.composable.main.home.main.MainTabScreen
 import com.asap.aljyo.ui.composable.main.home.popularity.PopularityScreen
@@ -54,12 +52,11 @@ private val homeTabItems = listOf(
 @Composable
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    onGroupItemClick: () -> Unit,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
-    val navigate = {
-        navController.navigate(AppRoute.GroupDetails.route)
-    }
+
+    Log.d("HomeTabScreen", "HomeTabScreen composition")
     Column(modifier = modifier) {
         ScrollableTabRow(
             modifier = modifier,
@@ -125,7 +122,7 @@ fun HomeTabScreen(
         when (tabIndex) {
             0 -> MainTabScreen(
                 tabChange = { tabIndex = it },
-                navigate = navigate
+                navigate = onGroupItemClick
             )
 
             1 -> PopularityScreen()
@@ -138,8 +135,6 @@ fun HomeTabScreen(
 @Composable
 fun HomeTabScreenPreview() {
     AljyoTheme {
-        HomeTabScreen(
-            navController = rememberNavController()
-        )
+        HomeTabScreen(onGroupItemClick = {})
     }
 }

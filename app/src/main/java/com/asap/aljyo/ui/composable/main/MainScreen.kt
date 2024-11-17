@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.components.navigation.MainNavHost
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
 @Composable
 internal fun MainScreen(
-    appNavController: NavHostController
+    screenNavController: NavHostController
 ) {
     AljyoTheme {
         val navController = rememberNavController()
@@ -39,9 +40,9 @@ internal fun MainScreen(
         ) { padding ->
             Box(Modifier.padding(padding)) {
                 MainNavHost(
-                    appNavController = appNavController,
-                    mainNavController = navController
-                )
+                    screenNavController = screenNavController,
+                    navController = navController,
+                    )
             }
         }
     }

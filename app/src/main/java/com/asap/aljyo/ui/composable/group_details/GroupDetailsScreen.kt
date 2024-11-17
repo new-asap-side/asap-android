@@ -88,9 +88,7 @@ fun GroupDetailsScreen(
                     },
                     actions = {
                         IconButton(
-                            onClick = {
-
-                            }
+                            onClick = {}
                         ) {
                             Icon(
                                 Icons.Default.MoreVert,

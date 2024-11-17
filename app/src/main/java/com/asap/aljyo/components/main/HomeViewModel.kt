@@ -19,8 +19,8 @@ class HomeViewModel @Inject constructor(
     private val resultCardUseCase: ResultCardUseCase,
     private val fetchFCMTokenUseCase: FetchFCMTokenUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
-    val uiState get() = _uiState.asStateFlow()
+    private val _cardState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
+    val cardState get() = _cardState.asStateFlow()
 
     private val _scrollPositionMap = mutableMapOf(
         MAIN_TAB_SCROLL_KEY to Pair(0, 0),
@@ -34,9 +34,9 @@ class HomeViewModel @Inject constructor(
             resultCardUseCase.invoke()
                 .catch { e ->
                     Log.e("HomeViewModel", "$e")
-                    _uiState.value = UiState.Success(ResultCard())
+                    _cardState.value = UiState.Success(ResultCard())
                 }
-                .collect { resultCard -> _uiState.value = UiState.Success(resultCard) }
+                .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
 
             fetchFCMTokenUseCase.invoke()
         }

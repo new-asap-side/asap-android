@@ -15,17 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.components.navigation.MainScreenRoute
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.theme.White
-
-sealed class MainRoute(val route: String) {
-    data object Home : MainRoute(route = "HOME")
-    data object AlarmList : MainRoute(route = "ALARM_LIST")
-    data object MyPage : MainRoute(route = "MY_PAGE")
-}
 
 private val bottomNavItems = listOf(
     BottomNavItem.AlarmList,
@@ -39,7 +34,7 @@ private val centerBezierGap = 22.dp
 
 @Preview
 @Composable
-fun BottomNavigationBackgroundPreview() {
+private fun BottomNavigationBackgroundPreview() {
     val navController = rememberNavController()
     BottomNavigationBar(
         modifier = Modifier
@@ -53,7 +48,7 @@ fun BottomNavigationBackgroundPreview() {
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavHostController,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -98,7 +93,7 @@ fun BottomNavigationBar(
                     }
                 }
 
-                if (item.route == MainRoute.Home.route) {
+                if (item.route == MainScreenRoute.Home.route) {
                     BottomNavItemMain(onClick = onClick)
                 } else {
                     BottomNavItemSub(

@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.dialog.LeaveGroupDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -79,9 +80,10 @@ fun GroupDetailsScreen(
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
-
     AljyoTheme {
         var showBottomSheet by remember { mutableStateOf(false) }
+        var showLeaveGroupDialog by remember { mutableStateOf(false) }
+
         if (showBottomSheet) {
             BottomSheet(
                 onDismissRequest = {},
@@ -114,6 +116,7 @@ fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .clickable {
                             // show leave group dialog
+                            showLeaveGroupDialog = true
                         }
                         .padding(vertical = 10.dp),
                 ) {
@@ -132,6 +135,11 @@ fun GroupDetailsScreen(
                 }
             }
         }
+
+        if(showLeaveGroupDialog) {
+            LeaveGroupDialog { showLeaveGroupDialog = false }
+        }
+
         Scaffold (
             topBar = {
                 TopAppBar(

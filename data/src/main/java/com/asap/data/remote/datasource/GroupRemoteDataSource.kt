@@ -13,4 +13,9 @@ class GroupRemoteDataSource @Inject constructor(
         val response = groupService.fetchTodayPopularGroup()
         emit(response.body())
     }
+
+    suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> = flow {
+        val response = groupService.postJoinGroup(body)
+        emit(response.body())
+    }
 }

@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.kapt)
 }
@@ -65,21 +67,31 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
     // splash screen api
     implementation(libs.androidx.core.splashscreen)
+
     // hilt
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
+
     // navigation with compose
     implementation(libs.navigation.compose)
+
     // compose placeholder
     implementation(libs.compose.placeholder.material)
+
     // kakao SDK
     implementation(libs.kakao.login)
+
     // coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

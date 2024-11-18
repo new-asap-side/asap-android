@@ -1,6 +1,11 @@
 package com.asap.aljyo.ui.composable.main.home
 
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
@@ -23,30 +28,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
-import com.asap.aljyo.ui.composable.main.home.main_tab.HomeMainScreen
+import com.asap.aljyo.ui.composable.main.home.latest.LatestScreen
+import com.asap.aljyo.ui.composable.main.home.main.MainTabScreen
+import com.asap.aljyo.ui.composable.main.home.popularity.PopularityScreen
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
 
-sealed class TabItem(val titleId: Int) {
-    data object MainTabItem : TabItem(titleId = R.string.main)
-    data object SortedByPopularity : TabItem(titleId = R.string.sorted_by_populrity)
-    data object SortedByLatest : TabItem(titleId = R.string.sorted_by_latest)
+sealed class HomeTabItem(val titleId: Int) {
+    data object MainHomeTabItem : HomeTabItem(titleId = R.string.main)
+    data object SortedByPopularity : HomeTabItem(titleId = R.string.sorted_by_populrity)
+    data object SortedByLatest : HomeTabItem(titleId = R.string.sorted_by_latest)
 }
 
-private val tabItems = listOf(
-    TabItem.MainTabItem,
-    TabItem.SortedByPopularity,
-    TabItem.SortedByLatest,
+private val homeTabItems = listOf(
+    HomeTabItem.MainHomeTabItem,
+    HomeTabItem.SortedByPopularity,
+    HomeTabItem.SortedByLatest,
 )
 
 @Composable
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
+    onGroupItemClick: () -> Unit,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
-    Column {
+
+    Log.d("HomeTabScreen", "HomeTabScreen composition")
+    Column(modifier = modifier) {
         ScrollableTabRow(
             modifier = modifier,
             selectedTabIndex = tabIndex,
@@ -61,7 +72,7 @@ fun HomeTabScreen(
             },
             divider = {}
         ) {
-            tabItems.forEachIndexed { index, item ->
+            homeTabItems.forEachIndexed { index, item ->
                 val selected = index == tabIndex
                 val badge = if (index == 2) " NEW!" else ""
 
@@ -101,8 +112,21 @@ fun HomeTabScreen(
                 }
             }
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Grey01)
+        )
+        Spacer(modifier = Modifier.height(32.dp))
         when (tabIndex) {
-            0 -> HomeMainScreen()
+            0 -> MainTabScreen(
+                tabChange = { tabIndex = it },
+                navigate = onGroupItemClick
+            )
+
+            1 -> PopularityScreen()
+            2 -> LatestScreen()
         }
     }
 }
@@ -111,6 +135,6 @@ fun HomeTabScreen(
 @Composable
 fun HomeTabScreenPreview() {
     AljyoTheme {
-        HomeTabScreen()
+        HomeTabScreen(onGroupItemClick = {})
     }
 }

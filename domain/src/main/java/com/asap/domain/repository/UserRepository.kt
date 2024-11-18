@@ -4,7 +4,6 @@ import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.kakao.sdk.auth.model.OAuthToken
-import com.squareup.moshi.Json
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -25,4 +24,6 @@ interface UserRepository {
         nickname: String,
         profileImg: String
     )
+
+    suspend fun fetchFCMToken()
 }

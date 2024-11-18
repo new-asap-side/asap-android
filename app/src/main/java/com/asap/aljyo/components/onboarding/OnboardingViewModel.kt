@@ -1,5 +1,6 @@
 package com.asap.aljyo.components.onboarding
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
@@ -42,6 +43,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun kakaoLoginSuccess(token: OAuthToken) = viewModelScope.launch {
+        Log.d(TAG, "kakaoLoginSuccess")
         authKakaoUseCase.invoke(token.accessToken).catch { _ ->
             _state.value = RequestState.Error()
         }.collect { response ->
@@ -53,5 +55,9 @@ class OnboardingViewModel @Inject constructor(
             }
             _state.value = RequestState.Error()
         }
+    }
+
+    companion object {
+        const val TAG = "OnboardingViewModel"
     }
 }

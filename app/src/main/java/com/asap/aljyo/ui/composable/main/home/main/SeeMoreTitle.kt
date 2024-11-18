@@ -1,10 +1,8 @@
-package com.asap.aljyo.ui.composable.main.home.main_tab
+package com.asap.aljyo.ui.composable.main.home.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -24,11 +22,13 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black03
 
 @Composable
-fun SeeMoreTitle(title: String, onClick: () -> Unit) {
+fun SeeMoreTitle(
+    modifier: Modifier = Modifier,
+    title: String,
+    onClick: () -> Unit
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 10.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -66,6 +66,6 @@ fun SeeMoreTitle(title: String, onClick: () -> Unit) {
 @Composable
 fun SeeMoreTitlePreview() {
     AljyoTheme {
-        SeeMoreTitle("타이틀") { }
+        SeeMoreTitle(title = "타이틀") { }
     }
 }

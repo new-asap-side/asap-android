@@ -72,6 +72,10 @@ dependencies {
     // dataStore
     implementation(libs.datastore.preferences)
 
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+
     // domain module
     implementation(project(":domain"))
 }

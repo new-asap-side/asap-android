@@ -30,4 +30,30 @@
     <string name="everyday">매일</string>
     <string name="counting_people">%d명</string>
     <string name="today_popular_group_title">오늘의 인기 그룹은?</string>
+    <string name="default_banner_sub_title">알죠는 처음이죠?</string>
+    <string name="default_banner_title">한눈에 알아보는 알죠 사용법</string>
+    <string name="new_group_title">최근에 새로 생긴 그룹이에요</string>
+    <!-- GroupDetails Screen -->
+    <string name="next_alarm_timer_title">다음 알람까지</string>
+    <string name="particularting_personnel">%d명이 참여하고 있어요!</string>
+    <string name="details">상세정보</string>
+    <string name="private_setting">개인설정</string>
+    <string name="alarm_information">알람 정보</string>
+    <string name="alarm_time">알람 시간</string>
+    <string name="alarm_period">알람 기간</string>
+    <string name="alarm_group_participants">참가 인원</string>
+    <string name="alarm_pulbic_or_private">공개/비공개</string>
+    <string name="alarm_setting">알람 설정</string>
+    <string name="alarm_release_content">해제 컨텐츠</string>
+    <string name="alarm_method">알람 방식</string>
+    <string name="alarm_music">알람 음악</string>
+    <string name="alarm_sound">알람 음량</string>
+    <string name="member">멤버</string>
+    <string name="modifiy">수정</string>
+    <string name="ranking">랭킹</string>
+    <string name="participate">참여하기</string>
+    <string name="confirm_rank">현재 순위를 확인해보세요!</string>
+    <string name="edit_alarm">알람 수정</string>
+    <string name="edit_group">그룹 수정</string>
+    <string name="edit_private_setting">개인 설정 수정</string>
 </resources>

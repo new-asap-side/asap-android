@@ -3,7 +3,7 @@ package com.asap.aljyo.ui.composable.main.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,18 +15,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
-import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onGroupItemClick: () -> Unit,
+) {
     AljyoTheme {
         Scaffold(
+            containerColor = White,
             topBar = {
                 TopAppBar(
                     windowInsets = WindowInsets(0.dp),
@@ -48,17 +49,13 @@ fun HomeScreen() {
             Surface(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .fillMaxWidth(),
-                color = Grey03
+                    .fillMaxSize(),
+                color = White
             ) {
-                HomeTabScreen()
+                HomeTabScreen(
+                    onGroupItemClick = onGroupItemClick
+                )
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }

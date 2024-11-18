@@ -1,12 +1,16 @@
 package com.asap.data.repository
 
+import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
+import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.asap.domain.repository.UserRepository
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,5 +67,22 @@ class UserRepositoryImpl @Inject constructor(
             .also {
                 localDataSource.userDao().updateProfileImg(it?.profileImageUrl, userId)
             }
+    }
+
+    override suspend fun fetchFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                FCMTokenManager.token = task.result
+            }
+        )
+    }
+
+    companion object {
+        private const val TAG = "UserRepositoryImpl"
     }
 }

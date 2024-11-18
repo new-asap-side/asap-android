@@ -44,7 +44,7 @@ internal fun BottomSheet(
         sheetState = sheetState,
         containerColor = containerColor,
         onDismissRequest = onDismissRequest,
-        dragHandle = null
+        dragHandle = null,
     ) {
         Column(
             modifier = Modifier.padding(

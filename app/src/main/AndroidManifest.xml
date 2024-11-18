@@ -30,7 +30,7 @@
 
                 <data
                     android:host="oauth"
-                    android:scheme="kakaod660673b614325c5987061bfd74d5393" />
+                    android:scheme="kakaod${KAKAO_NATIVE_APP_KEY}" />
             </intent-filter>
         </activity>
 
@@ -48,7 +48,7 @@
 
         <service
             android:name="com.asap.data.remote.firebase.MyFirebaseMessageService"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

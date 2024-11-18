@@ -7,7 +7,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SaveProfileRequest(
     val userId: Int,
+    @Json(name = "nickName")
     val nickname: String,
-    @Json(name = "profile_img")
+    @Json(name = "profileImgBase64")
     val profileImg: String
 )

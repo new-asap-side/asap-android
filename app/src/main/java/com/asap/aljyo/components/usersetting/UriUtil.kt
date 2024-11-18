@@ -12,12 +12,13 @@ object UriUtil {
         applicationContext = context.applicationContext
     }
 
+
     fun getStringFromUri(uri: Uri): String? {
         return try {
-            val inputStream = applicationContext.contentResolver.openInputStream(uri)
-            val byteArray = inputStream?.readBytes()
-            inputStream?.close()
-            byteArray?.let { Base64.encodeToString(it, Base64.DEFAULT) }
+            applicationContext.contentResolver.openInputStream(uri)?.use { inputStream ->
+                val byteArray = inputStream.readBytes()
+                Base64.encodeToString(byteArray, Base64.DEFAULT)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             null

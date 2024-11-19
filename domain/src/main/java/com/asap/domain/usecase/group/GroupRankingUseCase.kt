@@ -13,6 +13,6 @@ class FetchGroupRankingUseCaseImpl @Inject constructor(
     private val groupRepository: GroupRepository
 ) : FetchGroupRankingUseCase {
     override suspend fun invoke(groupId: Int): Flow<List<GroupRanking>?> =
-        groupRepository.fetchGroupRanking()
+        groupRepository.fetchGroupRanking(groupId = groupId)
 
 }

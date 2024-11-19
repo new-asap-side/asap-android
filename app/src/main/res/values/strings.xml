@@ -57,4 +57,5 @@
     <string name="edit_private_setting">개인 설정 수정</string>
     <!-- Ranking Screen -->
     <string name="group_ranking">그룹 랭킹</string>
+    <string name="score">%s점</string>
 </resources>

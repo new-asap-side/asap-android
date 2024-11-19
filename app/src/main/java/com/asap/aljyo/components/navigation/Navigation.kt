@@ -12,6 +12,7 @@ import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
 import com.asap.aljyo.ui.composable.main.home.HomeScreen
 import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
+import com.asap.aljyo.ui.composable.ranking.RankingScreen
 
 
 private const val TAG = "ApplicationNavHost"
@@ -45,6 +46,12 @@ internal fun AppNavHost() {
         composable(route = ScreenRoute.GroupDetails.route) {
             GroupDetailsScreen(
                 navController = navController
+            )
+        }
+
+        composable(route = ScreenRoute.Ranking.route) {
+            RankingScreen(
+                onBackPressed = { navController.popBackStack() }
             )
         }
     }

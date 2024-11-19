@@ -50,6 +50,7 @@ import kotlin.math.roundToInt
 internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType,
+    onRankingClick: () -> Unit,
 ) {
     val px = LocalDensity.current.run {
         20.dp.toPx()
@@ -66,12 +67,14 @@ internal fun GroupBottomNavBar(
 
             UserGroupType.Leader -> ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
-                isLeader = true
+                isLeader = true,
+                onRankingClick = onRankingClick
             )
 
             UserGroupType.Participant -> ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
-                isLeader = false
+                isLeader = false,
+                onRankingClick = onRankingClick
             )
         }
 
@@ -82,6 +85,7 @@ internal fun GroupBottomNavBar(
 private fun ParticipantBottomBar(
     modifier: Modifier = Modifier,
     isLeader: Boolean,
+    onRankingClick: () -> Unit,
 ) {
     var showPopup by remember { mutableStateOf(true) }
     var popupWidth by remember { mutableIntStateOf(0) }
@@ -199,7 +203,7 @@ private fun ParticipantBottomBar(
 
         },
         shape = RoundedCornerShape(10),
-        onClick = {}
+        onClick = onRankingClick
     ) {
         if (showPopup) {
             ConfirmRankingPopUp(
@@ -234,7 +238,8 @@ private fun ParticipantBottomBarPreview() {
         ) {
             ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
-                isLeader = true
+                isLeader = true,
+                onRankingClick = { }
             )
         }
     }

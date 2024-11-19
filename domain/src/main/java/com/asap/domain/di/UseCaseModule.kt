@@ -2,6 +2,8 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.group.FetchGroupRankingUseCase
+import com.asap.domain.usecase.group.FetchGroupRankingUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.user.AuthKakaoUseCase
@@ -49,4 +51,9 @@ interface UseCaseModule {
     fun bindPostJoinGroupUseCase(
         joinGroupUseCaseImpl: JoinGroupUseCaseImpl
     ): JoinGroupUseCase
+
+    @Binds
+    fun bindFetchGroupRankingUseCase(
+        fetchGroupRankingUseCaseImpl: FetchGroupRankingUseCaseImpl
+    ): FetchGroupRankingUseCase
 }

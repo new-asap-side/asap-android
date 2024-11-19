@@ -12,5 +12,5 @@ interface GroupRepository {
     suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?>
 
     // 그룹 랭킹 조회
-    suspend fun fetchGroupRanking(): Flow<List<GroupRanking>?>
+    suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>
 }

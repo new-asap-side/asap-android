@@ -7,16 +7,14 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class GroupRanking(
     @Json(name = "thumbnail")
-    val thumbnail: String,
+    val thumbnail: String = "",
     @Json(name = "nickname")
-    val nickname: String,
+    val nickname: String = "",
     @Json(name = "score")
-    val score: Int
-)
+    val score: Int = 0
+) {
 
-fun GroupRanking.dummy(): GroupRanking =
-    GroupRanking(
-        thumbnail = "",
-        nickname = "James",
-        score = 0
-    )
+    companion object {
+        fun dummy(): GroupRanking = GroupRanking()
+    }
+}

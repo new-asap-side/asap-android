@@ -42,7 +42,8 @@ import com.asap.domain.entity.remote.UserGroupType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupDetailsScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    groupId: Int,
 ) {
     val context = LocalContext.current
     SideEffect {
@@ -118,7 +119,9 @@ fun GroupDetailsScreen(
                         .background(White)
                         .padding(20.dp),
                     userGroupType = UserGroupType.Leader,
-                    onRankingClick = { navController.navigate(route = ScreenRoute.Ranking.route) }
+                    onRankingClick = {
+                        navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
+                    }
                 )
             }
         ) { padding ->

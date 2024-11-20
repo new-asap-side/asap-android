@@ -1,4 +1,4 @@
-package com.asap.aljyo.ui.composable.ranking
+package com.asap.aljyo.ui.composable.group_ranking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -1,5 +1,6 @@
-package com.asap.aljyo.ui.composable.ranking
+package com.asap.aljyo.ui.composable.group_ranking
 
+import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -27,17 +28,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.components.group_ranking.GroupRankingViewModel
+import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
+import dagger.hilt.android.EntryPointAccessors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RankingScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    groupId: Int
 ) {
     val context = LocalContext.current
+    val factory = EntryPointAccessors.fromActivity(
+        context as Activity,
+        ViewModelFactoryProvider::class.java
+    ).groupRankingViewModelFactory()
+
+    val viewModel = factory.create(groupId = groupId)
+
     SideEffect {
         val activity = (context as ComponentActivity)
         activity.enableEdgeToEdge(

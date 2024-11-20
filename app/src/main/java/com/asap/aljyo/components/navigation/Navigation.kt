@@ -3,16 +3,18 @@ package com.asap.aljyo.components.navigation
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.main.MainScreen
 import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
 import com.asap.aljyo.ui.composable.main.home.HomeScreen
 import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
-import com.asap.aljyo.ui.composable.ranking.RankingScreen
+import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
 
 
 private const val TAG = "ApplicationNavHost"
@@ -43,15 +45,25 @@ internal fun AppNavHost() {
             )
         }
 
-        composable(route = ScreenRoute.GroupDetails.route) {
+        composable(
+            route = "${ScreenRoute.GroupDetails.route}/{groupId}",
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             GroupDetailsScreen(
-                navController = navController
+                navController = navController,
+                groupId = groupId
             )
         }
 
-        composable(route = ScreenRoute.Ranking.route) {
+        composable(
+            route = "${ScreenRoute.Ranking.route}/{groupId}",
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             RankingScreen(
-                onBackPressed = { navController.popBackStack() }
+                onBackPressed = { navController.popBackStack() },
+                groupId = groupId
             )
         }
     }
@@ -67,8 +79,8 @@ fun MainNavHost(
         navController = navController,
         startDestination = MainScreenRoute.Home.route
     ) {
-        val navigateToGroupDetails = {
-            screenNavController.navigate(ScreenRoute.GroupDetails.route)
+        val navigateToGroupDetails: (Int) -> Unit = { groupId ->
+            screenNavController.navigate("${ScreenRoute.GroupDetails.route}/$groupId")
         }
         composable(route = MainScreenRoute.Home.route) {
             HomeScreen(

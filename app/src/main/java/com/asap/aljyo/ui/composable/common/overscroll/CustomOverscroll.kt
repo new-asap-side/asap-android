@@ -80,7 +80,6 @@ object CustomOverscroll {
             velocity: Velocity,
             performFling: suspend (Velocity) -> Velocity
         ) {
-            Log.d("CustomOverscroll.HorizontalOverscroll", "applyToFling")
             val consumed = performFling(velocity)
             val remaining = velocity - consumed
 

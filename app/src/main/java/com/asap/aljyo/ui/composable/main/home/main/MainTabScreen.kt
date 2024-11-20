@@ -28,7 +28,7 @@ import com.asap.aljyo.ui.theme.White
 @Composable
 fun MainTabScreen(
     tabChange: (Int) -> Unit,
-    navigate: () -> Unit,
+    navigate: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.MAIN_TAB_SCROLL_KEY] ?: Pair(0, 0)

@@ -1,0 +1,84 @@
+package com.asap.aljyo.ui.composable.group_ranking
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import com.asap.aljyo.R
+import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black03
+import com.asap.domain.entity.remote.GroupRanking
+
+@Composable
+internal fun UnRankingArea(
+    modifier: Modifier = Modifier,
+    unRakings: List<GroupRanking>,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(36.dp)
+    ) {
+        unRakings.forEachIndexed { index, ranking ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                Text(
+                    text = (index + 4).toString(),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 14.sp,
+                        color = Black03
+                    )
+                )
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    AsyncImage(
+                        model = ranking.thumbnail,
+                        contentDescription = "Group particular thumbnail",
+                        error = painterResource(R.drawable.ic_my_page)
+                    )
+                    Text(
+                        text = ranking.nickname,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 14.sp,
+                            color = Black01
+                        )
+                    )
+                }
+                Text(
+                    text = "${ranking.score}점",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontSize = 14.sp,
+                        color = Black03
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    AljyoTheme {
+        UnRankingArea(
+            modifier = Modifier.fillMaxWidth(),
+            unRakings = (0..4).map { GroupRanking.dummy() }
+        )
+    }
+}

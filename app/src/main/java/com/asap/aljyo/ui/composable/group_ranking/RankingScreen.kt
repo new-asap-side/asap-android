@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -149,7 +148,7 @@ internal fun RankingScreen(
                                 .fillMaxWidth()
                                 .padding(
                                     horizontal = 20.dp,
-                                    vertical = 30.dp
+                                    vertical = 60.dp
                                 ),
                             rankings = rankings.slice(0..2)
                         )

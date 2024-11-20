@@ -10,6 +10,7 @@ import com.asap.domain.usecase.group.FetchGroupRankingUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -22,14 +23,18 @@ class GroupRankingViewModel @AssistedInject constructor(
     val state get() = _state
 
     init {
-        Log.d("GroupRankingViewModel", "viewModel init block groupId: $groupId")
+        Log.d(TAG, "viewModel init block groupId: $groupId")
         viewModelScope.launch {
-            fetchGroupRankingUseCase.invoke(groupId).catch {
+            delay(500)
+            fetchGroupRankingUseCase.invoke(groupId).catch { e ->
                 // TODO 에러 처리
                 // _state.value = UiState.Error("")
+                Log.e(TAG, "$e")
                 _state.value = UiState.Success((1..8).map { GroupRanking.dummy() })
             }.collect { rankingList ->
-                _state.value = UiState.Success(rankingList ?: listOf())
+                _state.value = UiState.Success(
+                    rankingList ?: (1..8).map { GroupRanking.dummy() }
+                )
             }
         }
     }
@@ -40,6 +45,8 @@ class GroupRankingViewModel @AssistedInject constructor(
     }
 
     companion object {
+        private const val TAG = "GroupRankingViewModel"
+
         @Suppress("UNCHECKED_CAST")
         fun provideGroupRankingViewModelFactory(
             factory: GroupRankingViewModelFactory,

@@ -4,7 +4,9 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -19,6 +21,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -28,11 +32,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.components.group_ranking.GroupRankingViewModel
 import com.asap.aljyo.di.ViewModelFactoryProvider
+import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
@@ -55,18 +60,6 @@ internal fun RankingScreen(
             ),
         )
     }
-
-    val factory = EntryPointAccessors.fromActivity(
-        context as Activity,
-        ViewModelFactoryProvider::class.java
-    ).groupRankingViewModelFactory()
-
-    val viewModel: GroupRankingViewModel = viewModel(
-        factory = GroupRankingViewModel.provideGroupRankingViewModelFactory(
-            factory = factory,
-            groupId = groupId
-        )
-    )
 
     AljyoTheme {
         Scaffold(
@@ -115,10 +108,47 @@ internal fun RankingScreen(
                 )
             },
         ) { paddingValues ->
-            Column(
-                modifier = Modifier.padding(paddingValues)
-            ) {
+            val factory = EntryPointAccessors.fromActivity(
+                context as Activity,
+                ViewModelFactoryProvider::class.java
+            ).groupRankingViewModelFactory()
 
+            val viewModel: GroupRankingViewModel = viewModel(
+                factory = GroupRankingViewModel.provideGroupRankingViewModelFactory(
+                    factory = factory,
+                    groupId = groupId
+                )
+            )
+            val state = viewModel.state.collectAsState()
+
+            when (state.value) {
+                is UiState.Error -> TODO()
+                UiState.Loading -> Box(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                ) {
+                    LoadingDialog(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) { }
+                }
+
+                is UiState.Success -> {
+                    val rankings = state.value as UiState.Success
+                    Column(
+                        modifier = Modifier.padding(paddingValues)
+                    ) {
+                        RankingArea(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 20.dp,
+                                    vertical = 30.dp
+                                ),
+                            rankings = rankings.data.slice(0..2)
+                        )
+                    }
+                }
             }
         }
     }

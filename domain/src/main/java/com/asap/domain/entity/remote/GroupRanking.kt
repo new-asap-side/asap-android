@@ -8,8 +8,10 @@ import com.squareup.moshi.JsonClass
 data class GroupRanking(
     @Json(name = "thumbnail")
     val thumbnail: String = "",
+    @Json(name = "user_id")
+    val userId: String = "",
     @Json(name = "nickname")
-    val nickname: String = "",
+    val nickname: String = "NiCKNAME",
     @Json(name = "score")
     val score: Int = 0
 ) {

@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.group_details
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,10 +50,6 @@ internal fun GroupBottomNavBar(
     userGroupType: UserGroupType,
     onRankingClick: () -> Unit,
 ) {
-    val px = LocalDensity.current.run {
-        20.dp.toPx()
-    }
-    Log.d("BottomBar", "20dp - pixel: $px")
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)

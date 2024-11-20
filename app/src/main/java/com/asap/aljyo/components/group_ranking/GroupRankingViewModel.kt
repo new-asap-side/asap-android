@@ -1,5 +1,6 @@
 package com.asap.aljyo.components.group_ranking
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -21,6 +22,7 @@ class GroupRankingViewModel @AssistedInject constructor(
     val state get() = _state
 
     init {
+        Log.d("GroupRankingViewModel", "viewModel init block groupId: $groupId")
         viewModelScope.launch {
             fetchGroupRankingUseCase.invoke(groupId).catch {
                 // TODO 에러 처리

@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.components.group_ranking.GroupRankingViewModel
 import com.asap.aljyo.di.ViewModelFactoryProvider
@@ -44,12 +45,6 @@ internal fun RankingScreen(
     groupId: Int
 ) {
     val context = LocalContext.current
-    val factory = EntryPointAccessors.fromActivity(
-        context as Activity,
-        ViewModelFactoryProvider::class.java
-    ).groupRankingViewModelFactory()
-
-    val viewModel = factory.create(groupId = groupId)
 
     SideEffect {
         val activity = (context as ComponentActivity)
@@ -60,6 +55,19 @@ internal fun RankingScreen(
             ),
         )
     }
+
+    val factory = EntryPointAccessors.fromActivity(
+        context as Activity,
+        ViewModelFactoryProvider::class.java
+    ).groupRankingViewModelFactory()
+
+    val viewModel: GroupRankingViewModel = viewModel(
+        factory = GroupRankingViewModel.provideGroupRankingViewModelFactory(
+            factory = factory,
+            groupId = groupId
+        )
+    )
+
     AljyoTheme {
         Scaffold(
             topBar = {

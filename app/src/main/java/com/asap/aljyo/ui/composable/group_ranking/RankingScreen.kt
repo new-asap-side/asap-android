@@ -5,14 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,9 +26,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,10 +53,13 @@ import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
+import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,6 +80,80 @@ internal fun RankingScreen(
     }
 
     AljyoTheme {
+        var showBottomSheet by remember { mutableStateOf(false) }
+        val sheetState = rememberModalBottomSheetState()
+        val coroutineScope = rememberCoroutineScope()
+
+        val hideSheet = {
+            coroutineScope.launch {
+                sheetState.hide()
+            }.invokeOnCompletion {
+                if (!sheetState.isVisible) {
+                    showBottomSheet = false
+                }
+            }
+        }
+
+        if (showBottomSheet) {
+            BottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = { showBottomSheet = false },
+                arrangement = Arrangement.spacedBy(16.dp),
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.select_time),
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontSize = 18.sp,
+                                color = Black01
+                            )
+                        )
+                        IconButton(
+                            onClick = { hideSheet() }
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "close"
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.rank_score_descript),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 16.sp,
+                        color = Black02
+                    )
+                )
+                Text(
+                    text = stringResource(R.string.no_points_score),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 16.sp,
+                        color = Black02
+                    )
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(10),
+                    onClick = { hideSheet() }
+                ) {
+                    Text(
+                        text = stringResource(R.string.confirm),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 16.sp,
+                            color = White
+                        )
+                    )
+                }
+            }
+        }
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -97,9 +185,7 @@ internal fun RankingScreen(
                     },
                     actions = {
                         IconButton(
-                            onClick = {
-                                // 시간 선택 bottom sheet
-                            }
+                            onClick = { showBottomSheet = true }
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_question_mark),

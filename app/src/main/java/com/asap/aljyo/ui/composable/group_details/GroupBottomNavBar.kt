@@ -13,15 +13,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +44,7 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
@@ -75,6 +79,7 @@ internal fun GroupBottomNavBar(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ParticipantBottomBar(
     modifier: Modifier = Modifier,
@@ -85,9 +90,22 @@ private fun ParticipantBottomBar(
     var popupWidth by remember { mutableIntStateOf(0) }
     var popupOffset by remember { mutableStateOf(IntOffset.Zero) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val hide = {
+        coroutineScope.launch {
+            sheetState.hide()
+        }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                showBottomSheet = false
+            }
+        }
+    }
 
     if (showBottomSheet) {
         BottomSheet(
+            sheetState = sheetState,
             onDismissRequest = { showBottomSheet = false },
             title = {
                 Row(
@@ -103,7 +121,7 @@ private fun ParticipantBottomBar(
                         )
                     )
                     IconButton(
-                        onClick = { showBottomSheet = false }
+                        onClick = { hide() }
                     ) {
                         Icon(
                             Icons.Default.Close,

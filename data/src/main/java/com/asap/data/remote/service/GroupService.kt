@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface GroupService {
     @GET("/group/popular")
@@ -14,6 +15,6 @@ interface GroupService {
     @POST("/group/join")
     suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<Boolean>
 
-    @GET("/group/ranking")
-    suspend fun fetchGroupRanking(groupId: Int): Response<List<GroupRanking>>
+    @GET("/group/ranking?")
+    suspend fun fetchGroupRanking(@Query("groupId") groupId: Int): Response<List<GroupRanking>>
 }

@@ -68,9 +68,12 @@ internal fun AppNavHost() {
             )
         }
 
-        composable(route = ScreenRoute.ReleaseAlarm.route) {
+        composable(
+            route = ScreenRoute.ReleaseAlarm.route,
+        ) {
             ReleaseAlarmScreen()
         }
+
     }
 }
 

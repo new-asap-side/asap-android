@@ -63,4 +63,7 @@
     <string name="select_time">시간 선택</string>
     <string name="rank_score_descript">\u2022 알람 해제 성공 시 1등-1000점/ 2등-950점 / 3등-900점 / 4등-850점 / 5등-800점 / 6등-750점 / 7등-700점 / 8등-650점이 부여됩니다.</string>
     <string name="no_points_score">\u2022 알람을 해제하지 못하였을 시 점수는 부여되지 않습니다.</string>
+    <!-- Release alarm -->
+    <string name="drag_description">원을 옆으로 밀고\n오늘의 운세를 확인하세요!</string>
+    <string name="drag_to_release_alarm">옆으로 밀어서 알람 해제</string>
 </resources>

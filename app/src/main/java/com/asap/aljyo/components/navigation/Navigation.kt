@@ -25,7 +25,8 @@ internal fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.Onboarding.route,
+//        startDestination = ScreenRoute.Onboarding.route,
+        startDestination = ScreenRoute.ReleaseAlarm.route,
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
             OnboardingScreen(

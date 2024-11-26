@@ -1,7 +1,6 @@
 package com.asap.aljyo.ui.composable.alarm_result
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +16,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 
 private val colors = listOf(

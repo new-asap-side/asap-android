@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.White
 import kotlin.random.Random
 
 sealed class AlarmIllustration(
@@ -72,7 +74,8 @@ private val fortunes = listOf(
 @Composable
 internal fun FortuneCard(
     modifier: Modifier = Modifier,
-    index: Int
+    index: Int,
+    rank: Int
 ) {
     val fortune by remember { mutableStateOf(fortunes[index]) }
 
@@ -94,6 +97,24 @@ internal fun FortuneCard(
                 )
                 .aspectRatio(280f / 321f, false)
         ) {
+            Box(
+                modifier = Modifier
+                    .size(62.dp)
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-31).dp)
+                    .paint(painter = painterResource(R.drawable.ic_hexagon))
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = stringResource(R.string.alarm_rank, rank),
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontSize = 24.sp,
+                        color = White
+                    )
+                )
+
+            }
+
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -137,7 +158,8 @@ private fun Preview() {
         val index = Random.run { nextInt(fortunes.size) }
         FortuneCard(
             modifier = Modifier.fillMaxWidth(),
-            index = index
+            index = index,
+            rank = 1
         )
     }
 }

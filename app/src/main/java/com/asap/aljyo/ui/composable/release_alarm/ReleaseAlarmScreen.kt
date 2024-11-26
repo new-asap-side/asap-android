@@ -18,6 +18,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -48,9 +51,18 @@ private val illusts = listOf(
     R.drawable.img_illust_cloud,
 )
 
+
 @Composable
-internal fun ReleaseAlarmScreen() {
+internal fun ReleaseAlarmScreen(
+    navigateToResult: (Int) -> Unit
+) {
+    val index by rememberSaveable {
+        mutableIntStateOf(Random.run { nextInt(illusts.size) })
+    }
+    val navigateToResultByIndex = { navigateToResult(index) }
+
     val context = LocalContext.current
+
     SideEffect {
         val activity = context as ComponentActivity
         activity.enableEdgeToEdge(
@@ -66,7 +78,6 @@ internal fun ReleaseAlarmScreen() {
 
     AljyoTheme {
         Scaffold { paddingValues ->
-            val index = Random.run { nextInt(illusts.size) }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -115,7 +126,8 @@ internal fun ReleaseAlarmScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight(),
-                        resourceId = illusts[index]
+                        resourceId = illusts[index],
+                        navigateToResult = navigateToResultByIndex,
                     )
                 }
 

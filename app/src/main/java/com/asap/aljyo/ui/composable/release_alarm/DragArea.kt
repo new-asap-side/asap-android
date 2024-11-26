@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -49,13 +50,16 @@ private val arrowStroke = 4.dp
 @Composable
 internal fun DragArea(
     modifier: Modifier,
-    resourceId: Int
+    resourceId: Int,
+    navigateToResult: () -> Unit
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var draggedOffset by remember { mutableFloatStateOf(0f) }
+        val minimumOffset = LocalDensity.current.run { 180.dp.toPx() }
+
         val blur = animateDpAsState(
             if (draggedOffset == 0f) 30.dp else 0.dp,
             label = "Blur"
@@ -82,6 +86,10 @@ internal fun DragArea(
                                 draggedOffset = 0f
                             },
                             onDragEnd = {
+                                if (draggedOffset >= minimumOffset) {
+                                    navigateToResult()
+                                    return@detectDragGestures
+                                }
                                 draggedOffset = 0f
                             }
                         ) { _, dragAmount ->
@@ -196,7 +204,8 @@ private fun Preview() {
             modifier = Modifier
                 .width(300.dp)
                 .wrapContentHeight(),
-            resourceId = R.drawable.img_illust_water_drop
+            resourceId = R.drawable.img_illust_water_drop,
+            navigateToResult = {}
         )
     }
 }

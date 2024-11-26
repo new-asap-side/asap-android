@@ -66,4 +66,13 @@
     <!-- Release alarm -->
     <string name="drag_description">원을 옆으로 밀고\n오늘의 운세를 확인하세요!</string>
     <string name="drag_to_release_alarm">옆으로 밀어서 알람 해제</string>
+    <!-- Release alarm result -->
+    <string name="title_water_drop">비온 뒤 언제나 맑음!</string>
+    <string name="description_water_drop">비가 그치고 더욱 단단해질 거에요.</string>
+    <string name="title_flower">행복이란 꽃길!</string>
+    <string name="description_flower">마음 가는 곳마다 꽃길이 될 거에요.</string>
+    <string name="title_rainbow">반짝반짝 무지개!</string>
+    <string name="description_rainbow">꿈과 희망이 반짝거릴 거에요.</string>
+    <string name="title_cloud">콩닥콩닥 설레임의 방울</string>
+    <string name="description_cloud">설레는 일이 가득할 거 같아요!</string>
 </resources>

@@ -2,6 +2,7 @@
     <string name="app_name">aljyo</string>
     <!-- Common -->
     <string name="confirm">확인</string>
+    <string name="finish">완료</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>

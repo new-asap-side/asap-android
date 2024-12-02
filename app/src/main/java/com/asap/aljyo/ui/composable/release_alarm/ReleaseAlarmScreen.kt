@@ -69,6 +69,10 @@ internal fun ReleaseAlarmScreen(
             statusBarStyle = SystemBarStyle.light(
                 Color.TRANSPARENT,
                 Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
             )
         )
 
@@ -84,6 +88,8 @@ internal fun ReleaseAlarmScreen(
                     .background(brush = Brush.linearGradient(colors))
                     .padding(paddingValues)
             ) {
+                val content: AlarmContent = AlarmContent.SelectCard
+
                 Column(
                     modifier = Modifier
                         .padding(vertical = 40.dp)
@@ -102,7 +108,7 @@ internal fun ReleaseAlarmScreen(
                     Spacer(modifier = Modifier.height(50.dp))
 
                     Text(
-                        text = stringResource(R.string.drag_description),
+                        text = stringResource(content.descriptionId),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontSize = 24.sp,
                             color = White
@@ -113,7 +119,7 @@ internal fun ReleaseAlarmScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = stringResource(R.string.drag_to_release_alarm),
+                        text = stringResource(content.titleId),
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontSize = 18.sp,
                             color = White
@@ -122,13 +128,21 @@ internal fun ReleaseAlarmScreen(
 
                     Spacer(modifier = Modifier.height(40.dp))
 
-                    DragArea(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        resourceId = illusts[index],
-                        navigateToResult = navigateToResultByIndex,
-                    )
+                    when (content) {
+                        AlarmContent.Drag ->
+                            DragArea(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight(),
+                                resourceId = illusts[index],
+                                navigateToResult = navigateToResultByIndex,
+                            )
+                        AlarmContent.SelectCard ->
+                            SelectCardArea(
+                                resourceId = illusts[index],
+                                navigateToResult = navigateToResultByIndex
+                            )
+                    }
                 }
 
             }

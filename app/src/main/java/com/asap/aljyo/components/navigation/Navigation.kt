@@ -26,8 +26,7 @@ internal fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-//        startDestination = ScreenRoute.Onboarding.route,
-        startDestination = ScreenRoute.ReleaseAlarm.route,
+        startDestination = ScreenRoute.Onboarding.route,
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
             OnboardingScreen(
@@ -116,7 +115,15 @@ fun MainNavHost(
         }
 
         composable(route = MainScreenRoute.AlarmList.route) {
-            AlarmListScreen()
+            AlarmListScreen(
+                navigateToHome = {
+                    navController.navigate(MainScreenRoute.Home.route) {
+                        popUpTo(MainScreenRoute.AlarmList.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         composable(route = MainScreenRoute.MyPage.route) {

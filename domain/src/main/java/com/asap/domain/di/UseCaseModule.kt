@@ -12,6 +12,8 @@ import com.asap.domain.usecase.user.CacheUserUseCase
 import com.asap.domain.usecase.user.CacheUserUseCaseImpl
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
+import com.asap.domain.usecase.user.FetchAlarmListUseCase
+import com.asap.domain.usecase.user.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
 import dagger.Binds
@@ -56,4 +58,9 @@ interface UseCaseModule {
     fun bindFetchGroupRankingUseCase(
         fetchGroupRankingUseCaseImpl: FetchGroupRankingUseCaseImpl
     ): FetchGroupRankingUseCase
+
+    @Binds
+    fun bindFetchAlarmListUseCase(
+        fetchAlarmListUseCaseImpl: FetchAlarmListUseCaseImpl
+    ): FetchAlarmListUseCase
 }

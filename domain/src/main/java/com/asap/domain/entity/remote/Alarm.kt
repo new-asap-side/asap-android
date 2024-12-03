@@ -10,12 +10,16 @@ sealed interface ReleaseAlarmContent {
 
 @JsonClass(generateAdapter = true)
 data class Alarm(
+    @Json(name = "group_id")
+    val groupId: Int,
+    @Json(name = "title")
+    val title: String,
     @Json(name = "time")
     val time: String,
-    @Json(name = "releaseType")
-    val releaseTypeString: String
+    @Json(name = "alarm_unlock_contents")
+    val alarmUnlockContents: String
 ) {
-    val releaseType get() = when (releaseTypeString) {
+    val unlockContents get() = when (alarmUnlockContents) {
         "drag" -> ReleaseAlarmContent.Drag
         "card" -> ReleaseAlarmContent.Card
         else -> throw Exception("Unknown release type.")

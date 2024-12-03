@@ -2,6 +2,7 @@ package com.asap.data.remote.datasource
 
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
+import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,5 +21,14 @@ class UserRemoteDataSource @Inject constructor(
             hashMapOf("kakaoAccessToken" to kakaoAccessToken)
         )
         emit(response.body())
+    }
+
+    suspend fun fetchAlarmList(): Flow<List<Alarm>?> = flow {
+        try {
+            val response = userService.fetchAlarmList()
+            emit(response.body())
+        } catch (e: Exception) {
+            emit(null)
+        }
     }
 }

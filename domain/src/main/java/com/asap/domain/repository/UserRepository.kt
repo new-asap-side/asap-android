@@ -2,6 +2,7 @@ package com.asap.domain.repository
 
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.kakao.sdk.auth.model.OAuthToken
 import kotlinx.coroutines.flow.Flow
@@ -18,4 +19,6 @@ interface UserRepository {
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 
     suspend fun fetchFCMToken()
+
+    suspend fun fetchUserAlarmList(): Flow<List<Alarm>?>
 }

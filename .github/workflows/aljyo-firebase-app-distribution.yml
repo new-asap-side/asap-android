@@ -44,3 +44,12 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     # debug build
     - name: Build debug
       run: ./gradlew assembleDebug
+
+    # Distribute to firebase
+    - name: Upload to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1
+      with:
+        appId: ${{secrets.FIREBASE_APP_ID}}
+        serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+        groups: Tester
+        file: app/build/outputs/apk/debug/app-debug.apk

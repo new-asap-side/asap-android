@@ -32,6 +32,12 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
       run: chmod +x ./gradlew
       shell: bash
 
+    # create google-services.json
     - name: Create google-services.json
       run: echo $GOOGLE_SERVICE_JSON > app/google-services.json
+
+    # create local.properties
+    - name: Create local.properties
+      run: |
+        echo $ALJO > local.properties 
 

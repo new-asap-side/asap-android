@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">알죠</string>
     <!-- Common -->
+    <string name="sir">%s님</string>
     <string name="confirm">확인</string>
     <string name="finish">완료</string>
     <string name="morning">오전</string>
@@ -87,6 +88,8 @@
     <!-- Alarm list -->
     <string name="empty_alarm">아직 생성된 알람이 없어요!</string>
     <string name="start_with_new_group">새로운 그룹과 시작해보아요</string>
+    <string name="after_time">%s시간 %s분 뒤</string>
+    <string name="the_alarm_goes_off">알람이 울려요</string>
     <string name="find_group">그룹 찾아보기</string>
     <string name="find_more_group">그룹 더 찾아보기</string>
 </resources>

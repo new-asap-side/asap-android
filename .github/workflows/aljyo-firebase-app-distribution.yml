@@ -15,7 +15,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     # ENV
     env:
       ALJO: ${{ secrets.ALJO }} # ALJO -> 외부 SDK 키 값
-      GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }} # repository secrets 값 설정
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }} # repository secrets 값 설정
       
     steps:
     - name: Checkout code
@@ -34,7 +34,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
 
     # create google-services.json
     - name: Create google-services.json
-      run: echo $GOOGLE_SERVICE_JSON > /home/runner/work/asap-android/asap-android/app/google-services.json
+      run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
 
     # create local.properties
     - name: Create local.properties

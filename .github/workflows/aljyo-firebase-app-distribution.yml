@@ -12,9 +12,11 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
   build: # This workflow contains a single job called "build"
     runs-on: ubuntu-latest # The type of runner that the job will run on
 
-    # env:
-      # ALJO_LOCAL_CONTENTS: ${{ secrets.ALJO }} # ALJO -> 외부 SDK 키 값
-      # GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }} # repository secrets 값 설정
+    # ENV
+    env:
+      ALJO_LOCAL_CONTENTS: ${{ secrets.ALJO }} # ALJO -> 외부 SDK 키 값
+      GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }} # repository secrets 값 설정
+      
     steps:
     - name: Checkout code
       uses: actions/checkout@v3

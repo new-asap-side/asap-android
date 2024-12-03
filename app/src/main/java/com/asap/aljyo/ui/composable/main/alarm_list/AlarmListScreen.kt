@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -107,7 +108,7 @@ internal fun AlarmListScreen(
                 is UiState.Success -> {
                     val alarmList = (uiState as UiState.Success).data
 
-                    if (alarmList?.isEmpty() == true) {
+                    if (alarmList.isEmpty()) {
                         Box(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -118,15 +119,16 @@ internal fun AlarmListScreen(
                                 navigateToHome = navigateToHome
                             )
                         }
-
                     } else {
-                        AlarmList(modifier = Modifier.fillMaxSize())
+                        AlarmList(
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            alarmList = alarmList,
+                            navigateToHome = navigateToHome
+                        )
                     }
                 }
             }
         }
-
-
     }
 }
 

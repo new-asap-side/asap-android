@@ -88,4 +88,5 @@
     <string name="empty_alarm">아직 생성된 알람이 없어요!</string>
     <string name="start_with_new_group">새로운 그룹과 시작해보아요</string>
     <string name="find_group">그룹 찾아보기</string>
+    <string name="find_more_group">그룹 더 찾아보기</string>
 </resources>

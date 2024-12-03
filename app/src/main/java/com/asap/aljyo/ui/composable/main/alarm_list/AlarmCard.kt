@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -38,9 +37,13 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.Alarm
 
 @Composable
-internal fun AlarmCard(modifier: Modifier = Modifier) {
+internal fun AlarmCard(
+    modifier: Modifier = Modifier,
+    alarm: Alarm
+) {
     var checked by remember { mutableStateOf(true) }
 
     val containerColor = if (checked) {
@@ -73,7 +76,7 @@ internal fun AlarmCard(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
-                text = "title",
+                text = alarm.title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 16.sp,
                     color = if (!checked) Black01 else contentColor
@@ -102,7 +105,7 @@ internal fun AlarmCard(modifier: Modifier = Modifier) {
                                 fontSize = 24.sp,
                             ),
                         ) {
-                            append("06:30")
+                            append(alarm.time)
                         }
                     },
                 )
@@ -129,7 +132,7 @@ internal fun AlarmCard(modifier: Modifier = Modifier) {
                     contentDescription = "Clock icon"
                 )
                 Text(
-                    "월 화 수 ",
+                    alarm.dates.joinToString(separator = " "),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp
                     )
@@ -146,7 +149,8 @@ private fun Preview() {
         AlarmCard(
             modifier = Modifier
                 .width(320.dp)
-                .wrapContentHeight()
+                .wrapContentHeight(),
+            alarm = Alarm()
         )
     }
 }

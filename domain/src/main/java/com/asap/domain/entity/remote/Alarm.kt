@@ -11,13 +11,15 @@ sealed interface ReleaseAlarmContent {
 @JsonClass(generateAdapter = true)
 data class Alarm(
     @Json(name = "group_id")
-    val groupId: Int,
+    val groupId: Int = 0,
     @Json(name = "title")
-    val title: String,
+    val title: String = "title",
     @Json(name = "time")
-    val time: String,
+    val time: String = "21:30",
+    @Json(name = "dates")
+    val dates: List<String> = listOf("월", "화", "수"),
     @Json(name = "alarm_unlock_contents")
-    val alarmUnlockContents: String
+    val alarmUnlockContents: String = "card"
 ) {
     val unlockContents get() = when (alarmUnlockContents) {
         "drag" -> ReleaseAlarmContent.Drag

@@ -16,10 +16,12 @@ import javax.inject.Inject
 class AlarmListViewModel @Inject constructor(
     private val fetchAlarmListUseCase: FetchAlarmListUseCase
 ) : ViewModel() {
-    private val _alarmList = MutableStateFlow<UiState<List<Alarm>?>>(UiState.Loading)
+    private val _alarmList = MutableStateFlow<UiState<List<Alarm>>>(UiState.Loading)
     val alarmList get() = _alarmList.asStateFlow()
 
-    init { fetchAlarmList() }
+    init {
+        fetchAlarmList()
+    }
 
     fun fetchAlarmList() = viewModelScope.launch {
         _alarmList.value = UiState.Loading
@@ -27,7 +29,9 @@ class AlarmListViewModel @Inject constructor(
             _alarmList.value = UiState.Error()
         }.collect { result ->
             if (result == null) {
-                _alarmList.value = UiState.Error()
+//                _alarmList.value = UiState.Error()
+                _alarmList.value =
+                    UiState.Success(listOf(Alarm(), Alarm(), Alarm(), Alarm(), Alarm(), Alarm()))
                 return@collect
             }
             _alarmList.value = UiState.Success(result)

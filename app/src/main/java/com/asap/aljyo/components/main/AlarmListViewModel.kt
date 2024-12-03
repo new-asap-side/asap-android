@@ -1,7 +1,5 @@
 package com.asap.aljyo.components.main
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
@@ -24,6 +22,7 @@ class AlarmListViewModel @Inject constructor(
     init { fetchAlarmList() }
 
     fun fetchAlarmList() = viewModelScope.launch {
+        _alarmList.value = UiState.Loading
         fetchAlarmListUseCase.invoke().catch {
             _alarmList.value = UiState.Error()
         }.collect { result ->

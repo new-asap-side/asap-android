@@ -1,60 +1,44 @@
 name: Aljo CI
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
+
+on: # Controls when the workflow will run
+  push: # Triggers the workflow on push or pull request events but only for the "main" branch
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+jobs: # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  build: # This workflow contains a single job called "build"
+    runs-on: ubuntu-latest # The type of runner that the job will run on
 
-
-    # repository secrets 값 설정
-    # ALJO -> 외부 SDK 키 값
     env:
-      ALJO_LOCAL_CONTENTS: ${{ secrets.ALJO }}
-      GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }}
+      ALJO_LOCAL_CONTENTS: ${{ secrets.ALJO }} # ALJO -> 외부 SDK 키 값
+      GOOGLE_SERVICE_JSON: ${{ secrets.GOOGLE_SERVICE_JSON }} # repository secrets 값 설정
       
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 
-      # JDK 17로 설정
-      - name: set up JDK 17
+      - name: set up JDK 17 # JDK 17로 설정
         uses: actions/setup-java@v1
         with:
           java-version: 17
 
-      # gradlew permissions 허용
       - name: Grant Permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
 
-      # jks decode 추가 필요
 
-      # secrets를 통해서 google-services.json 생성
-      - name: Create google-services.json
+      - name: Create google-services.json # secrets를 통해서 google-services.json 생성
         run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
 
-      # secrets를 통해서 local.properties 생성
-      - name: Create local.properties
+      - name: Create local.properties # secrets를 통해서 local.properties 생성
         run: |
           echo "$ALJO_LOCAL_CONTENTS" > local.properties
 
-      # 디버그 용 APK 빌드
       - name: Build debug
         run: ./gradlew assembleDebug
 
-      # firebase app distribution에 배포
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:

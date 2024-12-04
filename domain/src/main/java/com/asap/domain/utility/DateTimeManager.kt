@@ -19,11 +19,12 @@ object DateTimeManager {
         return now.format(dayFormatter)
     }
 
-    fun diffFromNow(input: String, isTest: Boolean = false): String {
-        val today = if (isTest)
+    fun diffFromNow(input: String, isTest: Boolean = false): Long {
+        val today = if (isTest) {
             parseToDayOfWeek("월요일")
-        else
+        } else {
             parseToDayOfWeek(formatCurrentTime().split(" ")[0])
+        }
 
         val startOfWeek = LocalDateTime.now().with(today)
 
@@ -38,11 +39,14 @@ object DateTimeManager {
                 startOfWeek.plusDays(parseDayOfWeek(today, "월요일")).toLocalDate(),
                 LocalTime.parse("12:30", timeFormatter)
             )
-        } else
+        } else {
             LocalDateTime.now()
+        }
 
-        val duration = ChronoUnit.MINUTES.between(now, targetDateTime)
+        return ChronoUnit.MINUTES.between(now, targetDateTime)
+    }
 
+    fun parseToDay(duration: Long): String {
         return if (duration < 0) {
             // 현재 시간이 12:00 일 경우
             // 다음 주 같은 날짜에 12:00 이전 시간에 대한 처리

@@ -44,18 +44,18 @@ object DateTimeManager {
         val duration = ChronoUnit.MINUTES.between(now, targetDateTime)
 
         return if (duration < 0) {
+            // 현재 시간이 12:00 일 경우
+            // 다음 주 같은 날짜에 12:00 이전 시간에 대한 처리
             val remainTime = 24 * 60 + duration
             val hours = remainTime / 60
             val minites = remainTime % 60
 
-            println("6일 ${hours}시간 ${minites}분")
             "6일 ${hours}시간 ${minites}분"
         } else {
             val days = (duration / 60) / 24
             val hours = (duration / 60) % 24
             val minites = duration % 60
 
-            println("${days}일 ${hours}시간 ${minites}분")
             "${days}일 ${hours}시간 ${minites}분"
         }
     }

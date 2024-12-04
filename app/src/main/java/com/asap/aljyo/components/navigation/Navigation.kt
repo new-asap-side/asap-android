@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.components.usersetting.UserSettingScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.main.MainScreen
 import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
@@ -45,6 +46,17 @@ internal fun AppNavHost() {
         composable(route = ScreenRoute.GroupDetails.route) {
             GroupDetailsScreen(
                 navController = navController
+            )
+        }
+
+        composable(route = ScreenRoute.UserSetting.route) {
+            UserSettingScreen(
+                navigateToMain = {
+                    navController.navigate(ScreenRoute.Main.route) {
+                        popUpTo(0) {inclusive = true}
+                    }
+                },
+                onBackClick = {}
             )
         }
     }

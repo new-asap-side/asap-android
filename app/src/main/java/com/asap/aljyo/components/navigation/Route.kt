@@ -10,6 +10,7 @@ sealed class ScreenRoute(val route: String) {
 
     data object GroupDetails : ScreenRoute(route = "GROUP_DETAILS")
 
+    data object UserSetting: ScreenRoute(route = "USER_SETTING_PROFILE")
 }
 
 // Main screen route

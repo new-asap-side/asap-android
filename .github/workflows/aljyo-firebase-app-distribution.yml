@@ -46,7 +46,6 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
       run: ./gradlew assembleDebug
 
     # Distribute to firebase
-    # refresh GCP KEY
     - name: Upload to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
       with:

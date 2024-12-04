@@ -3,9 +3,9 @@ package com.asap.domain.entity.remote
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-sealed interface ReleaseAlarmContent {
-    data object Drag : ReleaseAlarmContent
-    data object Card : ReleaseAlarmContent
+sealed interface AlarmUnlockContent {
+    data object Drag : AlarmUnlockContent
+    data object Card : AlarmUnlockContent
 }
 
 @JsonClass(generateAdapter = true)
@@ -22,8 +22,8 @@ data class Alarm(
     val alarmUnlockContents: String = "card"
 ) {
     val unlockContents get() = when (alarmUnlockContents) {
-        "drag" -> ReleaseAlarmContent.Drag
-        "card" -> ReleaseAlarmContent.Card
+        "drag" -> AlarmUnlockContent.Drag
+        "card" -> AlarmUnlockContent.Card
         else -> throw Exception("Unknown release type.")
     }
 }

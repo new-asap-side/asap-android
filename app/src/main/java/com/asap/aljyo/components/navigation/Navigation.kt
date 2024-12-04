@@ -26,13 +26,16 @@ internal fun AppNavHost() {
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
             OnboardingScreen(
-                onLoginComplete = {
+                navigateToMain = {
                     Log.d(TAG, "navigate to main")
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(route = ScreenRoute.Onboarding.route) {
                             inclusive = true
                         }
                     }
+                },
+                navigateToUserSetting = {
+                    navController.navigate(ScreenRoute.UserSetting.route)
                 }
             )
         }

@@ -34,19 +34,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
+import com.asap.aljyo.components.navigation.ScreenRoute
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.NicknameTextField
 import com.asap.aljyo.ui.composable.common.ProfileImagePicker
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
+import com.google.gson.annotations.Until
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserSettingScreen(
-    userSettingViewModel: UserSettingViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
+    navigateToMain: () -> Unit,
+    userSettingViewModel: UserSettingViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val launcher = rememberLauncherForActivityResult(
@@ -57,8 +62,8 @@ fun UserSettingScreen(
     )
     val userSettingState by userSettingViewModel.userSettingState.collectAsStateWithLifecycle()
     val buttonState = userSettingState.run {
-            msg == UserSettingMsgType.Success && selectedProfileImage != null
-        }
+        msg == UserSettingMsgType.Success && selectedProfileImage != null
+    }
 
     Scaffold(
         containerColor = White,
@@ -127,7 +132,10 @@ fun UserSettingScreen(
                 text = "확인",
                 textColor = Color.White,
                 backgroundColor = Red01,
-                onClick = {userSettingViewModel.saveUserProfile()},
+                onClick = {
+                    userSettingViewModel.saveUserProfile()
+                    navigateToMain()
+                },
                 enable = buttonState
             )
         }
@@ -137,8 +145,10 @@ fun UserSettingScreen(
 @Preview
 @Composable
 fun HomeScreenPreview() {
+    val navController = rememberNavController()
     AljyoTheme {
         UserSettingScreen(
+            navigateToMain = { navController.navigate(ScreenRoute.Main.route) },
             onBackClick = {}
         )
     }

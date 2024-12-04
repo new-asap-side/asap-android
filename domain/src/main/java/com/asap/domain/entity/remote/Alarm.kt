@@ -14,10 +14,10 @@ data class Alarm(
     val groupId: Int = 0,
     @Json(name = "title")
     val title: String = "title",
-    @Json(name = "time")
-    val time: String = "21:30",
-    @Json(name = "dates")
-    val dates: List<String> = listOf("월", "화", "수"),
+    @Json(name = "alarm_time")
+    val alarmTime: String = "21:30",
+    @Json(name = "alarm_day")
+    val alarmDay: String = "월",
     @Json(name = "alarm_unlock_contents")
     val alarmUnlockContents: String = "card"
 ) {

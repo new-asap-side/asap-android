@@ -65,7 +65,10 @@ class UserRepositoryImpl @Inject constructor(
         // profileImg를 DB에 저장시키면
         remoteDataSource.saveProfile(userId, nickname, profileImg)
             .also {
-                localDataSource.userDao().updateProfileImg(it?.profileImageUrl, userId)
+                localDataSource.userDao().apply {
+                    updateProfileImg(it?.profileImageUrl, userId)
+                    updateNickname(nickname, userId)
+                }
             }
     }
 

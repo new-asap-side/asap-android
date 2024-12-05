@@ -26,4 +26,6 @@ data class Alarm(
         "card" -> AlarmUnlockContent.Card
         else -> throw Exception("Unknown release type.")
     }
+
+    fun parse(day: String): String = "$day $alarmTime"
 }

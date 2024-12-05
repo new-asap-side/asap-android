@@ -1,5 +1,7 @@
 package com.asap.aljyo.components.navigation
 
+import kotlin.math.round
+
 
 // Application screen
 sealed class ScreenRoute(val route: String) {
@@ -17,6 +19,10 @@ sealed class ScreenRoute(val route: String) {
     data object AlarmResult : ScreenRoute(route = "ALARM_RESULT")
 
     data object UserSetting: ScreenRoute(route = "USER_SETTING_PROFILE")
+
+    data object GroupType: ScreenRoute(route = "GROUP_TYPE")
+
+    data object GroupCreate: ScreenRoute(route = "GROUP_CREATE")
 }
 
 // Main screen route

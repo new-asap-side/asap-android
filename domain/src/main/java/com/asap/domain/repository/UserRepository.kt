@@ -17,5 +17,13 @@ interface UserRepository {
 
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 
+    suspend fun checkNickname(nickname: String): Boolean?
+
+    suspend fun saveProfile(
+        userId: Int,
+        nickname: String,
+        profileImg: String
+    )
+
     suspend fun fetchFCMToken()
 }

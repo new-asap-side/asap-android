@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
@@ -31,12 +32,15 @@ internal fun AppNavHost() {
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
             OnboardingScreen(
-                onLoginComplete = {
+                navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(route = ScreenRoute.Onboarding.route) {
                             inclusive = true
                         }
                     }
+                },
+                navigateToUserSetting = {
+                    navController.navigate(ScreenRoute.UserSetting.route)
                 }
             )
         }
@@ -93,6 +97,17 @@ internal fun AppNavHost() {
         }
 
 
+
+        composable(route = ScreenRoute.UserSetting.route) {
+            UserSettingScreen(
+                navigateToMain = {
+                    navController.navigate(ScreenRoute.Main.route) {
+                        popUpTo(0) {inclusive = true}
+                    }
+                },
+                onBackClick = {}
+            )
+        }
     }
 }
 

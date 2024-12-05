@@ -1,5 +1,8 @@
 package com.asap.data.remote.datasource
 
+import com.asap.data.remote.request.SaveProfileRequest
+import com.asap.data.remote.response.CheckNicknameResponse
+import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.AuthKakaoResponse
@@ -20,5 +23,25 @@ class UserRemoteDataSource @Inject constructor(
             hashMapOf("kakaoAccessToken" to kakaoAccessToken)
         )
         emit(response.body())
+    }
+
+    suspend fun checkNickname(nickname: String): CheckNicknameResponse? {
+        return userService.checkNickname(
+            hashMapOf("nickName" to nickname)
+        ).body()
+    }
+
+    suspend fun saveProfile(
+        userId: Int,
+        nickname: String,
+        profileImg: String
+    ): SaveProfileResponse? {
+        val request = SaveProfileRequest(
+            userId = userId,
+            nickname = nickname,
+            profileImg = profileImg
+        )
+
+        return userService.saveProfile(request).body()
     }
 }

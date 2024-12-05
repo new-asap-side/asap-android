@@ -58,6 +58,7 @@ import com.asap.aljyo.ui.theme.Red02
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectGroupTypeScreen(
+    navigateToCreateGroup: () -> Unit,
     onBackClick: () -> Unit
 ) {
     var isSelected by remember { mutableIntStateOf(-1) }
@@ -149,7 +150,7 @@ fun SelectGroupTypeScreen(
                     .imePadding(),
                 text = "확인",
                 enable = buttonState,
-                onClick = {}
+                onClick = { navigateToCreateGroup() }
             )
         }
     }

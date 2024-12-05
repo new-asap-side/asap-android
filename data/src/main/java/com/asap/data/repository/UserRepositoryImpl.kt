@@ -2,6 +2,7 @@ package com.asap.data.repository
 
 import android.util.Log
 import com.asap.data.local.AppDatabase
+import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
@@ -18,7 +19,8 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
-    private val localDataSource: AppDatabase
+    private val localDataSource: AppDatabase,
+    private val sessionLocalDataSource: SessionLocalDataSource
 ) : UserRepository {
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> {
         return remoteDataSource.authKakao(kakaoAccessToken)
@@ -39,6 +41,9 @@ class UserRepositoryImpl @Inject constructor(
                 refreshToken = response.refreshToken,
             )
         )
+        // TokenDataStore 저장
+        sessionLocalDataSource.updateAccessToken(response.accessToken)
+        sessionLocalDataSource.updateAccessToken(response.refreshToken)
     }
 
     override suspend fun getUserInfo(): User {
@@ -48,6 +53,25 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
         remoteDataSource.resultCard
+
+    override suspend fun checkNickname(nickname: String): Boolean? {
+        return remoteDataSource.checkNickname(nickname)?.isPossible
+    }
+
+    override suspend fun saveProfile(
+        userId: Int,
+        nickname: String,
+        profileImg: String
+    ) {
+        // profileImg를 DB에 저장시키면
+        remoteDataSource.saveProfile(userId, nickname, profileImg)
+            .also {
+                localDataSource.userDao().apply {
+                    updateProfileImg(it?.profileImageUrl, userId)
+                    updateNickname(nickname, userId)
+                }
+            }
+    }
 
     override suspend fun fetchFCMToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(

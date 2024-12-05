@@ -16,6 +16,7 @@ sealed class ScreenRoute(val route: String) {
 
     data object AlarmResult : ScreenRoute(route = "ALARM_RESULT")
 
+    data object UserSetting: ScreenRoute(route = "USER_SETTING_PROFILE")
 }
 
 // Main screen route

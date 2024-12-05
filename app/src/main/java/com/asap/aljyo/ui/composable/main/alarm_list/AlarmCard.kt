@@ -105,7 +105,7 @@ internal fun AlarmCard(
                                 fontSize = 24.sp,
                             ),
                         ) {
-                            append(alarm.time)
+                            append(alarm.alarmTime)
                         }
                     },
                 )
@@ -132,7 +132,7 @@ internal fun AlarmCard(
                     contentDescription = "Clock icon"
                 )
                 Text(
-                    alarm.dates.joinToString(separator = " "),
+                    alarm.alarmDay,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.sp
                     )

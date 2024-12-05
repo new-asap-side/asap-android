@@ -19,6 +19,25 @@ object DateTimeManager {
         return now.format(dayFormatter)
     }
 
+    // 현재 요일을 기준으로
+    // input 정렬
+    fun sortByDay(input: List<String>, isTest: Boolean = false): List<String> {
+        val today = if(isTest) {
+            parseToDayOfWeek("월")
+        } else {
+            parseToDayOfWeek(formatCurrentTime().split(" ")[0])
+        }
+
+        return input.sortedWith(
+            compareBy(
+                { parseDayOfWeek(today, it.split(" ")[0]) },
+                { LocalTime.parse(it.split(" ")[1], timeFormatter) }
+            )
+        )
+    }
+
+    // 현재 시간을 기준으로
+    // input 시간까지 남은 시간을 분 단위로 반환
     fun diffFromNow(input: String, isTest: Boolean = false): Long {
         val today = if (isTest) {
             parseToDayOfWeek("월요일")
@@ -43,40 +62,26 @@ object DateTimeManager {
             LocalDateTime.now()
         }
 
-        return ChronoUnit.MINUTES.between(now, targetDateTime)
+        val duration = ChronoUnit.MINUTES.between(now, targetDateTime)
+        return if (duration < 0L) 24 * 60 * 7 + duration else duration
     }
 
+    // duration 60 -> 01시간 00분
     fun parseToDay(duration: Long): String {
-        return if (duration < 0) {
-            // 현재 시간이 12:00 일 경우
-            // 다음 주 같은 날짜에 12:00 이전 시간에 대한 처리
-            val remainTime = 24 * 60 + duration
-            val hours = String.format(
-                Locale.KOREAN,
-                "%02d",remainTime / 60
-            )
-            val minites = String.format(
-                Locale.KOREAN,
-                "%02d",remainTime % 60
-            )
+        val days = (duration / 60) / 24
+        val hours = String.format(
+            Locale.KOREAN,
+            "%02d", (duration / 60) % 24
+        )
+        val minites = String.format(
+            Locale.KOREAN,
+            "%02d", duration % 60
+        )
 
-            "6일 ${hours}시간 ${minites}분"
+        return if (days == 0L) {
+            "${hours}시간 ${minites}분"
         } else {
-            val days = (duration / 60) / 24
-            val hours = String.format(
-                Locale.KOREAN,
-                "%02d", (duration / 60) % 24
-            )
-            val minites = String.format(
-                Locale.KOREAN,
-                "%02d", duration % 60
-            )
-
-            if (days == 0L) {
-                "${hours}시간 ${minites}분"
-            } else {
-                "${days}일 ${hours}시간 ${minites}분"
-            }
+            "${days}일 ${hours}시간 ${minites}분"
         }
     }
 

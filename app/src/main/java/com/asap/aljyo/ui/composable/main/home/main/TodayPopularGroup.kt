@@ -28,7 +28,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 fun TodayPopularGroup(
     modifier: Modifier = Modifier,
     tabChange: (Int) -> Unit,
-    navigate: () -> Unit
+    navigate: (Int) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val popularListState = rememberLazyListState()
@@ -63,7 +63,7 @@ fun TodayPopularGroup(
                 GroupItem(
                     modifier = Modifier
                         .width(148.dp)
-                        .clickable { navigate() }
+                        .clickable { navigate(it) }
                 )
             }
         }

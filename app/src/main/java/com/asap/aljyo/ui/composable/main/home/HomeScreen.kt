@@ -23,7 +23,7 @@ import com.asap.aljyo.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onGroupItemClick: () -> Unit,
+    onGroupItemClick: (Int) -> Unit,
 ) {
     AljyoTheme {
         Scaffold(

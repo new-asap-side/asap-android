@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.asap.aljyo.ui.composable.group_details
 
 import android.graphics.Color
@@ -36,13 +34,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
+import com.asap.aljyo.components.navigation.ScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupDetailsScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    groupId: Int,
 ) {
     val context = LocalContext.current
     SideEffect {
@@ -117,7 +118,10 @@ fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .background(White)
                         .padding(20.dp),
-                    userGroupType = UserGroupType.Leader
+                    userGroupType = UserGroupType.Leader,
+                    onRankingClick = {
+                        navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
+                    }
                 )
             }
         ) { padding ->

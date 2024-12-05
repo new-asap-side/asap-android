@@ -1,4 +1,4 @@
-package com.asap.domain.utility
+package com.asap.data.utility
 
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -14,7 +14,7 @@ object DateTimeManager {
     // ex) 13:30
     private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREAN)
 
-    fun formatCurrentTime(): String {
+    private fun formatCurrentTime(): String {
         val now = LocalDateTime.now()
         return now.format(dayFormatter)
     }
@@ -51,16 +51,32 @@ object DateTimeManager {
             // 현재 시간이 12:00 일 경우
             // 다음 주 같은 날짜에 12:00 이전 시간에 대한 처리
             val remainTime = 24 * 60 + duration
-            val hours = remainTime / 60
-            val minites = remainTime % 60
+            val hours = String.format(
+                Locale.KOREAN,
+                "%02d",remainTime / 60
+            )
+            val minites = String.format(
+                Locale.KOREAN,
+                "%02d",remainTime % 60
+            )
 
             "6일 ${hours}시간 ${minites}분"
         } else {
             val days = (duration / 60) / 24
-            val hours = (duration / 60) % 24
-            val minites = duration % 60
+            val hours = String.format(
+                Locale.KOREAN,
+                "%02d", (duration / 60) % 24
+            )
+            val minites = String.format(
+                Locale.KOREAN,
+                "%02d", duration % 60
+            )
 
-            "${days}일 ${hours}시간 ${minites}분"
+            if (days == 0L) {
+                "${hours}시간 ${minites}분"
+            } else {
+                "${days}일 ${hours}시간 ${minites}분"
+            }
         }
     }
 

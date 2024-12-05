@@ -1,14 +1,8 @@
-package com.asap.domain
+package com.asap.data.utility
 
-import com.asap.domain.utility.DateTimeManager
 import org.junit.Test
 
 class UtilityTest {
-    @Test
-    fun dateTimeManagerTest() {
-        println(DateTimeManager.formatCurrentTime())
-    }
-
     @Test
     fun test_DateTimeManager_diff() {
         // 테스트 시 현재 시간은 월요일 12:30으로 고정됨

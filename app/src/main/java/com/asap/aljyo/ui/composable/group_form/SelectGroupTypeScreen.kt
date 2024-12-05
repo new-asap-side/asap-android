@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.CustomButton
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -93,8 +94,12 @@ fun SelectGroupTypeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            GroupProgressbar(
+                startProgress = 0.0f,
+                endProgress = 0.3f
+            )
             Text(
-                modifier = Modifier.padding(start = 20.dp),
+                modifier = Modifier.padding(start = 20.dp, top = 8.dp),
                 text = "어떤 알람을 만드시겠어요?",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,
@@ -279,5 +284,10 @@ fun PreviewBoxWithCheckButton() {
 @Composable
 @Preview
 fun PreviewSelectGroupTypeScreen() {
-
+    AljyoTheme {
+        SelectGroupTypeScreen(
+            navigateToCreateGroup = {},
+            onBackClick = {}
+        )
+    }
 }

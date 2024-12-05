@@ -85,7 +85,7 @@ fun BottomNavigationBar(
                     navController.navigate(item.route) {
                         navController.graph.startDestinationRoute?.let {
                             popUpTo(it) {
-                                saveState = true
+                                inclusive = true
                             }
                             launchSingleTop = true
                             restoreState = true

@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">aljyo</string>
+    <string name="app_name">알죠</string>
     <!-- Common -->
+    <string name="sir">%s님</string>
     <string name="confirm">확인</string>
     <string name="finish">완료</string>
+    <string name="morning">오전</string>
+    <string name="afternoon">오후</string>
+    <string name="load_fail">정보를 불러오는데 실패했습니다.\n잠시 후 다시 시도해 주세요.</string>
+    <string name="retry">재시도</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
@@ -80,4 +85,11 @@
     <string name="description_cloud">설레는 일이 가득할 거 같아요!</string>
     <string name="alarm_title">알람 제목</string>
     <string name="alarm_rank">%d등</string>
+    <!-- Alarm list -->
+    <string name="empty_alarm">아직 생성된 알람이 없어요!</string>
+    <string name="start_with_new_group">새로운 그룹과 시작해보아요</string>
+    <string name="after_time">%s시간 %s분 뒤</string>
+    <string name="the_alarm_goes_off">알람이 울려요</string>
+    <string name="find_group">그룹 찾아보기</string>
+    <string name="find_more_group">그룹 더 찾아보기</string>
 </resources>

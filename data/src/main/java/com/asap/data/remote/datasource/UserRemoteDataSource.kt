@@ -5,6 +5,7 @@ import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
+import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,6 +26,14 @@ class UserRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
+    suspend fun fetchAlarmList(): Flow<List<Alarm>> = flow {
+        val response = userService.fetchAlarmList()
+//        if(!response.isSuccessful) {
+//            throw HttpException(response)
+//        }
+        emit(response.body() ?: listOf())
+    }
+    
     suspend fun checkNickname(nickname: String): CheckNicknameResponse? {
         return userService.checkNickname(
             hashMapOf("nickName" to nickname)

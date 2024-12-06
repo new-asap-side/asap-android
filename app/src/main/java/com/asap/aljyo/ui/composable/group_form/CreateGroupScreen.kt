@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -27,6 +28,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +49,10 @@ import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
+import java.time.LocalDate
+import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +65,14 @@ fun CreateGroupScreen(
 
         }
     )
+
+    var selectedYear by remember { mutableIntStateOf(LocalDate.now().year) }
+    var selectedMonth by remember { mutableIntStateOf(LocalDate.now().monthValue) }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var titleText by remember { mutableStateOf("") }
+    var descriptionText by remember { mutableStateOf("") }
+    var groupValue by remember { mutableIntStateOf(1) }
+    val selectedDays = remember { mutableStateListOf<String>() }
 
     Scaffold(
         containerColor = White,
@@ -103,6 +121,42 @@ fun CreateGroupScreen(
                     )
                 }
             )
+
+            GroupInputField(
+                modifier = Modifier.fillMaxWidth(),
+                label = "그룹명",
+                value = descriptionText,
+                onValueChange = {descriptionText = it},
+                singleLine = true,
+                placeHolder = {
+                    Text(
+                        text = "그룹명을 입력해주세 (최대 30자 이내)",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 15.sp,
+                            color = Black04
+                        )
+                    )
+                },
+            )
+
+            GroupInputField(
+                modifier = Modifier.fillMaxWidth().height(128.dp),
+                label = "그룹 소개글",
+                value = titleText,
+                onValueChange = {titleText = it},
+                singleLine = false,
+                placeHolder = {
+                    Text(
+                        text = "내용을 입력해세요",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 15.sp,
+                            color = Black04
+                        )
+                    )
+                },
+            )
+
+
         }
     }
 }

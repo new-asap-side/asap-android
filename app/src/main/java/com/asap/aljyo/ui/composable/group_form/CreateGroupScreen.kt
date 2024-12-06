@@ -52,7 +52,6 @@ import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
 import java.time.LocalDate
-import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,7 +155,11 @@ fun CreateGroupScreen(
                 },
             )
 
-
+            MemberPicker(
+                value = groupValue,
+                onPlusClick = {groupValue = it},
+                onMinusClick = {groupValue = it}
+            )
         }
     }
 }

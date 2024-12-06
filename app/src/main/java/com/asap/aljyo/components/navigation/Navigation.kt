@@ -11,7 +11,7 @@ import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
-import com.asap.aljyo.ui.composable.group_form.SelectGroupTypeScreen
+import com.asap.aljyo.ui.composable.group_form.group_type.SelectGroupTypeScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
 import com.asap.aljyo.ui.composable.main.MainScreen
 import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen

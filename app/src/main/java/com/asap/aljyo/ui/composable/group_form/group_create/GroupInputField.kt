@@ -1,4 +1,4 @@
-package com.asap.aljyo.ui.composable.group_form
+package com.asap.aljyo.ui.composable.group_form.group_create
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

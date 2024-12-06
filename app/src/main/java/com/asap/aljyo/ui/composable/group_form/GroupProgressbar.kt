@@ -25,6 +25,7 @@ import com.asap.aljyo.ui.theme.Red01
 
 @Composable
 fun GroupProgressbar(
+    modifier: Modifier = Modifier,
     startProgress: Float,
     endProgress: Float
 ) {
@@ -44,7 +45,7 @@ fun GroupProgressbar(
     }
 
     Canvas(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(height)
     ) {

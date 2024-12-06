@@ -99,7 +99,7 @@ fun SelectGroupTypeScreen(
                 endProgress = 0.3f
             )
             Text(
-                modifier = Modifier.padding(start = 20.dp, top = 8.dp),
+                modifier = Modifier.padding(start = 20.dp, top = 16.dp),
                 text = "어떤 알람을 만드시겠어요?",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,

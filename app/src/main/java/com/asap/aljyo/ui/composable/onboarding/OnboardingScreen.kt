@@ -24,9 +24,15 @@ import com.asap.aljyo.components.onboarding.OnboardingViewModel
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.theme.AljyoTheme
 
+enum class SignupState {
+    NOT_REGISTERED,
+    REGISTERED
+}
+
 @Composable
 internal fun OnboardingScreen(
-    onLoginComplete: () -> Unit,
+    navigateToMain: () -> Unit,
+    navigateToUserSetting: () -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     AljyoTheme {
@@ -42,8 +48,8 @@ internal fun OnboardingScreen(
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         val permission = Manifest.permission.POST_NOTIFICATIONS
 
-                        val checkPermssion = ContextCompat.checkSelfPermission(context, permission)
-                        val granted = checkPermssion == PackageManager.PERMISSION_GRANTED
+                        val checkPermission = ContextCompat.checkSelfPermission(context, permission)
+                        val granted = checkPermission == PackageManager.PERMISSION_GRANTED
 
                         if (!granted) {
                             // 알람 권한 요청
@@ -51,7 +57,11 @@ internal fun OnboardingScreen(
                         }
                     }
 
-                    onLoginComplete()
+                    if ((state as RequestState.Success).data == SignupState.REGISTERED) {
+                        navigateToMain()
+                    } else {
+                        navigateToUserSetting()
+                    }
                 }
             }
 

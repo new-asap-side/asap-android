@@ -7,6 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
@@ -26,17 +27,19 @@ internal fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-//        startDestination = ScreenRoute.Onboarding.route,
-        startDestination = ScreenRoute.ReleaseAlarm.route,
+        startDestination = ScreenRoute.Onboarding.route,
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
             OnboardingScreen(
-                onLoginComplete = {
+                navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(route = ScreenRoute.Onboarding.route) {
                             inclusive = true
                         }
                     }
+                },
+                navigateToUserSetting = {
+                    navController.navigate(ScreenRoute.UserSetting.route)
                 }
             )
         }
@@ -93,6 +96,17 @@ internal fun AppNavHost() {
         }
 
 
+
+        composable(route = ScreenRoute.UserSetting.route) {
+            UserSettingScreen(
+                navigateToMain = {
+                    navController.navigate(ScreenRoute.Main.route) {
+                        popUpTo(0) {inclusive = true}
+                    }
+                },
+                onBackClick = {}
+            )
+        }
     }
 }
 
@@ -116,7 +130,15 @@ fun MainNavHost(
         }
 
         composable(route = MainScreenRoute.AlarmList.route) {
-            AlarmListScreen()
+            AlarmListScreen(
+                navigateToHome = {
+                    navController.navigate(MainScreenRoute.Home.route) {
+                        popUpTo(MainScreenRoute.AlarmList.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         composable(route = MainScreenRoute.MyPage.route) {

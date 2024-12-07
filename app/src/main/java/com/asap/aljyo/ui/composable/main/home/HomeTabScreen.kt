@@ -52,7 +52,7 @@ private val homeTabItems = listOf(
 @Composable
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
-    onGroupItemClick: () -> Unit,
+    onGroupItemClick: (Int) -> Unit,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
 

@@ -10,6 +10,13 @@ sealed class ScreenRoute(val route: String) {
 
     data object GroupDetails : ScreenRoute(route = "GROUP_DETAILS")
 
+    data object Ranking : ScreenRoute(route = "RANKING")
+
+    data object ReleaseAlarm : ScreenRoute(route = "RELEASE_ALARM")
+
+    data object AlarmResult : ScreenRoute(route = "ALARM_RESULT")
+
+    data object UserSetting: ScreenRoute(route = "USER_SETTING_PROFILE")
 }
 
 // Main screen route

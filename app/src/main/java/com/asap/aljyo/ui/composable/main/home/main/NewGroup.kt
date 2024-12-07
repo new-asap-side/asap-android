@@ -18,7 +18,7 @@ import com.asap.aljyo.ui.composable.main.home.GroupItem
 fun NewGroupList(
     modifier: Modifier = Modifier,
     tabChange: (Int) -> Unit,
-    navigate: () -> Unit,
+    navigate: (Int) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -40,7 +40,7 @@ fun NewGroupList(
             items(6) {
                 GroupItem(
                     modifier = Modifier.clickable {
-                        navigate()
+                        navigate(it)
                     }
                 )
             }

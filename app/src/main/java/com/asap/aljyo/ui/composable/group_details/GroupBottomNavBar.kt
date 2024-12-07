@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.group_details
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,22 +13,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +44,7 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
@@ -50,11 +52,8 @@ import kotlin.math.roundToInt
 internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType,
+    onRankingClick: () -> Unit,
 ) {
-    val px = LocalDensity.current.run {
-        20.dp.toPx()
-    }
-    Log.d("BottomBar", "20dp - pixel: $px")
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -66,30 +65,47 @@ internal fun GroupBottomNavBar(
 
             UserGroupType.Leader -> ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
-                isLeader = true
+                isLeader = true,
+                onRankingClick = onRankingClick
             )
 
             UserGroupType.Participant -> ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
-                isLeader = false
+                isLeader = false,
+                onRankingClick = onRankingClick
             )
         }
 
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ParticipantBottomBar(
     modifier: Modifier = Modifier,
     isLeader: Boolean,
+    onRankingClick: () -> Unit,
 ) {
     var showPopup by remember { mutableStateOf(true) }
     var popupWidth by remember { mutableIntStateOf(0) }
     var popupOffset by remember { mutableStateOf(IntOffset.Zero) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val hide = {
+        coroutineScope.launch {
+            sheetState.hide()
+        }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                showBottomSheet = false
+            }
+        }
+    }
 
     if (showBottomSheet) {
         BottomSheet(
+            sheetState = sheetState,
             onDismissRequest = { showBottomSheet = false },
             title = {
                 Row(
@@ -105,7 +121,7 @@ private fun ParticipantBottomBar(
                         )
                     )
                     IconButton(
-                        onClick = { showBottomSheet = false }
+                        onClick = { hide() }
                     ) {
                         Icon(
                             Icons.Default.Close,
@@ -199,7 +215,7 @@ private fun ParticipantBottomBar(
 
         },
         shape = RoundedCornerShape(10),
-        onClick = {}
+        onClick = onRankingClick
     ) {
         if (showPopup) {
             ConfirmRankingPopUp(
@@ -234,7 +250,8 @@ private fun ParticipantBottomBarPreview() {
         ) {
             ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
-                isLeader = true
+                isLeader = true,
+                onRankingClick = { }
             )
         }
     }

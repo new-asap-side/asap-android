@@ -13,9 +13,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,20 +27,19 @@ import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BottomSheet(
     modifier: Modifier = Modifier,
+    sheetState: SheetState,
     onDismissRequest: () -> Unit,
     arrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
     containerColor: Color = White,
     title: @Composable () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
     ModalBottomSheet(
         modifier = modifier,
         sheetState = sheetState,
@@ -59,12 +60,14 @@ internal fun BottomSheet(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun Preview() {
     AljyoTheme {
         BottomSheet(
             onDismissRequest = {},
+            sheetState = rememberModalBottomSheetState(),
             title = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

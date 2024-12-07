@@ -11,10 +11,14 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        defaultConfig {
+            buildConfigField("String", "TOKEN_DATASTORE_NAME","\"token_datastore\"")
+        }
     }
 
     buildTypes {
@@ -64,6 +68,9 @@ dependencies {
 
     // kakao
     implementation(libs.kakao.login)
+
+    // dataStore
+    implementation(libs.datastore.preferences)
 
     // firebase
     implementation(platform(libs.firebase.bom))

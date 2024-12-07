@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,6 +24,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // local.properties load
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+
+        val kakaoKey = localProperties.getProperty("kakao_native_app_key") ?: ""
+        // manifest key value 등록
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
     }
 
     buildTypes {
@@ -33,16 +48,21 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }

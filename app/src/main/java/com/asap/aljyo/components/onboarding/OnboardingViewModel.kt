@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.onboarding.SignupState
 import com.asap.domain.usecase.user.AuthKakaoUseCase
 import com.asap.domain.usecase.user.CacheUserUseCase
 import com.asap.domain.usecase.user.CheckCacheUserCase
@@ -21,7 +22,7 @@ class OnboardingViewModel @Inject constructor(
     private val cacheUserUseCase: CacheUserUseCase,
     private val checkCacheUserCase: CheckCacheUserCase
 ) : ViewModel() {
-    private val _state = MutableStateFlow<RequestState<Unit?>>(RequestState.Initial)
+    private val _state = MutableStateFlow<RequestState<SignupState>>(RequestState.Initial)
     val state get() = _state.asStateFlow()
 
     init {
@@ -29,7 +30,7 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             val cached = checkCacheUserCase.invoke()
             if (cached) {
-                _state.value = RequestState.Success(null)
+                _state.value = RequestState.Success(SignupState.REGISTERED)
             }
         }
     }
@@ -50,7 +51,7 @@ class OnboardingViewModel @Inject constructor(
             // 서버 토큰 Room DB 저장
             if(response != null) {
                 cacheUserUseCase.invoke(response)
-                _state.value = RequestState.Success(null)
+                _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
                 return@collect
             }
             _state.value = RequestState.Error()

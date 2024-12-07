@@ -1,12 +1,16 @@
 package com.asap.aljyo.ui.composable.group_form.group_create
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +21,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,12 +31,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -45,12 +53,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.CustomButton
+import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,10 +80,17 @@ fun CreateGroupScreen(
     var selectedYear by remember { mutableIntStateOf(LocalDate.now().year) }
     var selectedMonth by remember { mutableIntStateOf(LocalDate.now().monthValue) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    var selectedHour by remember { mutableStateOf("12") }
+    var selectedMinutes by remember { mutableStateOf("00") }
     var titleText by remember { mutableStateOf("") }
     var descriptionText by remember { mutableStateOf("") }
     var groupValue by remember { mutableIntStateOf(1) }
     val selectedDays = remember { mutableStateListOf<String>() }
+    var isShowBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+
+
 
     Scaffold(
         containerColor = White,
@@ -125,7 +144,7 @@ fun CreateGroupScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = "그룹명",
                 value = descriptionText,
-                onValueChange = {descriptionText = it},
+                onValueChange = { descriptionText = it },
                 singleLine = true,
                 placeHolder = {
                     Text(
@@ -139,10 +158,12 @@ fun CreateGroupScreen(
             )
 
             GroupInputField(
-                modifier = Modifier.fillMaxWidth().height(128.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(128.dp),
                 label = "그룹 소개글",
                 value = titleText,
-                onValueChange = {titleText = it},
+                onValueChange = { titleText = it },
                 singleLine = false,
                 placeHolder = {
                     Text(
@@ -157,8 +178,8 @@ fun CreateGroupScreen(
 
             MemberPicker(
                 value = groupValue,
-                onPlusClick = {groupValue = it},
-                onMinusClick = {groupValue = it}
+                onPlusClick = { groupValue = it },
+                onMinusClick = { groupValue = it }
             )
 
             WeekdayPicker(
@@ -169,6 +190,69 @@ fun CreateGroupScreen(
                     }
                 }
             )
+
+            TimePicker(
+                selectedHour = selectedHour,
+                selectedMinutes = selectedMinutes,
+                onClick = { isShowBottomSheet = true }
+            )
+
+            if (isShowBottomSheet) {
+                BottomSheet(
+                    sheetState = sheetState,
+                    onDismissRequest = { isShowBottomSheet = false },
+                    title = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 24.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "시간 선택",
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontSize = 18.sp,
+                                    color = Black01
+                                )
+                            )
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "close",
+                                modifier = Modifier
+                                    .clickable {
+                                        coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                                            if (!sheetState.isVisible) isShowBottomSheet = false
+                                        }
+                                    }
+                            )
+                        }
+                    },
+                    content = {
+                        Column {
+                            var tempHour = ""
+                            var tempMinutes = ""
+
+                            AlarmTimePicker(
+                                onHourSelected = { tempHour = it },
+                                onMinutesSelected = { tempMinutes = it }
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            CustomButton(
+                                text = "확인",
+                                enable = true,
+                                onClick = {
+                                    selectedHour = tempHour
+                                    selectedMinutes = tempMinutes
+                                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        if (!sheetState.isVisible) isShowBottomSheet = false
+                                    }
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                        }
+                    }
+                )
+            }
         }
     }
 }

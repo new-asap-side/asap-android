@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
@@ -141,11 +144,13 @@ fun CreateGroupScreen(
             )
 
             GroupInputField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .wrapContentHeight()
+                    .heightIn(min = 50.dp, max = 80.dp),
                 label = "그룹명",
                 value = descriptionText,
                 onValueChange = { descriptionText = it },
-                singleLine = true,
+                type = GROUP_TITLE,
                 placeHolder = {
                     Text(
                         text = "그룹명을 입력해주세 (최대 30자 이내)",
@@ -164,7 +169,7 @@ fun CreateGroupScreen(
                 label = "그룹 소개글",
                 value = titleText,
                 onValueChange = { titleText = it },
-                singleLine = false,
+                type = GROUP_DESCRIPTION,
                 placeHolder = {
                     Text(
                         text = "내용을 입력해세요",

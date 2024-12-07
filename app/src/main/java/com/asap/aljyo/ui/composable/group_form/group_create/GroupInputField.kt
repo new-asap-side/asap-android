@@ -21,15 +21,17 @@ import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 
+const val GROUP_TITLE = 0
+const val GROUP_DESCRIPTION = 1
+
 @Composable
 fun GroupInputField(
     modifier: Modifier = Modifier,
+    type: Int,
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
     placeHolder: @Composable () -> Unit,
-    singleLine: Boolean,
-    maxLine: Int = 1
 ) {
     Column {
         Text(
@@ -45,8 +47,8 @@ fun GroupInputField(
                 modifier = modifier,
                 value = value,
                 onValueChange = onValueChange,
-                singleLine = singleLine,
-                maxLines = maxLine,
+                singleLine = false,
+                maxLines = Int.MAX_VALUE,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Start,
                     fontSize = 15.sp,
@@ -62,7 +64,7 @@ fun GroupInputField(
                     cursorColor = Red01
                 ),
             )
-            if (!singleLine) {
+            if (type == GROUP_DESCRIPTION) {
                 Text(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)

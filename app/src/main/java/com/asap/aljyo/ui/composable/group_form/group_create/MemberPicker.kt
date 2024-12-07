@@ -7,19 +7,26 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -48,7 +55,7 @@ fun MemberPicker(
                     color = Grey02,
                     shape = RoundedCornerShape(6.dp)
                 )
-                .padding(vertical = 10.dp, horizontal = 16.dp)
+                .padding(horizontal = 16.dp)
         ) {
             Row(
                 modifier = Modifier,
@@ -103,5 +110,20 @@ fun MemberPicker(
                 }
             }
         }
+    }
+}
+
+@Preview(
+    showBackground = true
+)
+@Composable
+fun PreviewMemberPicker() {
+    var member by remember { mutableIntStateOf(1) }
+    AljyoTheme() {
+        MemberPicker(
+            value = member,
+            onPlusClick = { member++ },
+            onMinusClick = { member-- }
+        )
     }
 }

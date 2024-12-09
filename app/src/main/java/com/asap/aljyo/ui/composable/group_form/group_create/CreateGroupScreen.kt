@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -80,18 +81,28 @@ fun CreateGroupScreen(
         }
     )
 
-    var selectedYear by remember { mutableIntStateOf(LocalDate.now().year) }
-    var selectedMonth by remember { mutableIntStateOf(LocalDate.now().monthValue) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var selectedHour by remember { mutableStateOf("12") }
-    var selectedMinutes by remember { mutableStateOf("00") }
     var titleText by remember { mutableStateOf("") }
     var descriptionText by remember { mutableStateOf("") }
     var groupValue by remember { mutableIntStateOf(1) }
     val selectedDays = remember { mutableStateListOf<String>() }
+    var selectedHour by remember { mutableStateOf("12") }
+    var selectedMinutes by remember { mutableStateOf("00") }
+    var selectedYear by remember { mutableIntStateOf(LocalDate.now().year) }
+    var selectedMonth by remember { mutableIntStateOf(LocalDate.now().monthValue) }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var isShowBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+    val buttonState by remember {
+        derivedStateOf {
+            titleText.isNotBlank() &&
+                    descriptionText.isNotBlank() &&
+                    selectedDays.isNotEmpty() &&
+                    selectedYear > 0 &&
+                    selectedMonth in 1..12 &&
+                    selectedDate != null
+        }
+    }
 
 
 
@@ -144,7 +155,8 @@ fun CreateGroupScreen(
             )
 
             GroupInputField(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .wrapContentHeight()
                     .heightIn(min = 50.dp, max = 80.dp),
                 label = "그룹명",
@@ -225,9 +237,10 @@ fun CreateGroupScreen(
                                 contentDescription = "close",
                                 modifier = Modifier
                                     .clickable {
-                                        coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                                            if (!sheetState.isVisible) isShowBottomSheet = false
-                                        }
+                                        coroutineScope.launch { sheetState.hide() }
+                                            .invokeOnCompletion {
+                                                if (!sheetState.isVisible) isShowBottomSheet = false
+                                            }
                                     }
                             )
                         }
@@ -258,6 +271,7 @@ fun CreateGroupScreen(
                     }
                 )
             }
+
             CalendarView(
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
@@ -268,14 +282,24 @@ fun CreateGroupScreen(
                             selectedMonth = 1
                             selectedYear += 1
                         }
+
                         0 -> {
                             selectedMonth = 12
                             selectedYear -= 1
                         }
+
                         else -> selectedMonth = month
                     }
                 },
-                onDateSelected = {selectedDate = it},
+                onDateSelected = { selectedDate = it },
+            )
+
+            CustomButton(
+                modifier = Modifier
+                    .padding(bottom = 6.dp, top = 40.dp),
+                text = "다음",
+                enable = buttonState,
+                onClick = {}
             )
         }
     }

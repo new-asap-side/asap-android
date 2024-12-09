@@ -34,6 +34,8 @@ import androidx.core.view.WindowCompat
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.Alarm
+import com.asap.domain.entity.remote.AlarmUnlockContent
 import kotlin.random.Random
 import androidx.compose.ui.graphics.Color as compose
 
@@ -54,6 +56,7 @@ private val illusts = listOf(
 
 @Composable
 internal fun ReleaseAlarmScreen(
+    alarm: Alarm,
     navigateToResult: (Int) -> Unit
 ) {
     val index by rememberSaveable {
@@ -88,7 +91,10 @@ internal fun ReleaseAlarmScreen(
                     .background(brush = Brush.linearGradient(colors))
                     .padding(paddingValues)
             ) {
-                val content: AlarmContent = AlarmContent.SelectCard
+                val content: AlarmContent = when (alarm.content) {
+                    AlarmUnlockContent.Card -> AlarmContent.SelectCard
+                    AlarmUnlockContent.Drag -> AlarmContent.Drag
+                }
 
                 Column(
                     modifier = Modifier
@@ -97,7 +103,7 @@ internal fun ReleaseAlarmScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "09:30",
+                        text = alarm.alarmTime,
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontSize = 86.sp,
                             color = White
@@ -139,6 +145,9 @@ internal fun ReleaseAlarmScreen(
                             )
                         AlarmContent.SelectCard ->
                             SelectCardArea(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight(),
                                 resourceId = illusts[index],
                                 navigateToResult = navigateToResultByIndex
                             )

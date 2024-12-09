@@ -258,6 +258,25 @@ fun CreateGroupScreen(
                     }
                 )
             }
+            CalendarView(
+                selectedYear = selectedYear,
+                selectedMonth = selectedMonth,
+                selectedDate = selectedDate,
+                onMonthSelected = { month ->
+                    when (month) {
+                        13 -> {
+                            selectedMonth = 1
+                            selectedYear += 1
+                        }
+                        0 -> {
+                            selectedMonth = 12
+                            selectedYear -= 1
+                        }
+                        else -> selectedMonth = month
+                    }
+                },
+                onDateSelected = {selectedDate = it},
+            )
         }
     }
 }

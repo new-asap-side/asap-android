@@ -1,5 +1,6 @@
 package com.asap.aljyo.components.navigation
 
+import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -85,8 +86,12 @@ internal fun AppNavHost() {
             )
         ) { navBackstackEntry ->
             val arguments = navBackstackEntry.arguments
-            val alarm = arguments?.getParcelable(AlarmNavType.name, Alarm::class.java)
-                ?: throw IllegalArgumentException("Argument is null!")
+            val alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                arguments?.getParcelable(AlarmNavType.name, Alarm::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                arguments?.getParcelable(AlarmNavType.name)
+            } ?: throw IllegalArgumentException("Argument is null!")
 
             ReleaseAlarmScreen(
                 alarm = alarm,

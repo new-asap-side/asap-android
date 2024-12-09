@@ -107,7 +107,7 @@ fun AlarmSettingScreen(
 
             AlarmTypeBox(
                 selectedAlarmType = selectedAlarmType,
-                onSelected = { type, number -> selectedAlarmType = number }
+                onSelected = { type, value -> selectedAlarmType = value }
             )
 
             if (selectedAlarmType != 2) {
@@ -252,22 +252,28 @@ fun AlarmTypeBox(
             SelectBox(
                 modifier = Modifier.weight(1f),
                 text = "소리",
+                type = "sound",
+                value = 1,
                 isSelected = selectedAlarmType == 1,
-                onSelected = { onSelected("sound", 1) }
+                onSelected = onSelected
             )
 
             SelectBox(
                 modifier = Modifier.weight(1f),
                 text = "진동",
+                type = "vibration",
+                value = 2,
                 isSelected = selectedAlarmType == 2,
-                onSelected = { onSelected("vibration", 2) }
+                onSelected = onSelected
             )
 
             SelectBox(
                 modifier = Modifier.weight(1f),
                 text = "소리, 진동",
+                type = "all",
+                value = 3,
                 isSelected = selectedAlarmType == 3,
-                onSelected = { onSelected("all", 3) }
+                onSelected = onSelected
             )
 
         }
@@ -278,8 +284,10 @@ fun AlarmTypeBox(
 fun SelectBox(
     modifier: Modifier = Modifier,
     text: String,
+    type: String,
+    value: Int,
     isSelected: Boolean,
-    onSelected: () -> Unit
+    onSelected: (String, Int) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -294,7 +302,7 @@ fun SelectBox(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(color = Red01),
-                onClick = onSelected
+                onClick = { onSelected(type, value) }
             ),
         contentAlignment = Alignment.Center
     ) {

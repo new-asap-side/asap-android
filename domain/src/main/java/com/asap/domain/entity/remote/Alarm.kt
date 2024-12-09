@@ -22,12 +22,12 @@ data class Alarm(
     @Json(name = "alarm_day")
     val alarmDay: String = "월",
     @Json(name = "alarm_unlock_contents")
-    val alarmUnlockContents: String = "card"
+    val alarmUnlockContents: String = "drag"
 ): Parcelable {
     val content get() = when (alarmUnlockContents) {
         "drag" -> AlarmUnlockContent.Drag
         "card" -> AlarmUnlockContent.Card
-        else -> throw Exception("Unknown release type.")
+        else -> throw Exception("Unknown unlock alarm type.")
     }
 
     fun parse(day: String): String = "$day $alarmTime"

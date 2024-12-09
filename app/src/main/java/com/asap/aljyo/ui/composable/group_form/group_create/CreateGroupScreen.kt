@@ -127,8 +127,8 @@ fun CreateGroupScreen(
     ) { innerPadding ->
         GroupProgressbar(
             modifier = Modifier.padding(innerPadding),
-            startProgress = 0.3f,
-            endProgress = 0.6f
+            startProgress = 0.25f,
+            endProgress = 0.5f
         )
         Column(
             modifier = Modifier

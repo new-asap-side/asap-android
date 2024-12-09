@@ -36,7 +36,7 @@ fun GroupProgressbar(
         targetValue = targetValue,
         label = "",
         animationSpec = tween(
-            durationMillis = 600,
+            durationMillis = 700,
         )
     )
 

@@ -38,10 +38,12 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.CustomButton
+import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
@@ -73,11 +75,17 @@ fun AlarmTypeScreen(
             )
         }
     ) { innerPadding ->
+        GroupProgressbar(
+            modifier = Modifier.padding(innerPadding),
+            startProgress = 0.5f,
+            endProgress = 0.75f
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 16.dp)
         ) {
             Text(
                 text = "\"닉네임\"님만의 알람 방식을\n선택해주세요!",

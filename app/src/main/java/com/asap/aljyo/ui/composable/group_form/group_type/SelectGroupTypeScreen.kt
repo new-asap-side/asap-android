@@ -96,7 +96,7 @@ fun SelectGroupTypeScreen(
         ) {
             GroupProgressbar(
                 startProgress = 0.0f,
-                endProgress = 0.3f
+                endProgress = 0.25f
             )
             Text(
                 modifier = Modifier.padding(start = 20.dp, top = 16.dp),

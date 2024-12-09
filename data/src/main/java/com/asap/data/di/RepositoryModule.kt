@@ -1,7 +1,9 @@
 package com.asap.data.di
 
+import com.asap.data.repository.AuthRepositoryImpl
 import com.asap.data.repository.GroupRepositoryImpl
 import com.asap.data.repository.UserRepositoryImpl
+import com.asap.domain.repository.AuthRepository
 import com.asap.domain.repository.GroupRepository
 import com.asap.domain.repository.UserRepository
 import dagger.Binds
@@ -22,5 +24,10 @@ interface RepositoryModule {
     fun bindAlarmGroupRepository(
         groupRepositoryImpl: GroupRepositoryImpl
     ): GroupRepository
+
+    @Binds
+    fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 }
 

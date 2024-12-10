@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.navigation
+package com.asap.aljyo.core.components.navigation
 
 import android.os.Build
 import android.util.Log
@@ -8,9 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.asap.aljyo.components.usersetting.UserSettingScreen
+import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
-import com.asap.aljyo.components.navigation.navtype.AlarmNavType
+import com.asap.aljyo.core.components.navigation.navtype.AlarmNavType
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen

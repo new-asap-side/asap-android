@@ -1,7 +1,7 @@
-package com.asap.aljyo.components
+package com.asap.aljyo.core.components
 
 import android.app.Application
-import com.asap.aljyo.components.usersetting.UriUtil
+import com.asap.aljyo.core.components.usersetting.UriUtil
 import com.asap.aljyo.BuildConfig
 import com.asap.aljyo.core.notification.createNotificationChannel
 import com.kakao.sdk.common.KakaoSdk

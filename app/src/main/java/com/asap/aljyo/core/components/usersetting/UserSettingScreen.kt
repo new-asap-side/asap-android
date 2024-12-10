@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.usersetting
+package com.asap.aljyo.core.components.usersetting
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -37,7 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
-import com.asap.aljyo.components.navigation.ScreenRoute
+import com.asap.aljyo.core.components.navigation.ScreenRoute
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.NicknameTextField
 import com.asap.aljyo.ui.composable.common.ProfileImagePicker

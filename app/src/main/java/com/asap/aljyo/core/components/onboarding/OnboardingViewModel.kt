@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.onboarding
+package com.asap.aljyo.core.components.onboarding
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

@@ -50,7 +50,7 @@ import androidx.navigation.NavHostController
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.dialog.LeaveGroupDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
-import com.asap.aljyo.components.navigation.ScreenRoute
+import com.asap.aljyo.core.components.navigation.ScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02

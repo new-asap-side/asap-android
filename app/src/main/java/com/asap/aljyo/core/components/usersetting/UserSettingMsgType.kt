@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.usersetting
+package com.asap.aljyo.core.components.usersetting
 
 enum class UserSettingMsgType(val msg: String) {
     LengthError("닉네임은 2~8자 사이여야 합니다."),

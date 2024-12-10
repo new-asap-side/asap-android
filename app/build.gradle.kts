@@ -111,6 +111,7 @@ dependencies {
     // firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 
     // moshi
     implementation(libs.moshi.kotlin)

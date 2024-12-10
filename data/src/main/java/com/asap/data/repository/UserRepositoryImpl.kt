@@ -82,6 +82,7 @@ class UserRepositoryImpl @Inject constructor(
                 }
 
                 FCMTokenManager.token = task.result
+                Log.d(TAG, FCMTokenManager.token)
             }
         )
     }

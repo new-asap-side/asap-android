@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,11 +45,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -64,6 +67,7 @@ fun AlarmSettingScreen(
 ) {
     var selectedAlarmType by remember { mutableIntStateOf(0) }
     var sliderPosition by remember { mutableFloatStateOf(0f) }
+    var openAlertDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = White,
@@ -223,8 +227,20 @@ fun AlarmSettingScreen(
             CustomButton(
                 modifier = Modifier.padding(bottom = 6.dp),
                 text = "완료",
-                enable = selectedAlarmType != 0
-            ) { }
+                enable = selectedAlarmType != 0,
+                onClick = { openAlertDialog = true }
+            )
+            if (openAlertDialog) {
+                CustomAlertDialog(
+                    title = "그룹 생성 완료!",
+                    content = "6시간 후부터 알람이 울려요",
+                    onClick =  {
+                        openAlertDialog = false
+                        // 화면 이동
+                    },
+                    dialogImg = R.drawable.group_dialog_img
+                )
+            }
         }
     }
 }
@@ -373,3 +389,10 @@ fun AlarmSoundSlider(
     }
 }
 
+@Composable
+@Preview
+fun PreviewAlarmSettingScreen() {
+    AljyoTheme {
+        AlarmSettingScreen {  }
+    }
+}

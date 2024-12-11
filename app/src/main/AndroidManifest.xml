@@ -21,7 +21,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -50,6 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Deep link -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -57,8 +58,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="main"
-                    android:scheme="alarm" />
+                    android:host="release-alarm"
+                    android:scheme="aljyo" />
             </intent-filter>
         </activity>
 

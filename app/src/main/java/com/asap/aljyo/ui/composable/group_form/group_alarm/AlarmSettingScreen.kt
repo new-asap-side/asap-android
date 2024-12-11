@@ -1,8 +1,10 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -37,9 +40,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -55,6 +64,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
@@ -114,7 +124,7 @@ fun AlarmSettingScreen(
                 onSelected = { type, value -> selectedAlarmType = value }
             )
 
-            if (selectedAlarmType != 2) {
+            if (selectedAlarmType == 1 || selectedAlarmType == 3) {
                 Text(
                     modifier = Modifier.padding(top = 28.dp, bottom = 8.dp),
                     text = "알람음",
@@ -234,7 +244,7 @@ fun AlarmSettingScreen(
                 CustomAlertDialog(
                     title = "그룹 생성 완료!",
                     content = "6시간 후부터 알람이 울려요",
-                    onClick =  {
+                    onClick = {
                         openAlertDialog = false
                         // 화면 이동
                     },
@@ -335,6 +345,7 @@ fun SelectBox(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmSoundSlider(
     sliderPosition: Float,
@@ -359,7 +370,7 @@ fun AlarmSoundSlider(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 13.dp),
+                .padding(top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -374,10 +385,48 @@ fun AlarmSoundSlider(
                 valueRange = 1f..100f,
                 onValueChange = onValueChange,
                 colors = SliderDefaults.colors(
-                    thumbColor = White,
                     activeTrackColor = Red01,
                     inactiveTickColor = Grey03
                 ),
+                thumb = {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .shadow(4.dp, CircleShape)
+                            .background(color = White, shape = CircleShape)
+                    )
+                },
+                track = {
+                    Canvas(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                    ) {
+                        val trackHeight = 4.dp.toPx()
+                        val activeWidth = size.width * (sliderPosition / 100f)
+
+                        drawCircle(
+                            color = Red01,
+                            radius = trackHeight / 2,
+                            center = Offset(0f, center.y)
+                        )
+
+                        drawLine(
+                            color = Red01,
+                            start = Offset(0f, center.y),
+                            end = Offset(activeWidth, center.y),
+                            strokeWidth = trackHeight
+                        )
+
+                        drawLine(
+                            color = Grey03,
+                            start = Offset(activeWidth, center.y),
+                            end = Offset(size.width, center.y),
+                            strokeWidth = trackHeight,
+                            cap = StrokeCap.Round
+                        )
+                    }
+                }
             )
             Icon(
                 modifier = Modifier.padding(start = 16.dp),
@@ -393,6 +442,6 @@ fun AlarmSoundSlider(
 @Preview
 fun PreviewAlarmSettingScreen() {
     AljyoTheme {
-        AlarmSettingScreen {  }
+        AlarmSettingScreen { }
     }
 }

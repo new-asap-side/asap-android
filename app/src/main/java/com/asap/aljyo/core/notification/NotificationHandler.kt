@@ -1,14 +1,19 @@
 package com.asap.aljyo.core.notification
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
+import androidx.core.net.toUri
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.MainActivity
+import com.asap.aljyo.core.components.navigation.ScreenRoute
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -21,8 +26,19 @@ class AlarmNotificationHandler @Inject constructor(
     @ApplicationContext private val context: Context,
     private val moshi: Moshi
 ) : NotificationHandler {
+    private val uri = "aljyo://${ScreenRoute.ReleaseAlarm.route}"
+
     override fun showNotification(data: Map<String, String>) {
-        Log.d("Notification Handler", "notification handler moshi - $moshi")
+        val deeplinkIntent = Intent(
+            Intent.ACTION_VIEW,
+            "$uri/{}".toUri(),
+            context, MainActivity::class.java
+        )
+
+        val pendingIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(deeplinkIntent)
+            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
+        }
 
         val notificationId = context.getString(R.string.default_notification_channel_id)
         val notificationBuilder = NotificationCompat.Builder(
@@ -33,6 +49,7 @@ class AlarmNotificationHandler @Inject constructor(
             .setContentTitle("Hi")
             .setContentText("aljo alarm !")
             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {

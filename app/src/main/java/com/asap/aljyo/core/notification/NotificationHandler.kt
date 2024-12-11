@@ -14,7 +14,7 @@ import androidx.core.net.toUri
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.MainActivity
 import com.asap.aljyo.core.components.navigation.ScreenRoute
-import com.squareup.moshi.Moshi
+import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -24,14 +24,19 @@ interface NotificationHandler {
 
 class AlarmNotificationHandler @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val moshi: Moshi
 ) : NotificationHandler {
     private val uri = "aljyo://${ScreenRoute.ReleaseAlarm.route}"
 
     override fun showNotification(data: Map<String, String>) {
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        val json = gson.toJson(data)
+
         val deeplinkIntent = Intent(
             Intent.ACTION_VIEW,
-            "$uri/{}".toUri(),
+            "$uri/${json}".toUri(),
             context, MainActivity::class.java
         )
 
@@ -46,8 +51,8 @@ class AlarmNotificationHandler @Inject constructor(
             notificationId
         )
             .setSmallIcon(R.drawable.ic_aljo)
-            .setContentTitle("Hi")
-            .setContentText("aljo alarm !")
+            .setContentTitle("${data["title"]}")
+            .setContentText("${data["alarm_time"]}")
             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

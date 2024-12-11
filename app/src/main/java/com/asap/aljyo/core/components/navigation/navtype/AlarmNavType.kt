@@ -27,7 +27,7 @@ object AlarmNavType : NavType<Alarm>(false) {
             .add(KotlinJsonAdapterFactory())
             .build()
 
-        return moshi.adapter(Alarm::class.java).fromJson(value)
+        return moshi.adapter(Alarm::class.java).lenient().fromJson(value)
             ?: throw JsonParseException("Invalid json")
     }
 

@@ -1,8 +1,10 @@
 package com.asap.aljyo.ui.composable.release_alarm
 
+import android.app.Activity
 import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.BackHandler
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -85,6 +87,11 @@ internal fun ReleaseAlarmScreen(
 
     AljyoTheme {
         Scaffold { paddingValues ->
+            BackHandler {
+                val activity = context as ComponentActivity
+                activity.finish()
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()

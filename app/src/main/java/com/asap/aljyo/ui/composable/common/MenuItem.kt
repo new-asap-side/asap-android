@@ -1,4 +1,4 @@
-package com.asap.aljyo.ui.composable.main.my_page
+package com.asap.aljyo.ui.composable.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,19 +24,19 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Yellow
 
 @Composable
-internal fun MyPageMenuItem(
+internal fun MenuItem(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit = {},
     icon: @Composable () -> Unit,
 ) {
     Row(
-        modifier = modifier.clickable {
-            onClick()
-        }.padding(
-            vertical = 15.dp,
-            horizontal = 20.dp
-        ),
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(
+                vertical = 15.dp,
+                horizontal = 20.dp
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -68,7 +68,7 @@ internal fun MyPageMenuItem(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        MyPageMenuItem(
+        MenuItem(
             modifier = Modifier.fillMaxWidth(),
             title = "환경설정"
         ) {

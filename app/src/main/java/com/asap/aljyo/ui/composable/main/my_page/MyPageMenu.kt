@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.MenuItem
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import com.asap.aljyo.ui.theme.Yellow
@@ -30,7 +31,7 @@ internal fun MyPageMenu(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        MyPageMenuItem(
+        MenuItem(
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.preferences)
         ) {
@@ -41,7 +42,7 @@ internal fun MyPageMenu(
             )
         }
 
-        MyPageMenuItem(
+        MenuItem(
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.log_out)
         ) {

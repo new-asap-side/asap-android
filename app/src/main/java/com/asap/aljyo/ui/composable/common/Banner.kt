@@ -1,4 +1,4 @@
-package com.asap.aljyo.ui.composable.main.home.main
+package com.asap.aljyo.ui.composable.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -58,6 +58,7 @@ fun Banner(modifier: Modifier = Modifier) {
                             top = 20.dp,
                             bottom = 20.dp
                         )
+                        .background(Color(0xFFFFF2D8))
                 )
             }
         }

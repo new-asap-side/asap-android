@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.asap.aljyo.core.components.navigation.AppNavHost
+import com.asap.aljyo.core.navigation.AppNavHost
 import com.asap.aljyo.ui.theme.White
 import dagger.hilt.android.AndroidEntryPoint
 

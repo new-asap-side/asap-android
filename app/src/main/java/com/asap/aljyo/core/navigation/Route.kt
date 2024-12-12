@@ -1,4 +1,4 @@
-package com.asap.aljyo.core.components.navigation
+package com.asap.aljyo.core.navigation
 
 
 // Application screen

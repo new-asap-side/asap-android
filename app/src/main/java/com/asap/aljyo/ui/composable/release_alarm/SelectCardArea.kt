@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.manager.VibratorManager
+import com.asap.aljyo.core.manager.VibratorManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random

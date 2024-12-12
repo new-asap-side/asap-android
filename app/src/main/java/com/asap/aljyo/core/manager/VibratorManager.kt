@@ -1,4 +1,4 @@
-package com.asap.aljyo.core.components.manager
+package com.asap.aljyo.core.manager
 
 import android.content.Context
 import android.os.Build

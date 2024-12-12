@@ -28,7 +28,7 @@ internal fun MyPageMenu(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(36.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         MyPageMenuItem(
             modifier = Modifier.fillMaxWidth(),

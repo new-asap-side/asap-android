@@ -34,7 +34,7 @@ internal fun MyPageMenuItem(
         modifier = modifier.clickable {
             onClick()
         }.padding(
-            vertical = 5.dp,
+            vertical = 15.dp,
             horizontal = 20.dp
         ),
         verticalAlignment = Alignment.CenterVertically,

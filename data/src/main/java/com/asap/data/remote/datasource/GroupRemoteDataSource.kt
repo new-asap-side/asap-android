@@ -37,6 +37,7 @@ class GroupRemoteDataSource @Inject constructor(
         alarmUnlockContents: String,
         alarmVolume: Int,
         description: String,
+        deviceToken: String,
         deviceType: String,
         groupPassword: String,
         isPublic: Boolean,
@@ -53,13 +54,14 @@ class GroupRemoteDataSource @Inject constructor(
             alarmUnlockContents = alarmUnlockContents,
             alarmVolume = alarmVolume,
             description = description,
-            deviceType, deviceType,
+            deviceToken = deviceToken,
+            deviceType = deviceType,
             groupPassword = groupPassword,
             isPublic = isPublic,
             maxPerson = maxPerson,
             musicTitle = musicTitle,
             title = title,
-            userId
+            userId = userId
         )
         return groupService.postCreateGroup(groupCreateRequest).body()
     }

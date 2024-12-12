@@ -30,54 +30,56 @@ import com.asap.aljyo.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PreferencesScreen(
-    modifier: Modifier = Modifier,
-    onBackIconPressed: () -> Unit = {},
+    onBackIconPressed: () -> Unit,
 ) {
-    Scaffold(
-        modifier = modifier,
-        containerColor = White,
-        topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.wrapContentHeight(),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = White
-                ),
-                title = {
-                    Text(
-                        text = stringResource(R.string.preferences),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = Black01,
-                            fontSize = 16.sp
-                        ),
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBackIconPressed() }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "Back icon"
+    AljyoTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = White,
+            topBar = {
+                CenterAlignedTopAppBar(
+                    modifier = Modifier.wrapContentHeight(),
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = White
+                    ),
+                    title = {
+                        Text(
+                            text = stringResource(R.string.preferences),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = Black01,
+                                fontSize = 16.sp
+                            ),
                         )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { onBackIconPressed() }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_top_back),
+                                contentDescription = "Back icon"
+                            )
+                        }
                     }
-                }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            MenuItem(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.membership_withdrawal)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_leave_group),
-                    contentDescription = "Membership withdrawal icon"
                 )
             }
-            
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier.padding(paddingValues),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                MenuItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.membership_withdrawal),
+                    onClick = {}
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_leave_group),
+                        contentDescription = "Membership withdrawal icon"
+                    )
+                }
+
+            }
         }
     }
 }
@@ -86,8 +88,6 @@ internal fun PreferencesScreen(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        PreferencesScreen(
-            modifier = Modifier.fillMaxSize()
-        )
+        PreferencesScreen(onBackIconPressed = {})
     }
 }

@@ -28,7 +28,9 @@ import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-internal fun MyPageScreen() {
+internal fun MyPageScreen(
+    navigateToPreferences: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +66,8 @@ internal fun MyPageScreen() {
                     .fillMaxSize()
                     .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                     .background(White)
-                    .padding(vertical = 44.dp)
+                    .padding(vertical = 44.dp),
+                navigateToPreferences = navigateToPreferences
             )
 
             Box(
@@ -87,6 +90,6 @@ internal fun MyPageScreen() {
 @Composable
 private fun Preview() {
     AljyoTheme {
-        MyPageScreen()
+        MyPageScreen(navigateToPreferences = {})
     }
 }

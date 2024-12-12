@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
+import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
@@ -19,6 +19,7 @@ import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
 import com.asap.aljyo.ui.composable.main.home.HomeScreen
 import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
+import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
 import com.asap.domain.entity.remote.Alarm
 
@@ -124,6 +125,14 @@ internal fun AppNavHost() {
                 onBackClick = {}
             )
         }
+
+        composable(route = ScreenRoute.Preferences.route) {
+            PreferencesScreen(
+                onBackIconPressed = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }
 
@@ -159,7 +168,11 @@ fun MainNavHost(
         }
 
         composable(route = MainScreenRoute.MyPage.route) {
-            MyPageScreen()
+            MyPageScreen(
+                navigateToPreferences = {
+                    screenNavController.navigate(ScreenRoute.Preferences.route)
+                }
+            )
         }
     }
 }

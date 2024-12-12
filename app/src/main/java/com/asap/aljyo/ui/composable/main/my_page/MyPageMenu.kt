@@ -25,7 +25,8 @@ import com.asap.aljyo.ui.theme.Yellow
 
 @Composable
 internal fun MyPageMenu(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToPreferences: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -33,7 +34,8 @@ internal fun MyPageMenu(
     ) {
         MenuItem(
             modifier = Modifier.fillMaxWidth(),
-            title = stringResource(R.string.preferences)
+            title = stringResource(R.string.preferences),
+            onClick = { navigateToPreferences() }
         ) {
             Icon(
                 Icons.Default.Settings,
@@ -66,7 +68,8 @@ private fun Preview() {
                 .background(White)
                 .padding(
                     vertical = 44.dp
-                )
+                ),
+            navigateToPreferences = {}
         )
     }
 }

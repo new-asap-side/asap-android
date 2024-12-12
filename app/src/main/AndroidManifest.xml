@@ -42,7 +42,9 @@
         <activity
             android:name=".core.components.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.SplashScreen.Custom">
+            android:theme="@style/Theme.SplashScreen.Custom"
+            android:launchMode="singleTask"
+            android:clearTaskOnLaunch="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

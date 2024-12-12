@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -19,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.Banner
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey01
@@ -55,14 +58,28 @@ internal fun MyPageScreen() {
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        MyPageMenu(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(White)
-                .padding(vertical = 44.dp)
-                .weight(1f)
-        )
+        Box(modifier = Modifier.weight(1f)) {
+            MyPageMenu(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                    .background(White)
+                    .padding(vertical = 44.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 32.dp
+                    )
+            ) {
+                Banner(
+                    modifier = Modifier.clip(RoundedCornerShape(10.dp))
+                )
+            }
+        }
     }
 }
 

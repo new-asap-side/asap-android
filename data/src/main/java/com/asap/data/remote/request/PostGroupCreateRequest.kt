@@ -24,7 +24,7 @@ data class PostGroupCreateRequest(
     @Json(name = "device_type")
     val deviceType: String,
     @Json(name = "group_password")
-    val groupPassword: String,
+    val groupPassword: String?,
     @Json(name = "is_public")
     val isPublic: Boolean,
     @Json(name = "max_person")

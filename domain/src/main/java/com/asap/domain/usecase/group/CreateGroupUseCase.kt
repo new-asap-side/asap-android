@@ -18,7 +18,7 @@ class CreateGroupUseCase @Inject constructor(
         description: String,
         deviceToken: String,
         deviceType: String,
-        groupPassword: String,
+        groupPassword: String?,
         isPublic: Boolean,
         maxPerson: Int,
         musicTitle: String,

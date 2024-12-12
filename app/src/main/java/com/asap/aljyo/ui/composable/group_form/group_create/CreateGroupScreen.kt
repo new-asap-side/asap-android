@@ -77,7 +77,7 @@ fun CreateGroupScreen(
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-
+            // 선택한 이미지 처리
         }
     )
 
@@ -90,8 +90,10 @@ fun CreateGroupScreen(
     var selectedYear by remember { mutableIntStateOf(LocalDate.now().year) }
     var selectedMonth by remember { mutableIntStateOf(LocalDate.now().monthValue) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var isShowBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
+    var isShowTimeBottomSheet by remember { mutableStateOf(false) }
+    val timeSheetState = rememberModalBottomSheetState()
+    var isShowPhotoBottomSheet by remember { mutableStateOf(false) }
+    val photoSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     val buttonState by remember {
         derivedStateOf {
@@ -103,8 +105,6 @@ fun CreateGroupScreen(
                     selectedDate != null
         }
     }
-
-
 
     Scaffold(
         containerColor = White,
@@ -147,12 +147,100 @@ fun CreateGroupScreen(
             )
 
             GroupImagePicker(
-                onImagePickerClick = {
-                    imagePickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
+                onImagePickerClick = { isShowPhotoBottomSheet = true }
             )
+
+            if (isShowPhotoBottomSheet) {
+                BottomSheet(
+                    sheetState = photoSheetState,
+                    onDismissRequest = { isShowPhotoBottomSheet = false },
+                    title = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 28.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "이미지 변경",
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    fontSize = 18.sp,
+                                    color = Black01
+                                )
+                            )
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "close",
+                                modifier = Modifier
+                                    .clickable {
+                                        coroutineScope.launch { photoSheetState.hide() }
+                                            .invokeOnCompletion {
+                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
+                                                    false
+                                            }
+                                    }
+                            )
+                        }
+                    },
+                    content = {
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    imagePickerLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                    coroutineScope
+                                        .launch { photoSheetState.hide() }.invokeOnCompletion {
+                                            if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
+                                        }
+                                }
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_album),
+                                modifier = Modifier
+                                    .padding(end = 10.dp),
+                                contentDescription = "Album Icon",
+                                tint = Color.Unspecified
+                            )
+                            Text(
+                                text = "앨범에서 선택하기",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = 16.sp,
+                                    color = Black02
+                                )
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(28.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    // 이미지 랜덤 선택 로직
+                                    coroutineScope.launch { photoSheetState.hide() }
+                                        .invokeOnCompletion {
+                                            if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
+                                        }
+                                }
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_random),
+                                modifier = Modifier
+                                    .padding(bottom = 26.dp, end = 10.dp),
+                                contentDescription = "Random Icon",
+                                tint = Color.Unspecified
+                            )
+                            Text(
+                                text = "랜덤으로 바꾸기",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = 16.sp,
+                                    color = Black02
+                                )
+                            )
+                        }
+                    }
+                )
+            }
 
             GroupInputField(
                 modifier = Modifier
@@ -211,13 +299,13 @@ fun CreateGroupScreen(
             TimePicker(
                 selectedHour = selectedHour,
                 selectedMinutes = selectedMinutes,
-                onClick = { isShowBottomSheet = true }
+                onClick = { isShowTimeBottomSheet = true }
             )
 
-            if (isShowBottomSheet) {
+            if (isShowTimeBottomSheet) {
                 BottomSheet(
-                    sheetState = sheetState,
-                    onDismissRequest = { isShowBottomSheet = false },
+                    sheetState = timeSheetState,
+                    onDismissRequest = { isShowTimeBottomSheet = false },
                     title = {
                         Row(
                             modifier = Modifier
@@ -237,9 +325,10 @@ fun CreateGroupScreen(
                                 contentDescription = "close",
                                 modifier = Modifier
                                     .clickable {
-                                        coroutineScope.launch { sheetState.hide() }
+                                        coroutineScope.launch { timeSheetState.hide() }
                                             .invokeOnCompletion {
-                                                if (!sheetState.isVisible) isShowBottomSheet = false
+                                                if (!timeSheetState.isVisible) isShowTimeBottomSheet =
+                                                    false
                                             }
                                     }
                             )
@@ -261,9 +350,11 @@ fun CreateGroupScreen(
                                 onClick = {
                                     selectedHour = tempHour
                                     selectedMinutes = tempMinutes
-                                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                                        if (!sheetState.isVisible) isShowBottomSheet = false
-                                    }
+                                    coroutineScope.launch { timeSheetState.hide() }
+                                        .invokeOnCompletion {
+                                            if (!timeSheetState.isVisible) isShowTimeBottomSheet =
+                                                false
+                                        }
                                 }
                             )
                             Spacer(modifier = Modifier.height(6.dp))
@@ -332,16 +423,17 @@ fun GroupImagePicker(
                 .clip(CircleShape)
                 .background(color = White)
                 .padding(12.dp)
+                .clickable { onImagePickerClick() }
         ) {
             Icon(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .clickable { onImagePickerClick() },
+                    .align(Alignment.Center),
                 painter = painterResource(R.drawable.ic_select_photo),
                 contentDescription = "Group Image Picker Icon",
                 tint = Color.Unspecified,
             )
         }
+
     }
     Text(
         text = "사진을 등록하지 않는 경우 랜덤 이미지로 보여집니다",

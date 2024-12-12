@@ -1,7 +1,9 @@
 package com.asap.domain.entity.remote
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
 sealed interface AlarmUnlockContent {
     data object Drag : AlarmUnlockContent
@@ -9,6 +11,7 @@ sealed interface AlarmUnlockContent {
 }
 
 @JsonClass(generateAdapter = true)
+@Parcelize
 data class Alarm(
     @Json(name = "group_id")
     val groupId: Int = 0,
@@ -18,13 +21,13 @@ data class Alarm(
     val alarmTime: String = "21:30",
     @Json(name = "alarm_day")
     val alarmDay: String = "월",
-    @Json(name = "alarm_unlock_contents")
-    val alarmUnlockContents: String = "card"
-) {
-    val unlockContents get() = when (alarmUnlockContents) {
+    @Json(name = "alarm_unlock_content")
+    val alarmUnlockContents: String = "drag"
+): Parcelable {
+    val content get() = when (alarmUnlockContents) {
         "drag" -> AlarmUnlockContent.Drag
         "card" -> AlarmUnlockContent.Card
-        else -> throw Exception("Unknown release type.")
+        else -> throw Exception("Unknown unlock alarm type.")
     }
 
     fun parse(day: String): String = "$day $alarmTime"

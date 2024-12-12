@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.components.group_ranking.GroupRankingViewModel
+import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog

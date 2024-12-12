@@ -10,7 +10,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.asap.aljyo.components.main.HomeViewModel
+import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.ui.composable.main.home.GroupItem
 
 @Composable

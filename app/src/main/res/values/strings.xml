@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">알죠</string>
+    <!-- Notification channel -->
+    <string name="default_notification_channel_id">Aljo notification channel</string>
     <!-- Common -->
     <string name="yes">네</string>
     <string name="no">아니오</string>

@@ -30,6 +30,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -50,7 +51,7 @@ import androidx.navigation.NavHostController
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.dialog.LeaveGroupDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
-import com.asap.aljyo.components.navigation.ScreenRoute
+import com.asap.aljyo.core.components.navigation.ScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -86,6 +87,7 @@ fun GroupDetailsScreen(
 
         if (showBottomSheet) {
             BottomSheet(
+                sheetState = rememberModalBottomSheetState(),
                 onDismissRequest = {},
                 title = {
                     Row(

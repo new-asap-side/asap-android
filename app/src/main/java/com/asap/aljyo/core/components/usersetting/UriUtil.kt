@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.usersetting
+package com.asap.aljyo.core.components.usersetting
 
 import android.content.Context
 import android.net.Uri

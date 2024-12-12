@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.group_details
+package com.asap.aljyo.core.components.group_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

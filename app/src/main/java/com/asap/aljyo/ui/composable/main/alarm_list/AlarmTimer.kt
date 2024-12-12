@@ -25,7 +25,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
-import com.asap.aljyo.components.main.AlarmListViewModel
+import com.asap.aljyo.core.components.main.AlarmListViewModel
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 

@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.main
+package com.asap.aljyo.core.components.main
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

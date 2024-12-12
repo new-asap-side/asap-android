@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.group_ranking
+package com.asap.aljyo.core.components.group_ranking
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

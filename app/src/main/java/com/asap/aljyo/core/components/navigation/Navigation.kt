@@ -1,14 +1,16 @@
-package com.asap.aljyo.components.navigation
+package com.asap.aljyo.core.components.navigation
 
-import android.util.Log
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.asap.aljyo.core.components.navigation.navtype.AlarmNavType
+import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
@@ -18,9 +20,8 @@ import com.asap.aljyo.ui.composable.main.home.HomeScreen
 import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
+import com.asap.domain.entity.remote.Alarm
 
-
-private const val TAG = "ApplicationNavHost"
 
 @Composable
 internal fun AppNavHost() {
@@ -73,12 +74,31 @@ internal fun AppNavHost() {
         }
 
         composable(
-            route = ScreenRoute.ReleaseAlarm.route,
-        ) {
+            route = "${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}",
+            arguments = listOf(
+                navArgument(name = AlarmNavType.name) {
+                    type = AlarmNavType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "aljyo://${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}"
+                }
+            )
+        ) { navBackstackEntry ->
+            val arguments = navBackstackEntry.arguments
+            val alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                arguments?.getParcelable(AlarmNavType.name, Alarm::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                arguments?.getParcelable(AlarmNavType.name)
+            } ?: throw IllegalArgumentException("Argument is null!")
+
             ReleaseAlarmScreen(
+                alarm = alarm,
                 navigateToResult = { index ->
                     navController.navigate("${ScreenRoute.AlarmResult.route}/$index") {
-                        popUpTo(route = ScreenRoute.ReleaseAlarm.route) {
+                        popUpTo("${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}") {
                             inclusive = true
                         }
                     }
@@ -91,17 +111,14 @@ internal fun AppNavHost() {
             arguments = listOf(navArgument("illustIndex") { type = NavType.IntType })
         ) { backStackEntry ->
             val index = backStackEntry.arguments?.getInt("illustIndex") ?: 0
-            Log.d(TAG, "illust index: $index")
             AlarmResultScreen(illustIndex = index)
         }
-
-
 
         composable(route = ScreenRoute.UserSetting.route) {
             UserSettingScreen(
                 navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
-                        popUpTo(0) {inclusive = true}
+                        popUpTo(0) { inclusive = true }
                     }
                 },
                 onBackClick = {}

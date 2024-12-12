@@ -2,6 +2,7 @@ package com.asap.aljyo.ui.composable.alarm_result
 
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.BackHandler
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -119,6 +120,10 @@ internal fun AlarmResultScreen(
                 }
             }
         ) { paddingValues ->
+            BackHandler {
+                (context as ComponentActivity).finish()
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()

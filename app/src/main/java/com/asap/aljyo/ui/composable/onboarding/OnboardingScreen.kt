@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.asap.aljyo.components.onboarding.OnboardingViewModel
+import com.asap.aljyo.core.components.onboarding.OnboardingViewModel
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.theme.AljyoTheme
 

@@ -99,4 +99,6 @@
     <string name="the_alarm_goes_off">알람이 울려요</string>
     <string name="find_group">그룹 찾아보기</string>
     <string name="find_more_group">그룹 더 찾아보기</string>
+    <!-- My page -->
+    <string name="edit_my_info">내 정보 수정</string>
 </resources>

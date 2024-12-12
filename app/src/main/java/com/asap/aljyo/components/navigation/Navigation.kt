@@ -11,6 +11,9 @@ import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
+import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
+import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmTypeScreen
+import com.asap.aljyo.ui.composable.group_form.group_create.CreateGroupScreen
 import com.asap.aljyo.ui.composable.group_form.group_type.SelectGroupTypeScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
 import com.asap.aljyo.ui.composable.main.MainScreen
@@ -103,7 +106,7 @@ internal fun AppNavHost() {
             UserSettingScreen(
                 navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
-                        popUpTo(0) {inclusive = true}
+                        popUpTo(0) { inclusive = true }
                     }
                 },
                 onBackClick = {}
@@ -115,9 +118,28 @@ internal fun AppNavHost() {
                 navigateToCreateGroup = {
                     navController.navigate(ScreenRoute.GroupCreate.route)
                 },
-                onBackClick =  {
+                onBackClick = {
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable(route = ScreenRoute.GroupCreate.route) {
+            CreateGroupScreen(
+                onBackClick = {}
+            )
+        }
+
+        composable(route = ScreenRoute.AlarmType.route) {
+            AlarmTypeScreen(
+                onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) }
+            )
+        }
+
+        composable(route = ScreenRoute.AlarmSetting.route) {
+            AlarmSettingScreen(
+                onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) },
+                onCompleteClick = {}
             )
         }
     }

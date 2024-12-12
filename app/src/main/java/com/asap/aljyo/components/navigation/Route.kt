@@ -23,6 +23,10 @@ sealed class ScreenRoute(val route: String) {
     data object GroupType: ScreenRoute(route = "GROUP_TYPE")
 
     data object GroupCreate: ScreenRoute(route = "GROUP_CREATE")
+
+    data object AlarmType: ScreenRoute(route = "ALARM_TYPE")
+
+    data object AlarmSetting: ScreenRoute(route = "ALARM_TYPE")
 }
 
 // Main screen route

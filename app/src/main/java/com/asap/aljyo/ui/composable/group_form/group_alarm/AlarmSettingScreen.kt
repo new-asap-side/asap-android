@@ -73,7 +73,8 @@ import com.asap.aljyo.ui.theme.Red02
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmSettingScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onCompleteClick: () -> Unit
 ) {
     var selectedAlarmType by remember { mutableIntStateOf(0) }
     var sliderPosition by remember { mutableFloatStateOf(0f) }
@@ -246,7 +247,7 @@ fun AlarmSettingScreen(
                     content = "6시간 후부터 알람이 울려요",
                     onClick = {
                         openAlertDialog = false
-                        // 화면 이동
+                        onCompleteClick()
                     },
                     dialogImg = R.drawable.group_dialog_img
                 )
@@ -442,6 +443,9 @@ fun AlarmSoundSlider(
 @Preview
 fun PreviewAlarmSettingScreen() {
     AljyoTheme {
-        AlarmSettingScreen { }
+        AlarmSettingScreen(
+            onBackClick =  {},
+            onCompleteClick = {}
+        )
     }
 }

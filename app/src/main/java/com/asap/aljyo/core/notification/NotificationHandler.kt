@@ -38,7 +38,9 @@ class AlarmNotificationHandler @Inject constructor(
             Intent.ACTION_VIEW,
             "$uri/${json}".toUri(),
             context, MainActivity::class.java
-        )
+        ).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
 
         val pendingIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(deeplinkIntent)

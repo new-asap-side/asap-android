@@ -82,13 +82,12 @@ fun BottomNavigationBar(
         ) {
             bottomNavItems.forEach { item ->
                 val onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let {
-                            popUpTo(it) {
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            val previousRoute = currentRoute ?: MainScreenRoute.Home.route
+                            popUpTo(previousRoute) {
                                 inclusive = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 }

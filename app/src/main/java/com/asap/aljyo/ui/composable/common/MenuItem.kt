@@ -58,7 +58,7 @@ internal fun MenuItem(
 
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = "My page menu click icon"
+            contentDescription = "Menu click icon"
         )
     }
 

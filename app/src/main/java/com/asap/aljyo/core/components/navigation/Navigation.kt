@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.navigation.navtype.AlarmNavType
+import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
@@ -98,7 +98,7 @@ internal fun AppNavHost() {
                 alarm = alarm,
                 navigateToResult = { index ->
                     navController.navigate("${ScreenRoute.AlarmResult.route}/$index") {
-                        popUpTo(route = ScreenRoute.ReleaseAlarm.route) {
+                        popUpTo("${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}") {
                             inclusive = true
                         }
                     }

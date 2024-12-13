@@ -1,8 +1,6 @@
 package com.asap.aljyo.core.navigation
 
 import android.os.Build
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -131,12 +129,8 @@ internal fun AppNavHost() {
 
         composable(
             route = ScreenRoute.Preferences.route,
-            enterTransition = {
-                defaultEnterTransition()
-            },
-            exitTransition = {
-                defaultExitTransition()
-            },
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
             popEnterTransition = null
         ) {
             PreferencesScreen(
@@ -151,12 +145,8 @@ internal fun AppNavHost() {
 
         composable(
             route = ScreenRoute.Withdrawal.route,
-            enterTransition = {
-                defaultEnterTransition()
-            },
-            exitTransition = {
-                defaultExitTransition()
-            },
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
             popEnterTransition = null,
         ) {
             WithdrawalScreen(

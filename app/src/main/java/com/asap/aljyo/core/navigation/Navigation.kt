@@ -23,6 +23,7 @@ import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
+import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.domain.entity.remote.Alarm
 
 
@@ -131,18 +132,40 @@ internal fun AppNavHost() {
         composable(
             route = ScreenRoute.Preferences.route,
             enterTransition = {
-                return@composable defaultEnterTransition()
+                defaultEnterTransition()
             },
             exitTransition = {
-                return@composable defaultExitTransition()
-            }
+                defaultExitTransition()
+            },
+            popEnterTransition = null
         ) {
             PreferencesScreen(
                 onBackIconPressed = {
                     navController.popBackStack()
+                },
+                navigateToWithdrawal = {
+                    navController.navigate(ScreenRoute.Withdrawal.route)
                 }
             )
         }
+
+        composable(
+            route = ScreenRoute.Withdrawal.route,
+            enterTransition = {
+                defaultEnterTransition()
+            },
+            exitTransition = {
+                defaultExitTransition()
+            },
+            popEnterTransition = null,
+        ) {
+            WithdrawalScreen(
+                onBackIconPressed = {
+                    navController.popBackStack()
+                },
+            )
+        }
+
     }
 }
 

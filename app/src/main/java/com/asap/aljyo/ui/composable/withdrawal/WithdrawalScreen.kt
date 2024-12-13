@@ -25,7 +25,9 @@ import com.asap.aljyo.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun WithdrawalScreen() {
+internal fun WithdrawalScreen(
+    onBackIconPressed: () -> Unit
+) {
     Scaffold(
         containerColor = White,
         topBar = {
@@ -44,7 +46,7 @@ internal fun WithdrawalScreen() {
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {}
+                        onClick = { onBackIconPressed() }
                     ) {
                         Icon(
                             Icons.Default.Close,
@@ -67,6 +69,8 @@ internal fun WithdrawalScreen() {
 @Composable
 private fun Preview() {
     AljyoTheme {
-        WithdrawalScreen()
+        WithdrawalScreen(
+            onBackIconPressed = {}
+        )
     }
 }

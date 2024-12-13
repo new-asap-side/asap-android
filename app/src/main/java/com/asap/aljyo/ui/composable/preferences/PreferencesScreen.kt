@@ -31,6 +31,7 @@ import com.asap.aljyo.ui.theme.White
 @Composable
 internal fun PreferencesScreen(
     onBackIconPressed: () -> Unit,
+    navigateToWithdrawal: () -> Unit,
 ) {
     AljyoTheme {
         Scaffold(
@@ -71,7 +72,7 @@ internal fun PreferencesScreen(
                 MenuItem(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(R.string.membership_withdrawal),
-                    onClick = {}
+                    onClick = { navigateToWithdrawal() }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_leave_group),
@@ -88,6 +89,9 @@ internal fun PreferencesScreen(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        PreferencesScreen(onBackIconPressed = {})
+        PreferencesScreen(
+            onBackIconPressed = {},
+            navigateToWithdrawal = {}
+        )
     }
 }

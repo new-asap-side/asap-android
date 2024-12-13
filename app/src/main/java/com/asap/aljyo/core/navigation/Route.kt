@@ -19,6 +19,8 @@ sealed class ScreenRoute(val route: String) {
     data object UserSetting: ScreenRoute(route = "user-setting-profile")
 
     data object Preferences: ScreenRoute(route = "preferences")
+
+    data object Withdrawal: ScreenRoute(route = "withdrawal")
 }
 
 // Main screen route

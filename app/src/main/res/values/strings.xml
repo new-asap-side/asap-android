@@ -109,4 +109,12 @@
     <!-- Withdrawal -->
     <string name="really">정말</string>
     <string name="are_you_leave">탈퇴하실건가요?</string>
+    <string name="survey_title">탈퇴하시려는 이유를 알려주세요.\n적극 반영하여 개선하겠습니다!</string>
+    <string-array name="survey_list">
+        <item>다른 유사 서비스를 이용중이에요</item>
+        <item>사용하기 어려워요</item>
+        <item>사용을 잘 안하게 돼요</item>
+        <item>참여하고 싶은 그룹이 없어요</item>
+        <item>기타</item>
+    </string-array>
 </resources>

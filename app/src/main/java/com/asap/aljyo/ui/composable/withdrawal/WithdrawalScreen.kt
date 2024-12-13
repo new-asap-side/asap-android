@@ -2,6 +2,7 @@ package com.asap.aljyo.ui.composable.withdrawal
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -16,6 +17,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
@@ -58,8 +63,31 @@ internal fun WithdrawalScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).fillMaxSize()
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
         ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = buildAnnotatedString {
+                    append("${stringResource(R.string.really)} ")
+                    withStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        append(stringResource(R.string.app_name))
+                    }
+                    append("${stringResource(R.string.from)}\n")
+                    append(stringResource(R.string.are_you_leave))
+                },
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    color = Black01,
+                    fontSize = 20.sp,
+                    lineHeight = 28.sp
+                ),
+                textAlign = TextAlign.Center
+            )
 
         }
     }

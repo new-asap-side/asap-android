@@ -12,6 +12,7 @@
     <string name="afternoon">오후</string>
     <string name="load_fail">정보를 불러오는데 실패했습니다.\n잠시 후 다시 시도해 주세요.</string>
     <string name="retry">재시도</string>
+    <string name="from">를</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
@@ -105,4 +106,7 @@
     <string name="log_out">로그아웃</string>
     <!-- Preferences -->
     <string name="membership_withdrawal">회원탈퇴</string>
+    <!-- Withdrawal -->
+    <string name="really">정말</string>
+    <string name="are_you_leave">탈퇴하실건가요?</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.asap.aljyo.core.navigation
 
 import android.os.Build
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -126,7 +128,15 @@ internal fun AppNavHost() {
             )
         }
 
-        composable(route = ScreenRoute.Preferences.route) {
+        composable(
+            route = ScreenRoute.Preferences.route,
+            enterTransition = {
+                return@composable defaultEnterTransition()
+            },
+            exitTransition = {
+                return@composable defaultExitTransition()
+            }
+        ) {
             PreferencesScreen(
                 onBackIconPressed = {
                     navController.popBackStack()
@@ -167,7 +177,9 @@ fun MainNavHost(
             )
         }
 
-        composable(route = MainScreenRoute.MyPage.route) {
+        composable(
+            route = MainScreenRoute.MyPage.route,
+        ) {
             MyPageScreen(
                 navigateToPreferences = {
                     screenNavController.navigate(ScreenRoute.Preferences.route)

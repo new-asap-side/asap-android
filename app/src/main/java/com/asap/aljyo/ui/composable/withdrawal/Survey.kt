@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,12 +23,7 @@ import com.asap.aljyo.ui.theme.Grey01
 
 @Composable
 internal fun Survey(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.padding(
-            horizontal = 24.dp,
-            vertical = 20.dp
-        )
-    ) {
+    Column(modifier = modifier) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.survey_title),

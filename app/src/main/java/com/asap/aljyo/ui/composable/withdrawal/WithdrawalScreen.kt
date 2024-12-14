@@ -74,6 +74,10 @@ internal fun WithdrawalScreen(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 32.dp
+                    )
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -101,10 +105,13 @@ internal fun WithdrawalScreen(
 
                 Survey(
                     modifier = Modifier
-                        .padding(horizontal = 20.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Grey01)
+                        .padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        )
                 )
 
             }

@@ -117,4 +117,5 @@
         <item>참여하고 싶은 그룹이 없어요</item>
         <item>기타</item>
     </string-array>
+    <string name="etc_hint">(필수사항) 구체적인 이유를 적어주시면 많은 도움이 됩니다.</string>
 </resources>

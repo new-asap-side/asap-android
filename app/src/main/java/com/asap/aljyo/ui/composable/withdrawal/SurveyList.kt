@@ -76,6 +76,10 @@ internal fun SurveyList(
                     BasicTextField(
                         value = text,
                         onValueChange = { value ->
+                            if (value.contains("\n")) {
+                                return@BasicTextField
+                            }
+
                             if (value.length <= maxLength) {
                                 text = value
                             }

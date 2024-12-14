@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.withdrawal
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
 
@@ -146,6 +149,36 @@ internal fun WithdrawalScreen(
                         )
                     )
 
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    stringArrayResource(R.array.withdrawal_informations).forEach { info ->
+                        Row {
+                            Text(
+                                text = "\u2022",
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    color = Black02,
+                                    fontSize = 12.sp,
+                                )
+                            )
+                            
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Text(
+                                text = info,
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    color = Black02,
+                                    fontSize = 12.sp,
+                                )
+                            )
+
+                        }
+                    }
                 }
 
             }

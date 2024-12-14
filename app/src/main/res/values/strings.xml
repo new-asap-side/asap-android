@@ -120,4 +120,11 @@
     <string name="etc_hint">(필수사항) 구체적인 이유를 적어주시면 많은 도움이 됩니다.</string>
     <string name="wait">잠깐</string>
     <string name="withdrawal_information_title">탈퇴하기 전 꼭 확인해 주세요!</string>
+    <string-array name="withdrawal_informations">
+        <item>탈퇴 아이디는 복구와 재사용이 불가능합니다.</item>
+        <item>회원님과 관련된 모든 개인정보 및 서비스 이용 기록 등은 모두 삭제되며, 삭제된 데이터는 복구되지 않습니다.</item>
+        <item>소셜 로그인 회원의 경우, 서비스에서 관리하는 모든 정보가 삭제되며, 같은 소셜 아이디로 재가입 시 신규 회원으로 가입됩니다.</item>
+        <item>부적합 정보, 이용 제한 및 징계에 관한 기록은 일정 기간 보관합니다.</item>
+        <item>궁금하신 사항은 new.asap.side@gmail.com로 문의 바랍니다.</item>
+    </string-array>
 </resources>

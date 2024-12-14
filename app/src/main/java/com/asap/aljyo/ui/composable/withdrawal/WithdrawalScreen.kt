@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -78,10 +80,12 @@ internal fun WithdrawalScreen(
                 )
             }
         ) { paddingValues ->
+            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
+                    .verticalScroll(state = scrollState)
                     .padding(
                         horizontal = 20.dp,
                         vertical = 32.dp
@@ -166,7 +170,7 @@ internal fun WithdrawalScreen(
                                     fontSize = 12.sp,
                                 )
                             )
-                            
+
                             Spacer(modifier = Modifier.width(6.dp))
 
                             Text(
@@ -180,6 +184,14 @@ internal fun WithdrawalScreen(
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(36.dp))
+
+                PrecautionsButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(68.dp)
+                )
 
             }
         }

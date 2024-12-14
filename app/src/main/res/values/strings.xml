@@ -118,4 +118,6 @@
         <item>기타</item>
     </string-array>
     <string name="etc_hint">(필수사항) 구체적인 이유를 적어주시면 많은 도움이 됩니다.</string>
+    <string name="wait">잠깐</string>
+    <string name="withdrawal_information_title">탈퇴하기 전 꼭 확인해 주세요!</string>
 </resources>

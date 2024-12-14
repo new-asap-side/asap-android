@@ -104,7 +104,8 @@ internal fun SurveyList(
                                     text = stringResource(R.string.etc_hint),
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         color = Black04,
-                                        fontSize = 15.sp
+                                        fontSize = 15.sp,
+                                        lineHeight = 24.sp
                                     )
                                 )
                             }

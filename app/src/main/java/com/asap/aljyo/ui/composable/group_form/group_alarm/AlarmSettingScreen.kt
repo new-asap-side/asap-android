@@ -79,10 +79,10 @@ import com.asap.aljyo.ui.theme.Red02
 @Composable
 fun AlarmSettingScreen(
     onBackClick: () -> Unit,
-    onCompleteClick: () -> Unit
+    onCompleteClick: () -> Unit,
+    viewModel: GroupFormViewModel = hiltViewModel()
 ) {
-    var selectedAlarmType by remember { mutableIntStateOf(0) }
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+    val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
     var openAlertDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -126,11 +126,11 @@ fun AlarmSettingScreen(
             )
 
             AlarmTypeBox(
-                selectedAlarmType = selectedAlarmType,
-                onSelected = { type, value -> selectedAlarmType = value }
+                selectedAlarmType = alarmState.alarmType,
+                onSelected = { viewModel.onAlarmTypeSelected(it) }
             )
 
-            if (selectedAlarmType == 1 || selectedAlarmType == 3) {
+            if (alarmState.alarmType == "SOUND" || alarmState.alarmType == "ALL") {
                 Text(
                     modifier = Modifier.padding(top = 28.dp, bottom = 8.dp),
                     text = "알람음",
@@ -183,8 +183,8 @@ fun AlarmSettingScreen(
                 }
 
                 AlarmSoundSlider(
-                    sliderPosition = sliderPosition,
-                    onValueChange = { sliderPosition = it }
+                    sliderPosition = alarmState.alarmVolume,
+                    onValueChange = { viewModel.onAlarmVolumeSelected(it) }
                 )
             }
 
@@ -243,7 +243,7 @@ fun AlarmSettingScreen(
             CustomButton(
                 modifier = Modifier.padding(bottom = 6.dp),
                 text = "완료",
-                enable = selectedAlarmType != 0,
+                enable = alarmState.buttonState,
                 onClick = { openAlertDialog = true }
             )
             if (openAlertDialog) {
@@ -263,8 +263,8 @@ fun AlarmSettingScreen(
 
 @Composable
 fun AlarmTypeBox(
-    selectedAlarmType: Int = 0,
-    onSelected: (String, Int) -> Unit,
+    selectedAlarmType: String = "",
+    onSelected: (String) -> Unit,
 ) {
     Column {
         Text(
@@ -284,30 +284,26 @@ fun AlarmTypeBox(
             SelectBox(
                 modifier = Modifier.weight(1f),
                 text = "소리",
-                type = "sound",
-                value = 1,
-                isSelected = selectedAlarmType == 1,
+                type = "SOUND",
+                isSelected = selectedAlarmType == "SOUND",
                 onSelected = onSelected
             )
 
             SelectBox(
                 modifier = Modifier.weight(1f),
                 text = "진동",
-                type = "vibration",
-                value = 2,
-                isSelected = selectedAlarmType == 2,
+                type = "VIBRATION",
+                isSelected = selectedAlarmType == "VIBRATION",
                 onSelected = onSelected
             )
 
             SelectBox(
                 modifier = Modifier.weight(1f),
                 text = "소리, 진동",
-                type = "all",
-                value = 3,
-                isSelected = selectedAlarmType == 3,
+                type = "ALL",
+                isSelected = selectedAlarmType == "ALL",
                 onSelected = onSelected
             )
-
         }
     }
 }
@@ -317,9 +313,8 @@ fun SelectBox(
     modifier: Modifier = Modifier,
     text: String,
     type: String,
-    value: Int,
     isSelected: Boolean,
-    onSelected: (String, Int) -> Unit
+    onSelected: (String) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -334,7 +329,7 @@ fun SelectBox(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(color = Red01),
-                onClick = { onSelected(type, value) }
+                onClick = { onSelected(type) }
             ),
         contentAlignment = Alignment.Center
     ) {

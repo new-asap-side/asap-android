@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -55,8 +56,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
@@ -73,39 +77,24 @@ import java.time.LocalDate
 @Composable
 fun CreateGroupScreen(
     onBackClick: () -> Unit,
-    onNextClick:() -> Unit
+    onNextClick:() -> Unit,
+    viewModel: GroupFormViewModel = hiltViewModel()
 ) {
+    val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            // 선택한 이미지 처리
+            viewModel.onGroupImageSelected(uri)
         }
     )
 
-    var titleText by remember { mutableStateOf("") }
-    var descriptionText by remember { mutableStateOf("") }
-    var groupValue by remember { mutableIntStateOf(1) }
-    val selectedDays = remember { mutableStateListOf<String>() }
-    var selectedHour by remember { mutableStateOf("12") }
-    var selectedMinutes by remember { mutableStateOf("00") }
     var selectedYear by remember { mutableIntStateOf(LocalDate.now().year) }
     var selectedMonth by remember { mutableIntStateOf(LocalDate.now().monthValue) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var isShowTimeBottomSheet by remember { mutableStateOf(false) }
     val timeSheetState = rememberModalBottomSheetState()
     var isShowPhotoBottomSheet by remember { mutableStateOf(false) }
     val photoSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
-    val buttonState by remember {
-        derivedStateOf {
-            titleText.isNotBlank() &&
-                    descriptionText.isNotBlank() &&
-                    selectedDays.isNotEmpty() &&
-                    selectedYear > 0 &&
-                    selectedMonth in 1..12 &&
-                    selectedDate != null
-        }
-    }
 
     Scaffold(
         containerColor = White,
@@ -176,8 +165,7 @@ fun CreateGroupScreen(
                                     .clickable {
                                         coroutineScope.launch { photoSheetState.hide() }
                                             .invokeOnCompletion {
-                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
-                                                    false
+                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
                                             }
                                     }
                             )
@@ -249,8 +237,8 @@ fun CreateGroupScreen(
                     .wrapContentHeight()
                     .heightIn(min = 50.dp, max = 80.dp),
                 label = "그룹명",
-                value = descriptionText,
-                onValueChange = { descriptionText = it },
+                value = groupState.description,
+                onValueChange = { viewModel.onGroupDescriptionChanged(it) },
                 type = GROUP_TITLE,
                 placeHolder = {
                     Text(
@@ -268,8 +256,8 @@ fun CreateGroupScreen(
                     .fillMaxWidth()
                     .height(128.dp),
                 label = "그룹 소개글",
-                value = titleText,
-                onValueChange = { titleText = it },
+                value = groupState.title,
+                onValueChange = { viewModel.onGroupTitleChanged(it) },
                 type = GROUP_DESCRIPTION,
                 placeHolder = {
                     Text(
@@ -283,23 +271,18 @@ fun CreateGroupScreen(
             )
 
             MemberPicker(
-                value = groupValue,
-                onPlusClick = { groupValue = it },
-                onMinusClick = { groupValue = it }
+                value = groupState.maxPerson,
+                onPlusClick = { viewModel.onGroupPersonSelected(it) },
+                onMinusClick = { viewModel.onGroupPersonSelected(it) }
             )
 
             WeekdayPicker(
-                selectedDays = selectedDays,
-                onDaySelected = { day ->
-                    selectedDays.run {
-                        if (day in this) remove(day) else add(day)
-                    }
-                }
+                selectedDays = groupState.alarmDays,
+                onDaySelected = { day -> viewModel.onAlarmDaysSelected(day) }
             )
 
             TimePicker(
-                selectedHour = selectedHour,
-                selectedMinutes = selectedMinutes,
+                selectedTime = groupState.alarmTime,
                 onClick = { isShowTimeBottomSheet = true }
             )
 
@@ -328,8 +311,7 @@ fun CreateGroupScreen(
                                     .clickable {
                                         coroutineScope.launch { timeSheetState.hide() }
                                             .invokeOnCompletion {
-                                                if (!timeSheetState.isVisible) isShowTimeBottomSheet =
-                                                    false
+                                                if (!timeSheetState.isVisible) isShowTimeBottomSheet = false
                                             }
                                     }
                             )
@@ -349,12 +331,10 @@ fun CreateGroupScreen(
                                 text = "확인",
                                 enable = true,
                                 onClick = {
-                                    selectedHour = tempHour
-                                    selectedMinutes = tempMinutes
+                                    viewModel.onAlarmTimeSelected(tempHour, tempMinutes)
                                     coroutineScope.launch { timeSheetState.hide() }
                                         .invokeOnCompletion {
-                                            if (!timeSheetState.isVisible) isShowTimeBottomSheet =
-                                                false
+                                            if (!timeSheetState.isVisible) isShowTimeBottomSheet = false
                                         }
                                 }
                             )
@@ -367,7 +347,7 @@ fun CreateGroupScreen(
             CalendarView(
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
-                selectedDate = selectedDate,
+                selectedDate = groupState.alarmEndDate,
                 onMonthSelected = { month ->
                     when (month) {
                         13 -> {
@@ -383,15 +363,18 @@ fun CreateGroupScreen(
                         else -> selectedMonth = month
                     }
                 },
-                onDateSelected = { selectedDate = it },
+                onDateSelected = { viewModel.onAlarmEndDateSelected(it) },
             )
 
             CustomButton(
                 modifier = Modifier
                     .padding(bottom = 6.dp, top = 40.dp),
                 text = "다음",
-                enable = buttonState,
-                onClick = onNextClick
+                enable = groupState.buttonState,
+                onClick = {
+                    onNextClick()
+                    viewModel.onNextClicked()
+                }
             )
         }
     }

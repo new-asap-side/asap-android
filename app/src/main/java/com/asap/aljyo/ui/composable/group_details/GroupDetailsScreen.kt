@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
-import com.asap.aljyo.ui.composable.common.dialog.LeaveGroupDialog
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -139,7 +139,14 @@ fun GroupDetailsScreen(
         }
 
         if(showLeaveGroupDialog) {
-            LeaveGroupDialog { showLeaveGroupDialog = false }
+            PrecautionsDialog(
+                title = stringResource(R.string.ask_leave_group),
+                description = stringResource(R.string.ranking_initialized),
+                onDismissRequest = { showLeaveGroupDialog = false },
+                onConfirm = {
+                    // 그룹 탈퇴 api
+                }
+            )
         }
 
         Scaffold (

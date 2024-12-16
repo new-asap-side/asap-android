@@ -36,8 +36,11 @@ import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-internal fun LeaveGroupDialog(
+internal fun PrecautionsDialog(
+    title: String,
+    description: String,
     onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -60,7 +63,7 @@ internal fun LeaveGroupDialog(
             ) {
                 Spacer(modifier = Modifier.height(42.dp))
                 Text(
-                    text = stringResource(R.string.ask_leave_group),
+                    text = title,
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontSize = 18.sp,
                         color = Black01
@@ -68,7 +71,7 @@ internal fun LeaveGroupDialog(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = stringResource(R.string.ranking_initialized),
+                    text = description,
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontSize = 14.sp,
                         color = Black02
@@ -96,7 +99,7 @@ internal fun LeaveGroupDialog(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(10.dp),
                         onClick = {
-                            // 그룹 탈퇴 요청
+                            onConfirm()
                         }
                     ) {
                         Text(
@@ -123,6 +126,11 @@ internal fun LeaveGroupDialog(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        LeaveGroupDialog { }
+        PrecautionsDialog(
+            title = "Title",
+            description = "description",
+            onDismissRequest = {},
+            onConfirm = {}
+        )
     }
 }

@@ -13,6 +13,13 @@ data class GroupScreenState(
     val description: String = "",
     val maxPerson: Int = 1,
     val alarmDays: List<String> = emptyList(),
-    val alarmTime: String = "",
-    val alarmEndDate: LocalDate = LocalDate.now()
-)
+    val alarmTime: String = "12:00",
+    val alarmEndDate: LocalDate? = null
+) {
+    val buttonState: Boolean
+        get() = title.isNotBlank() &&
+                description.isNotBlank() &&
+                alarmDays.isNotEmpty() &&
+                alarmTime.isNotBlank() &&
+                alarmEndDate != null
+}

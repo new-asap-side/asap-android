@@ -53,7 +53,7 @@ import com.asap.aljyo.ui.theme.Red02
 @Composable
 fun AlarmTypeScreen(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit
+    navigateToAlarmSetting: (String) -> Unit
 ) {
     var isSelected by remember { mutableIntStateOf(-1) }
 
@@ -127,7 +127,9 @@ fun AlarmTypeScreen(
             CustomButton(
                 text = "다음",
                 enable = (isSelected == 0) || (isSelected == 1),
-                onClick = {}
+                onClick = {
+                    if (isSelected == 0) navigateToAlarmSetting("SLIDE") else navigateToAlarmSetting("CARD")
+                }
             )
 
             Spacer(modifier = Modifier.height(6.dp))

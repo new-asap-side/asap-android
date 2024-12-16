@@ -145,16 +145,18 @@ internal fun AppNavHost() {
         composable(route = ScreenRoute.AlarmType.route) {
             AlarmTypeScreen(
                 onBackClick = { navController.popBackStack() },
-                onNextClick = { navController.navigate(ScreenRoute.AlarmSetting.route)}
+                navigateToAlarmSetting = { alarmUnlockContents ->
+                    navController.navigate("${ScreenRoute.AlarmSetting.route}/$alarmUnlockContents")
+                }
             )
         }
 
         composable(
-            route = "${ScreenRoute.AlarmSetting.route}/{alarmType}",
-            arguments = listOf(navArgument("alarmType") {type = NavType.StringType})
+            route = "${ScreenRoute.AlarmSetting.route}/{alarmUnlockContents}",
+            arguments = listOf(navArgument("alarmUnlockContents") {type = NavType.StringType})
         ) {
             AlarmSettingScreen(
-                onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) },
+                onBackClick = { navController.popBackStack() },
                 onCompleteClick = {}
             )
         }

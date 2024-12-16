@@ -22,6 +22,7 @@ import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
+import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
 import com.asap.domain.entity.remote.Alarm
 
 
@@ -153,6 +154,16 @@ internal fun AppNavHost() {
                 onBackIconPressed = {
                     navController.popBackStack()
                 },
+            )
+        }
+
+        composable(
+            route = ScreenRoute.WithdrawalComplete.route,
+        ) {
+            WithdrawalCompleteScreen(
+                navigateToOnboarding = {
+
+                }
             )
         }
 

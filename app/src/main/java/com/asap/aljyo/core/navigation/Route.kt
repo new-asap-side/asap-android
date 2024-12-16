@@ -21,6 +21,8 @@ sealed class ScreenRoute(val route: String) {
     data object Preferences: ScreenRoute(route = "preferences")
 
     data object Withdrawal: ScreenRoute(route = "withdrawal")
+
+    data object WithdrawalComplete: ScreenRoute(route = "withdrawal-comoplete")
 }
 
 // Main screen route

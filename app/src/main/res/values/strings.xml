@@ -13,6 +13,7 @@
     <string name="load_fail">정보를 불러오는데 실패했습니다.\n잠시 후 다시 시도해 주세요.</string>
     <string name="retry">재시도</string>
     <string name="from">를</string>
+    <string name="cancel">취소</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
@@ -128,4 +129,5 @@
         <item>궁금하신 사항은 new.asap.side@gmail.com로 문의 바랍니다.</item>
     </string-array>
     <string name="checked_precautions">유의사항을 모두 확인했어요</string>
+    <string name="withdrawal">탈퇴하기</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.asap.aljyo.ui.composable.withdrawal
 
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,18 +18,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -38,18 +45,32 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Grey01
+import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun WithdrawalScreen(
-    onBackIconPressed: () -> Unit
+    onBackIconPressed: () -> Unit,
+    viewModel: WithdrawalViewModel = hiltViewModel(),
+    preview: Boolean = false
 ) {
+    val context = LocalContext.current
+    if (!preview) {
+        SideEffect {
+            val window = (context as ComponentActivity).window
+            WindowCompat.setDecorFitsSystemWindows(window,true)
+        }
+    }
+
     AljyoTheme {
         Scaffold(
             containerColor = White,
@@ -78,6 +99,54 @@ internal fun WithdrawalScreen(
                         }
                     }
                 )
+            },
+            bottomBar = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(52.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        onClick = { onBackIconPressed() },
+                    ) {
+                        Text(
+                            text = stringResource(R.string.cancel),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontSize = 16.sp
+                            )
+                        )
+                    }
+
+                    TextButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(52.dp),
+                        enabled = viewModel.checkedPrecautions,
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.textButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = White,
+                            disabledContainerColor = Grey02,
+                        ),
+                        onClick = {},
+                    ) {
+                        Text(
+                            text = stringResource(R.string.withdrawal),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontSize = 16.sp
+                            )
+                        )
+                    }
+                }
             }
         ) { paddingValues ->
             val scrollState = rememberScrollState()
@@ -203,7 +272,8 @@ internal fun WithdrawalScreen(
 private fun Preview() {
     AljyoTheme {
         WithdrawalScreen(
-            onBackIconPressed = {}
+            onBackIconPressed = {},
+            preview = true
         )
     }
 }

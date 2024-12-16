@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,7 +58,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.widget.Group
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -380,10 +385,31 @@ fun AlarmSoundSlider(
                 contentDescription = "Volume Off Icon",
                 tint = Color.Unspecified
             )
+            Canvas(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                val trackHeight = 4.dp.toPx()
+
+                drawCircle(
+                    color = Red01,
+                    radius = trackHeight / 2,
+                    center = Offset(0f, center.y)
+                )
+
+                drawLine(
+                    color = Red01,
+                    start = Offset(0f, center.y),
+                    end = Offset(size.width, center.y),
+                    strokeWidth = trackHeight
+                )
+            }
             Slider(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(9f),
                 value = sliderPosition,
-                valueRange = 1f..100f,
+                valueRange = 10f..100f,
                 onValueChange = onValueChange,
                 colors = SliderDefaults.colors(
                     activeTrackColor = Red01,
@@ -404,7 +430,8 @@ fun AlarmSoundSlider(
                             .height(48.dp)
                     ) {
                         val trackHeight = 4.dp.toPx()
-                        val activeWidth = size.width * (sliderPosition / 100f)
+                        val activeWidth = size.width * ((sliderPosition - 10f) / 90f)
+                        val thumbPadding = 12.dp.toPx()
 
                         drawCircle(
                             color = Red01,
@@ -414,7 +441,7 @@ fun AlarmSoundSlider(
 
                         drawLine(
                             color = Red01,
-                            start = Offset(0f, center.y),
+                            start = Offset(0f - thumbPadding, center.y),
                             end = Offset(activeWidth, center.y),
                             strokeWidth = trackHeight
                         )
@@ -430,7 +457,7 @@ fun AlarmSoundSlider(
                 }
             )
             Icon(
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier.padding(start = 4.dp),
                 painter = painterResource(R.drawable.ic_volume_max),
                 contentDescription = "Volume Max Icon",
                 tint = Color.Unspecified

@@ -41,12 +41,11 @@ import com.asap.aljyo.ui.theme.Grey02
 
 @Composable
 fun TimePicker(
-    selectedHour: String,
-    selectedMinutes: String,
+    selectedTime: String,
     onClick: () -> Unit
 ) {
-    val formatHour = selectedHour.trimStart('0')
-    val period = if (formatHour.toInt() in 1..12)"오전" else "오후"
+    val hour = selectedTime.split(":").first().trimStart('0')
+    val period = if (hour.toInt() in 1..12)"오전" else "오후"
 
     Column {
         Text(
@@ -70,7 +69,7 @@ fun TimePicker(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$period $formatHour:$selectedMinutes",
+                text = "$period $selectedTime",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -169,8 +168,4 @@ fun AlarmTimePicker(
             )
         }
     }
-}
-
-fun getPeriod(hour: String):String {
-    return if (hour.toInt() in 1..12) "오전" else "오후"
 }

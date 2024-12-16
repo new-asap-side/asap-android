@@ -9,7 +9,8 @@ class CreateGroupUseCase @Inject constructor(
     private val groupRepository: GroupRepository
 ) {
     suspend operator fun invoke(
-        alarmDay: String,
+        groupImage: String,
+        alarmDay: List<String>,
         alarmEndDate: String,
         alarmTime: String,
         alarmType: String,
@@ -27,7 +28,8 @@ class CreateGroupUseCase @Inject constructor(
         val userId = userRepository.getUserInfo().userId.toInt()
 
         groupRepository.postCreateGroup(
-            alarmDay = alarmDay,
+            groupImage = groupImage,
+            alarmDays = alarmDay,
             alarmEndDate = alarmEndDate,
             alarmTime = alarmTime,
             alarmType = alarmType,

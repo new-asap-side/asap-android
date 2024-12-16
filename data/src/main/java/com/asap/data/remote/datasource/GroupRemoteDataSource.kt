@@ -30,7 +30,8 @@ class GroupRemoteDataSource @Inject constructor(
     }
 
     suspend fun postCreateGroup(
-        alarmDay: String,
+        groupImage: String,
+        alarmDays: List<String>,
         alarmEndDate: String,
         alarmTime: String,
         alarmType: String,
@@ -47,7 +48,8 @@ class GroupRemoteDataSource @Inject constructor(
         userId: Int
     ): PostGroupCreateResponse? {
         val groupCreateRequest = PostGroupCreateRequest(
-            alarmDay = alarmDay,
+            groupImage = groupImage,
+            alarmDays = alarmDays,
             alarmEndDate = alarmEndDate,
             alarmTime = alarmTime,
             alarmType = alarmType,

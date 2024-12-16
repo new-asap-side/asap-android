@@ -5,8 +5,10 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class PostGroupCreateRequest(
-    @Json(name = "alarm_day")
-    val alarmDay: String,
+    @Json(name = "base64_group_img")
+    val groupImage: String,
+    @Json(name = "alarm_days")
+    val alarmDays: List<String>,
     @Json(name = "alarm_end_date")
     val alarmEndDate: String,
     @Json(name = "alarm_time")

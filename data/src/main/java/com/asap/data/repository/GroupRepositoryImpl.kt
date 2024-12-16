@@ -23,7 +23,8 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun postCreateGroup(
-        alarmDay: String,
+        groupImage: String,
+        alarmDays: List<String>,
         alarmEndDate: String,
         alarmTime: String,
         alarmType: String,
@@ -40,7 +41,8 @@ class GroupRepositoryImpl @Inject constructor(
         userId: Int
     ) {
         remoteDataSource.postCreateGroup(
-            alarmDay = alarmDay,
+            groupImage = groupImage,
+            alarmDays = alarmDays,
             alarmEndDate = alarmEndDate,
             alarmTime = alarmTime,
             alarmType = alarmType,

@@ -12,7 +12,7 @@ data class GroupScreenState(
     val title: String = "",
     val description: String = "",
     val maxPerson: Int = 1,
-    val alarmDay: String = "",
+    val alarmDays: List<String> = emptyList(),
     val alarmTime: String = "",
     val alarmEndDate: LocalDate = LocalDate.now()
 )

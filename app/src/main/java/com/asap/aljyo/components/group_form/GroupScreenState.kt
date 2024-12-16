@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 data class GroupScreenState(
     val isPublic: Boolean = false,
-    val groupPassword: String = "",
+    val groupPassword: String? = null,
     val groupImage: Uri? = null,
     val title: String = "",
     val description: String = "",

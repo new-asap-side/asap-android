@@ -4,5 +4,13 @@ data class AlarmScreenState(
     val alarmUnlockContents: String = "",
     val alarmType: String = "",
     val musicTitle: String = "",
-    val alarmVolume: Int = 1
-)
+    val alarmVolume: Float = 10f
+) {
+    val buttonState: Boolean
+        get() = when (alarmType) {
+            "SOUND", "ALL" -> musicTitle.isNotBlank() && alarmVolume > 1
+            "VIBRATION" -> true
+            else -> false
+        }
+}
+

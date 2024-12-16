@@ -132,4 +132,7 @@
     <string name="withdrawal">탈퇴하기</string>
     <string name="ask_withdrawal">정말 회원탈퇴를 하시겠어요?</string>
     <string name="no_turning_back">되돌릴 수 없어요</string>
+    <string name="complete_withdrawal">탈퇴가 완료되었어요</string>
+    <string name="see_you">다음에 또 만날 수 있길 바래요</string>
+    <string name="bye">안녕</string>
 </resources>

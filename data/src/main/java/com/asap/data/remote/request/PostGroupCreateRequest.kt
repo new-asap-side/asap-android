@@ -18,7 +18,7 @@ data class PostGroupCreateRequest(
     @Json(name = "alarm_unlock_contents")
     val alarmUnlockContents: String,
     @Json(name = "alarm_volume")
-    val alarmVolume: Int,
+    val alarmVolume: Int?,
     @Json(name = "description")
     val description: String,
     @Json(name = "device_token")
@@ -32,7 +32,7 @@ data class PostGroupCreateRequest(
     @Json(name = "max_person")
     val maxPerson: Int,
     @Json(name = "music_title")
-    val musicTitle: String,
+    val musicTitle: String?,
     @Json(name = "title")
     val title: String,
     @Json(name = "user_id")

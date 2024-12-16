@@ -36,14 +36,14 @@ class GroupRemoteDataSource @Inject constructor(
         alarmTime: String,
         alarmType: String,
         alarmUnlockContents: String,
-        alarmVolume: Int,
+        alarmVolume: Int?,
         description: String,
         deviceToken: String,
         deviceType: String,
         groupPassword: String?,
         isPublic: Boolean,
         maxPerson: Int,
-        musicTitle: String,
+        musicTitle: String?,
         title: String,
         userId: Int
     ): PostGroupCreateResponse? {

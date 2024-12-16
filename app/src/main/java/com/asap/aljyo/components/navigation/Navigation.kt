@@ -32,8 +32,8 @@ internal fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-//        startDestination = ScreenRoute.Onboarding.route,
-        startDestination = ScreenRoute.ReleaseAlarm.route,
+        startDestination = ScreenRoute.GroupType.route,
+//        startDestination = ScreenRoute.ReleaseAlarm.route,
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
             OnboardingScreen(
@@ -137,14 +137,14 @@ internal fun AppNavHost() {
             )
         ) {
             CreateGroupScreen(
-                onBackClick = {},
+                onBackClick = {navController.popBackStack()},
                 onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
             )
         }
 
         composable(route = ScreenRoute.AlarmType.route) {
             AlarmTypeScreen(
-                onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) },
+                onBackClick = { navController.popBackStack() },
                 onNextClick = { navController.navigate(ScreenRoute.AlarmSetting.route)}
             )
         }

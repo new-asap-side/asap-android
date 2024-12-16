@@ -31,6 +31,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -49,6 +53,7 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -101,6 +106,17 @@ internal fun WithdrawalScreen(
                 )
             },
             bottomBar = {
+                var showWithdrawalDialog by remember { mutableStateOf(false) }
+
+                if (showWithdrawalDialog) {
+                    PrecautionsDialog(
+                        title = stringResource(R.string.ask_withdrawal),
+                        description = stringResource(R.string.no_turning_back),
+                        onDismissRequest = { showWithdrawalDialog = false},
+                        onConfirm = {}
+                    )
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -137,7 +153,7 @@ internal fun WithdrawalScreen(
                             contentColor = White,
                             disabledContainerColor = Grey02,
                         ),
-                        onClick = {},
+                        onClick = { showWithdrawalDialog = true },
                     ) {
                         Text(
                             text = stringResource(R.string.withdrawal),

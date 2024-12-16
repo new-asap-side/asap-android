@@ -130,4 +130,6 @@
     </string-array>
     <string name="checked_precautions">유의사항을 모두 확인했어요</string>
     <string name="withdrawal">탈퇴하기</string>
+    <string name="ask_withdrawal">정말 회원탈퇴를 하시겠어요?</string>
+    <string name="no_turning_back">되돌릴 수 없어요</string>
 </resources>

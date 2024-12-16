@@ -2,6 +2,7 @@ package com.asap.aljyo.components.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -115,8 +116,8 @@ internal fun AppNavHost() {
 
         composable(route = ScreenRoute.GroupType.route) {
             SelectGroupTypeScreen(
-                navigateToCreateGroup = {
-                    navController.navigate(ScreenRoute.GroupCreate.route)
+                navigateToCreateGroup = { isPublic, password ->
+                    navController.navigate("${ScreenRoute.GroupCreate.route}/$isPublic?groupPassword=$password")
                 },
                 onBackClick = {
                     navController.popBackStack()
@@ -124,19 +125,34 @@ internal fun AppNavHost() {
             )
         }
 
-        composable(route = ScreenRoute.GroupCreate.route) {
+        composable(
+            route = "${ScreenRoute.GroupCreate.route}/{groupType}?groupPassword={groupPassword}",
+            arguments = listOf(
+                navArgument("groupType") { type = NavType.BoolType },
+                navArgument("groupPassword") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
             CreateGroupScreen(
-                onBackClick = {}
+                onBackClick = {},
+                onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
             )
         }
 
         composable(route = ScreenRoute.AlarmType.route) {
             AlarmTypeScreen(
-                onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) }
+                onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) },
+                onNextClick = { navController.navigate(ScreenRoute.AlarmSetting.route)}
             )
         }
 
-        composable(route = ScreenRoute.AlarmSetting.route) {
+        composable(
+            route = "${ScreenRoute.AlarmSetting.route}/{alarmType}",
+            arguments = listOf(navArgument("alarmType") {type = NavType.StringType})
+        ) {
             AlarmSettingScreen(
                 onBackClick = { navController.navigate(ScreenRoute.GroupCreate.route) },
                 onCompleteClick = {}

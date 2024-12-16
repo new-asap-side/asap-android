@@ -59,7 +59,7 @@ import com.asap.aljyo.ui.theme.Red02
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectGroupTypeScreen(
-    navigateToCreateGroup: () -> Unit,
+    navigateToCreateGroup: (Boolean, String?) -> Unit,
     onBackClick: () -> Unit
 ) {
     var isSelected by remember { mutableIntStateOf(-1) }
@@ -155,7 +155,13 @@ fun SelectGroupTypeScreen(
                     .imePadding(),
                 text = "확인",
                 enable = buttonState,
-                onClick = { navigateToCreateGroup() }
+                onClick = {
+                    if (isSelected == 0) {
+                        navigateToCreateGroup(true, null)
+                    } else {
+                        navigateToCreateGroup(false, password)
+                    }
+                }
             )
         }
     }
@@ -284,10 +290,10 @@ fun PreviewBoxWithCheckButton() {
 @Composable
 @Preview
 fun PreviewSelectGroupTypeScreen() {
-    AljyoTheme {
-        SelectGroupTypeScreen(
-            navigateToCreateGroup = {},
-            onBackClick = {}
-        )
-    }
+//    AljyoTheme {
+//        SelectGroupTypeScreen(
+//            navigateToCreateGroup = {},
+//            onBackClick = {}
+//        )
+//    }
 }

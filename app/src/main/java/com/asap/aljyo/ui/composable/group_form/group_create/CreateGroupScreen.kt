@@ -72,7 +72,8 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateGroupScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNextClick:() -> Unit
 ) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -390,7 +391,7 @@ fun CreateGroupScreen(
                     .padding(bottom = 6.dp, top = 40.dp),
                 text = "다음",
                 enable = buttonState,
-                onClick = {}
+                onClick = onNextClick
             )
         }
     }
@@ -449,9 +450,9 @@ fun GroupImagePicker(
 @Composable
 @Preview
 fun PreviewCreateGroupScreen() {
-    AljyoTheme {
-        CreateGroupScreen(
-            onBackClick = {}
-        )
-    }
+//    AljyoTheme {
+//        CreateGroupScreen(
+//            onBackClick = {}
+//        )
+//    }
 }

@@ -52,7 +52,8 @@ import com.asap.aljyo.ui.theme.Red02
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmTypeScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit
 ) {
     var isSelected by remember { mutableIntStateOf(-1) }
 

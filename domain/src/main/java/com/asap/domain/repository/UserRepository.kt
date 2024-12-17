@@ -30,5 +30,6 @@ interface UserRepository {
 
     suspend fun fetchUserAlarmList(): Flow<List<Alarm>?>
 
-    suspend fun delteUserInfo()
+    suspend fun delteUserInfo(survey: String): Flow<Unit>
+
 }

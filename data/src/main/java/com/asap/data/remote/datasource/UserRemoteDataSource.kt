@@ -9,6 +9,7 @@ import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
@@ -52,5 +53,16 @@ class UserRemoteDataSource @Inject constructor(
         )
 
         return userService.saveProfile(request).body()
+    }
+
+    suspend fun deleteUser(survey: String): Flow<Unit> = flow {
+        val response = userService.deleteUser(
+            hashMapOf("survey" to survey)
+        )
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(Unit)
     }
 }

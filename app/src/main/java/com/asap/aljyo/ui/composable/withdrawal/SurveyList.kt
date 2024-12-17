@@ -48,8 +48,6 @@ internal fun SurveyList(
 ) {
     val surveyContents = stringArrayResource(R.array.survey_list)
     val selectedIndex = viewModel.selectedIndex
-    var selectedSurvey by remember { mutableStateOf("") }
-
     var text by remember { mutableStateOf("") }
 
     Column(
@@ -62,11 +60,11 @@ internal fun SurveyList(
                 survey = survey,
                 selected = selectedIndex == index,
                 onSelect = {
-                    selectedSurvey = survey
                     if (selectedIndex == index) {
                         viewModel.select(null)
                         return@SurveyItem
                     }
+                    viewModel.survey = survey
                     viewModel.select(index)
                 }
             ) {
@@ -82,6 +80,7 @@ internal fun SurveyList(
 
                             if (value.length <= maxLength) {
                                 text = value
+                                viewModel.survey = value
                             }
                         },
                         textStyle = MaterialTheme.typography.bodyMedium.copy(

@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.withdrawal
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -30,7 +31,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +56,8 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
+import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -73,7 +78,7 @@ internal fun WithdrawalScreen(
     if (!preview) {
         SideEffect {
             val window = (context as ComponentActivity).window
-            WindowCompat.setDecorFitsSystemWindows(window,true)
+            WindowCompat.setDecorFitsSystemWindows(window, true)
         }
     }
 
@@ -108,14 +113,42 @@ internal fun WithdrawalScreen(
             },
             bottomBar = {
                 var showWithdrawalDialog by remember { mutableStateOf(false) }
+                var showLoadingDialog by remember { mutableStateOf(false) }
+                val withdrawalState by viewModel.withdrawalState.collectAsState()
+
+
+                LaunchedEffect(withdrawalState) {
+                    when (withdrawalState) {
+                        RequestState.Initial -> Unit
+                        RequestState.Loading -> Unit
+
+                        is RequestState.Success -> {
+                            showLoadingDialog = false
+                            navigateToComplete()
+                        }
+
+                        is RequestState.Error -> {
+                            Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                }
 
                 if (showWithdrawalDialog) {
                     PrecautionsDialog(
                         title = stringResource(R.string.ask_withdrawal),
                         description = stringResource(R.string.no_turning_back),
-                        onDismissRequest = { showWithdrawalDialog = false},
-                        onConfirm = { navigateToComplete() }
+                        onDismissRequest = { showWithdrawalDialog = false },
+                        onConfirm = {
+                            showWithdrawalDialog = false
+                            showLoadingDialog = true
+                            viewModel.deleteUser()
+                        }
                     )
+                }
+
+                if (showLoadingDialog) {
+                    LoadingDialog()
                 }
 
                 Row(

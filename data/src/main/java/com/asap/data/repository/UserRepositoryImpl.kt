@@ -77,7 +77,6 @@ class UserRepositoryImpl @Inject constructor(
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
             OnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                     return@OnCompleteListener
                 }
 
@@ -94,8 +93,12 @@ class UserRepositoryImpl @Inject constructor(
         remoteDataSource.deleteUser(survey = survey)
 
     override suspend fun deleteLocalUserInfo() {
+        // Room DB delete
         val userDao = localDataSource.userDao()
         userDao.deleteAll()
+
+        // session data store clear
+        sessionLocalDataSource.clear()
     }
 
     companion object {

@@ -12,6 +12,8 @@ import com.asap.domain.usecase.user.CacheUserUseCase
 import com.asap.domain.usecase.user.CacheUserUseCaseImpl
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
+import com.asap.domain.usecase.user.DeleteUseCase
+import com.asap.domain.usecase.user.DeleteUseCaseImpl
 import com.asap.domain.usecase.user.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
@@ -63,4 +65,9 @@ interface UseCaseModule {
     fun bindFetchAlarmListUseCase(
         fetchAlarmListUseCaseImpl: FetchAlarmListUseCaseImpl
     ): FetchAlarmListUseCase
+
+    @Binds
+    fun bindDeleteUseCase(
+        deleteUseCaseImpl: DeleteUseCaseImpl
+    ): DeleteUseCase
 }

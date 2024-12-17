@@ -90,8 +90,13 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun fetchUserAlarmList(): Flow<List<Alarm>?> =
         remoteDataSource.fetchAlarmList()
 
-    override suspend fun delteUserInfo(survey: String): Flow<Unit> =
+    override suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit> =
         remoteDataSource.deleteUser(survey = survey)
+
+    override suspend fun deleteLocalUserInfo() {
+        val userDao = localDataSource.userDao()
+        userDao.deleteAll()
+    }
 
     companion object {
         private const val TAG = "UserRepositoryImpl"

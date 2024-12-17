@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
-import com.asap.domain.usecase.user.DeleteUseCase
+import com.asap.domain.usecase.user.DeleteUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WithdrawalViewModel @Inject constructor(
-    private val deleteUseCase: DeleteUseCase
+    private val deleteUserInfoUseCase: DeleteUserInfoUseCase
 ) : ViewModel() {
     private val _selectedIndex = mutableStateOf<Int?>(null)
     val selectedIndex get() = _selectedIndex.value
@@ -38,7 +38,7 @@ class WithdrawalViewModel @Inject constructor(
 
     fun deleteUser() = viewModelScope.launch {
         _withdrawalState.value = RequestState.Loading
-        deleteUseCase.invoke(survey).catch { e ->
+        deleteUserInfoUseCase.invoke(survey).catch { e ->
             when (e) {
                 is HttpException -> {
                     // TODO error handling

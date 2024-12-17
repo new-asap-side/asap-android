@@ -65,6 +65,7 @@ import com.asap.aljyo.ui.theme.White
 @Composable
 internal fun WithdrawalScreen(
     onBackIconPressed: () -> Unit,
+    navigateToComplete: () -> Unit,
     viewModel: WithdrawalViewModel = hiltViewModel(),
     preview: Boolean = false
 ) {
@@ -113,7 +114,7 @@ internal fun WithdrawalScreen(
                         title = stringResource(R.string.ask_withdrawal),
                         description = stringResource(R.string.no_turning_back),
                         onDismissRequest = { showWithdrawalDialog = false},
-                        onConfirm = {}
+                        onConfirm = { navigateToComplete() }
                     )
                 }
 
@@ -289,6 +290,7 @@ private fun Preview() {
     AljyoTheme {
         WithdrawalScreen(
             onBackIconPressed = {},
+            navigateToComplete = {},
             preview = true
         )
     }

@@ -151,14 +151,18 @@ internal fun AppNavHost() {
             popEnterTransition = null,
         ) {
             WithdrawalScreen(
-                onBackIconPressed = {
-                    navController.popBackStack()
-                },
+                onBackIconPressed = { navController.popBackStack() },
+                navigateToComplete = {
+                    navController.navigate(ScreenRoute.WithdrawalComplete.route) {
+                        popUpTo(0)
+                    }
+                }
             )
         }
 
         composable(
             route = ScreenRoute.WithdrawalComplete.route,
+            enterTransition = { defaultEnterTransition() },
         ) {
             WithdrawalCompleteScreen(
                 navigateToOnboarding = {

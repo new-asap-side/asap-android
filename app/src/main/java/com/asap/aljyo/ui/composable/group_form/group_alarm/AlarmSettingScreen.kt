@@ -79,6 +79,7 @@ import com.asap.aljyo.ui.theme.Red02
 @Composable
 fun AlarmSettingScreen(
     onBackClick: () -> Unit,
+    navigateToAlarmMusicScreen: () -> Unit,
     onCompleteClick: () -> Unit,
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
@@ -149,6 +150,11 @@ fun AlarmSettingScreen(
                             shape = RoundedCornerShape(6.dp)
                         )
                         .padding(vertical = 12.dp, horizontal = 16.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = navigateToAlarmMusicScreen
+                        )
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -165,7 +171,7 @@ fun AlarmSettingScreen(
                             modifier = Modifier
                                 .padding(start = 96.dp, end = 4.dp)
                                 .weight(1f),
-                            text = "Text",
+                            text = alarmState.musicTitle,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black03,
                                 fontSize = 15.sp,
@@ -467,6 +473,7 @@ fun PreviewAlarmSettingScreen() {
     AljyoTheme {
         AlarmSettingScreen(
             onBackClick =  {},
+            navigateToAlarmMusicScreen = {},
             onCompleteClick = {}
         )
     }

@@ -26,7 +26,9 @@ sealed class ScreenRoute(val route: String) {
 
     data object AlarmType: ScreenRoute(route = "ALARM_TYPE")
 
-    data object AlarmSetting: ScreenRoute(route = "ALARM_TYPE")
+    data object AlarmSetting: ScreenRoute(route = "ALARM_SETTING")
+
+    data object AlarmMusic: ScreenRoute(route = "ALARM_MUSIC")
 }
 
 // Main screen route

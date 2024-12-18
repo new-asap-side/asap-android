@@ -12,6 +12,7 @@ import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
+import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmTypeScreen
 import com.asap.aljyo.ui.composable.group_form.group_create.CreateGroupScreen
@@ -32,7 +33,7 @@ internal fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.GroupType.route,
+        startDestination = ScreenRoute.AlarmType.route,
 //        startDestination = ScreenRoute.ReleaseAlarm.route,
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
@@ -137,7 +138,7 @@ internal fun AppNavHost() {
             )
         ) {
             CreateGroupScreen(
-                onBackClick = {navController.popBackStack()},
+                onBackClick = { navController.popBackStack() },
                 onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
             )
         }
@@ -153,11 +154,19 @@ internal fun AppNavHost() {
 
         composable(
             route = "${ScreenRoute.AlarmSetting.route}/{alarmUnlockContents}",
-            arguments = listOf(navArgument("alarmUnlockContents") {type = NavType.StringType})
+            arguments = listOf(navArgument("alarmUnlockContents") { type = NavType.StringType })
         ) {
             AlarmSettingScreen(
                 onBackClick = { navController.popBackStack() },
+                navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
                 onCompleteClick = {}
+            )
+        }
+
+        composable(route = ScreenRoute.AlarmMusic.route) {
+            AlarmMusicScreen(
+                onBackClick = { navController.popBackStack() },
+                onCompleteClick = { navController.popBackStack() }
             )
         }
     }

@@ -20,6 +20,15 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
+    suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?> = flow {
+        val response = groupService.fetchLatestGroup()
+        if(!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(response.body())
+    }
+
     suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> = flow {
         val response = groupService.postJoinGroup(body)
         emit(response.body())

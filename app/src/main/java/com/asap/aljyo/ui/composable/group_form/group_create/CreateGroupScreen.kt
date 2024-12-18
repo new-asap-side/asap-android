@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_form.group_create
 
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -71,6 +72,7 @@ import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
+import com.asap.aljyo.util.PictureUtil
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -142,6 +144,7 @@ fun CreateGroupScreen(
                 )
 
                 GroupImagePicker(
+                    groupImage = groupState.groupImage,
                     onImagePickerClick = { isShowPhotoBottomSheet = true }
                 )
 
@@ -170,8 +173,7 @@ fun CreateGroupScreen(
                                         .clickable {
                                             coroutineScope.launch { photoSheetState.hide() }
                                                 .invokeOnCompletion {
-                                                    if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
-                                                        false
+                                                    if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
                                                 }
                                         }
                                 )
@@ -186,8 +188,7 @@ fun CreateGroupScreen(
                                         )
                                         coroutineScope
                                             .launch { photoSheetState.hide() }.invokeOnCompletion {
-                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
-                                                    false
+                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
                                             }
                                     }
                             ) {
@@ -212,7 +213,9 @@ fun CreateGroupScreen(
                             Row(
                                 modifier = Modifier
                                     .clickable {
-                                        // 이미지 랜덤 선택 로직
+                                        PictureUtil.groupRandomImage.filterNot { it == groupState.groupImage }
+                                            .random()
+                                            .also { viewModel.onGroupImageSelected(it) }
                                         coroutineScope.launch { photoSheetState.hide() }
                                             .invokeOnCompletion {
                                                 if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
@@ -394,6 +397,7 @@ fun CreateGroupScreen(
 
 @Composable
 fun GroupImagePicker(
+     groupImage: Uri?,
     onImagePickerClick: () -> Unit
 ) {
     Box(
@@ -403,7 +407,7 @@ fun GroupImagePicker(
             .padding(top = 8.dp)
     ) {
         AsyncImage(
-            model = R.drawable.group_default_img,
+            model = groupImage ?: R.drawable.group_default_img,
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier

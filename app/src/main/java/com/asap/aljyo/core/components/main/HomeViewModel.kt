@@ -6,6 +6,7 @@ import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.usecase.ResultCardUseCase
+import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,13 +22,17 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val resultCardUseCase: ResultCardUseCase,
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
+    private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchFCMTokenUseCase: FetchFCMTokenUseCase,
 ) : ViewModel() {
     private val _cardState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
     val cardState get() = _cardState.asStateFlow()
 
-    private val _popularGroupsState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
-    val popularGroupState get() = _popularGroupsState.asStateFlow()
+    private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
+    val popularGroupState get() = _popularGroupState.asStateFlow()
+
+    private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
+    val latestGroupState get() = _latestGroupState.asStateFlow()
 
     private val _scrollPositionMap = mutableMapOf(
         MAIN_TAB_SCROLL_KEY to Pair(0, 0),
@@ -42,19 +47,24 @@ class HomeViewModel @Inject constructor(
             delay(1000)
             resultCardUseCase.invoke()
                 .catch { e ->
-                    _cardState.value = UiState.Success(ResultCard())
+                    _cardState.value = handleThrowable(e)
                 }
                 .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
 
             fetchPopularGroupUseCase.invoke()
                 .catch { e ->
-                    _popularGroupsState.value = when (e) {
-                        is HttpException -> UiState.Error(e.code())
-                        else -> UiState.Error(errorCode = -1)
-                    }
+                    _popularGroupState.value = handleThrowable(e)
                 }
                 .collect { popularGroup ->
-                    _popularGroupsState.value = UiState.Success(popularGroup)
+                    _popularGroupState.value = UiState.Success(popularGroup)
+                }
+
+            fetchLatestGroupUseCase.invoke()
+                .catch { e ->
+                    _popularGroupState.value = handleThrowable(e)
+                }
+                .collect { latestGroup ->
+                    _latestGroupState.value = UiState.Success(latestGroup)
                 }
 
             fetchFCMTokenUseCase.invoke()
@@ -63,6 +73,13 @@ class HomeViewModel @Inject constructor(
 
     fun saveScrollPosition(key: String, index: Int, offset: Int) {
         _scrollPositionMap[key] = Pair(index, offset)
+    }
+
+    private fun handleThrowable(e: Throwable): UiState.Error {
+        return when (e) {
+            is HttpException -> UiState.Error(e.code())
+            else -> UiState.Error(-1)
+        }
     }
 
     companion object {

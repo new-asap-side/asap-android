@@ -8,6 +8,7 @@ import com.asap.domain.entity.ResultCard
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -31,6 +32,8 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // TODO remove
+            delay(1000)
             resultCardUseCase.invoke()
                 .catch { e ->
                     Log.e("HomeViewModel", "$e")

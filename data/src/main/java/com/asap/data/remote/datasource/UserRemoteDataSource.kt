@@ -15,8 +15,12 @@ import javax.inject.Inject
 class UserRemoteDataSource @Inject constructor(
     private val userService: UserService
 ) {
-    val resultCard: Flow<ResultCard?> = flow {
+    suspend fun fetchResultCard(): Flow<ResultCard?> = flow {
         val response = userService.fetchResultCard()
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
         emit(response.body())
     }
 

@@ -52,7 +52,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
-        remoteDataSource.resultCard
+        remoteDataSource.fetchResultCard()
 
     override suspend fun checkNickname(nickname: String): Boolean? {
         return remoteDataSource.checkNickname(nickname)?.isPossible

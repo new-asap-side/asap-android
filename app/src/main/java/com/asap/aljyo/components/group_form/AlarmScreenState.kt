@@ -3,7 +3,7 @@ package com.asap.aljyo.components.group_form
 data class AlarmScreenState(
     val alarmUnlockContents: String = "",
     val alarmType: String = "",
-    val musicTitle: String = "",
+    val musicTitle: String = "노래를 선택해주세요!",
     val alarmVolume: Float = 10f
 ) {
     val buttonState: Boolean

@@ -4,6 +4,8 @@ import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase
 import com.asap.domain.usecase.group.FetchGroupRankingUseCaseImpl
+import com.asap.domain.usecase.group.FetchPopularGroupUseCase
+import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.user.AuthKakaoUseCase
@@ -77,4 +79,12 @@ interface UseCaseModule {
     fun bindDeleteLocalUseCase(
         deleteLocalUserInfoUseCaseImpl: DeleteLocalUserInfoUseCaseImpl
     ): DeleteLocalUserInfoUseCase
+
+    /**
+     * Group usecase
+     * **/
+    @Binds
+    fun bindFetchPopularGroupUseCae(
+        fetchPopularGroupUseCaseImpl: FetchPopularGroupUseCaseImpl
+    ): FetchPopularGroupUseCase
 }

@@ -1,11 +1,10 @@
-package com.asap.aljyo.components.usersetting
+package com.asap.aljyo.util
 
 import android.content.Context
 import android.net.Uri
-import dagger.hilt.android.qualifiers.ApplicationContext
 import android.util.Base64
 
-object UriUtil {
+object PictureUtil {
     private lateinit var applicationContext: Context
 
     fun setContext(context: Context) {

@@ -13,7 +13,7 @@ import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.MainActivity
-import com.asap.aljyo.core.components.navigation.ScreenRoute
+import com.asap.aljyo.core.navigation.ScreenRoute
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

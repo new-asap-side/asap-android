@@ -11,7 +11,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 @Composable
 fun LoadingDialog(
     modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit = {}
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         CircularProgressIndicator(
@@ -23,7 +23,7 @@ fun LoadingDialog(
 
 @Preview(showBackground = true)
 @Composable
-fun LoadingDialogPreview() {
+private fun Preview() {
     AljyoTheme {
         LoadingDialog { }
     }

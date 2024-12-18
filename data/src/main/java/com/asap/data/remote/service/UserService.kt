@@ -8,7 +8,9 @@ import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 
 interface UserService {
@@ -17,7 +19,6 @@ interface UserService {
 
     @GET("/")
     suspend fun fetchResultCard(): Response<ResultCard>
-
 
     // 유저 알람 리스트 조회
     @GET("/alarm-list")
@@ -28,6 +29,9 @@ interface UserService {
 
     @POST("/profile/save-profile")
     suspend fun saveProfile(@Body body: SaveProfileRequest): Response<SaveProfileResponse>
+
+    @HTTP(method = "DELETE", path = "/auth/user", hasBody = true)
+    suspend fun deleteUser(@Body body: Map<String, String>): Response<Unit>
 
 }
 

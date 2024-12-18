@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.Banner
 import com.asap.aljyo.ui.theme.White
 
 @Composable

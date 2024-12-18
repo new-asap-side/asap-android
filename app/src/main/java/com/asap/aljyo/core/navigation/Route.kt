@@ -1,4 +1,4 @@
-package com.asap.aljyo.core.components.navigation
+package com.asap.aljyo.core.navigation
 
 
 // Application screen
@@ -17,6 +17,12 @@ sealed class ScreenRoute(val route: String) {
     data object AlarmResult : ScreenRoute(route = "alarm-result")
 
     data object UserSetting: ScreenRoute(route = "user-setting-profile")
+
+    data object Preferences: ScreenRoute(route = "preferences")
+
+    data object Withdrawal: ScreenRoute(route = "withdrawal")
+
+    data object WithdrawalComplete: ScreenRoute(route = "withdrawal-comoplete")
 }
 
 // Main screen route

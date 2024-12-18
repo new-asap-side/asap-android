@@ -1,4 +1,4 @@
-package com.asap.aljyo.core.components.navigation.navtype
+package com.asap.aljyo.core.navigation.navtype
 
 import android.os.Build
 import android.os.Bundle

@@ -248,8 +248,8 @@ fun CreateGroupScreen(
                         .wrapContentHeight()
                         .heightIn(min = 50.dp, max = 80.dp),
                     label = "그룹명",
-                    value = groupState.description,
-                    onValueChange = { viewModel.onGroupDescriptionChanged(it) },
+                    value = groupState.title,
+                    onValueChange = { viewModel.onGroupTitleChanged(it) },
                     type = GROUP_TITLE,
                     placeHolder = {
                         Text(
@@ -267,8 +267,8 @@ fun CreateGroupScreen(
                         .fillMaxWidth()
                         .height(128.dp),
                     label = "그룹 소개글",
-                    value = groupState.title,
-                    onValueChange = { viewModel.onGroupTitleChanged(it) },
+                    value = groupState.description,
+                    onValueChange = { viewModel.onGroupDescriptionChanged(it) },
                     type = GROUP_DESCRIPTION,
                     placeHolder = {
                         Text(

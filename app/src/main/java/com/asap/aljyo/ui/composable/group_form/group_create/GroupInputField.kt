@@ -47,7 +47,7 @@ fun GroupInputField(
                 modifier = modifier,
                 value = value,
                 onValueChange = onValueChange,
-                singleLine = false,
+                singleLine = type == GROUP_TITLE,
                 maxLines = Int.MAX_VALUE,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Start,

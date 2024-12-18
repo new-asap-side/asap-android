@@ -31,10 +31,12 @@ class GroupFormViewModel @Inject constructor(
     }
 
     fun onGroupTitleChanged(title: String) {
+        if (title.length > 30) return
         _groupScreenState.value = _groupScreenState.value.copy(title = title)
     }
 
     fun onGroupDescriptionChanged(description: String) {
+        if (description.length > 50) return
         _groupScreenState.value = _groupScreenState.value.copy(description = description)
     }
     fun onGroupPersonSelected(person: Int) {

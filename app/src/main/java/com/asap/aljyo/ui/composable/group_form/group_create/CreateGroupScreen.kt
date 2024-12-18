@@ -56,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -77,7 +78,7 @@ import java.time.LocalDate
 @Composable
 fun CreateGroupScreen(
     onBackClick: () -> Unit,
-    onNextClick:() -> Unit,
+    onNextClick: () -> Unit,
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
     val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
@@ -115,267 +116,277 @@ fun CreateGroupScreen(
             )
         }
     ) { innerPadding ->
-        GroupProgressbar(
-            modifier = Modifier.padding(innerPadding),
-            startProgress = 0.25f,
-            endProgress = 0.5f
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)
-                .padding(start = 20.dp, end = 20.dp, top = 16.dp)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
         ) {
-            Text(
-                text = "대표 이미지",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Black02,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+            GroupProgressbar(
+                modifier = Modifier
+                    .zIndex(1f),
+                startProgress = 0.25f,
+                endProgress = 0.5f
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 20.dp, end = 20.dp, top = 16.dp)
+            ) {
+                Text(
+                    text = "대표 이미지",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Black02,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 )
-            )
 
-            GroupImagePicker(
-                onImagePickerClick = { isShowPhotoBottomSheet = true }
-            )
+                GroupImagePicker(
+                    onImagePickerClick = { isShowPhotoBottomSheet = true }
+                )
 
-            if (isShowPhotoBottomSheet) {
-                BottomSheet(
-                    sheetState = photoSheetState,
-                    onDismissRequest = { isShowPhotoBottomSheet = false },
-                    title = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 28.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "이미지 변경",
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontSize = 18.sp,
-                                    color = Black01
+                if (isShowPhotoBottomSheet) {
+                    BottomSheet(
+                        sheetState = photoSheetState,
+                        onDismissRequest = { isShowPhotoBottomSheet = false },
+                        title = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 28.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "이미지 변경",
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 18.sp,
+                                        color = Black01
+                                    )
                                 )
-                            )
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = "close",
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "close",
+                                    modifier = Modifier
+                                        .clickable {
+                                            coroutineScope.launch { photoSheetState.hide() }
+                                                .invokeOnCompletion {
+                                                    if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
+                                                        false
+                                                }
+                                        }
+                                )
+                            }
+                        },
+                        content = {
+                            Row(
                                 modifier = Modifier
                                     .clickable {
+                                        imagePickerLauncher.launch(
+                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                        )
+                                        coroutineScope
+                                            .launch { photoSheetState.hide() }.invokeOnCompletion {
+                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
+                                                    false
+                                            }
+                                    }
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_album),
+                                    modifier = Modifier
+                                        .padding(end = 10.dp),
+                                    contentDescription = "Album Icon",
+                                    tint = Color.Unspecified
+                                )
+                                Text(
+                                    text = "앨범에서 선택하기",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 16.sp,
+                                        color = Black02
+                                    )
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(28.dp))
+
+                            Row(
+                                modifier = Modifier
+                                    .clickable {
+                                        // 이미지 랜덤 선택 로직
                                         coroutineScope.launch { photoSheetState.hide() }
                                             .invokeOnCompletion {
-                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
+                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
+                                                    false
                                             }
                                     }
-                            )
-                        }
-                    },
-                    content = {
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    imagePickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_random),
+                                    modifier = Modifier
+                                        .padding(bottom = 26.dp, end = 10.dp),
+                                    contentDescription = "Random Icon",
+                                    tint = Color.Unspecified
+                                )
+                                Text(
+                                    text = "랜덤으로 바꾸기",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 16.sp,
+                                        color = Black02
                                     )
-                                    coroutineScope
-                                        .launch { photoSheetState.hide() }.invokeOnCompletion {
-                                            if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
-                                        }
-                                }
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_album),
-                                modifier = Modifier
-                                    .padding(end = 10.dp),
-                                contentDescription = "Album Icon",
-                                tint = Color.Unspecified
-                            )
-                            Text(
-                                text = "앨범에서 선택하기",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontSize = 16.sp,
-                                    color = Black02
                                 )
-                            )
+                            }
                         }
+                    )
+                }
 
-                        Spacer(modifier = Modifier.height(28.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    // 이미지 랜덤 선택 로직
-                                    coroutineScope.launch { photoSheetState.hide() }
-                                        .invokeOnCompletion {
-                                            if (!photoSheetState.isVisible) isShowPhotoBottomSheet = false
-                                        }
-                                }
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_random),
-                                modifier = Modifier
-                                    .padding(bottom = 26.dp, end = 10.dp),
-                                contentDescription = "Random Icon",
-                                tint = Color.Unspecified
+                GroupInputField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .heightIn(min = 50.dp, max = 80.dp),
+                    label = "그룹명",
+                    value = groupState.description,
+                    onValueChange = { viewModel.onGroupDescriptionChanged(it) },
+                    type = GROUP_TITLE,
+                    placeHolder = {
+                        Text(
+                            text = "그룹명을 입력해주세 (최대 30자 이내)",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 15.sp,
+                                color = Black04
                             )
-                            Text(
-                                text = "랜덤으로 바꾸기",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontSize = 16.sp,
-                                    color = Black02
-                                )
-                            )
-                        }
-                    }
+                        )
+                    },
                 )
-            }
 
-            GroupInputField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .heightIn(min = 50.dp, max = 80.dp),
-                label = "그룹명",
-                value = groupState.description,
-                onValueChange = { viewModel.onGroupDescriptionChanged(it) },
-                type = GROUP_TITLE,
-                placeHolder = {
-                    Text(
-                        text = "그룹명을 입력해주세 (최대 30자 이내)",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 15.sp,
-                            color = Black04
-                        )
-                    )
-                },
-            )
-
-            GroupInputField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(128.dp),
-                label = "그룹 소개글",
-                value = groupState.title,
-                onValueChange = { viewModel.onGroupTitleChanged(it) },
-                type = GROUP_DESCRIPTION,
-                placeHolder = {
-                    Text(
-                        text = "내용을 입력해세요",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 15.sp,
-                            color = Black04
-                        )
-                    )
-                },
-            )
-
-            MemberPicker(
-                value = groupState.maxPerson,
-                onPlusClick = { viewModel.onGroupPersonSelected(it) },
-                onMinusClick = { viewModel.onGroupPersonSelected(it) }
-            )
-
-            WeekdayPicker(
-                selectedDays = groupState.alarmDays,
-                onDaySelected = { day -> viewModel.onAlarmDaysSelected(day) }
-            )
-
-            TimePicker(
-                selectedTime = groupState.alarmTime,
-                onClick = { isShowTimeBottomSheet = true }
-            )
-
-            if (isShowTimeBottomSheet) {
-                BottomSheet(
-                    sheetState = timeSheetState,
-                    onDismissRequest = { isShowTimeBottomSheet = false },
-                    title = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 24.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "시간 선택",
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontSize = 18.sp,
-                                    color = Black01
-                                )
+                GroupInputField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(128.dp),
+                    label = "그룹 소개글",
+                    value = groupState.title,
+                    onValueChange = { viewModel.onGroupTitleChanged(it) },
+                    type = GROUP_DESCRIPTION,
+                    placeHolder = {
+                        Text(
+                            text = "내용을 입력해세요",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 15.sp,
+                                color = Black04
                             )
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = "close",
+                        )
+                    },
+                )
+
+                MemberPicker(
+                    value = groupState.maxPerson,
+                    onPlusClick = { viewModel.onGroupPersonSelected(it) },
+                    onMinusClick = { viewModel.onGroupPersonSelected(it) }
+                )
+
+                WeekdayPicker(
+                    selectedDays = groupState.alarmDays,
+                    onDaySelected = { day -> viewModel.onAlarmDaysSelected(day) }
+                )
+
+                TimePicker(
+                    selectedTime = groupState.alarmTime,
+                    onClick = { isShowTimeBottomSheet = true }
+                )
+
+                if (isShowTimeBottomSheet) {
+                    BottomSheet(
+                        sheetState = timeSheetState,
+                        onDismissRequest = { isShowTimeBottomSheet = false },
+                        title = {
+                            Row(
                                 modifier = Modifier
-                                    .clickable {
+                                    .fillMaxWidth()
+                                    .padding(bottom = 24.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "시간 선택",
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 18.sp,
+                                        color = Black01
+                                    )
+                                )
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "close",
+                                    modifier = Modifier
+                                        .clickable {
+                                            coroutineScope.launch { timeSheetState.hide() }
+                                                .invokeOnCompletion {
+                                                    if (!timeSheetState.isVisible) isShowTimeBottomSheet =
+                                                        false
+                                                }
+                                        }
+                                )
+                            }
+                        },
+                        content = {
+                            Column {
+                                var tempHour = ""
+                                var tempMinutes = ""
+
+                                AlarmTimePicker(
+                                    onHourSelected = { tempHour = it },
+                                    onMinutesSelected = { tempMinutes = it }
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                CustomButton(
+                                    text = "확인",
+                                    enable = true,
+                                    onClick = {
+                                        viewModel.onAlarmTimeSelected(tempHour, tempMinutes)
                                         coroutineScope.launch { timeSheetState.hide() }
                                             .invokeOnCompletion {
-                                                if (!timeSheetState.isVisible) isShowTimeBottomSheet = false
+                                                if (!timeSheetState.isVisible) isShowTimeBottomSheet =
+                                                    false
                                             }
                                     }
-                            )
+                                )
+                                Spacer(modifier = Modifier.height(6.dp))
+                            }
+                        }
+                    )
+                }
+
+                CalendarView(
+                    selectedYear = selectedYear,
+                    selectedMonth = selectedMonth,
+                    selectedDate = groupState.alarmEndDate,
+                    onMonthSelected = { month ->
+                        when (month) {
+                            13 -> {
+                                selectedMonth = 1
+                                selectedYear += 1
+                            }
+
+                            0 -> {
+                                selectedMonth = 12
+                                selectedYear -= 1
+                            }
+
+                            else -> selectedMonth = month
                         }
                     },
-                    content = {
-                        Column {
-                            var tempHour = ""
-                            var tempMinutes = ""
+                    onDateSelected = { viewModel.onAlarmEndDateSelected(it) },
+                )
 
-                            AlarmTimePicker(
-                                onHourSelected = { tempHour = it },
-                                onMinutesSelected = { tempMinutes = it }
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            CustomButton(
-                                text = "확인",
-                                enable = true,
-                                onClick = {
-                                    viewModel.onAlarmTimeSelected(tempHour, tempMinutes)
-                                    coroutineScope.launch { timeSheetState.hide() }
-                                        .invokeOnCompletion {
-                                            if (!timeSheetState.isVisible) isShowTimeBottomSheet = false
-                                        }
-                                }
-                            )
-                            Spacer(modifier = Modifier.height(6.dp))
-                        }
+                CustomButton(
+                    modifier = Modifier
+                        .padding(bottom = 6.dp, top = 40.dp),
+                    text = "다음",
+                    enable = groupState.buttonState,
+                    onClick = {
+                        onNextClick()
+                        viewModel.onNextClicked()
                     }
                 )
             }
-
-            CalendarView(
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth,
-                selectedDate = groupState.alarmEndDate,
-                onMonthSelected = { month ->
-                    when (month) {
-                        13 -> {
-                            selectedMonth = 1
-                            selectedYear += 1
-                        }
-
-                        0 -> {
-                            selectedMonth = 12
-                            selectedYear -= 1
-                        }
-
-                        else -> selectedMonth = month
-                    }
-                },
-                onDateSelected = { viewModel.onAlarmEndDateSelected(it) },
-            )
-
-            CustomButton(
-                modifier = Modifier
-                    .padding(bottom = 6.dp, top = 40.dp),
-                text = "다음",
-                enable = groupState.buttonState,
-                onClick = {
-                    onNextClick()
-                    viewModel.onNextClicked()
-                }
-            )
         }
     }
 }

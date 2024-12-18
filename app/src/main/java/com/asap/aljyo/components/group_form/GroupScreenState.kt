@@ -1,6 +1,7 @@
 package com.asap.aljyo.components.group_form
 
 import android.net.Uri
+import com.asap.aljyo.util.format
 import com.kakao.sdk.common.model.Description
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -13,7 +14,7 @@ data class GroupScreenState(
     val description: String = "",
     val maxPerson: Int = 1,
     val alarmDays: List<String> = emptyList(),
-    val alarmTime: String = "12:00",
+    val alarmTime: String = LocalDateTime.now().format(),
     val alarmEndDate: LocalDate? = null
 ) {
     val buttonState: Boolean

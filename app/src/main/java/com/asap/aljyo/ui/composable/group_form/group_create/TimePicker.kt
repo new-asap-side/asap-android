@@ -44,8 +44,9 @@ fun TimePicker(
     selectedTime: String,
     onClick: () -> Unit
 ) {
-    val hour = selectedTime.split(":").first().trimStart('0')
-    val period = if (hour.toInt() in 1..12)"오전" else "오후"
+    val (hour, minutes) = selectedTime.split(":")
+    val period = hour.toInt().let { if (it in 0..11)"오전" else "오후" }
+    val hour12 = hour.toInt().let { if (it == 0 || it == 12) 12 else it % 12 }
 
     Column {
         Text(
@@ -69,7 +70,7 @@ fun TimePicker(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$period $selectedTime",
+                text = "$period $hour12:$minutes",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
@@ -134,7 +135,7 @@ fun AlarmTimePicker(
     onHourSelected: (String) -> Unit,
     onMinutesSelected: (String) -> Unit
 ) {
-    val hoursList = listOf("", "") + (1..24).map { it.toString().padStart(2, '0') } + listOf("", "")
+    val hoursList = listOf("", "") + (0..23).map { it.toString().padStart(2, '0') } + listOf("", "")
     val minutesList =
         listOf("", "") + (0..59).map { it.toString().padStart(2, '0') } + listOf("", "")
 

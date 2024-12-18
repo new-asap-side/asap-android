@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.main
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
@@ -41,34 +42,44 @@ class HomeViewModel @Inject constructor(
     )
     val scrollPositionMap get() = _scrollPositionMap
 
+    private val _error = mutableStateOf(false)
+    val error get() = _error.value
+
     init {
-        viewModelScope.launch {
-            // TODO remove
-            delay(1000)
-            resultCardUseCase.invoke()
-                .catch { e ->
-                    _cardState.value = handleThrowable(e)
-                }
-                .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
+        fetchHomeData()
+    }
 
-            fetchPopularGroupUseCase.invoke()
-                .catch { e ->
-                    _popularGroupState.value = handleThrowable(e)
-                }
-                .collect { popularGroup ->
-                    _popularGroupState.value = UiState.Success(popularGroup)
-                }
+    fun fetchHomeData() = viewModelScope.launch {
+        _error.value = false
+        _cardState.value = UiState.Loading
+        _popularGroupState.value = UiState.Loading
+        _latestGroupState.value = UiState.Loading
 
-            fetchLatestGroupUseCase.invoke()
-                .catch { e ->
-                    _popularGroupState.value = handleThrowable(e)
-                }
-                .collect { latestGroup ->
-                    _latestGroupState.value = UiState.Success(latestGroup)
-                }
+        delay(1000)
+        resultCardUseCase.invoke()
+            .catch { e ->
+                _cardState.value = handleThrowable(e)
+            }
+            .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
 
-            fetchFCMTokenUseCase.invoke()
-        }
+        fetchPopularGroupUseCase.invoke()
+            .catch { e ->
+                _popularGroupState.value = handleThrowable(e)
+            }
+            .collect { popularGroup ->
+                _popularGroupState.value = UiState.Success(popularGroup)
+            }
+
+        fetchLatestGroupUseCase.invoke()
+            .catch { e ->
+                _latestGroupState.value = handleThrowable(e)
+            }
+            .collect { latestGroup ->
+                _latestGroupState.value = UiState.Success(latestGroup)
+            }
+
+        fetchFCMTokenUseCase.invoke()
+
     }
 
     fun saveScrollPosition(key: String, index: Int, offset: Int) {
@@ -76,6 +87,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handleThrowable(e: Throwable): UiState.Error {
+        _error.value = true
         return when (e) {
             is HttpException -> UiState.Error(e.code())
             else -> UiState.Error(-1)

@@ -45,7 +45,7 @@ internal fun ErrorBox(
 
         TextButton(
             colors = ButtonDefaults.textButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = Black01,
                 contentColor = White,
             ),
             onClick = { retryFunc() }
@@ -64,8 +64,6 @@ internal fun ErrorBox(
 @Composable
 private fun Preview_ErrorBox() {
     AljyoTheme {
-        ErrorBox(modifier = Modifier.size(320.dp)) {
-
-        }
+        ErrorBox(modifier = Modifier.size(320.dp)) {}
     }
 }

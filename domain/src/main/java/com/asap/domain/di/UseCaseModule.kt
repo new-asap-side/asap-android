@@ -4,6 +4,8 @@ import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase
 import com.asap.domain.usecase.group.FetchGroupRankingUseCaseImpl
+import com.asap.domain.usecase.group.FetchLatestGroupUseCase
+import com.asap.domain.usecase.group.FetchLatestGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
@@ -87,4 +89,9 @@ interface UseCaseModule {
     fun bindFetchPopularGroupUseCae(
         fetchPopularGroupUseCaseImpl: FetchPopularGroupUseCaseImpl
     ): FetchPopularGroupUseCase
+
+    @Binds
+    fun bindFetchLatestGroupUseCase(
+        fetchGroupRankingUseCaseImpl: FetchLatestGroupUseCaseImpl
+    ): FetchLatestGroupUseCase
 }

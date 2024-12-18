@@ -44,6 +44,13 @@ fun LatestScreen(
         }
     }
 
+    if(latestGroupState is UiState.Error) {
+        ErrorBox(modifier = Modifier.fillMaxSize()) {
+            viewModel.fetchHomeData()
+        }
+        return
+    }
+
     LazyVerticalGrid(
         state = scrollState,
         modifier = Modifier.padding(horizontal = 20.dp),
@@ -52,17 +59,12 @@ fun LatestScreen(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         when (latestGroupState) {
-            is UiState.Error -> {
-                item {
-                    ErrorBox(modifier = Modifier.fillMaxSize()) {
-                        viewModel.fetchHomeData()
-                    }
-                }
-            }
 
             UiState.Loading -> {
-                item(6) {
-                    GroupItemShimmer(modifier = Modifier)
+                repeat(6) {
+                    item {
+                        GroupItemShimmer(modifier = Modifier)
+                    }
                 }
             }
 
@@ -79,6 +81,8 @@ fun LatestScreen(
                     }
                 }
             }
+
+            else -> Unit
         }
     }
 }

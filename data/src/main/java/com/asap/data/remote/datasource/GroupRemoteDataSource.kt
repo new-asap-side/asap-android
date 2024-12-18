@@ -5,6 +5,7 @@ import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.GroupRanking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class GroupRemoteDataSource @Inject constructor(
@@ -12,6 +13,10 @@ class GroupRemoteDataSource @Inject constructor(
 ) {
     suspend fun fetchTodayPopularGroup(): Flow<List<AlarmGroup>?> = flow {
         val response = groupService.fetchTodayPopularGroup()
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
         emit(response.body())
     }
 

@@ -15,6 +15,7 @@ import com.asap.aljyo.ui.composable.main.home.GroupItem
 
 @Composable
 fun PopularityScreen(
+    navigateToGroupDetails: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.POPULAR_TAB_SCROLL_KEY] ?: Pair(0, 0)

@@ -17,3 +17,16 @@ class DeleteUserInfoUseCaseImpl @Inject constructor(
             .onCompletion { userRepository.deleteLocalUserInfo() }
 
 }
+
+interface DeleteLocalUserInfoUseCase {
+    suspend operator fun invoke()
+}
+
+class DeleteLocalUserInfoUseCaseImpl @Inject constructor(
+    private val userRepository: UserRepository
+): DeleteLocalUserInfoUseCase {
+    override suspend fun invoke() {
+        userRepository.deleteLocalUserInfo()
+    }
+
+}

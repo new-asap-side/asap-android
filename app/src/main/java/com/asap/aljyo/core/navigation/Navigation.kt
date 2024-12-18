@@ -211,6 +211,11 @@ fun MainNavHost(
             MyPageScreen(
                 navigateToPreferences = {
                     screenNavController.navigate(ScreenRoute.Preferences.route)
+                },
+                navigateToOnboarding = {
+                    screenNavController.navigate(ScreenRoute.Onboarding.route) {
+                        popUpTo(0)
+                    }
                 }
             )
         }

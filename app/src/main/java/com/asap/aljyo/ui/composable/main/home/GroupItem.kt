@@ -43,7 +43,7 @@ import com.asap.domain.entity.remote.AlarmGroup
 private const val everyDay = 7
 
 @Composable
-fun GroupItem(
+internal fun GroupItem(
     modifier: Modifier = Modifier,
     alarmGroup: AlarmGroup = AlarmGroup.dummy()
 ) {
@@ -66,9 +66,9 @@ fun GroupItem(
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val dates = if (alarmGroup.alarmDates.size == everyDay)
+            val dates = if (alarmGroup.alarmDays.size == everyDay)
                 stringResource(R.string.everyday)
-            else alarmGroup.alarmDates.joinToString(
+            else alarmGroup.alarmDays.joinToString(
                 separator = " "
             )
             GreyBackgroundText(dates)
@@ -76,15 +76,15 @@ fun GroupItem(
         }
         Spacer(modifier = Modifier.height(4.dp))
         GroupCounting(
-            currentCount = alarmGroup.currentNumber,
-            totalCount = alarmGroup.totalNumber
+            currentCount = alarmGroup.currentPerson,
+            totalCount = alarmGroup.maxPersion
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GroupItemPreview() {
+private fun GroupItemPreview() {
     AljyoTheme {
         GroupItem(modifier = Modifier.width(148.dp))
     }

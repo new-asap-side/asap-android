@@ -42,8 +42,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     # create local.properties
     - name: Create local.properties
       run: |
-        echo $ALJO > local.properties
-        echo "SIGNED_STORE_FILE=keystore.jks" >> local.properties
+        echo $ALJO > ./local.properties
+        echo "SIGNED_STORE_FILE=keystore.jks" >> ./local.properties
+        cat ./local.properties
 
     # debug build
     - name: Build debug

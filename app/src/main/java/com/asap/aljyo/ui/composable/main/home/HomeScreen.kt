@@ -24,6 +24,7 @@ import com.asap.aljyo.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    onCreateButtonClick: () -> Unit,
     onGroupItemClick: (Int) -> Unit,
 ) {
     AljyoTheme {
@@ -47,7 +48,7 @@ fun HomeScreen(
                 )
             },
             floatingActionButton = {
-                NewGroupButton()
+                NewGroupButton(onClick = onCreateButtonClick)
             }
         ) { paddingValues ->
             Surface(

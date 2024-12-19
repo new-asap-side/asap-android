@@ -8,32 +8,40 @@ import kotlinx.parcelize.Parcelize
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class AlarmGroup(
-    @Json(name = "isPublic")
-    val isPublic: Boolean,
-    @Json(name = "thumbnailUrl")
-    val thumbnailUrl: String,
+    @Json(name = "group_id")
+    val groupId: Int = 0,
     @Json(name = "title")
-    val title: String,
-    @Json(name = "alarmDate")
-    val alarmDates: List<String>,
-    @Json(name = "alarmTime")
-    val alarmTime: String,
-    @Json(name = "totalNumber")
-    val totalNumber: Int,
-    @Json(name = "currentNumber")
-    val currentNumber: Int,
+    val title: String = "Title",
+    @Json(name = "description")
+    val description: String = "",
+    @Json(name = "max_person")
+    val maxPersion: Int = 0,
+    @Json(name = "current_person")
+    val currentPerson: Int = 0,
+    @Json(name = "is_public")
+    val isPublic: Boolean = true,
+    @Json(name = "group_password")
+    val groupPasswrod: String? = null,
+    @Json(name = "alarm_end_date")
+    val alarmEndDate: String = "",
+    @Json(name = "alarm_time")
+    val alarmTime: String = "21:30",
+    @Json(name = "alarm_days")
+    val alarmDays: List<String> = listOf("월", "화", "수", "목", "금"),
+    @Json(name = "view_count")
+    val viewCount: Int = 0,
+    @Json(name = "group_thumbnail_image_url")
+    val thumbnailUrl: String = "",
+    @Json(name = "status")
+    val status: String = "",
+    @Json(name = "alarm_unlock_contents")
+    val alarmUnlockContent: String = "CARD",
+    @Json(name = "created_at")
+    val createDate: String = "",
+    @Json(name = "updated_at")
+    val udateDate: String = "",
 ) : Parcelable {
     companion object {
-        fun dummy(): AlarmGroup {
-            return AlarmGroup(
-                isPublic = true,
-                thumbnailUrl = "",
-                title = "TEST Group",
-                alarmDates = listOf("월", "화", "수"),
-                alarmTime = "21:00",
-                totalNumber = 8,
-                currentNumber = 4,
-            )
-        }
+        fun dummy(): AlarmGroup = AlarmGroup()
     }
 }

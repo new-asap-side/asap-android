@@ -55,9 +55,7 @@ internal fun AlarmListScreen(
             )
         }
 
-        Surface(
-            modifier = Modifier.weight(1f)
-        ) {
+        Surface(modifier = Modifier.weight(1f)) {
             val uiState by viewModel.alarmList.collectAsState()
             when (uiState) {
                 is UiState.Error -> {

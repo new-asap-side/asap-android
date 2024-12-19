@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.main.home
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.main.home.latest.LatestScreen
-import com.asap.aljyo.ui.composable.main.home.main.MainTabScreen
+import com.asap.aljyo.ui.composable.main.home.main.MainScreen
 import com.asap.aljyo.ui.composable.main.home.popularity.PopularityScreen
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -56,7 +55,6 @@ fun HomeTabScreen(
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
 
-    Log.d("HomeTabScreen", "HomeTabScreen composition")
     Column(modifier = modifier) {
         ScrollableTabRow(
             modifier = modifier,
@@ -120,13 +118,13 @@ fun HomeTabScreen(
         )
         Spacer(modifier = Modifier.height(32.dp))
         when (tabIndex) {
-            0 -> MainTabScreen(
+            0 -> MainScreen(
                 tabChange = { tabIndex = it },
-                navigate = onGroupItemClick
+                navigateToGroupDetails = onGroupItemClick
             )
 
-            1 -> PopularityScreen()
-            2 -> LatestScreen()
+            1 -> PopularityScreen(navigateToGroupDetails = onGroupItemClick)
+            2 -> LatestScreen(navigateToGroupDetails = onGroupItemClick)
         }
     }
 }

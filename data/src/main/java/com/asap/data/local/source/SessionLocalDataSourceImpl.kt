@@ -36,6 +36,13 @@ class SessionLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun clear() {
+        sessionDataStore.edit {
+            it.remove(ACCESS_TOKEN)
+            it.remove(REFRESH_TOKEN)
+        }
+    }
+
     companion object {
         val ACCESS_TOKEN = stringPreferencesKey("accessToken")
         val REFRESH_TOKEN = stringPreferencesKey("refreshToken")

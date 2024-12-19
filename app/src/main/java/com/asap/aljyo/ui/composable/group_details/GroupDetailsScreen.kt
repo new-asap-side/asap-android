@@ -5,16 +5,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,20 +27,34 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
-import com.asap.aljyo.components.navigation.ScreenRoute
+import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
+import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
+import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 
@@ -63,7 +82,74 @@ fun GroupDetailsScreen(
     }
 
     AljyoTheme {
-        Scaffold(
+        var showBottomSheet by remember { mutableStateOf(false) }
+        var showLeaveGroupDialog by remember { mutableStateOf(false) }
+
+        if (showBottomSheet) {
+            BottomSheet(
+                sheetState = rememberModalBottomSheetState(),
+                onDismissRequest = {},
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.see_more),
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontSize = 18.sp,
+                                color = Black01
+                            )
+                        )
+                        IconButton(
+                            onClick = { showBottomSheet = false }
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "close"
+                            )
+                        }
+                    }
+                }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            // show leave group dialog
+                            showLeaveGroupDialog = true
+                        }
+                        .padding(vertical = 10.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_leave_group),
+                        contentDescription = "Leave group icon"
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = stringResource(R.string.leave_group),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.sp,
+                            color = Black02
+                        )
+                    )
+                }
+            }
+        }
+
+        if(showLeaveGroupDialog) {
+            PrecautionsDialog(
+                title = stringResource(R.string.ask_leave_group),
+                description = stringResource(R.string.ranking_initialized),
+                onDismissRequest = { showLeaveGroupDialog = false },
+                onConfirm = {
+                    // 그룹 탈퇴 api
+                }
+            )
+        }
+
+        Scaffold (
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -89,7 +175,7 @@ fun GroupDetailsScreen(
                     },
                     actions = {
                         IconButton(
-                            onClick = {}
+                            onClick = { showBottomSheet = true }
                         ) {
                             Icon(
                                 Icons.Default.MoreVert,

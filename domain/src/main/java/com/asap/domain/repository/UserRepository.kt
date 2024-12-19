@@ -29,4 +29,9 @@ interface UserRepository {
     suspend fun fetchFCMToken()
 
     suspend fun fetchUserAlarmList(): Flow<List<Alarm>?>
+
+    suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit>
+
+    suspend fun deleteLocalUserInfo()
+
 }

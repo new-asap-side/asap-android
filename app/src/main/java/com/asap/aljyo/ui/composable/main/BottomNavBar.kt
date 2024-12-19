@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.asap.aljyo.components.navigation.MainScreenRoute
+import com.asap.aljyo.core.navigation.MainScreenRoute
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.theme.White
 
@@ -82,13 +82,12 @@ fun BottomNavigationBar(
         ) {
             bottomNavItems.forEach { item ->
                 val onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let {
-                            popUpTo(it) {
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            val previousRoute = currentRoute ?: MainScreenRoute.Home.route
+                            popUpTo(previousRoute) {
                                 inclusive = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 }

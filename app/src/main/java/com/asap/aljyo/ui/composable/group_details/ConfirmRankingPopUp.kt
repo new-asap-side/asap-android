@@ -110,8 +110,9 @@ internal fun ConfirmRankingPopUp(
 @Composable
 private fun ConfirmRankingDialogPreview() {
     AljyoTheme {
-//        ConfirmRankingDialog(
-//            onDismiss = {}
-//        )
+        ConfirmRankingPopUp(
+            onDismiss = {},
+            offset = IntOffset.Zero
+        )
     }
 }

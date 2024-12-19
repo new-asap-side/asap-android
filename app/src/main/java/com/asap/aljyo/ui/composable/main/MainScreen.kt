@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.asap.aljyo.components.navigation.MainNavHost
-import com.asap.aljyo.components.navigation.MainScreenRoute
+import com.asap.aljyo.core.navigation.MainNavHost
+import com.asap.aljyo.core.navigation.MainScreenRoute
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
@@ -58,12 +58,6 @@ internal fun MainScreen(
                     navController = navController
                 )
             },
-            floatingActionButton = {
-                val currentRoute by navController.currentBackStackEntryAsState()
-                if (currentRoute?.destination?.route == MainScreenRoute.Home.route) {
-                    NewGroupButton()
-                }
-            }
         ) { padding ->
             Box(Modifier.padding(padding)) {
                 MainNavHost(

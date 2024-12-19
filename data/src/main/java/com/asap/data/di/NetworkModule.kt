@@ -20,6 +20,13 @@ internal const val baseUrl = "http://aljo.shop/"
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    @Singleton
+    @Provides
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
 
     @Singleton
     @Provides
@@ -37,13 +44,9 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
         return Retrofit.Builder()
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+            .addConverterFactory(MoshiConverterFactory.create(provideMoshi()))
             .baseUrl(baseUrl)
             .build()
     }

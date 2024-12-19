@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Grey02
+import com.asap.aljyo.ui.theme.Red01
+import com.asap.aljyo.ui.theme.White
 
 @Composable
 fun CustomButton(
     modifier: Modifier = Modifier,
     text: String,
-    textColor: androidx.compose.ui.graphics.Color,
-    backgroundColor: androidx.compose.ui.graphics.Color,
     enable: Boolean = false,
     onClick: () -> Unit
 ) {
@@ -29,8 +29,8 @@ fun CustomButton(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = textColor,
+            containerColor = Red01,
+            contentColor = White,
             disabledContainerColor = Grey02,
             disabledContentColor = Black04
         ),

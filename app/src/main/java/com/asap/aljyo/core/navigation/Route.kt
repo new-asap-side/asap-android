@@ -23,6 +23,16 @@ sealed class ScreenRoute(val route: String) {
     data object Withdrawal: ScreenRoute(route = "withdrawal")
 
     data object WithdrawalComplete: ScreenRoute(route = "withdrawal-comoplete")
+
+    data object GroupType: ScreenRoute(route = "group_type")
+
+    data object GroupCreate: ScreenRoute(route = "group_create")
+
+    data object AlarmType: ScreenRoute(route = "alarm_type")
+
+    data object AlarmSetting: ScreenRoute(route = "alarm_Setting")
+
+    data object AlarmMusic: ScreenRoute(route = "alarm_music")
 }
 
 // Main screen route

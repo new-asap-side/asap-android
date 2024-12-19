@@ -3,6 +3,7 @@ package com.asap.aljyo.core.components.usersetting
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.user.CheckNicknameUseCase
 import com.asap.domain.usecase.user.SaveUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,7 +59,7 @@ class UserSettingViewModel @Inject constructor(
             val profileImage = _userSettingState.value.selectedProfileImage
 
             profileImage?.let {
-                saveUserProfileUseCase(nickname, UriUtil.getStringFromUri(it))
+                saveUserProfileUseCase(nickname, PictureUtil.getStringFromUri(it))
             }
         }
     }

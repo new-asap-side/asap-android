@@ -130,8 +130,6 @@ fun UserSettingScreen(
                 modifier = Modifier
                     .imePadding(),
                 text = "확인",
-                textColor = Color.White,
-                backgroundColor = Red01,
                 onClick = {
                     userSettingViewModel.saveUserProfile()
                     navigateToMain()

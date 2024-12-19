@@ -16,4 +16,23 @@ interface GroupRepository {
 
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>
+
+    suspend fun postCreateGroup(
+        groupImage: String,
+        alarmDays: List<String>,
+        alarmEndDate: String,
+        alarmTime: String,
+        alarmType: String,
+        alarmUnlockContents: String,
+        alarmVolume: Int?,
+        description: String,
+        deviceToken: String,
+        deviceType: String,
+        groupPassword: String?,
+        isPublic: Boolean,
+        maxPerson: Int,
+        musicTitle: String?,
+        title: String,
+        userId: Int
+    )
 }

@@ -14,6 +14,9 @@ interface GroupService {
     @GET("/group/popular")
     suspend fun fetchTodayPopularGroup(): Response<List<AlarmGroup>>
 
+    @GET("/group/latest")
+    suspend fun fetchLatestGroup(): Response<List<AlarmGroup>>
+
     @POST("/group/join")
     suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<Boolean>
 

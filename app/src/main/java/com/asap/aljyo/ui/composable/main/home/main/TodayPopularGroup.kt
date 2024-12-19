@@ -12,15 +12,21 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.overscroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.HomeViewModel
+import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.overscroll.CustomOverscroll
 import com.asap.aljyo.ui.composable.main.home.GroupItem
+import com.asap.aljyo.ui.composable.main.home.GroupItemShimmer
 import com.asap.aljyo.ui.theme.AljyoTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -28,13 +34,16 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 fun TodayPopularGroup(
     modifier: Modifier = Modifier,
     tabChange: (Int) -> Unit,
-    navigate: (Int) -> Unit
+    navigate: (Int) -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val popularListState = rememberLazyListState()
     val overscrollEffect = remember(coroutineScope) {
         CustomOverscroll.HorizontalClamping(scope = coroutineScope)
     }
+
+    val popularGroupsState by viewModel.popularGroupState.collectAsState()
 
     Column(
         modifier = modifier,
@@ -46,25 +55,46 @@ fun TodayPopularGroup(
         ) {
             tabChange(1)
         }
-        LazyRow(
-            state = popularListState,
-            userScrollEnabled = false,
-            modifier = Modifier
-                .overscroll(overscrollEffect = overscrollEffect)
-                .scrollable(
-                    orientation = Orientation.Horizontal,
-                    reverseDirection = true,
+
+        when (popularGroupsState) {
+            is UiState.Error -> Unit
+            UiState.Loading -> {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    repeat(3) {
+                        item {
+                            GroupItemShimmer(modifier = Modifier.width(148.dp))
+                        }
+                    }
+                }
+            }
+
+            is UiState.Success -> {
+                val popularGroups = (popularGroupsState as UiState.Success).data ?: emptyList()
+
+                LazyRow(
                     state = popularListState,
-                    overscrollEffect = overscrollEffect
-                ),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(5) {
-                GroupItem(
+                    userScrollEnabled = false,
                     modifier = Modifier
-                        .width(148.dp)
-                        .clickable { navigate(it) }
-                )
+                        .overscroll(overscrollEffect = overscrollEffect)
+                        .scrollable(
+                            orientation = Orientation.Horizontal,
+                            reverseDirection = true,
+                            state = popularListState,
+                            overscrollEffect = overscrollEffect
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    popularGroups.forEach { alarmGroup ->
+                        item {
+                            GroupItem(
+                                modifier = Modifier
+                                    .width(148.dp)
+                                    .clickable { navigate(alarmGroup.groupId) },
+                                alarmGroup = alarmGroup
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -72,10 +102,11 @@ fun TodayPopularGroup(
 
 @Preview(showBackground = true)
 @Composable
-fun TodayPopularGroupPreview() {
+private fun TodayPopularGroupPreview() {
     AljyoTheme {
         TodayPopularGroup(
-            tabChange = {}
-        ) {}
+            tabChange = {},
+            navigate = {}
+        )
     }
 }

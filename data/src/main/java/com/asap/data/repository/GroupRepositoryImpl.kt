@@ -14,6 +14,10 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchTodayPopularGroup()
     }
 
+    override suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?> {
+        return remoteDataSource.fetchTodayPopularGroup()
+    }
+
     override suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> {
         return remoteDataSource.postJoinGroup(body = body)
     }

@@ -7,6 +7,7 @@ import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.asap.domain.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
@@ -51,7 +52,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
-        remoteDataSource.resultCard
+        remoteDataSource.fetchResultCard()
 
     override suspend fun checkNickname(nickname: String): Boolean? {
         return remoteDataSource.checkNickname(nickname)?.isPossible
@@ -76,13 +77,28 @@ class UserRepositoryImpl @Inject constructor(
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
             OnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                     return@OnCompleteListener
                 }
 
                 FCMTokenManager.token = task.result
+                Log.d(TAG, FCMTokenManager.token)
             }
         )
+    }
+
+    override suspend fun fetchUserAlarmList(): Flow<List<Alarm>?> =
+        remoteDataSource.fetchAlarmList()
+
+    override suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit> =
+        remoteDataSource.deleteUser(survey = survey)
+
+    override suspend fun deleteLocalUserInfo() {
+        // Room DB delete
+        val userDao = localDataSource.userDao()
+        userDao.deleteAll()
+
+        // session data store clear
+        sessionLocalDataSource.clear()
     }
 
     companion object {

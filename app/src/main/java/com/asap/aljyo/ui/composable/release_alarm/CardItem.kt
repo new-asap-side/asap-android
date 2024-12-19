@@ -11,6 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,12 +59,12 @@ internal fun CardItem(
                 )
 
             CardState.Success ->
-                Box(modifier = modifier) {
-                    Image(
-                        modifier = Modifier.fillMaxSize(),
-                        painter = painterResource(R.drawable.ic_card),
-                        contentDescription = "Success card",
-                    )
+                Box(
+                    modifier = modifier.paint(
+                        painter = painterResource(R.drawable.ic_empty_card),
+                        contentScale = ContentScale.FillHeight,
+                    ),
+                ) {
                     Image(
                         modifier = Modifier
                             .size(60.dp)

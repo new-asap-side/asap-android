@@ -8,6 +8,7 @@ import com.asap.domain.entity.remote.GroupRanking
 import com.squareup.moshi.Json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -16,6 +17,19 @@ class GroupRemoteDataSource @Inject constructor(
 ) {
     suspend fun fetchTodayPopularGroup(): Flow<List<AlarmGroup>?> = flow {
         val response = groupService.fetchTodayPopularGroup()
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(response.body())
+    }
+
+    suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?> = flow {
+        val response = groupService.fetchLatestGroup()
+        if(!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
         emit(response.body())
     }
 

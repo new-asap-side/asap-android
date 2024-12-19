@@ -26,3 +26,7 @@ val Error = Color(0xFFDE0000)
 val Blue = Color(0xFF0066FF)
 val Green = Color(0xFF17C07E)
 val Yellow = Color(0xFFFFC441)
+
+// Shimmer
+val ShimmerBase = Color(0xFFEFF0F4)
+val ShimmerBaseDark = Color(0xFFD9D8E0)

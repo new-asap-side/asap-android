@@ -30,6 +30,11 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
       run: chmod +x ./gradlew
       shell: bash
 
+    # decode keystore
+    - name: Decode And Save Keystore Base64
+      run: |
+        echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
+
     # create google-services.json
     - name: Create google-services.json
       run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
@@ -38,6 +43,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     - name: Create local.properties
       run: |
         echo $ALJO > local.properties
+        echo "SIGNED_STORE_FILE=keystore.jks" >> local.properties
 
     # debug build
     - name: Build debug

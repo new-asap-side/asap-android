@@ -31,6 +31,7 @@ import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
 import com.asap.domain.entity.remote.Alarm
+import com.google.gson.Gson
 
 
 @Composable
@@ -197,6 +198,10 @@ fun MainNavHost(
         }
         composable(route = MainScreenRoute.Home.route) {
             HomeScreen(
+                navigateToReleaseAlarm = { alarm ->
+                    val json = Gson().toJson(alarm)
+                    screenNavController.navigate("${ScreenRoute.ReleaseAlarm.route}/$json")
+                },
                 onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
                 onGroupItemClick = navigateToGroupDetails
             )

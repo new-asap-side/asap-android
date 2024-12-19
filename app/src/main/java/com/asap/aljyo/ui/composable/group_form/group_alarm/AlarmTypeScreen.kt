@@ -41,7 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.Black01
@@ -52,8 +54,9 @@ import com.asap.aljyo.ui.theme.Red02
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmTypeScreen(
+    viewModel: GroupFormViewModel,
     onBackClick: () -> Unit,
-    navigateToAlarmSetting: (String) -> Unit
+    navigateToAlarmSetting: () -> Unit
 ) {
     var isSelected by remember { mutableIntStateOf(-1) }
 
@@ -128,7 +131,10 @@ fun AlarmTypeScreen(
                 text = "다음",
                 enable = (isSelected == 0) || (isSelected == 1),
                 onClick = {
-                    if (isSelected == 0) navigateToAlarmSetting("SLIDE") else navigateToAlarmSetting("CARD")
+                    viewModel.onAlarmUnlockContentsSelected(
+                        if (isSelected == 0) "SLIDE" else "CARD"
+                    )
+                    navigateToAlarmSetting()
                 }
             )
 

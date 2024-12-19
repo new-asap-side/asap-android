@@ -384,10 +384,7 @@ fun CreateGroupScreen(
                         .padding(bottom = 6.dp, top = 40.dp),
                     text = "다음",
                     enable = groupState.buttonState,
-                    onClick = {
-                        onNextClick()
-                        viewModel.onNextClicked()
-                    }
+                    onClick = onNextClick
                 )
             }
         }

@@ -44,7 +44,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -59,16 +61,13 @@ import com.asap.aljyo.ui.theme.Red02
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectGroupTypeScreen(
-    navigateToCreateGroup: (Boolean, String?) -> Unit,
+    viewModel: GroupFormViewModel,
+    navigateToCreateGroup: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
     var isSelected by remember { mutableIntStateOf(-1) }
     var password by remember { mutableStateOf("") }
-    val buttonState by remember {
-        derivedStateOf {
-            (isSelected == 0) || (isSelected == 1 && password.length == 4)
-        }
-    }
 
     Scaffold(
         containerColor = White,
@@ -154,13 +153,13 @@ fun SelectGroupTypeScreen(
                     .padding(start = 20.dp, end = 20.dp)
                     .imePadding(),
                 text = "확인",
-                enable = buttonState,
+                enable = (isSelected == 0) || (isSelected == 1 && password.length == 4),
                 onClick = {
-                    if (isSelected == 0) {
-                        navigateToCreateGroup(true, null)
-                    } else {
-                        navigateToCreateGroup(false, password)
-                    }
+                    viewModel.onGroupTypeSelected(
+                        groupType = isSelected == 0,
+                        password = password
+                    )
+                    navigateToCreateGroup()
                 }
             )
         }
@@ -279,21 +278,4 @@ fun UnderlineTextField(
             )
         }
     }
-}
-
-@Composable
-@Preview
-fun PreviewBoxWithCheckButton() {
-
-}
-
-@Composable
-@Preview
-fun PreviewSelectGroupTypeScreen() {
-//    AljyoTheme {
-//        SelectGroupTypeScreen(
-//            navigateToCreateGroup = {},
-//            onBackClick = {}
-//        )
-//    }
 }

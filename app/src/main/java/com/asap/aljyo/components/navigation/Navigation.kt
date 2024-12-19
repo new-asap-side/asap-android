@@ -2,7 +2,9 @@ package com.asap.aljyo.components.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavArgument
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,6 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.components.usersetting.UserSettingScreen
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
+import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
@@ -33,7 +37,7 @@ internal fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = ScreenRoute.AlarmType.route,
+        startDestination = ScreenRoute.GroupType.route,
 //        startDestination = ScreenRoute.ReleaseAlarm.route,
     ) {
         composable(route = ScreenRoute.Onboarding.route) {
@@ -102,8 +106,6 @@ internal fun AppNavHost() {
             AlarmResultScreen(illustIndex = index)
         }
 
-
-
         composable(route = ScreenRoute.UserSetting.route) {
             UserSettingScreen(
                 navigateToMain = {
@@ -115,60 +117,7 @@ internal fun AppNavHost() {
             )
         }
 
-        composable(route = ScreenRoute.GroupType.route) {
-            SelectGroupTypeScreen(
-                navigateToCreateGroup = { isPublic, password ->
-                    navController.navigate("${ScreenRoute.GroupCreate.route}/$isPublic?groupPassword=$password")
-                },
-                onBackClick = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable(
-            route = "${ScreenRoute.GroupCreate.route}/{groupType}?groupPassword={groupPassword}",
-            arguments = listOf(
-                navArgument("groupType") { type = NavType.BoolType },
-                navArgument("groupPassword") {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                }
-            )
-        ) {
-            CreateGroupScreen(
-                onBackClick = { navController.popBackStack() },
-                onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
-            )
-        }
-
-        composable(route = ScreenRoute.AlarmType.route) {
-            AlarmTypeScreen(
-                onBackClick = { navController.popBackStack() },
-                navigateToAlarmSetting = { alarmUnlockContents ->
-                    navController.navigate("${ScreenRoute.AlarmSetting.route}/$alarmUnlockContents")
-                }
-            )
-        }
-
-        composable(
-            route = "${ScreenRoute.AlarmSetting.route}/{alarmUnlockContents}",
-            arguments = listOf(navArgument("alarmUnlockContents") { type = NavType.StringType })
-        ) {
-            AlarmSettingScreen(
-                onBackClick = { navController.popBackStack() },
-                navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
-                onCompleteClick = {}
-            )
-        }
-
-        composable(route = ScreenRoute.AlarmMusic.route) {
-            AlarmMusicScreen(
-                onBackClick = { navController.popBackStack() },
-                onCompleteClick = { navController.popBackStack() }
-            )
-        }
+        groupCreateNavGraph(navController)
     }
 }
 
@@ -198,5 +147,56 @@ fun MainNavHost(
         composable(route = MainScreenRoute.MyPage.route) {
             MyPageScreen()
         }
+    }
+}
+
+fun NavGraphBuilder.groupCreateNavGraph(
+    navController: NavHostController
+) {
+    composable(route = ScreenRoute.GroupType.route) {
+        SelectGroupTypeScreen(
+            viewModel = hiltViewModel(),
+            navigateToCreateGroup = {
+                navController.navigate(ScreenRoute.GroupCreate.route)
+            },
+            onBackClick = {
+                navController.popBackStack()
+            }
+        )
+    }
+
+    composable(route = ScreenRoute.GroupCreate.route) {
+        CreateGroupScreen(
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            onBackClick = { navController.popBackStack() },
+            onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
+        )
+    }
+
+    composable(route = ScreenRoute.AlarmType.route) {
+        AlarmTypeScreen(
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            onBackClick = { navController.popBackStack() },
+            navigateToAlarmSetting = {
+                navController.navigate(ScreenRoute.AlarmSetting.route)
+            }
+        )
+    }
+
+    composable(route = ScreenRoute.AlarmSetting.route) {
+        AlarmSettingScreen(
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            onBackClick = { navController.popBackStack() },
+            navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
+            onCompleteClick = {}
+        )
+    }
+
+    composable(route = ScreenRoute.AlarmMusic.route) {
+        AlarmMusicScreen(
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            onBackClick = { navController.popBackStack() },
+            onCompleteClick = { navController.popBackStack() }
+        )
     }
 }

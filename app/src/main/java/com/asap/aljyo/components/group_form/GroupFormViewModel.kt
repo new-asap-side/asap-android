@@ -1,6 +1,7 @@
 package com.asap.aljyo.components.group_form
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupFormViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+
 ): ViewModel() {
     private val _groupScreenState = MutableStateFlow(GroupScreenState())
     val groupScreenState: StateFlow<GroupScreenState> get() = _groupScreenState.asStateFlow()
@@ -20,9 +21,12 @@ class GroupFormViewModel @Inject constructor(
     private val _alarmScreenState = MutableStateFlow(AlarmScreenState())
     val alarmScreenState: StateFlow<AlarmScreenState> get() = _alarmScreenState.asStateFlow()
 
-    private val groupType: Boolean? get() = savedStateHandle["groupType"]
-    private val groupPassword: String? get() = savedStateHandle["groupPassword"]
-    private val alarmUnlockContents: String? get() = savedStateHandle["alarmUnlockContents"]
+    fun onGroupTypeSelected(groupType: Boolean, password: String) {
+        _groupScreenState.value = _groupScreenState.value.copy(
+            isPublic = groupType,
+            groupPassword = password
+        )
+    }
 
     fun onGroupImageSelected(image: Uri?) {
         if (image != null) {
@@ -32,11 +36,13 @@ class GroupFormViewModel @Inject constructor(
 
     fun onGroupTitleChanged(title: String) {
         if (title.length > 30) return
+
         _groupScreenState.value = _groupScreenState.value.copy(title = title)
     }
 
     fun onGroupDescriptionChanged(description: String) {
         if (description.length > 50) return
+
         _groupScreenState.value = _groupScreenState.value.copy(description = description)
     }
     fun onGroupPersonSelected(person: Int) {
@@ -62,16 +68,15 @@ class GroupFormViewModel @Inject constructor(
         _groupScreenState.value = _groupScreenState.value.copy(alarmEndDate = date)
     }
 
-    fun onNextClicked() {
-        _groupScreenState.value = _groupScreenState.value.copy(
-            isPublic = groupType!!,
-            groupPassword = groupPassword
+    fun onAlarmUnlockContentsSelected(contents: String) {
+        _alarmScreenState.value = _alarmScreenState.value.copy(
+            alarmUnlockContents = contents
         )
     }
 
     fun onAlarmTypeSelected(alarmType: String) {
         _alarmScreenState.value = _alarmScreenState.value.copy(
-            alarmType = alarmType
+            alarmType = alarmType,
         )
     }
 
@@ -88,8 +93,7 @@ class GroupFormViewModel @Inject constructor(
     }
 
     fun onCompleteClicked() {
-        _alarmScreenState.value = _alarmScreenState.value.copy(
-            alarmUnlockContents = alarmUnlockContents!!
-        )
+        // 서버 요청 보내기
+        // AlarmType이 진동이라면 musicTitle & Volume = null
     }
 }

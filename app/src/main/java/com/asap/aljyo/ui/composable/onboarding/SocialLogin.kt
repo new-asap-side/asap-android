@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.onboarding
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -98,6 +99,7 @@ private fun kakaoLogin(
     onLoading()
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, e ->
         if (e != null) {
+            Log.e("KakaoLogin", "$e")
             onError()
         }
 
@@ -113,6 +115,7 @@ private fun kakaoLogin(
                 if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                     return@loginWithKakaoTalk
                 }
+                Log.e("KakaoLogin", "$error")
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             } else if (token != null) {
                 onLoginSuccess(token)

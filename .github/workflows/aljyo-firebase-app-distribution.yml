@@ -1,6 +1,8 @@
 name: aljyo-firebase-app-distribution
 
 on: # Controls when the workflow will run
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -33,7 +35,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     # decode keystore
     - name: Decode And Save Keystore Base64
       run: |
-        echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > app/keystore.jks
+        echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
 
     # create google-services.json
     - name: Create google-services.json
@@ -43,7 +45,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     - name: Create local.properties
       run: |
         echo "$ALJO" > local.properties
-        echo "SIGNED_STORE_FILE=/keystore.jks" >> local.properties
+        echo "SIGNED_STORE_FILE=keystore.jks" >> local.properties
         cat ./local.properties
 
     # debug build

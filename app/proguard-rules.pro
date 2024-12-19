@@ -21,4 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 # kakao sdk proguard
--keep class com.kakao.sdk.**.model.*
+-keep class com.kakao.sdk.**.model.* { <fields>; }

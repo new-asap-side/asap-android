@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
@@ -45,6 +46,9 @@ fun HomeScreen(
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = White)
                 )
             },
+            floatingActionButton = {
+                NewGroupButton()
+            }
         ) { paddingValues ->
             Surface(
                 modifier = Modifier

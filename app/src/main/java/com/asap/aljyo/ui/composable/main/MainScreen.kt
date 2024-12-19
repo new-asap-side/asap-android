@@ -58,12 +58,6 @@ internal fun MainScreen(
                     navController = navController
                 )
             },
-            floatingActionButton = {
-                val currentRoute by navController.currentBackStackEntryAsState()
-                if (currentRoute?.destination?.route == MainScreenRoute.Home.route) {
-                    NewGroupButton()
-                }
-            }
         ) { padding ->
             Box(Modifier.padding(padding)) {
                 MainNavHost(

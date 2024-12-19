@@ -17,6 +17,7 @@ android {
     }
 
     defaultConfig {
+        manifestPlaceholders += mapOf()
         applicationId = "com.asap.aljyo"
         minSdk = 26
         targetSdk = 34
@@ -35,7 +36,7 @@ android {
     }
 
     signingConfigs {
-        create("aljo_debug") {
+        getByName("debug") {
             keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS")
             keyPassword = localProperties.getProperty("SIGNED_KEY_PASSWORD")
             storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
@@ -45,7 +46,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig = signingConfigs.getByName("aljo_debug")
+            signingConfig = signingConfigs.getByName("debug")
         }
 
         release {

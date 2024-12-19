@@ -13,7 +13,7 @@ android {
     compileSdk = 34
 
     val localProperties = Properties().apply {
-        load(rootProject.file("local.properties").inputStream())
+        load(project.rootProject.file("local.properties").inputStream())
     }
 
     defaultConfig {
@@ -36,12 +36,10 @@ android {
 
     signingConfigs {
         create("aljo_debug") {
-
             keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS")
             keyPassword = localProperties.getProperty("SIGNED_KEY_PASSWORD")
             storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
             storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE"))
-
         }
     }
 

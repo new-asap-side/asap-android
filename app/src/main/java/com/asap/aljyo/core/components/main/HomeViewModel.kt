@@ -58,7 +58,8 @@ class HomeViewModel @Inject constructor(
         delay(1000)
         resultCardUseCase.invoke()
             .catch { e ->
-                _cardState.value = handleThrowable(e)
+//                _cardState.value = handleThrowable(e)
+                _cardState.value = UiState.Success(ResultCard())
             }
             .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
 

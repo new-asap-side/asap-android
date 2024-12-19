@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,7 +42,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -53,11 +56,11 @@ data class Music(
     val artist: String
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmMusicScreen(
     onBackClick: () -> Unit,
     onCompleteClick: () -> Unit,
+    viewModel: GroupFormViewModel = hiltViewModel()
 //    itemList: List<Music>
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
@@ -124,8 +127,11 @@ fun AlarmMusicScreen(
             CustomButton(
                 modifier = Modifier.padding(bottom = 6.dp),
                 text = "완료",
-                enable = true,
-                onClick = {}
+                enable = selectedIndex != null,
+                onClick = {
+                    viewModel.onAlarmMusicSelected(dummyMusicList[selectedIndex!!].musicTitle)
+                    onCompleteClick()
+                }
             )
         }
     }

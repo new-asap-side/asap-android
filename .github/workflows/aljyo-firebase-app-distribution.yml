@@ -35,8 +35,8 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     # decode keystore
     - name: Decode And Save Keystore Base64
       run: |
-        mkdir ./app/keystore
-        echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > ./app/keystore/debug_keystore.jks
+        mkdir ./keystore
+        echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 --decode > ./keystore/debug_keystore.jks
 
     # create google-services.json
     - name: Create google-services.json
@@ -46,7 +46,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     - name: Create local.properties
       run: |
         echo "$ALJO" > local.properties
-        echo "SIGNED_STORE_FILE=./app/keystore/debug_keystore.jks" >> local.properties
+        echo "SIGNED_STORE_FILE=/home/runner/work/asap-android/asap-android/app/keystore/debug_keystore.jks" >> local.properties
         cat ./local.properties
 
     # debug build

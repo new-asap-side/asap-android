@@ -51,6 +51,7 @@ private val homeTabItems = listOf(
 @Composable
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
+    navigateToDescript: () -> Unit,
     onGroupItemClick: (Int) -> Unit,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
@@ -120,6 +121,7 @@ fun HomeTabScreen(
         when (tabIndex) {
             0 -> MainScreen(
                 tabChange = { tabIndex = it },
+                navigateToDescript = navigateToDescript,
                 navigateToGroupDetails = onGroupItemClick
             )
 
@@ -133,6 +135,9 @@ fun HomeTabScreen(
 @Composable
 fun HomeTabScreenPreview() {
     AljyoTheme {
-        HomeTabScreen(onGroupItemClick = {})
+        HomeTabScreen(
+            navigateToDescript = {},
+            onGroupItemClick = {}
+        )
     }
 }

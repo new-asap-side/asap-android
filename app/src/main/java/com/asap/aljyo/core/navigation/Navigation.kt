@@ -14,6 +14,7 @@ import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
+import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
@@ -179,6 +180,15 @@ internal fun AppNavHost() {
             )
         }
 
+        composable(
+            route = ScreenRoute.AljyoDescript.route,
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
+        ) {
+            AljyoDescriptScreen(onBackPress = { navController.popBackStack() })
+        }
+
         groupCreateNavGraph(navController)
     }
 }
@@ -201,6 +211,9 @@ fun MainNavHost(
                 navigateToReleaseAlarm = { alarm ->
                     val json = Gson().toJson(alarm)
                     screenNavController.navigate("${ScreenRoute.ReleaseAlarm.route}/$json")
+                },
+                navigateToDescript = {
+                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
                 },
                 onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
                 onGroupItemClick = navigateToGroupDetails

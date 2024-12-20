@@ -27,7 +27,7 @@ import com.asap.aljyo.ui.theme.Red01
 @Composable
 internal fun AljyoPager(
     modifier: Modifier,
-    pageCount: Int
+    pageCount: Int = 3
 ) {
     val pagerState = rememberPagerState(pageCount = { pageCount })
     Column(modifier = modifier) {

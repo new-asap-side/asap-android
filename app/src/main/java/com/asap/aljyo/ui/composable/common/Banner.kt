@@ -2,6 +2,7 @@ package com.asap.aljyo.ui.composable.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +34,10 @@ import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-fun Banner(modifier: Modifier = Modifier) {
+fun Banner(
+    modifier: Modifier = Modifier,
+    navigateToDescript: () -> Unit = {},
+) {
     val pagerState = rememberPagerState(pageCount = { 1 })
     val bannerColor = when (pagerState.currentPage) {
         0 -> Color(0xFFFFF2D8)
@@ -52,6 +56,7 @@ fun Banner(modifier: Modifier = Modifier) {
                 0 -> DefaultBanner(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clickable { navigateToDescript() }
                         .padding(
                             start = 20.dp,
                             end = 16.dp,

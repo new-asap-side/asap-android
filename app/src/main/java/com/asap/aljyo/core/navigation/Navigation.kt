@@ -236,6 +236,9 @@ fun MainNavHost(
             route = MainScreenRoute.MyPage.route,
         ) {
             MyPageScreen(
+                navigateToDescript = {
+                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                },
                 navigateToPreferences = {
                     screenNavController.navigate(ScreenRoute.Preferences.route)
                 },

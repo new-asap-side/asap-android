@@ -48,12 +48,12 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     - name: Create local.properties
       run: |
         echo "$ALJO" > local.properties
-        echo "SIGNED_STORE_FILE=debug_keystore.jks" >> local.properties
+        echo "SIGNED_STORE_FILE=/home/runner/work/asap-android/asap-android/app/debug_keystore.jks" >> local.properties
         cat ./local.properties
 
     # debug build
     - name: Build debug
-      run: ./gradlew clean assembleDebug
+      run: ./gradlew assembleDebug
 
     # Distribute to firebase
     - name: Upload to Firebase App Distribution

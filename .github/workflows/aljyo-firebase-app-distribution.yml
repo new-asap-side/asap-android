@@ -32,6 +32,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
       run: chmod +x ./gradlew
       shell: bash
 
+    - name: Clean Gradle cache
+      run: ./gradlew clean
+
     # decode keystore
     - name: Decode And Save Keystore Base64
       run: |
@@ -46,7 +49,7 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     - name: Create local.properties
       run: |
         echo "$ALJO" > local.properties
-        echo "SIGNED_STORE_FILE=/home/runner/work/asap-android/asap-android/app/keystore/debug_keystore.jks" >> local.properties
+        echo "SIGNED_STORE_FILE=./keystore/debug_keystore.jks" >> local.properties
         cat ./local.properties
 
     # debug build

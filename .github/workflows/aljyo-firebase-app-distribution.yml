@@ -36,9 +36,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
     - name: Decode And Save Keystore Base64
       run: |
         echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > app/debug_keystore.jks
-
-    - name: Find keystore file
-      run: find . -name "keystore.jks"
+    
+    - name: List files in the app directory
+      run: ls -la app/
 
     # create google-services.json
     - name: Create google-services.json

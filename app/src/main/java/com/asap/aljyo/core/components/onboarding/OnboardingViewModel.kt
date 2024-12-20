@@ -10,6 +10,7 @@ import com.asap.domain.usecase.user.CacheUserUseCase
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,6 +29,7 @@ class OnboardingViewModel @Inject constructor(
     init {
         // 기 로그인 정보 체크
         viewModelScope.launch {
+            delay(500)
             val cached = checkCacheUserCase.invoke()
             if (cached) {
                 _state.value = RequestState.Success(SignupState.REGISTERED)

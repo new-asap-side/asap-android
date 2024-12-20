@@ -33,6 +33,7 @@ import com.asap.domain.entity.remote.Alarm
 @Composable
 fun HomeScreen(
     navigateToReleaseAlarm: (Alarm) -> Unit,
+    navigateToDescript: () -> Unit,
     onCreateButtonClick: () -> Unit,
     onGroupItemClick: (Int) -> Unit,
 ) {
@@ -97,6 +98,7 @@ fun HomeScreen(
                 color = White
             ) {
                 HomeTabScreen(
+                    navigateToDescript = navigateToDescript,
                     onGroupItemClick = onGroupItemClick
                 )
             }

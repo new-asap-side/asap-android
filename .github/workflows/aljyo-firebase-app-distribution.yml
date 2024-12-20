@@ -37,6 +37,9 @@ jobs: # A workflow run is made up of one or more jobs that can run sequentially 
       run: |
         echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > app/debug_keystore.jks
 
+    - name: Find keystore file
+      run: find . -name "keystore.jks"
+
     # create google-services.json
     - name: Create google-services.json
       run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json

@@ -250,7 +250,10 @@ fun AlarmSettingScreen(
                 modifier = Modifier.padding(bottom = 6.dp),
                 text = "완료",
                 enable = alarmState.buttonState,
-                onClick = { openAlertDialog = true }
+                onClick = {
+                    viewModel.onCompleteClicked()
+                    openAlertDialog = true
+                }
             )
             if (openAlertDialog) {
                 CustomAlertDialog(

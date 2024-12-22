@@ -4,16 +4,22 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.util.PictureUtil
+import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.domain.usecase.group.CreateGroupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupFormViewModel @Inject constructor(
-
+    private val createGroupUseCase: CreateGroupUseCase
 ): ViewModel() {
     private val _groupScreenState = MutableStateFlow(GroupScreenState())
     val groupScreenState: StateFlow<GroupScreenState> get() = _groupScreenState.asStateFlow()
@@ -77,6 +83,9 @@ class GroupFormViewModel @Inject constructor(
     fun onAlarmTypeSelected(alarmType: String) {
         _alarmScreenState.value = _alarmScreenState.value.copy(
             alarmType = alarmType,
+//            if(alarmType == "VIBRATION") {
+//
+//            }
         )
     }
 
@@ -93,7 +102,34 @@ class GroupFormViewModel @Inject constructor(
     }
 
     fun onCompleteClicked() {
+        Log.d("CHECK:","group: ${_groupScreenState.value}")
+        Log.d("CHECK:","alarm: ${_alarmScreenState.value}")
+        viewModelScope.launch {
+            _groupScreenState.value.groupImage?.let{
+                createGroupUseCase(
+                    groupImage = PictureUtil.getStringFromUri(it)!!,
+                    alarmDay = _groupScreenState.value.alarmDays,
+                    alarmEndDate = _groupScreenState.value.alarmEndDate!!.format(),
+                    alarmTime = _groupScreenState.value.alarmTime,
+                    alarmType = _alarmScreenState.value.alarmType,
+                    alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
+                    alarmVolume = _alarmScreenState.value.alarmVolume.toInt(),
+                    description = _groupScreenState.value.description,
+                    deviceType = "ANDROID",
+                    groupPassword = _groupScreenState.value.groupPassword,
+                    isPublic = _groupScreenState.value.isPublic,
+                    maxPerson = _groupScreenState.value.maxPerson,
+                    title = _groupScreenState.value.title,
+                    musicTitle = _alarmScreenState.value.musicTitle,
+                    deviceToken = FCMTokenManager.token
+                )
+            }
+        }
+
         // 서버 요청 보내기
         // AlarmType이 진동이라면 musicTitle & Volume = null
+
     }
+
+    fun LocalDate.format(): String = atTime(23,59).atZone(ZoneOffset.UTC).toString()
 }

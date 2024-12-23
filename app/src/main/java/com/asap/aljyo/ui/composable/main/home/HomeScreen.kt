@@ -61,8 +61,8 @@ import com.asap.domain.entity.remote.Alarm
 fun HomeScreen(
     navigateToReleaseAlarm: (Alarm) -> Unit,
     navigateToDescript: () -> Unit,
+    navigateToGroupDetails: (Int) -> Unit,
     onCreateButtonClick: () -> Unit,
-    onGroupItemClick: (Int) -> Unit,
 ) {
     AljyoTheme {
         Scaffold(
@@ -303,7 +303,12 @@ fun HomeScreen(
 
                 HomeTabScreen(
                     navigateToDescript = navigateToDescript,
-                    onGroupItemClick = onGroupItemClick
+                    onGroupItemClick = { isPublic, groupId ->
+                        if (!isPublic) {
+                            showPasswordBottomSheet = true
+                        }
+                        navigateToGroupDetails(groupId)
+                    }
                 )
             }
         }

@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -55,6 +56,7 @@ import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.Alarm
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,14 +126,25 @@ fun HomeScreen(
                     .fillMaxSize(),
                 color = White
             ) {
+                val coroutineScope = rememberCoroutineScope()
+
                 var showPasswordBottomSheet by remember { mutableStateOf(false) }
                 var password by remember { mutableStateOf("") }
                 val sheetState = rememberModalBottomSheetState()
 
+                val hideSheet = {
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showPasswordBottomSheet = false
+                        }
+                    }
+                }
+
                 if (showPasswordBottomSheet) {
                     BottomSheet(
-                        modifier = Modifier
-                            .padding(
+                        modifier = Modifier.padding(
                                 horizontal = 20.dp,
                                 vertical = 24.dp
                             ),
@@ -264,7 +277,7 @@ fun HomeScreen(
                                     contentColor = MaterialTheme.colorScheme.primary
                                 ),
                                 shape = RoundedCornerShape(10.dp),
-                                onClick = { showPasswordBottomSheet = false }
+                                onClick = { hideSheet() }
                             ) {
                                 Text(
                                     text = stringResource(R.string.exit),
@@ -306,6 +319,7 @@ fun HomeScreen(
                     onGroupItemClick = { isPublic, groupId ->
                         if (!isPublic) {
                             showPasswordBottomSheet = true
+                            return@HomeTabScreen
                         }
                         navigateToGroupDetails(groupId)
                     }

@@ -52,7 +52,7 @@ private val homeTabItems = listOf(
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
     navigateToDescript: () -> Unit,
-    onGroupItemClick: (Int) -> Unit,
+    onGroupItemClick: (Boolean, Int) -> Unit,
 ) {
     var tabIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -122,11 +122,11 @@ fun HomeTabScreen(
             0 -> MainScreen(
                 tabChange = { tabIndex = it },
                 navigateToDescript = navigateToDescript,
-                navigateToGroupDetails = onGroupItemClick
+                onGroupItemClick = onGroupItemClick
             )
 
-            1 -> PopularityScreen(navigateToGroupDetails = onGroupItemClick)
-            2 -> LatestScreen(navigateToGroupDetails = onGroupItemClick)
+            1 -> PopularityScreen(onGroupItemClick = onGroupItemClick)
+            2 -> LatestScreen(onGroupItemClick = onGroupItemClick)
         }
     }
 }
@@ -137,7 +137,7 @@ fun HomeTabScreenPreview() {
     AljyoTheme {
         HomeTabScreen(
             navigateToDescript = {},
-            onGroupItemClick = {}
+            onGroupItemClick = { _, _ -> }
         )
     }
 }

@@ -177,6 +177,7 @@ fun HomeScreen(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .height(56.dp)
                                 .indicatorLine(
                                     enabled = true,
                                     isError = isError,

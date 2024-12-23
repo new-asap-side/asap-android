@@ -14,6 +14,9 @@
     <string name="retry">재시도</string>
     <string name="from">를</string>
     <string name="cancel">취소</string>
+    <string name="password">비밀번호</string>
+    <string name="exit">나가기</string>
+    <string name="join">참여하기</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
@@ -27,6 +30,9 @@
     <string name="alarm_list">알람 리스트</string>
     <string name="my_page">마이 페이지</string>
     <!-- Home Screen -->
+    <string name="private_alarm_input_password">비공개 알람입니다.\n비밀번호를 입력해주세요.</string>
+    <string name="password_hint">비밀번호 4자리를 입력해주세요</string>
+    <string name="password_error">비밀번호가 일치하지 않습니다.</string>
     <!-- Main Tab -->
     <string name="main">메인</string>
     <string name="sorted_by_populrity">인기순</string>

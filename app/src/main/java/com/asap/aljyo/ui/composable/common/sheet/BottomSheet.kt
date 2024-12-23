@@ -41,17 +41,18 @@ internal fun BottomSheet(
     content: @Composable ColumnScope.() -> Unit
 ) {
     ModalBottomSheet(
-        modifier = modifier,
+//        modifier = modifier,
         sheetState = sheetState,
         containerColor = containerColor,
         onDismissRequest = onDismissRequest,
         dragHandle = null,
     ) {
         Column(
-            modifier = Modifier.padding(
-                horizontal = 20.dp,
-                vertical = 24.dp
-            ),
+            modifier = modifier,
+//            modifier = Modifier.padding(
+//                horizontal = 20.dp,
+//                vertical = 24.dp
+//            ),
             verticalArrangement = arrangement
         ) {
             title()

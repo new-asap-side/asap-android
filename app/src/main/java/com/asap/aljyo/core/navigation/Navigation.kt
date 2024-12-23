@@ -206,6 +206,7 @@ fun MainNavHost(
         val navigateToGroupDetails: (Int) -> Unit = { groupId ->
             screenNavController.navigate("${ScreenRoute.GroupDetails.route}/$groupId")
         }
+
         composable(route = MainScreenRoute.Home.route) {
             HomeScreen(
                 navigateToReleaseAlarm = { alarm ->
@@ -215,8 +216,8 @@ fun MainNavHost(
                 navigateToDescript = {
                     screenNavController.navigate(ScreenRoute.AljyoDescript.route)
                 },
+                navigateToGroupDetails = navigateToGroupDetails,
                 onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
-                onGroupItemClick = navigateToGroupDetails
             )
         }
 

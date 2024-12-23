@@ -23,7 +23,7 @@ import com.asap.aljyo.ui.theme.White
 internal fun MainScreen(
     tabChange: (Int) -> Unit,
     navigateToDescript: () -> Unit,
-    navigateToGroupDetails: (Int) -> Unit,
+    onGroupItemClick: (Boolean, Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.MAIN_TAB_SCROLL_KEY] ?: Pair(0, 0)
@@ -70,7 +70,7 @@ internal fun MainScreen(
                     .fillMaxWidth()
                     .padding(start = 20.dp),
                 tabChange = tabChange,
-                navigate = navigateToGroupDetails
+                onGroupItemClick = onGroupItemClick
             )
         }
 
@@ -90,7 +90,7 @@ internal fun MainScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
                 tabChange = tabChange,
-                navigate = navigateToGroupDetails
+                onGroupItemClick = onGroupItemClick
             )
         }
     }

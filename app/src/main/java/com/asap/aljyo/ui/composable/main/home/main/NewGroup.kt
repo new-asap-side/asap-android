@@ -24,7 +24,7 @@ import com.asap.aljyo.ui.composable.main.home.GroupItemShimmer
 fun NewGroupList(
     modifier: Modifier = Modifier,
     tabChange: (Int) -> Unit,
-    navigate: (Int) -> Unit,
+    onGroupItemClick: (Boolean, Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Column(
@@ -60,7 +60,7 @@ fun NewGroupList(
                         item {
                             GroupItem(
                                 modifier = Modifier.clickable {
-                                    navigate(it.groupId)
+                                    onGroupItemClick(it.isPublic, it.groupId)
                                 }
                             )
                         }

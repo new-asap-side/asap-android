@@ -58,6 +58,7 @@ class GroupFormViewModel @Inject constructor(
 
         _groupScreenState.value = _groupScreenState.value.copy(description = description)
     }
+
     fun onGroupPersonSelected(person: Int) {
         _groupScreenState.value = _groupScreenState.value.copy(maxPerson = person)
     }
@@ -109,25 +110,24 @@ class GroupFormViewModel @Inject constructor(
 
     fun onCompleteClicked() {
         viewModelScope.launch {
-            _groupScreenState.value.groupImage?.let{
-                createGroupUseCase(
-                    groupImage = PictureUtil.getStringFromUri(it)!!,
-                    alarmDay = _groupScreenState.value.alarmDays,
-                    alarmEndDate = _groupScreenState.value.alarmEndDate!!.format(),
-                    alarmTime = _groupScreenState.value.alarmTime,
-                    alarmType = _alarmScreenState.value.alarmType,
-                    alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
-                    alarmVolume = _alarmScreenState.value.alarmVolume?.toInt(),
-                    description = _groupScreenState.value.description,
-                    deviceType = "ANDROID",
-                    groupPassword = _groupScreenState.value.groupPassword,
-                    isPublic = _groupScreenState.value.isPublic!!,
-                    maxPerson = _groupScreenState.value.maxPerson,
-                    title = _groupScreenState.value.title,
-                    musicTitle = _alarmScreenState.value.musicTitle,
-                    deviceToken = FCMTokenManager.token
-                )
-            }
+            createGroupUseCase(
+                groupImage = PictureUtil.getStringFromUri(_groupScreenState.value.groupImage)
+                    ?: throw IllegalArgumentException("image encoded fail"),
+                alarmDay = _groupScreenState.value.alarmDays,
+                alarmEndDate = _groupScreenState.value.alarmEndDate!!.format(),
+                alarmTime = _groupScreenState.value.alarmTime,
+                alarmType = _alarmScreenState.value.alarmType,
+                alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
+                alarmVolume = _alarmScreenState.value.alarmVolume?.toInt(),
+                description = _groupScreenState.value.description,
+                deviceType = "ANDROID",
+                groupPassword = _groupScreenState.value.groupPassword,
+                isPublic = _groupScreenState.value.isPublic!!,
+                maxPerson = _groupScreenState.value.maxPerson,
+                title = _groupScreenState.value.title,
+                musicTitle = _alarmScreenState.value.musicTitle,
+                deviceToken = FCMTokenManager.token
+            )
         }
     }
 

@@ -171,7 +171,7 @@ fun AlarmSettingScreen(
                             modifier = Modifier
                                 .padding(start = 96.dp, end = 4.dp)
                                 .weight(1f),
-                            text = alarmState.musicTitle,
+                            text = alarmState.musicTitle ?: "노래를 선택해주세요",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black03,
                                 fontSize = 15.sp,
@@ -189,7 +189,7 @@ fun AlarmSettingScreen(
                 }
 
                 AlarmSoundSlider(
-                    sliderPosition = alarmState.alarmVolume,
+                    sliderPosition = alarmState.alarmVolume ?: 10f,
                     onValueChange = { viewModel.onAlarmVolumeSelected(it) }
                 )
             }

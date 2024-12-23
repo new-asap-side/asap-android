@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.util.PictureUtil
+import com.asap.aljyo.util.format
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.usecase.group.CreateGroupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -89,9 +90,8 @@ class GroupFormViewModel @Inject constructor(
     fun onAlarmTypeSelected(alarmType: String) {
         _alarmScreenState.value = _alarmScreenState.value.copy(
             alarmType = alarmType,
-//            if(alarmType == "VIBRATION") {
-//
-//            }
+            musicTitle = if (alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
+            alarmVolume = if (alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume
         )
     }
 
@@ -108,8 +108,6 @@ class GroupFormViewModel @Inject constructor(
     }
 
     fun onCompleteClicked() {
-        Log.d("CHECK:","group: ${_groupScreenState.value}")
-        Log.d("CHECK:","alarm: ${_alarmScreenState.value}")
         viewModelScope.launch {
             _groupScreenState.value.groupImage?.let{
                 createGroupUseCase(
@@ -119,7 +117,7 @@ class GroupFormViewModel @Inject constructor(
                     alarmTime = _groupScreenState.value.alarmTime,
                     alarmType = _alarmScreenState.value.alarmType,
                     alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
-                    alarmVolume = _alarmScreenState.value.alarmVolume.toInt(),
+                    alarmVolume = _alarmScreenState.value.alarmVolume?.toInt(),
                     description = _groupScreenState.value.description,
                     deviceType = "ANDROID",
                     groupPassword = _groupScreenState.value.groupPassword,
@@ -131,11 +129,7 @@ class GroupFormViewModel @Inject constructor(
                 )
             }
         }
-
-        // 서버 요청 보내기
-        // AlarmType이 진동이라면 musicTitle & Volume = null
-
     }
 
-    fun LocalDate.format(): String = atTime(23,59).atZone(ZoneOffset.UTC).toString()
+
 }

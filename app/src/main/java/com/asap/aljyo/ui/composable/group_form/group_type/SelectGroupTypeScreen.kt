@@ -66,8 +66,6 @@ fun SelectGroupTypeScreen(
     onBackClick: () -> Unit
 ) {
     val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
-    var isSelected by remember { mutableIntStateOf(-1) }
-    var password by remember { mutableStateOf("") }
 
     Scaffold(
         containerColor = White,
@@ -121,18 +119,18 @@ fun SelectGroupTypeScreen(
             BoxWithCheckButton(
                 R.drawable.ic_public,
                 "공개",
-                isSelected = isSelected == 0,
-                onCheckedChange = { isSelected = 0 }
+                isSelected = groupState.isPublic ?: false,
+                onCheckedChange = { viewModel.onGroupTypeSelected(true) }
             )
             Spacer(modifier = Modifier.height(4.dp))
             BoxWithCheckButton(
                 R.drawable.ic_private,
                 "비공개",
-                isSelected = isSelected == 1,
-                onCheckedChange = { isSelected = 1 }
+                isSelected = groupState.isPublic?.not() ?: false,
+                onCheckedChange = { viewModel.onGroupTypeSelected(false) }
             )
             Spacer(modifier = Modifier.height(30.dp))
-            if (isSelected == 1) {
+            if (groupState.isPublic?.not() == true) {
                 Text(
                     modifier = Modifier.padding(start = 20.dp),
                     text = "비밀번호",
@@ -141,10 +139,8 @@ fun SelectGroupTypeScreen(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 UnderlineTextField(
-                    value = password,
-                    onValueChange = { newText ->
-                        if(newText.length <= 4) password = newText
-                    }
+                    value = groupState.groupPassword ?: "",
+                    onValueChange = { viewModel.onGroupPasswordChanged(it) }
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -153,14 +149,8 @@ fun SelectGroupTypeScreen(
                     .padding(start = 20.dp, end = 20.dp)
                     .imePadding(),
                 text = "확인",
-                enable = (isSelected == 0) || (isSelected == 1 && password.length == 4),
-                onClick = {
-                    viewModel.onGroupTypeSelected(
-                        groupType = isSelected == 0,
-                        password = password
-                    )
-                    navigateToCreateGroup()
-                }
+                enable = groupState.typeButtonState,
+                onClick = navigateToCreateGroup
             )
         }
     }

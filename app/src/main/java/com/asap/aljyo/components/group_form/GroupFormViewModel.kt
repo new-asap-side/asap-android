@@ -27,11 +27,17 @@ class GroupFormViewModel @Inject constructor(
     private val _alarmScreenState = MutableStateFlow(AlarmScreenState())
     val alarmScreenState: StateFlow<AlarmScreenState> get() = _alarmScreenState.asStateFlow()
 
-    fun onGroupTypeSelected(groupType: Boolean, password: String) {
+    fun onGroupTypeSelected(groupType: Boolean) {
         _groupScreenState.value = _groupScreenState.value.copy(
             isPublic = groupType,
-            groupPassword = password
+            groupPassword = if (groupType) null else ""
         )
+    }
+
+    fun onGroupPasswordChanged(pw: String) {
+        if (pw.length > 4) return
+
+        _groupScreenState.value = _groupScreenState.value.copy(groupPassword = pw)
     }
 
     fun onGroupImageSelected(image: Uri?) {
@@ -117,7 +123,7 @@ class GroupFormViewModel @Inject constructor(
                     description = _groupScreenState.value.description,
                     deviceType = "ANDROID",
                     groupPassword = _groupScreenState.value.groupPassword,
-                    isPublic = _groupScreenState.value.isPublic,
+                    isPublic = _groupScreenState.value.isPublic!!,
                     maxPerson = _groupScreenState.value.maxPerson,
                     title = _groupScreenState.value.title,
                     musicTitle = _alarmScreenState.value.musicTitle,

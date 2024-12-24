@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_details
 
+import android.app.Activity
 import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -33,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,16 +49,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.core.navigation.ScreenRoute
+import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.UserGroupType
+import dagger.hilt.android.EntryPointAccessors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,6 +87,18 @@ fun GroupDetailsScreen(
         val window = activity.window
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
+
+    val factory = EntryPointAccessors.fromActivity(
+        activity = context as Activity,
+        entryPoint = ViewModelFactoryProvider::class.java
+    ).groupDetailsViewModelFactory()
+
+    val viewModel: GroupDetailsViewModel = viewModel(
+        factory = GroupDetailsViewModel.provideGroupDetailsViewModelFactory(
+            factory = factory,
+            groupId = groupId
+        )
+    )
 
     AljyoTheme {
         var showBottomSheet by remember { mutableStateOf(false) }
@@ -220,7 +239,10 @@ fun GroupDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     item {
-                        GroupSummation(modifier = Modifier.fillMaxWidth())
+                        GroupSummation(
+                            modifier = Modifier.fillMaxWidth(),
+                            viewModel = viewModel
+                        )
                     }
                     item {
                         AlarmDetails(

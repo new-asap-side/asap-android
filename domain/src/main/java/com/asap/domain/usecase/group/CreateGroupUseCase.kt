@@ -24,10 +24,10 @@ class CreateGroupUseCase @Inject constructor(
         maxPerson: Int,
         musicTitle: String?,
         title: String,
-    ) {
+    ): Int? {
         val userId = userRepository.getUserInfo().userId.toInt()
 
-        groupRepository.postCreateGroup(
+        return groupRepository.postCreateGroup(
             groupImage = groupImage,
             alarmDays = alarmDay,
             alarmEndDate = alarmEndDate,

@@ -19,8 +19,8 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchTodayPopularGroup()
     }
 
-    override suspend fun fetchGroupDetails(): Flow<GroupDetails?> {
-        TODO("Not yet implemented")
+    override suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> {
+        return remoteDataSource.fetchGroupDetails(groupId = groupId)
     }
 
     override suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> {

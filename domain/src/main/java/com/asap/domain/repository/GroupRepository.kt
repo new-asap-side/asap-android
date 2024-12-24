@@ -13,7 +13,7 @@ interface GroupRepository {
     suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?>
 
     // 그룹 상세 조회
-    suspend fun fetchGroupDetails(): Flow<GroupDetails?>
+    suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?>
 
     // 그룹 참여
     suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?>

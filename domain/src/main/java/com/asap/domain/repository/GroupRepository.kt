@@ -1,6 +1,7 @@
 package com.asap.domain.repository
 
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupRanking
 import kotlinx.coroutines.flow.Flow
 
@@ -10,6 +11,9 @@ interface GroupRepository {
 
     // 최신 그룹 리스트 조회
     suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?>
+
+    // 그룹 상세 조회
+    suspend fun fetchGroupDetails(): Flow<GroupDetails?>
 
     // 그룹 참여
     suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?>

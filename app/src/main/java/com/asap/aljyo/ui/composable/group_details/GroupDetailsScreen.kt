@@ -34,7 +34,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,16 +53,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
-import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
-import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.di.ViewModelFactoryProvider
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
+import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.GroupDetails
-import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
@@ -103,6 +100,8 @@ fun GroupDetailsScreen(
             groupId = groupId
         )
     )
+
+    val userGroupType = viewModel.userGroupType
 
     AljyoTheme {
         val sheetState = rememberModalBottomSheetState()
@@ -237,7 +236,7 @@ fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .background(White)
                         .padding(20.dp),
-                    userGroupType = UserGroupType.Leader,
+                    userGroupType = userGroupType,
                     onRankingClick = {
                         navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
                     }

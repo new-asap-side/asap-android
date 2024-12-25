@@ -51,7 +51,7 @@ import kotlin.math.roundToInt
 @Composable
 internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
-    userGroupType: UserGroupType,
+    userGroupType: UserGroupType?,
     onRankingClick: () -> Unit,
 ) {
     Row(
@@ -74,6 +74,8 @@ internal fun GroupBottomNavBar(
                 isLeader = false,
                 onRankingClick = onRankingClick
             )
+
+            null -> Unit
         }
 
     }

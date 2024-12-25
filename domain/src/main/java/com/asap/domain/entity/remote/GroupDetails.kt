@@ -38,13 +38,13 @@ data class GroupDetails(
     val alarmUnlockContents: String,
     @Json(name = "userGroups")
     val users: List<GroupMember>,
-    @Json(name = "alarm_days")
-    val alarmDays: List<String>,
-    val userType: String
+//    @Json(name = "alarm_days")
+//    val alarmDays: List<String>,
+//    val userType: String
 ) {
-    val userGroupType: UserGroupType get() = when(userType) {
-        "leader" -> UserGroupType.Leader
-        "participant" -> UserGroupType.Participant
-        else -> UserGroupType.NonParticipant
-    }
+//    val userGroupType: UserGroupType get() = when(userType) {
+//        "leader" -> UserGroupType.Leader
+//        "participant" -> UserGroupType.Participant
+//        else -> UserGroupType.NonParticipant
+//    }
 }

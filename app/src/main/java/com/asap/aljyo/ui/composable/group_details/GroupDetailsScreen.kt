@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,6 +65,7 @@ import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,6 +90,8 @@ fun GroupDetailsScreen(
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
+    val coroutineScope = rememberCoroutineScope()
+
     val factory = EntryPointAccessors.fromActivity(
         activity = context as Activity,
         entryPoint = ViewModelFactoryProvider::class.java
@@ -101,13 +105,23 @@ fun GroupDetailsScreen(
     )
 
     AljyoTheme {
+        val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
         var showLeaveGroupDialog by remember { mutableStateOf(false) }
 
+        val hideBottomSheet = {
+            coroutineScope.launch {
+                sheetState.hide()
+            }.invokeOnCompletion {
+                showBottomSheet = false
+            }
+        }
+
         if (showBottomSheet) {
             BottomSheet(
-                sheetState = rememberModalBottomSheetState(),
-                onDismissRequest = {},
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp),
+                sheetState = sheetState,
+                onDismissRequest = { hideBottomSheet() },
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -122,7 +136,7 @@ fun GroupDetailsScreen(
                             )
                         )
                         IconButton(
-                            onClick = { showBottomSheet = false }
+                            onClick = { hideBottomSheet() }
                         ) {
                             Icon(
                                 Icons.Default.Close,
@@ -157,7 +171,7 @@ fun GroupDetailsScreen(
             }
         }
 
-        if(showLeaveGroupDialog) {
+        if (showLeaveGroupDialog) {
             PrecautionsDialog(
                 title = stringResource(R.string.ask_leave_group),
                 description = stringResource(R.string.ranking_initialized),
@@ -168,7 +182,7 @@ fun GroupDetailsScreen(
             )
         }
 
-        Scaffold (
+        Scaffold(
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(

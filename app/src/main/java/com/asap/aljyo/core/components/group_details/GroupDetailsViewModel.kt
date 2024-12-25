@@ -1,5 +1,8 @@
 package com.asap.aljyo.core.components.group_details
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -7,37 +10,83 @@ import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel.GroupR
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupMember
+import com.asap.domain.entity.remote.UserGroupType
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
+import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase,
     @Assisted private val groupId: Int
 ) : ViewModel() {
-    private val _groupDetailsState = MutableStateFlow<UiState<GroupDetails>>(UiState.Loading)
+    private val _groupDetailsState = MutableStateFlow<UiState<GroupDetails?>>(UiState.Loading)
     val groupDetails get() = _groupDetailsState.asStateFlow()
+
+    private val _userGroupType = mutableStateOf<UserGroupType?>(null)
+    val userGroupType get() = _userGroupType.value
 
     private val _joinGroupState = MutableStateFlow<RequestState<Boolean>>(RequestState.Initial)
     val joinGroupState get() = _joinGroupState
 
-
     init {
         viewModelScope.launch {
-            fetchGroupDetailsUseCase.invoke(groupId = groupId).catch {
+            delay(500)
+            fetchGroupDetailsUseCase.invoke(groupId = groupId).catch { e ->
+                Log.e(TAG, "error: $e")
+                val errorCode = when (e) {
+                    is HttpException -> e.code()
+                    else -> -1
+                }
+                _groupDetailsState.value = UiState.Error(errorCode)
+            }.collect { result ->
+                Log.d(TAG, "$result")
 
-            }.collect {
-
+                _groupDetailsState.value = UiState.Success(result)
+                participationStatus(result)
             }
+        }
+    }
+
+    // 그룹 참여 여부 확인
+    private fun participationStatus(groupDetails: GroupDetails?) = viewModelScope.launch {
+        groupDetails?.users.also { participateUsers ->
+            val target = participateUsers?.find { participants ->
+                getUserInfoUseCase.invoke().userId.let { myUserId ->
+                    myUserId.toInt() == participants.userId
+                }
+            }
+
+            if (target == null) {
+                _userGroupType.value = UserGroupType.NonParticipant
+                return@launch
+            }
+
+            _userGroupType.value = if (target.isGroupMaster) {
+                UserGroupType.Leader
+            } else {
+                UserGroupType.Participant
+            }
+
+        }
+    }
+
+    fun findLeader(groupDetails: GroupDetails?): GroupMember? {
+        return groupDetails?.users?.first { user ->
+            user.isGroupMaster
         }
     }
 

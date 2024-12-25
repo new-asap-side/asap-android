@@ -25,13 +25,18 @@ object DateTimeManager {
     }
 
     fun parseToAmPm(time: String): String {
-        return ""
+        val splitedTime = time.split(":")
+        val hour = splitedTime[0].toInt()
+        val minites = splitedTime[1]
+
+        val prefix = if ((hour / 12) > 0) "오후" else "오전"
+        return "$prefix ${hour % 12}:$minites"
     }
 
     // 현재 요일을 기준으로
     // input 정렬
     fun sortByDay(input: List<String>, isTest: Boolean = false): List<String> {
-        val today = if(isTest) {
+        val today = if (isTest) {
             parseToDayOfWeek("월")
         } else {
             parseToDayOfWeek(formatCurrentTime().split(" ")[0])

@@ -70,7 +70,7 @@ class UtilityTest {
     @Test
     fun test_DateTimeManager_parseToDate() {
         val stringDateISO = "2024-12-31T23:59:59Z"
-        val stringDate = DateTimeManager.parseToDate(stringDateISO)
+        val stringDate = DateTimeManager.parseISO(stringDateISO)
 
         assert(stringDate == "2024-12-31")
     }

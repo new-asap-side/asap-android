@@ -3,6 +3,7 @@ package com.asap.data.utility
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
@@ -17,6 +18,10 @@ object DateTimeManager {
     private fun formatCurrentTime(): String {
         val now = LocalDateTime.now()
         return now.format(dayFormatter)
+    }
+
+    fun parseISO(stringDate: String): String {
+        return ZonedDateTime.parse(stringDate).toLocalDate().toString()
     }
 
     // 현재 요일을 기준으로

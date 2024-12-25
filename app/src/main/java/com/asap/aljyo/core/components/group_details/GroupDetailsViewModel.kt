@@ -1,12 +1,10 @@
 package com.asap.aljyo.core.components.group_details
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel.GroupRankingViewModelFactory
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
@@ -19,14 +17,16 @@ import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import javax.inject.Inject
+import java.util.LinkedList
+import java.util.Queue
 
 class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
@@ -39,6 +39,19 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _userGroupType = mutableStateOf<UserGroupType?>(null)
     val userGroupType get() = _userGroupType.value
+
+    private var active = true
+
+    private val _fastestAlarmQueue: Queue<String> = LinkedList()
+    private val _nextAlarmTimeFlow: Flow<String> = flow {
+        val nextAlarmTime = _fastestAlarmQueue.peek()
+        if (nextAlarmTime != null) {
+            emit(nextAlarmTime)
+        }
+    }
+
+    private val _nextAlarmTime = MutableStateFlow("")
+    val nextAlarmTime = _nextAlarmTime.asStateFlow()
 
     private val _joinGroupState = MutableStateFlow<RequestState<Boolean>>(RequestState.Initial)
     val joinGroupState get() = _joinGroupState
@@ -56,8 +69,16 @@ class GroupDetailsViewModel @AssistedInject constructor(
             }.collect { result ->
                 Log.d(TAG, "$result")
 
-                _groupDetailsState.value = UiState.Success(result)
                 participationStatus(result)
+                sortedByFastest(
+                    result?.alarmDays?.map { day ->
+                        "$day ${result.alarmTime}"
+                    } ?: listOf()
+                )
+
+                observingRemainTime()
+
+                _groupDetailsState.value = UiState.Success(result)
             }
         }
     }
@@ -85,6 +106,24 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    private fun sortedByFastest(dates: List<String>) {
+        dates.sortedBy {
+            DateTimeManager.diffFromNow(it)
+        }.also { list ->
+            _fastestAlarmQueue.addAll(list)
+        }
+    }
+
+    private fun observingRemainTime() = viewModelScope.launch {
+        while (active) {
+            delay(1000)
+            _nextAlarmTimeFlow.collect { nextAlarmDate ->
+                val duration = DateTimeManager.diffFromNow(nextAlarmDate, basedMinite = false)
+                _nextAlarmTime.value = DateTimeManager.parseToDayBySecond(duration)
+            }
+        }
+    }
+
     fun findLeader(groupDetails: GroupDetails?): GroupMember? {
         return groupDetails?.users?.first { user ->
             user.isGroupMaster
@@ -104,6 +143,11 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 _joinGroupState.value = RequestState.Success(result)
             }
         }
+    }
+
+    override fun onCleared() {
+        active = false
+        super.onCleared()
     }
 
     @AssistedFactory

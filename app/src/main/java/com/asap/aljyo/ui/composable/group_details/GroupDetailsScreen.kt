@@ -201,7 +201,8 @@ fun GroupDetailsScreen(
                                     .padding(
                                         vertical = 6.dp,
                                         horizontal = 14.dp
-                                    )
+                                    ),
+                                viewModel = viewModel
                             )
                         }
                     },

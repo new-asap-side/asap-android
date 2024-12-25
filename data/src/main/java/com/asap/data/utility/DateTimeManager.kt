@@ -9,6 +9,11 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 object DateTimeManager {
+    private const val BASED_MINITE = 7 * 24 * 60
+    private const val BASED_SECOND = 7 * 24 * 60 * 60
+
+    private const val DAY_BY_SECOND = 86400
+
     // ex) 월요일 13:30
     private val dayFormatter = DateTimeFormatter.ofPattern("EEEE HH:mm", Locale.KOREAN)
 
@@ -52,7 +57,7 @@ object DateTimeManager {
 
     // 현재 시간을 기준으로
     // input 시간까지 남은 시간을 분 단위로 반환
-    fun diffFromNow(input: String, isTest: Boolean = false): Long {
+    fun diffFromNow(input: String, isTest: Boolean = false, basedMinite: Boolean = true): Long {
         val today = if (isTest) {
             parseToDayOfWeek("월요일")
         } else {
@@ -76,8 +81,15 @@ object DateTimeManager {
             LocalDateTime.now()
         }
 
-        val duration = ChronoUnit.MINUTES.between(now, targetDateTime)
-        return if (duration < 0L) 24 * 60 * 7 + duration else duration
+        if (basedMinite) {
+            // '분' 기준
+            val duration = ChronoUnit.MINUTES.between(now, targetDateTime)
+            return if (duration < 0L) BASED_MINITE + duration else duration
+        } else {
+            // '초' 기준
+            val duration = ChronoUnit.SECONDS.between(now, targetDateTime)
+            return if (duration < 0L) BASED_SECOND + duration else duration
+        }
     }
 
     // duration 60 -> 01시간 00분
@@ -96,6 +108,31 @@ object DateTimeManager {
             "${hours}시간 ${minites}분"
         } else {
             "${days}일 ${hours}시간 ${minites}분"
+        }
+    }
+
+    fun parseToDayBySecond(duration: Long): String {
+        val days = duration / DAY_BY_SECOND
+        val hours = String.format(
+            Locale.KOREAN,
+            "%02d", (duration % DAY_BY_SECOND) / 3600
+        )
+        val minites = String.format(
+            Locale.KOREAN,
+            "%02d", (duration % 3600) / 60
+        )
+        val seconds = String.format(
+            Locale.KOREAN,
+            "%02d", (duration % 60)
+        )
+
+        return if (days == 0L) {
+            return if (hours == "00")
+                "${minites}분 ${seconds}초"
+            else
+                "${hours}시간 ${minites}분 ${seconds}초"
+        } else {
+            "${days}일 ${hours}시간 ${minites}분 ${seconds}초"
         }
     }
 

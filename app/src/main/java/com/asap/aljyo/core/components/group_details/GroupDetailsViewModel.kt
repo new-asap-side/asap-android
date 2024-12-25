@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel.GroupRankingViewModelFactory
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
+import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupMember
 import com.asap.domain.entity.remote.UserGroupType
@@ -89,6 +90,10 @@ class GroupDetailsViewModel @AssistedInject constructor(
             user.isGroupMaster
         }
     }
+
+    fun parseISOFormat(stringDate: String): String = DateTimeManager.parseISO(stringDate)
+
+    fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
 
     fun joinGroup(body: Map<String, Any>) = viewModelScope.launch {
         joinGroupUseCase.invoke(body).catch { e ->

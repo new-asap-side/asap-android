@@ -61,13 +61,15 @@ fun GroupSummation(
         UiState.Loading -> GroupSummationShimmer(modifier = modifier)
 
         is UiState.Success -> {
+            val groupDetails = (groupDetailsState as UiState.Success).data
+
             Column(modifier = modifier) {
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(270.dp),
-                    model = "",
-                    contentDescription = "Alarm group thumbnail",
+                    model = groupDetails?.groupThumbnailImageUrl,
+                    contentDescription = "Group thumbnail",
                     contentScale = ContentScale.Crop,
                     error = painterResource(R.drawable.ic_my_page)
                 )
@@ -82,7 +84,13 @@ fun GroupSummation(
                             bottom = 24.dp
                         )
                 ) {
-                    GroupLeader()
+                    val leader = viewModel.findLeader(groupDetails)
+
+                    GroupLeader(
+                        leaderNickname = leader?.user?.nickName ?: "",
+                        leaderThumbnail = leader?.user?.profileImageUrl ?: ""
+                    )
+
                     Spacer(modifier = Modifier.height(8.dp))
                     HorizontalDivider(
                         modifier = Modifier.fillMaxWidth(),
@@ -91,7 +99,7 @@ fun GroupSummation(
                     )
                     Spacer(modifier = Modifier.height(18.dp))
                     Text(
-                        text = "GROUP TITLE GROUP TITLE GROUP TITLE GROUP TITLE GROUP TITLE",
+                        text = groupDetails?.title ?: "",
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontSize = 22.sp,
                             color = Black01,
@@ -101,12 +109,13 @@ fun GroupSummation(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     GroupAlarmDates(
+                        // TODO entity 변경 시 반영
                         dates = "월 화 수",
-                        timeStamp = "21:00"
+                        timeStamp = groupDetails?.alarmTime ?: ""
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
-                        text = "Desciption",
+                        text = groupDetails?.description ?: "",
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontSize = 15.sp,
                             color = Color(0xFF666666),
@@ -126,7 +135,7 @@ fun GroupSummation(
                                 vertical = 13.dp,
                                 horizontal = 14.dp
                             ),
-                        personnel = 6
+                        personnel = groupDetails?.currentPerson ?: 0
                     )
                 }
             }
@@ -291,20 +300,27 @@ private fun GroupSummationShimmer_Preview() {
 }
 
 @Composable
-private fun GroupLeader(modifier: Modifier = Modifier) {
+private fun GroupLeader(
+    modifier: Modifier = Modifier,
+    leaderThumbnail: String,
+    leaderNickname: String
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            modifier = Modifier.clip(CircleShape),
-            model = "",
+            modifier = Modifier
+                .size(26.dp)
+                .clip(CircleShape),
+            model = leaderThumbnail,
+            contentScale = ContentScale.Crop,
             contentDescription = "Group leader profile",
             error = painterResource(R.drawable.ic_my_page),
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = "nickname",
+            text = leaderNickname,
             style = MaterialTheme.typography.labelMedium.copy(
                 fontSize = 14.sp,
                 color = Black01
@@ -323,7 +339,10 @@ private fun GroupLeader(modifier: Modifier = Modifier) {
 @Composable
 fun GroupLeader_Preview() {
     AljyoTheme {
-        GroupLeader()
+        GroupLeader(
+            leaderThumbnail = "",
+            leaderNickname = "닉네임"
+        )
     }
 }
 

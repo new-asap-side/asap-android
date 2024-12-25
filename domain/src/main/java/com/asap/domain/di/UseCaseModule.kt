@@ -26,6 +26,8 @@ import com.asap.domain.usecase.user.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
+import com.asap.domain.usecase.user.GetUserInfoUseCase
+import com.asap.domain.usecase.user.GetUserInfoUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -34,6 +36,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 interface UseCaseModule {
+    /**
+     * User usecase
+     */
     @Binds
     fun bindKakaoLoginUseCase(
         kakaoLoginUseCaseImpl: AuthKakaoUseCaseImpl
@@ -48,6 +53,11 @@ interface UseCaseModule {
     fun bindCheckCacheUseCase(
         checkCacheUserCaseImpl: CheckCacheUserCaseImpl
     ): CheckCacheUserCase
+
+    @Binds
+    fun bindGetUserInfoUseCase(
+        getUserInfoUseCaseImpl: GetUserInfoUseCaseImpl
+    ): GetUserInfoUseCase
 
     @Binds
     fun bindResultCardUseCase(

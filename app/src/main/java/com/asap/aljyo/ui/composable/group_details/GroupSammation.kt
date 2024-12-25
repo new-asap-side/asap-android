@@ -44,9 +44,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey03
-import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
-import com.asap.aljyo.ui.theme.Yellow
 
 @Composable
 fun GroupSummation(
@@ -135,7 +133,10 @@ fun GroupSummation(
                                 vertical = 13.dp,
                                 horizontal = 14.dp
                             ),
-                        personnel = groupDetails?.currentPerson ?: 0
+                        personnel = groupDetails?.currentPerson ?: 0,
+                        participantsProfiles = groupDetails?.users?.map {
+                            it.user.profileImageUrl
+                        } ?: listOf()
                     )
                 }
             }
@@ -397,6 +398,7 @@ fun GroupAlarmDates_Preview() {
 fun GroupPersonnel(
     modifier: Modifier = Modifier,
     personnel: Int = 0,
+    participantsProfiles: List<String>
 ) {
     Row(
         modifier = modifier,
@@ -419,16 +421,17 @@ fun GroupPersonnel(
             )
         }
         OverlappingRow {
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(color = Red01)
-            )
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(color = Yellow)
-            )
+            participantsProfiles.forEach { profile ->
+                AsyncImage(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .border(width = 1.dp, color = MaterialTheme.colorScheme.surface),
+                    model = profile,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "participant's profile icon"
+                )
+            }
         }
     }
 }
@@ -448,7 +451,8 @@ private fun GroupPersonnel_Preview() {
                 .padding(
                     vertical = 13.dp,
                     horizontal = 14.dp
-                )
+                ),
+            participantsProfiles = listOf()
         )
     }
 }

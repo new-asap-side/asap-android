@@ -274,7 +274,7 @@ fun GroupDetailsScreen(
                                     vertical = 24.dp,
                                     horizontal = 20.dp
                                 ),
-                            count = 3
+                            viewModel = viewModel,
                         )
                     }
                 }

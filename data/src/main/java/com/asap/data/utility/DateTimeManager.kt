@@ -24,6 +24,10 @@ object DateTimeManager {
         return ZonedDateTime.parse(stringDate).toLocalDate().toString()
     }
 
+    fun parseToAmPm(time: String): String {
+        return ""
+    }
+
     // 현재 요일을 기준으로
     // input 정렬
     fun sortByDay(input: List<String>, isTest: Boolean = false): List<String> {

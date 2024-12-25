@@ -74,4 +74,13 @@ class UtilityTest {
 
         assert(stringDate == "2024-12-31")
     }
+
+    @Test
+    fun test_DateTimeManager_parseToAmPm() {
+        val am = "01:00"
+        assert(DateTimeManager.parseToAmPm(am) == "오전 1:00")
+
+        val pm = "21:30"
+        assert(DateTimeManager.parseToAmPm(pm) == "오후 9:30")
+    }
 }

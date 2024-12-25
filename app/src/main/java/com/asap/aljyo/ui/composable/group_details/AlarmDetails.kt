@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -21,13 +23,17 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -57,7 +63,12 @@ fun AlarmDetails(
     when (groupDetailsState) {
         is UiState.Error -> Unit
 
-        UiState.Loading -> {}
+        UiState.Loading -> AlarmDetailsShimmer(
+            modifier = modifier.padding(
+                horizontal = 20.dp,
+                vertical = 24.dp
+            ),
+        )
 
         is UiState.Success -> {
             val groupDetails = (groupDetailsState as UiState.Success).data
@@ -140,7 +151,6 @@ fun AlarmDetails(
 
                         }
                     }
-
                 }
 
                 UserGroupType.NonParticipant -> {
@@ -162,6 +172,118 @@ fun AlarmDetails(
             }
 
         }
+    }
+}
+
+@Composable
+private fun AlarmDetailsShimmer(modifier: Modifier) {
+    val shape = RoundedCornerShape(4.dp)
+    Column(modifier = modifier) {
+        ShimmerBox(
+            modifier = Modifier
+                .size(58.dp, 16.dp)
+                .clip(shape)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ShimmerBox(
+                modifier = Modifier
+                    .size(58.dp, 16.dp)
+                    .clip(shape)
+            )
+
+            Column {
+                ShimmerBox(
+                    modifier = Modifier
+                        .size(58.dp, 16.dp)
+                        .clip(shape)
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ShimmerBox(
+                    modifier = Modifier
+                        .size(110.dp, 16.dp)
+                        .clip(shape)
+                )
+
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ShimmerBox(
+                modifier = Modifier
+                    .size(58.dp, 16.dp)
+                    .clip(shape)
+            )
+
+            ShimmerBox(
+                modifier = Modifier
+                    .size(175.dp, 16.dp)
+                    .clip(shape)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ShimmerBox(
+                modifier = Modifier
+                    .size(58.dp, 16.dp)
+                    .clip(shape)
+            )
+
+            ShimmerBox(
+                modifier = Modifier
+                    .size(113.dp, 16.dp)
+                    .clip(shape)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ShimmerBox(
+                modifier = Modifier
+                    .size(58.dp, 16.dp)
+                    .clip(shape)
+            )
+
+            ShimmerBox(
+                modifier = Modifier
+                    .size(26.dp, 16.dp)
+                    .clip(shape)
+            )
+        }
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AlarmDetailsShimmer_Preview() {
+    AljyoTheme {
+        AlarmDetailsShimmer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(White),
+        )
     }
 }
 

@@ -26,11 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.UserGroupType
 
 sealed class AlarmDetailsTabItem(val titleId: Int) {
     data object Details : AlarmDetailsTabItem(titleId = R.string.details)
@@ -43,82 +45,103 @@ private val tabItems = listOf(
 )
 
 @Composable
-fun AlarmDetails(modifier: Modifier = Modifier) {
+fun AlarmDetails(
+    modifier: Modifier = Modifier,
+    viewModel: GroupDetailsViewModel
+) {
+    val userGroupType = viewModel.userGroupType
     var tabIndex by remember { mutableIntStateOf(0) }
-    Column(
-        modifier = modifier
-    ) {
-        TabRow(
-            selectedTabIndex = tabIndex,
-            containerColor = White,
-            contentColor = Black01,
-            indicator = { positions ->
-                Box(
-                    modifier = Modifier
-                        .tabIndicatorOffset(positions[tabIndex])
-                        .padding(horizontal = 20.dp)
-                        .height(2.dp)
-                        .background(Black01)
-                )
-            },
-            divider = {}
-        ) {
-            tabItems.forEachIndexed { index, item ->
-                val selected = tabIndex == index
-                Tab(
-                    modifier = Modifier
-                        .height(48.dp)
-                        .padding(horizontal = 20.dp),
-                    selected = selected,
-                    selectedContentColor = Black01,
-                    unselectedContentColor = Black03,
-                    onClick = {
-                        tabIndex = index
-                    }
+
+    when (userGroupType) {
+        UserGroupType.Leader,
+        UserGroupType.Participant -> {
+            Column(modifier = modifier) {
+                TabRow(
+                    selectedTabIndex = tabIndex,
+                    containerColor = White,
+                    contentColor = Black01,
+                    indicator = { positions ->
+                        Box(
+                            modifier = Modifier
+                                .tabIndicatorOffset(positions[tabIndex])
+                                .padding(horizontal = 20.dp)
+                                .height(2.dp)
+                                .background(Black01)
+                        )
+                    },
+                    divider = {}
                 ) {
-                    Text(
-                        text = stringResource(item.titleId),
-                        textAlign = TextAlign.Center,
-                        style = if (selected) {
-                            MaterialTheme.typography.headlineMedium.copy(
-                                fontSize = 15.sp
-                            )
-                        } else {
-                            MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp,
+                    tabItems.forEachIndexed { index, item ->
+                        val selected = tabIndex == index
+                        Tab(
+                            modifier = Modifier
+                                .height(48.dp)
+                                .padding(horizontal = 20.dp),
+                            selected = selected,
+                            selectedContentColor = Black01,
+                            unselectedContentColor = Black03,
+                            onClick = { tabIndex = index }
+                        ) {
+                            Text(
+                                text = stringResource(item.titleId),
+                                textAlign = TextAlign.Center,
+                                style = if (selected) {
+                                    MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 15.sp
+                                    )
+                                } else {
+                                    MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 15.sp,
+                                    )
+                                }
                             )
                         }
-                    )
+                    }
+
+                    when (tabIndex) {
+                        0 -> AlarmDetailsContent(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 20.dp,
+                                    vertical = 24.dp
+                                )
+                        )
+
+                        1 -> PrivateSetting(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 20.dp,
+                                    vertical = 24.dp
+                                )
+                        )
+                    }
+
                 }
             }
-        }
-        when (tabIndex) {
-            0 -> AlarmDetailsContent(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp,
-                        vertical = 24.dp
-                    )
-            )
 
-            1 -> PrivateSetting(
+        }
+        UserGroupType.NonParticipant -> {
+            AlarmDetailsContent(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(color = White)
                     .padding(
                         horizontal = 20.dp,
                         vertical = 24.dp
                     )
             )
         }
+        null -> Unit
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AlarmDetailsPreview() {
+fun AlarmDetailsContent_Preview() {
     AljyoTheme {
-        AlarmDetails()
+        AlarmDetailsContent()
     }
 }
 

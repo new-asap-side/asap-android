@@ -261,7 +261,8 @@ fun GroupDetailsScreen(
                         AlarmDetails(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(White)
+                                .background(White),
+                            viewModel = viewModel
                         )
                     }
                     item {

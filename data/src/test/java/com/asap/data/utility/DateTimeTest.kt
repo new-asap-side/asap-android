@@ -66,4 +66,12 @@ class UtilityTest {
         val sortedDays = DateTimeManager.sortByDay(days, isTest = true)
         assert(sortedDays[0] == "월 11:30")
     }
+
+    @Test
+    fun test_DateTimeManager_parseToDate() {
+        val stringDateISO = "2024-12-31T23:59:59Z"
+        val stringDate = DateTimeManager.parseToDate(stringDateISO)
+
+        assert(stringDate == "2024-12-31")
+    }
 }

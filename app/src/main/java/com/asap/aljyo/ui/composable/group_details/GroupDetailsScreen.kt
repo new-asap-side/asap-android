@@ -61,6 +61,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
@@ -207,14 +208,22 @@ fun GroupDetailsScreen(
                         }
                     },
                     actions = {
-                        IconButton(
-                            onClick = { showBottomSheet = true }
-                        ) {
-                            Icon(
-                                Icons.Default.MoreVert,
-                                tint = White,
-                                contentDescription = "Top app bar first action"
-                            )
+                        when (userGroupType) {
+                            null,
+                            UserGroupType.NonParticipant -> Unit
+
+                            UserGroupType.Leader,
+                            UserGroupType.Participant -> {
+                                IconButton(
+                                    onClick = { showBottomSheet = true }
+                                ) {
+                                    Icon(
+                                        Icons.Default.MoreVert,
+                                        tint = White,
+                                        contentDescription = "Top app bar first action"
+                                    )
+                                }
+                            }
                         }
                     },
                     navigationIcon = {

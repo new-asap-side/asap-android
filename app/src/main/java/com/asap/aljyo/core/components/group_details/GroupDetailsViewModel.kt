@@ -40,6 +40,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _userGroupType = mutableStateOf<UserGroupType?>(null)
     val userGroupType get() = _userGroupType.value
 
+    private val _privateSettingState = MutableStateFlow<GroupMember?>(null)
+    val privateSettingState get() = _privateSettingState.asStateFlow()
+
     private var active = true
 
     private val _fastestAlarmQueue: Queue<String> = LinkedList()
@@ -51,7 +54,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
     }
 
     private val _nextAlarmTime = MutableStateFlow("")
-    val nextAlarmTime = _nextAlarmTime.asStateFlow()
+    val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
 
     private val _joinGroupState = MutableStateFlow<RequestState<Boolean>>(RequestState.Initial)
     val joinGroupState get() = _joinGroupState
@@ -70,6 +73,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 Log.d(TAG, "$result")
 
                 participationStatus(result)
+                privateSetting(result)
                 sortedByFastest(
                     result?.alarmDays?.map { day ->
                         "$day ${result.alarmTime}"
@@ -127,6 +131,12 @@ class GroupDetailsViewModel @AssistedInject constructor(
     fun findLeader(groupDetails: GroupDetails?): GroupMember? {
         return groupDetails?.users?.first { user ->
             user.isGroupMaster
+        }
+    }
+
+    private fun privateSetting(groupDetails: GroupDetails?) = viewModelScope.launch {
+        _privateSettingState.value = groupDetails?.users?.find { participant ->
+            participant.userId.toString() == getUserInfoUseCase.invoke().userId
         }
     }
 

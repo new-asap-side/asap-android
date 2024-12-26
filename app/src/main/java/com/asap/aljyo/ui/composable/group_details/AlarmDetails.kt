@@ -80,6 +80,8 @@ fun AlarmDetails(
                 groupDetails?.alarmTime ?: ""
             )
 
+            val privateSetting by viewModel.privateSettingState.collectAsState()
+
             when (userGroupType) {
                 UserGroupType.Leader,
                 UserGroupType.Participant -> {
@@ -145,7 +147,10 @@ fun AlarmDetails(
                                         .padding(
                                             horizontal = 20.dp,
                                             vertical = 24.dp
-                                        )
+                                        ),
+                                    alarmType = privateSetting?.alarmType ?: "",
+                                    musicTitle = privateSetting?.musicTitle ?: "",
+                                    volume = privateSetting?.volume ?: 0
                                 )
                             }
 
@@ -353,7 +358,12 @@ private fun AlarmDetailsContent(
 }
 
 @Composable
-fun PrivateSetting(modifier: Modifier = Modifier) {
+fun PrivateSetting(
+    modifier: Modifier = Modifier,
+    alarmType: String,
+    musicTitle: String,
+    volume: Int
+) {
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.alarm_information),
@@ -370,17 +380,22 @@ fun PrivateSetting(modifier: Modifier = Modifier) {
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_method),
-                content = "소리"
+                content = when (alarmType) {
+                    "SOUND" -> "소리"
+                    "SOUND, VIBRATE" -> "소리, 진동"
+                    "VIBRATE" -> "진동"
+                    else -> ""
+                }
             )
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_music),
-                content = "IU - Love wins all"
+                content = musicTitle
             )
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_sound),
-                content = "39%"
+                content = "$volume%"
             )
         }
     }

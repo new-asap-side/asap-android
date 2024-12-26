@@ -9,6 +9,8 @@ data class GroupMember(
     val userId: Int,
     @Json(name = "alarm_type")
     val alarmType: String,
+    @Json(name = "music_title")
+    val musicTitle: String,
     @Json(name = "volume")
     val volume: Int,
     @Json(name = "is_group_master")

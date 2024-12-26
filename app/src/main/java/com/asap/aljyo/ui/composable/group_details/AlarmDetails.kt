@@ -127,34 +127,34 @@ fun AlarmDetails(
                                     )
                                 }
                             }
-
-                            when (tabIndex) {
-                                0 -> AlarmDetailsContent(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 20.dp,
-                                            vertical = 24.dp
-                                        ),
-                                    groupDetails = groupDetails,
-                                    parsedAlarmTime = parsedAlarmTime,
-                                    parsedAlarmEndDate = parsedAlarmEndDate
-                                )
-
-                                1 -> PrivateSetting(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            horizontal = 20.dp,
-                                            vertical = 24.dp
-                                        ),
-                                    alarmType = privateSetting?.alarmType ?: "",
-                                    musicTitle = privateSetting?.musicTitle ?: "",
-                                    volume = privateSetting?.volume ?: 0
-                                )
-                            }
-
                         }
+
+                        when (tabIndex) {
+                            0 -> AlarmDetailsContent(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 20.dp,
+                                        vertical = 24.dp
+                                    ),
+                                groupDetails = groupDetails,
+                                parsedAlarmTime = parsedAlarmTime,
+                                parsedAlarmEndDate = parsedAlarmEndDate
+                            )
+
+                            1 -> PrivateSetting(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 20.dp,
+                                        vertical = 24.dp
+                                    ),
+                                alarmType = privateSetting?.alarmType ?: "",
+                                musicTitle = privateSetting?.musicTitle ?: "",
+                                volume = privateSetting?.volume ?: 0
+                            )
+                        }
+
                     }
                 }
 

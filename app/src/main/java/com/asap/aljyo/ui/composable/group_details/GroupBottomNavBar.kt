@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,19 +59,21 @@ internal fun GroupBottomNavBar(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        val mod = Modifier.weight(1f).height(52.dp)
+
         when (userGroupType) {
             UserGroupType.NonParticipant -> NonParticipantBottomBar(
-                modifier = Modifier.weight(1f)
+                modifier = mod
             )
 
             UserGroupType.Leader -> ParticipantBottomBar(
-                modifier = Modifier.weight(1f),
+                modifier = mod,
                 isLeader = true,
                 onRankingClick = onRankingClick
             )
 
             UserGroupType.Participant -> ParticipantBottomBar(
-                modifier = Modifier.weight(1f),
+                modifier = mod,
                 isLeader = false,
                 onRankingClick = onRankingClick
             )

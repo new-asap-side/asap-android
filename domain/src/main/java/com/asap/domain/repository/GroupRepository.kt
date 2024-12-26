@@ -34,5 +34,5 @@ interface GroupRepository {
         musicTitle: String?,
         title: String,
         userId: Int
-    )
+    ): Int?
 }

@@ -43,8 +43,8 @@ class GroupRepositoryImpl @Inject constructor(
         musicTitle: String?,
         title: String,
         userId: Int
-    ) {
-        remoteDataSource.postCreateGroup(
+    ): Int? {
+        return remoteDataSource.postCreateGroup(
             groupImage = groupImage,
             alarmDays = alarmDays,
             alarmEndDate = alarmEndDate,
@@ -61,7 +61,6 @@ class GroupRepositoryImpl @Inject constructor(
             musicTitle = musicTitle,
             title = title,
             userId = userId
-        )
-        // groupID를 받아서 Room에 Group 정보와 함께 저장
+        )?.groupId
     }
 }

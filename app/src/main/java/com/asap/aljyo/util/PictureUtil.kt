@@ -15,11 +15,13 @@ object PictureUtil {
     }
 
 
-    fun getStringFromUri(uri: Uri): String? {
+    fun getStringFromUri(uri: Uri?): String? {
         return try {
-            applicationContext.contentResolver.openInputStream(uri)?.use { inputStream ->
-                val byteArray = inputStream.readBytes()
-                Base64.encodeToString(byteArray, Base64.DEFAULT)
+            uri?.let {
+                applicationContext.contentResolver.openInputStream(it)?.use { inputStream ->
+                    val byteArray = inputStream.readBytes()
+                    Base64.encodeToString(byteArray, Base64.DEFAULT)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

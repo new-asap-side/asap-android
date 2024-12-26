@@ -291,7 +291,11 @@ fun NavGraphBuilder.groupCreateNavGraph(
             viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
-            onCompleteClick = {}
+            onCompleteClick = { groupId ->
+                navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId") {
+                    popUpTo(ScreenRoute.GroupType) { inclusive = true }
+                }
+            }
         )
     }
 

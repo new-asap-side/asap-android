@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class GroupScreenState(
-    val isPublic: Boolean = false,
+    val isPublic: Boolean? = null,
     val groupPassword: String? = null,
     val groupImage: Uri? = null,
     val title: String = "",
@@ -17,6 +17,13 @@ data class GroupScreenState(
     val alarmTime: String = LocalDateTime.now().format(),
     val alarmEndDate: LocalDate? = null
 ) {
+    val typeButtonState: Boolean
+        get() = when (isPublic) {
+            true -> true
+            false -> groupPassword?.length == 4
+            null -> false
+        }
+
     val buttonState: Boolean
         get() = title.isNotBlank() &&
                 description.isNotBlank() &&

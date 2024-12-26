@@ -5,14 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupMember
 import com.asap.domain.entity.remote.UserGroupType
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
-import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -31,7 +29,6 @@ import java.util.Queue
 class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val joinGroupUseCase: JoinGroupUseCase,
     @Assisted private val groupId: Int
 ) : ViewModel() {
     private val _groupDetailsState = MutableStateFlow<UiState<GroupDetails?>>(UiState.Loading)
@@ -55,9 +52,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _nextAlarmTime = MutableStateFlow("")
     val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
-
-    private val _joinGroupState = MutableStateFlow<RequestState<Boolean>>(RequestState.Initial)
-    val joinGroupState get() = _joinGroupState
 
     init {
         viewModelScope.launch {
@@ -143,17 +137,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
     fun parseISOFormat(stringDate: String): String = DateTimeManager.parseISO(stringDate)
 
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
-
-    fun joinGroup(body: Map<String, Any>) = viewModelScope.launch {
-        joinGroupUseCase.invoke(body).catch { e ->
-            // error
-            _joinGroupState.value = RequestState.Error(errorCode = e.toString())
-        }.collect { result ->
-            if (result != null) {
-                _joinGroupState.value = RequestState.Success(result)
-            }
-        }
-    }
 
     override fun onCleared() {
         active = false

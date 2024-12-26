@@ -21,7 +21,8 @@ data class Alarm(
     val alarmTime: String = "21:30",
     @Json(name = "alarm_day")
     val alarmDay: String = "월",
-    @Json(name = "alarm_unlock_content")
+//    @Json(name = "alarm_unlock_content")
+    @Json(name = "alarmUnlockContents")
     val alarmUnlockContents: String = "drag"
 ): Parcelable {
     val content get() = when (alarmUnlockContents) {

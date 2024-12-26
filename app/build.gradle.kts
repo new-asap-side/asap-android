@@ -12,7 +12,12 @@ android {
     namespace = "com.asap.aljyo"
     compileSdk = 34
 
+    val localProperties = Properties().apply {
+        load(project.rootProject.file("local.properties").inputStream())
+    }
+
     defaultConfig {
+        manifestPlaceholders += mapOf()
         applicationId = "com.asap.aljyo"
         minSdk = 26
         targetSdk = 34
@@ -24,21 +29,27 @@ android {
             useSupportLibrary = true
         }
 
-        // local.properties load
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-
         val kakaoKey = localProperties.getProperty("kakao_native_app_key") ?: ""
         // manifest key value 등록
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoKey
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoKey\"")
     }
 
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS")
+            keyPassword = localProperties.getProperty("SIGNED_KEY_PASSWORD")
+            storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
+            storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE"))
+        }
+    }
+
     buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+            isDebuggable = true
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(

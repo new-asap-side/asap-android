@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -17,7 +16,6 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -27,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,17 +38,13 @@ internal fun BottomSheet(
     content: @Composable ColumnScope.() -> Unit
 ) {
     ModalBottomSheet(
-        modifier = modifier,
         sheetState = sheetState,
         containerColor = containerColor,
         onDismissRequest = onDismissRequest,
         dragHandle = null,
     ) {
         Column(
-            modifier = Modifier.padding(
-                horizontal = 20.dp,
-                vertical = 24.dp
-            ),
+            modifier = modifier,
             verticalArrangement = arrangement
         ) {
             title()

@@ -1,105 +1,63 @@
 package com.asap.aljyo.ui.composable.onboarding
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.asap.aljyo.R
+import com.asap.aljyo.ui.composable.common.pager.GoodDay
+import com.asap.aljyo.ui.composable.common.pager.HardObject
 import com.asap.aljyo.ui.composable.common.pager.PagerIndicator
+import com.asap.aljyo.ui.composable.common.pager.ReleaseAlarm
 import com.asap.aljyo.ui.theme.AljyoTheme
-import com.asap.aljyo.ui.theme.Black01
 
 @Composable
 fun OnboardingPager(modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState(pageCount = { 4 })
-    Box(
-        modifier = modifier
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
     ) {
-        val currentConfig = LocalConfiguration.current
-        val screenHeight = currentConfig.screenHeightDp
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = modifier
-        ) { page ->
-
+        HorizontalPager(state = pagerState) { page ->
+            val pageModifier =  Modifier.size(480.dp)
             when (page) {
                 0 -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = (screenHeight * 0.1975).dp)
-                    ) {
-                        OnboardingMain()
+                    Box(modifier = pageModifier) {
+                        Image(
+                            modifier = Modifier.align(Alignment.Center),
+                            painter = painterResource(R.drawable.img_onboarding_main),
+                            contentDescription = "onboarding main image"
+                        )
                     }
                 }
-
-                1 -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = (screenHeight * 0.1463).dp)
-                    ) {
-                        OnboardingHardObjective(imageHeight = (screenHeight * 0.5175).dp)
-                    }
-                }
-
-                2 -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = (screenHeight * 0.1463).dp)
-                    ) {
-                        OnboardingReleaseAlarm()
-                    }
-                }
-
-                3 -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(y = (screenHeight * 0.1463).dp)
-                    ) {
-                        OnboardingGoodToday()
-                    }
-                }
-
-                else -> {
-                    Text(
-                        text = "$page / ${pagerState.pageCount}",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .background(Black01)
-                    )
-                }
+                1 -> HardObject(modifier = pageModifier)
+                2 -> ReleaseAlarm(modifier = pageModifier)
+                3 -> GoodDay(modifier = pageModifier)
             }
         }
+
         Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .offset(y = (screenHeight * 0.725).dp),
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
         ) {
             repeat(pagerState.pageCount) { currentPage ->
                 val isSelected = pagerState.currentPage == currentPage
                 PagerIndicator(isSelected = isSelected)
             }
         }
-
     }
 }
 

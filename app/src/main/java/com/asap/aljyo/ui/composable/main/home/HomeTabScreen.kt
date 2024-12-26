@@ -15,7 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,9 +51,10 @@ private val homeTabItems = listOf(
 @Composable
 fun HomeTabScreen(
     modifier: Modifier = Modifier,
-    onGroupItemClick: (Int) -> Unit,
+    navigateToDescript: () -> Unit,
+    onGroupItemClick: (Boolean, Int) -> Unit,
 ) {
-    var tabIndex by remember { mutableIntStateOf(0) }
+    var tabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     Column(modifier = modifier) {
         ScrollableTabRow(
@@ -120,11 +121,12 @@ fun HomeTabScreen(
         when (tabIndex) {
             0 -> MainScreen(
                 tabChange = { tabIndex = it },
-                navigateToGroupDetails = onGroupItemClick
+                navigateToDescript = navigateToDescript,
+                onGroupItemClick = onGroupItemClick
             )
 
-            1 -> PopularityScreen(navigateToGroupDetails = onGroupItemClick)
-            2 -> LatestScreen(navigateToGroupDetails = onGroupItemClick)
+            1 -> PopularityScreen(onGroupItemClick = onGroupItemClick)
+            2 -> LatestScreen(onGroupItemClick = onGroupItemClick)
         }
     }
 }
@@ -133,6 +135,9 @@ fun HomeTabScreen(
 @Composable
 fun HomeTabScreenPreview() {
     AljyoTheme {
-        HomeTabScreen(onGroupItemClick = {})
+        HomeTabScreen(
+            navigateToDescript = {},
+            onGroupItemClick = { _, _ -> }
+        )
     }
 }

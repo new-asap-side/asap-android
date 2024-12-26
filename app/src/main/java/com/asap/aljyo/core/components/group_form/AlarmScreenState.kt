@@ -1,4 +1,4 @@
-package com.asap.aljyo.components.group_form
+package com.asap.aljyo.core.components.group_form
 
 data class AlarmScreenState(
     val alarmUnlockContents: String = "",

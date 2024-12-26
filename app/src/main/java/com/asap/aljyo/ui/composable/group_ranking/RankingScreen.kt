@@ -96,6 +96,10 @@ internal fun RankingScreen(
 
         if (showBottomSheet) {
             BottomSheet(
+                modifier = Modifier.padding(
+                    horizontal = 20.dp,
+                    vertical = 24.dp
+                ),
                 sheetState = sheetState,
                 onDismissRequest = { showBottomSheet = false },
                 arrangement = Arrangement.spacedBy(16.dp),

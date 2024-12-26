@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.release_alarm
 
-import android.app.Activity
 import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle

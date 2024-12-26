@@ -22,7 +22,7 @@ import com.asap.aljyo.ui.composable.main.home.GroupItemShimmer
 
 @Composable
 fun LatestScreen(
-    navigateToGroupDetails: (Int) -> Unit,
+    onGroupItemClick: (Boolean, Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.LATEST_TAB_SCROLL_KEY] ?: Pair(0, 0)
@@ -74,7 +74,7 @@ fun LatestScreen(
                     item {
                         GroupItem(
                             modifier = Modifier.clickable {
-                                navigateToGroupDetails(group.groupId)
+                                onGroupItemClick(group.isPublic, group.groupId)
                             },
                             alarmGroup = group,
                         )

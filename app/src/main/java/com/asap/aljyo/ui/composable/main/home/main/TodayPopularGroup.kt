@@ -34,7 +34,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 fun TodayPopularGroup(
     modifier: Modifier = Modifier,
     tabChange: (Int) -> Unit,
-    navigate: (Int) -> Unit,
+    onGroupItemClick: (Boolean, Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -89,7 +89,12 @@ fun TodayPopularGroup(
                             GroupItem(
                                 modifier = Modifier
                                     .width(148.dp)
-                                    .clickable { navigate(alarmGroup.groupId) },
+                                    .clickable {
+                                        onGroupItemClick(
+                                            alarmGroup.isPublic,
+                                            alarmGroup.groupId
+                                        )
+                                    },
                                 alarmGroup = alarmGroup
                             )
                         }
@@ -106,7 +111,7 @@ private fun TodayPopularGroupPreview() {
     AljyoTheme {
         TodayPopularGroup(
             tabChange = {},
-            navigate = {}
+            onGroupItemClick = { _, _ -> }
         )
     }
 }

@@ -3,7 +3,6 @@ package com.asap.aljyo.core.navigation
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavArgument
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,9 +13,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
-import androidx.navigation.navigation
-import com.asap.aljyo.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
+import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
@@ -34,6 +32,7 @@ import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
 import com.asap.domain.entity.remote.Alarm
+import com.google.gson.Gson
 
 
 @Composable
@@ -181,6 +180,15 @@ internal fun AppNavHost() {
             )
         }
 
+        composable(
+            route = ScreenRoute.AljyoDescript.route,
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
+        ) {
+            AljyoDescriptScreen(onBackPress = { navController.popBackStack() })
+        }
+
         groupCreateNavGraph(navController)
     }
 }
@@ -198,9 +206,18 @@ fun MainNavHost(
         val navigateToGroupDetails: (Int) -> Unit = { groupId ->
             screenNavController.navigate("${ScreenRoute.GroupDetails.route}/$groupId")
         }
+
         composable(route = MainScreenRoute.Home.route) {
             HomeScreen(
-                onGroupItemClick = navigateToGroupDetails
+                navigateToReleaseAlarm = { alarm ->
+                    val json = Gson().toJson(alarm)
+                    screenNavController.navigate("${ScreenRoute.ReleaseAlarm.route}/$json")
+                },
+                navigateToDescript = {
+                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                },
+                navigateToGroupDetails = navigateToGroupDetails,
+                onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
             )
         }
 
@@ -220,6 +237,9 @@ fun MainNavHost(
             route = MainScreenRoute.MyPage.route,
         ) {
             MyPageScreen(
+                navigateToDescript = {
+                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                },
                 navigateToPreferences = {
                     screenNavController.navigate(ScreenRoute.Preferences.route)
                 },

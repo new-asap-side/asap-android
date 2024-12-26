@@ -62,7 +62,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
-import com.asap.aljyo.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
@@ -150,6 +150,10 @@ fun CreateGroupScreen(
 
                 if (isShowPhotoBottomSheet) {
                     BottomSheet(
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        ),
                         sheetState = photoSheetState,
                         onDismissRequest = { isShowPhotoBottomSheet = false },
                         title = {
@@ -299,6 +303,10 @@ fun CreateGroupScreen(
 
                 if (isShowTimeBottomSheet) {
                     BottomSheet(
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        ),
                         sheetState = timeSheetState,
                         onDismissRequest = { isShowTimeBottomSheet = false },
                         title = {

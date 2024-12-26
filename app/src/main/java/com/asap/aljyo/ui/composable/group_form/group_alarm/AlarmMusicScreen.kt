@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01

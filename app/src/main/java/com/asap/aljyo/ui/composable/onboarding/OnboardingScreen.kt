@@ -5,8 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -23,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.core.components.onboarding.OnboardingViewModel
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.White
 
 enum class SignupState {
     NOT_REGISTERED,
@@ -36,7 +35,9 @@ internal fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     AljyoTheme {
-        Scaffold { innerPadding ->
+        Scaffold(
+            containerColor = White
+        ) { innerPadding ->
             val state by viewModel.state.collectAsState()
             val context = LocalContext.current
             val launcher = rememberLauncherForActivityResult(
@@ -65,27 +66,20 @@ internal fun OnboardingScreen(
                 }
             }
 
-            Box(
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                OnboardingPager(
-                    modifier = Modifier.fillMaxSize()
+            Column(modifier = Modifier.padding(innerPadding)) {
+                OnboardingPager(modifier = Modifier.weight(1f))
+
+                SocialLogin(
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                        .fillMaxWidth(),
+                    onLoading = { viewModel.kakaoLoginLoading() },
+                    onLoginSuccess = { token ->
+                        viewModel.kakaoLoginSuccess(token = token)
+                    },
+                    onError = { viewModel.kakaoLoginFailed() }
                 )
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomStart
-                ) {
-                    SocialLogin(
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp, vertical = 24.dp)
-                            .fillMaxWidth(),
-                        onLoading = { viewModel.kakaoLoginLoading() },
-                        onLoginSuccess = { token ->
-                            viewModel.kakaoLoginSuccess(token = token)
-                        },
-                        onError = { viewModel.kakaoLoginFailed() }
-                    )
-                }
+
             }
         }
     }

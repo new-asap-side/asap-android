@@ -10,8 +10,10 @@ import com.asap.aljyo.util.format
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.usecase.group.CreateGroupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -27,6 +29,14 @@ class GroupFormViewModel @Inject constructor(
 
     private val _alarmScreenState = MutableStateFlow(AlarmScreenState())
     val alarmScreenState: StateFlow<AlarmScreenState> get() = _alarmScreenState.asStateFlow()
+
+    private val _complete = MutableSharedFlow<Int?>()
+    val complete = _complete.asSharedFlow()
+
+    private val _showDialog = MutableSharedFlow<Boolean>()
+    val showDialog = _showDialog.asSharedFlow()
+
+    private var groupId: Int? = null
 
     fun onGroupTypeSelected(groupType: Boolean) {
         _groupScreenState.value = _groupScreenState.value.copy(
@@ -127,9 +137,19 @@ class GroupFormViewModel @Inject constructor(
                 title = _groupScreenState.value.title,
                 musicTitle = _alarmScreenState.value.musicTitle,
                 deviceToken = FCMTokenManager.token
-            )
+            ).let { id ->
+                groupId = id
+            }
+        }.invokeOnCompletion {
+            viewModelScope.launch {
+                _showDialog.emit(true)
+            }
         }
     }
 
-
+    fun navigateToDetail() {
+        viewModelScope.launch {
+            _complete.emit(groupId)
+        }
+    }
 }

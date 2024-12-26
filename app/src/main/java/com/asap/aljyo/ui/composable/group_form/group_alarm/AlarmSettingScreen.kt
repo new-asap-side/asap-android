@@ -32,6 +32,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -80,11 +81,25 @@ import com.asap.aljyo.ui.theme.Red02
 fun AlarmSettingScreen(
     onBackClick: () -> Unit,
     navigateToAlarmMusicScreen: () -> Unit,
-    onCompleteClick: () -> Unit,
+    onCompleteClick: (Int) -> Unit,
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
     var openAlertDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.showDialog.collect{
+            openAlertDialog = true
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect { groupId ->
+            groupId?.let {
+                onCompleteClick(it)
+            }
+        }
+    }
 
     Scaffold(
         containerColor = White,
@@ -252,7 +267,6 @@ fun AlarmSettingScreen(
                 enable = alarmState.buttonState,
                 onClick = {
                     viewModel.onCompleteClicked()
-                    openAlertDialog = true
                 }
             )
             if (openAlertDialog) {
@@ -261,7 +275,7 @@ fun AlarmSettingScreen(
                     content = "6시간 후부터 알람이 울려요",
                     onClick = {
                         openAlertDialog = false
-                        onCompleteClick()
+                        viewModel.navigateToDetail()
                     },
                     dialogImg = R.drawable.group_dialog_img
                 )

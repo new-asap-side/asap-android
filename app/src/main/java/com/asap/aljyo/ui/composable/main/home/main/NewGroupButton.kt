@@ -14,7 +14,9 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-fun NewGroupButton() {
+fun NewGroupButton(
+    navigateToGroupType: () -> Unit
+) {
     FloatingActionButton(
         contentColor = White,
         containerColor = MaterialTheme.colorScheme.primary,
@@ -22,7 +24,7 @@ fun NewGroupButton() {
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 5.dp
         ),
-        onClick = {}
+        onClick = navigateToGroupType
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_new_group),
@@ -35,6 +37,6 @@ fun NewGroupButton() {
 @Composable
 fun NewGroupButtonPreview() {
     AljyoTheme {
-        NewGroupButton()
+        NewGroupButton() {}
     }
 }

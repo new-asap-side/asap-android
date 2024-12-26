@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.core.navigation.MainNavHost
 import com.asap.aljyo.core.navigation.MainScreenRoute
+import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
@@ -61,7 +62,9 @@ internal fun MainScreen(
             floatingActionButton = {
                 val currentRoute by navController.currentBackStackEntryAsState()
                 if (currentRoute?.destination?.route == MainScreenRoute.Home.route) {
-                    NewGroupButton()
+                    NewGroupButton(
+                        navigateToGroupType = { screenNavController.navigate(ScreenRoute.GroupType.route) }
+                    )
                 }
             }
         ) { padding ->

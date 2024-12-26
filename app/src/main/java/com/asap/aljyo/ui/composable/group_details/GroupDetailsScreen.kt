@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -184,28 +185,23 @@ fun GroupDetailsScreen(
 
         Scaffold(
             topBar = {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surface.copy(
                             alpha = 0f
                         ),
                     ),
                     title = {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            NextAlarmTimer(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(100))
-                                    .background(color = White.copy(alpha = 0.88f))
-                                    .padding(
-                                        vertical = 6.dp,
-                                        horizontal = 14.dp
-                                    ),
-                                viewModel = viewModel
-                            )
-                        }
+                        NextAlarmTimer(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(100))
+                                .background(color = White.copy(alpha = 0.88f))
+                                .padding(
+                                    vertical = 6.dp,
+                                    horizontal = 14.dp
+                                ),
+                            viewModel = viewModel
+                        )
                     },
                     actions = {
                         when (userGroupType) {

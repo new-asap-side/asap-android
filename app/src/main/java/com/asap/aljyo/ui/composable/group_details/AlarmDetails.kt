@@ -313,11 +313,13 @@ private fun AlarmDetailsContent(
                 // TODO data entity
                 content = "$parsedAlarmTime\n월 화 수 목 금 토 일"
             )
+
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_end_date),
                 content = parsedAlarmEndDate
             )
+
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_group_participants),
@@ -335,6 +337,16 @@ private fun AlarmDetailsContent(
                     stringResource(R.string.public_group)
                 else
                     stringResource(R.string.private_group)
+            )
+
+            RowText(
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.alarm_release_content),
+                content = when (groupDetails?.alarmUnlockContents ?: "") {
+                    "CARD" -> stringResource(R.string.alarm_unlock_contents_card)
+                    "SLIDE" -> stringResource(R.string.alarm_unlock_contents_slide)
+                    else -> ""
+                }
             )
         }
     }
@@ -355,11 +367,6 @@ fun PrivateSetting(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            RowText(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.alarm_release_content),
-                content = "아이트래커"
-            )
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_method),

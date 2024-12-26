@@ -17,6 +17,8 @@
     <string name="password">비밀번호</string>
     <string name="exit">나가기</string>
     <string name="join">참여하기</string>
+    <string name="alarm_unlock_contents_slide">밀어서 알람 해제</string>
+    <string name="alarm_unlock_contents_card">카드를 터치하여 알람 해제</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>

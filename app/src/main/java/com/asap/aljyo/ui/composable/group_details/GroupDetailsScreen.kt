@@ -190,7 +190,7 @@ fun GroupDetailsScreen(
                         ),
                     ),
                     title = {
-                        NextAlarmTimer(
+                        AlarmTimer(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(100))
                                 .background(color = White.copy(alpha = 0.88f))

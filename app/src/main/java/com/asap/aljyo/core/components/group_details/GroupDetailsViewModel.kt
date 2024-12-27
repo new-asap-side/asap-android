@@ -66,8 +66,27 @@ class GroupDetailsViewModel @AssistedInject constructor(
             }.collect { result ->
                 Log.d(TAG, "$result")
 
-                participationStatus(result)
-                privateSetting(result)
+                val mId = getUserInfoUseCase.invoke().userId.toInt()
+                result?.users.also { participateUsers ->
+                    val target = participateUsers?.find { participants ->
+                        mId == participants.userId
+                    }
+
+                    // 그룹장 / 참여자 / 미 참여자 구분
+                    if (target == null) {
+                        _userGroupType.value = UserGroupType.NonParticipant
+                    } else {
+                        // 개인 설정
+                        _privateSettingState.value = target
+                        _userGroupType.value = if (target.isGroupMaster) {
+                            UserGroupType.Leader
+                        } else {
+                            UserGroupType.Participant
+                        }
+                    }
+                }
+
+                // 다음 알람 시간 세팅
                 sortedByFastest(
                     result?.alarmDays?.map { day ->
                         "$day ${result.alarmTime}"
@@ -75,32 +94,8 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 )
 
                 observingRemainTime()
-
                 _groupDetailsState.value = UiState.Success(result)
             }
-        }
-    }
-
-    // 그룹 참여 여부 확인
-    private fun participationStatus(groupDetails: GroupDetails?) = viewModelScope.launch {
-        groupDetails?.users.also { participateUsers ->
-            val target = participateUsers?.find { participants ->
-                getUserInfoUseCase.invoke().userId.let { myUserId ->
-                    myUserId.toInt() == participants.userId
-                }
-            }
-
-            if (target == null) {
-                _userGroupType.value = UserGroupType.NonParticipant
-                return@launch
-            }
-
-            _userGroupType.value = if (target.isGroupMaster) {
-                UserGroupType.Leader
-            } else {
-                UserGroupType.Participant
-            }
-
         }
     }
 
@@ -117,20 +112,22 @@ class GroupDetailsViewModel @AssistedInject constructor(
             delay(1000)
             _nextAlarmTimeFlow.collect { nextAlarmDate ->
                 val duration = DateTimeManager.diffFromNow(nextAlarmDate, basedMinite = false)
+                if (duration < 0L) {
+                    val last = _fastestAlarmQueue.poll()
+                    _fastestAlarmQueue.add(last)
+                }
                 _nextAlarmTime.value = DateTimeManager.parseToDayBySecond(duration)
             }
         }
     }
 
     fun findLeader(groupDetails: GroupDetails?): GroupMember? {
-        return groupDetails?.users?.first { user ->
-            user.isGroupMaster
-        }
-    }
-
-    private fun privateSetting(groupDetails: GroupDetails?) = viewModelScope.launch {
-        _privateSettingState.value = groupDetails?.users?.find { participant ->
-            participant.userId.toString() == getUserInfoUseCase.invoke().userId
+        return try {
+            groupDetails?.users?.first { user ->
+                user.isGroupMaster
+            }
+        } catch (e: NoSuchElementException) {
+            null
         }
     }
 

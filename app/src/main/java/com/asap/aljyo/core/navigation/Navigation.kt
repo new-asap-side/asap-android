@@ -293,7 +293,7 @@ fun NavGraphBuilder.groupCreateNavGraph(
             navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
             onCompleteClick = { groupId ->
                 navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId") {
-                    popUpTo(ScreenRoute.GroupType) { inclusive = true }
+                    popUpTo(ScreenRoute.GroupType.route) { inclusive = true }
                 }
             }
         )

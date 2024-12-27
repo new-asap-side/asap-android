@@ -17,6 +17,8 @@
     <string name="password">비밀번호</string>
     <string name="exit">나가기</string>
     <string name="join">참여하기</string>
+    <string name="alarm_unlock_contents_slide">밀어서 알람 해제</string>
+    <string name="alarm_unlock_contents_card">카드를 터치하여 알람 해제</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
     <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
@@ -59,8 +61,9 @@
     <string name="private_setting">개인설정</string>
     <string name="alarm_information">알람 정보</string>
     <string name="alarm_time">알람 시간</string>
-    <string name="alarm_period">알람 기간</string>
+    <string name="alarm_end_date">알람 종료 일자</string>
     <string name="alarm_group_participants">참가 인원</string>
+    <string name="alarm_participation_status">현재 %d명 / 최대 %d명</string>
     <string name="alarm_pulbic_or_private">공개/비공개</string>
     <string name="alarm_setting">알람 설정</string>
     <string name="alarm_release_content">해제 컨텐츠</string>

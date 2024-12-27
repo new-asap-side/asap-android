@@ -2,6 +2,8 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
+import com.asap.domain.usecase.group.FetchGroupDetailsUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase
 import com.asap.domain.usecase.group.FetchGroupRankingUseCaseImpl
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
@@ -24,6 +26,8 @@ import com.asap.domain.usecase.user.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
+import com.asap.domain.usecase.user.GetUserInfoUseCase
+import com.asap.domain.usecase.user.GetUserInfoUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,6 +36,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 interface UseCaseModule {
+    /**
+     * User usecase
+     */
     @Binds
     fun bindKakaoLoginUseCase(
         kakaoLoginUseCaseImpl: AuthKakaoUseCaseImpl
@@ -46,6 +53,11 @@ interface UseCaseModule {
     fun bindCheckCacheUseCase(
         checkCacheUserCaseImpl: CheckCacheUserCaseImpl
     ): CheckCacheUserCase
+
+    @Binds
+    fun bindGetUserInfoUseCase(
+        getUserInfoUseCaseImpl: GetUserInfoUseCaseImpl
+    ): GetUserInfoUseCase
 
     @Binds
     fun bindResultCardUseCase(
@@ -94,4 +106,9 @@ interface UseCaseModule {
     fun bindFetchLatestGroupUseCase(
         fetchGroupRankingUseCaseImpl: FetchLatestGroupUseCaseImpl
     ): FetchLatestGroupUseCase
+
+    @Binds
+    fun bindFetchGroupDetailsUseCase(
+        fetchGroupDetailsUseCaseImpl: FetchGroupDetailsUseCaseImpl
+    ): FetchGroupDetailsUseCase
 }

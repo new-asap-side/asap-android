@@ -2,6 +2,7 @@ package com.asap.data.repository
 
 import com.asap.data.remote.datasource.GroupRemoteDataSource
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +17,10 @@ class GroupRepositoryImpl @Inject constructor(
 
     override suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?> {
         return remoteDataSource.fetchTodayPopularGroup()
+    }
+
+    override suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> {
+        return remoteDataSource.fetchGroupDetails(groupId = groupId)
     }
 
     override suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> {
@@ -43,8 +48,8 @@ class GroupRepositoryImpl @Inject constructor(
         musicTitle: String?,
         title: String,
         userId: Int
-    ) {
-        remoteDataSource.postCreateGroup(
+    ): Int? {
+        return remoteDataSource.postCreateGroup(
             groupImage = groupImage,
             alarmDays = alarmDays,
             alarmEndDate = alarmEndDate,
@@ -61,7 +66,6 @@ class GroupRepositoryImpl @Inject constructor(
             musicTitle = musicTitle,
             title = title,
             userId = userId
-        )
-        // groupID를 받아서 Room에 Group 정보와 함께 저장
+        )?.groupId
     }
 }

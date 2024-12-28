@@ -4,16 +4,25 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.util.PictureUtil
+import com.asap.aljyo.util.format
+import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.domain.usecase.group.CreateGroupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupFormViewModel @Inject constructor(
-
+    private val createGroupUseCase: CreateGroupUseCase
 ): ViewModel() {
     private val _groupScreenState = MutableStateFlow(GroupScreenState())
     val groupScreenState: StateFlow<GroupScreenState> get() = _groupScreenState.asStateFlow()
@@ -21,11 +30,25 @@ class GroupFormViewModel @Inject constructor(
     private val _alarmScreenState = MutableStateFlow(AlarmScreenState())
     val alarmScreenState: StateFlow<AlarmScreenState> get() = _alarmScreenState.asStateFlow()
 
-    fun onGroupTypeSelected(groupType: Boolean, password: String) {
+    private val _complete = MutableSharedFlow<Int?>()
+    val complete = _complete.asSharedFlow()
+
+    private val _showDialog = MutableSharedFlow<Boolean>()
+    val showDialog = _showDialog.asSharedFlow()
+
+    private var groupId: Int? = null
+
+    fun onGroupTypeSelected(groupType: Boolean) {
         _groupScreenState.value = _groupScreenState.value.copy(
             isPublic = groupType,
-            groupPassword = password
+            groupPassword = if (groupType) null else ""
         )
+    }
+
+    fun onGroupPasswordChanged(pw: String) {
+        if (pw.length > 4) return
+
+        _groupScreenState.value = _groupScreenState.value.copy(groupPassword = pw)
     }
 
     fun onGroupImageSelected(image: Uri?) {
@@ -45,6 +68,7 @@ class GroupFormViewModel @Inject constructor(
 
         _groupScreenState.value = _groupScreenState.value.copy(description = description)
     }
+
     fun onGroupPersonSelected(person: Int) {
         _groupScreenState.value = _groupScreenState.value.copy(maxPerson = person)
     }
@@ -77,6 +101,8 @@ class GroupFormViewModel @Inject constructor(
     fun onAlarmTypeSelected(alarmType: String) {
         _alarmScreenState.value = _alarmScreenState.value.copy(
             alarmType = alarmType,
+            musicTitle = if (alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
+            alarmVolume = if (alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume
         )
     }
 
@@ -93,7 +119,37 @@ class GroupFormViewModel @Inject constructor(
     }
 
     fun onCompleteClicked() {
-        // 서버 요청 보내기
-        // AlarmType이 진동이라면 musicTitle & Volume = null
+        viewModelScope.launch {
+            createGroupUseCase(
+                groupImage = PictureUtil.getStringFromUri(_groupScreenState.value.groupImage)
+                    ?: throw IllegalArgumentException("image encoded fail"),
+                alarmDay = _groupScreenState.value.alarmDays,
+                alarmEndDate = _groupScreenState.value.alarmEndDate!!.format(),
+                alarmTime = _groupScreenState.value.alarmTime,
+                alarmType = _alarmScreenState.value.alarmType,
+                alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
+                alarmVolume = _alarmScreenState.value.alarmVolume?.toInt(),
+                description = _groupScreenState.value.description,
+                deviceType = "ANDROID",
+                groupPassword = _groupScreenState.value.groupPassword,
+                isPublic = _groupScreenState.value.isPublic!!,
+                maxPerson = _groupScreenState.value.maxPerson,
+                title = _groupScreenState.value.title,
+                musicTitle = _alarmScreenState.value.musicTitle,
+                deviceToken = FCMTokenManager.token
+            ).let { id ->
+                groupId = id
+            }
+        }.invokeOnCompletion {
+            viewModelScope.launch {
+                _showDialog.emit(true)
+            }
+        }
+    }
+
+    fun navigateToDetail() {
+        viewModelScope.launch {
+            _complete.emit(groupId)
+        }
     }
 }

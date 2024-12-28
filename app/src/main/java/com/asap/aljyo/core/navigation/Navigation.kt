@@ -14,6 +14,7 @@ import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
+import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
@@ -64,7 +65,10 @@ internal fun AppNavHost() {
 
         composable(
             route = "${ScreenRoute.GroupDetails.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             GroupDetailsScreen(
@@ -75,7 +79,10 @@ internal fun AppNavHost() {
 
         composable(
             route = "${ScreenRoute.Ranking.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             RankingScreen(
@@ -179,6 +186,15 @@ internal fun AppNavHost() {
             )
         }
 
+        composable(
+            route = ScreenRoute.AljyoDescript.route,
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
+        ) {
+            AljyoDescriptScreen(onBackPress = { navController.popBackStack() })
+        }
+
         groupCreateNavGraph(navController)
     }
 }
@@ -196,14 +212,18 @@ fun MainNavHost(
         val navigateToGroupDetails: (Int) -> Unit = { groupId ->
             screenNavController.navigate("${ScreenRoute.GroupDetails.route}/$groupId")
         }
+
         composable(route = MainScreenRoute.Home.route) {
             HomeScreen(
                 navigateToReleaseAlarm = { alarm ->
                     val json = Gson().toJson(alarm)
                     screenNavController.navigate("${ScreenRoute.ReleaseAlarm.route}/$json")
                 },
+                navigateToDescript = {
+                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                },
+                navigateToGroupDetails = navigateToGroupDetails,
                 onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
-                onGroupItemClick = navigateToGroupDetails
             )
         }
 
@@ -223,6 +243,9 @@ fun MainNavHost(
             route = MainScreenRoute.MyPage.route,
         ) {
             MyPageScreen(
+                navigateToDescript = {
+                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                },
                 navigateToPreferences = {
                     screenNavController.navigate(ScreenRoute.Preferences.route)
                 },
@@ -274,7 +297,11 @@ fun NavGraphBuilder.groupCreateNavGraph(
             viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
-            onCompleteClick = {}
+            onCompleteClick = { groupId ->
+                navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId") {
+                    popUpTo(ScreenRoute.GroupType.route) { inclusive = true }
+                }
+            }
         )
     }
 

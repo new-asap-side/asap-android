@@ -33,6 +33,8 @@ sealed class ScreenRoute(val route: String) {
     data object AlarmSetting: ScreenRoute(route = "alarm_Setting")
 
     data object AlarmMusic: ScreenRoute(route = "alarm_music")
+
+    data object AljyoDescript: ScreenRoute(route = "descript")
 }
 
 // Main screen route

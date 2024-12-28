@@ -58,7 +58,7 @@ fun AlarmTypeScreen(
     onBackClick: () -> Unit,
     navigateToAlarmSetting: () -> Unit
 ) {
-    var isSelected by remember { mutableIntStateOf(-1) }
+    val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = White,
@@ -112,8 +112,8 @@ fun AlarmTypeScreen(
             BoxWithIcon(
                 icon = R.drawable.ic_slide,
                 text = "밀어서 알람 해제",
-                isSelected = isSelected == 0,
-                onCheckedChange = { isSelected = 0 }
+                isSelected = alarmState.alarmUnlockContents == "SLIDE",
+                onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("SLIDE") }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -121,21 +121,16 @@ fun AlarmTypeScreen(
             BoxWithIcon(
                 icon = R.drawable.ic_card_touch,
                 text = "카드를 터치하여 알람 해제",
-                isSelected = isSelected == 1,
-                onCheckedChange = { isSelected = 1 }
+                isSelected = alarmState.alarmUnlockContents == "CARD",
+                onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CARD") }
             )
 
             Spacer(modifier = Modifier.height(36.dp))
 
             CustomButton(
                 text = "다음",
-                enable = (isSelected == 0) || (isSelected == 1),
-                onClick = {
-                    viewModel.onAlarmUnlockContentsSelected(
-                        if (isSelected == 0) "SLIDE" else "CARD"
-                    )
-                    navigateToAlarmSetting()
-                }
+                enable = alarmState.alarmUnlockContents.isNotEmpty(),
+                onClick = navigateToAlarmSetting
             )
 
             Spacer(modifier = Modifier.height(6.dp))

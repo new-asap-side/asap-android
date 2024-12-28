@@ -150,6 +150,10 @@ fun CreateGroupScreen(
 
                 if (isShowPhotoBottomSheet) {
                     BottomSheet(
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        ),
                         sheetState = photoSheetState,
                         onDismissRequest = { isShowPhotoBottomSheet = false },
                         title = {
@@ -299,6 +303,10 @@ fun CreateGroupScreen(
 
                 if (isShowTimeBottomSheet) {
                     BottomSheet(
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        ),
                         sheetState = timeSheetState,
                         onDismissRequest = { isShowTimeBottomSheet = false },
                         title = {

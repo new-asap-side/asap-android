@@ -29,6 +29,7 @@ import com.asap.aljyo.ui.theme.White
 
 @Composable
 internal fun MyPageScreen(
+    navigateToDescript: () -> Unit,
     navigateToPreferences: () -> Unit,
     navigateToOnboarding: () -> Unit,
 ) {
@@ -81,7 +82,8 @@ internal fun MyPageScreen(
                     )
             ) {
                 Banner(
-                    modifier = Modifier.clip(RoundedCornerShape(10.dp))
+                    modifier = Modifier.clip(RoundedCornerShape(10.dp)),
+                    navigateToDescript = navigateToDescript
                 )
             }
         }
@@ -93,6 +95,7 @@ internal fun MyPageScreen(
 private fun Preview() {
     AljyoTheme {
         MyPageScreen(
+            navigateToDescript = {},
             navigateToOnboarding = {},
             navigateToPreferences = {}
         )

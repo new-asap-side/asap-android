@@ -103,8 +103,9 @@ fun GroupThumbnail(
             model = thumbnailUrl,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f),
-            contentScale = ContentScale.Fit,
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop,
             contentDescription = "Group thumbnail",
             placeholder = null,
             error = painterResource(R.drawable.ic_my_page)

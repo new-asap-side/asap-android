@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.custom.OverlappingRow
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
@@ -99,7 +100,7 @@ fun GroupSummation(
                     Text(
                         text = groupDetails?.title ?: "",
                         style = MaterialTheme.typography.headlineMedium.copy(
-                            fontSize = 22.sp,
+                            fontSize = 22.fsp,
                             color = Black01,
                         ),
                         maxLines = 2,
@@ -115,7 +116,7 @@ fun GroupSummation(
                     Text(
                         text = groupDetails?.description ?: "",
                         style = MaterialTheme.typography.labelMedium.copy(
-                            fontSize = 15.sp,
+                            fontSize = 15.fsp,
                             color = Color(0xFF666666),
                         ),
                     )
@@ -323,7 +324,7 @@ private fun GroupLeader(
         Text(
             text = leaderNickname,
             style = MaterialTheme.typography.labelMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black01
             )
         )
@@ -365,7 +366,7 @@ private fun GroupAlarmDates(
         Text(
             text = dates,
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -379,7 +380,7 @@ private fun GroupAlarmDates(
         Text(
             text = timeStamp,
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -415,7 +416,7 @@ fun GroupPersonnel(
             Text(
                 text = stringResource(R.string.particularting_personnel, personnel),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = MaterialTheme.colorScheme.primary
                 )
             )

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.shape.SpeechBubble
 import com.asap.aljyo.ui.shape.TailArrangement
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -90,7 +91,7 @@ internal fun ConfirmRankingPopUp(
                 Text(
                     text = stringResource(R.string.confirm_rank),
                     style = MaterialTheme.typography.labelMedium.copy(
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                         color = White
                     )
                 )

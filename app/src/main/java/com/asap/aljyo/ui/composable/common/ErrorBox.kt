@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
@@ -35,7 +36,7 @@ internal fun ErrorBox(
         Text(
             text = stringResource(R.string.load_fail),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 20.sp,
+                fontSize = 20.fsp,
                 color = Black01,
                 textAlign = TextAlign.Center
             )
@@ -53,7 +54,7 @@ internal fun ErrorBox(
             Text(
                 text = stringResource(R.string.retry),
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = 16.sp,
+                    fontSize = 16.fsp,
                 )
             )
         }

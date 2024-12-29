@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
@@ -45,7 +46,7 @@ internal fun UnRankingArea(
                 Text(
                     text = (index + 4).toString(),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                         color = Black03
                     )
                 )
@@ -65,7 +66,7 @@ internal fun UnRankingArea(
                     Text(
                         text = ranking.nickname,
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 14.sp,
+                            fontSize = 14.fsp,
                             color = Black01
                         )
                     )
@@ -73,7 +74,7 @@ internal fun UnRankingArea(
                 Text(
                     text = "${ranking.score}점",
                     style = MaterialTheme.typography.labelMedium.copy(
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                         color = Black03
                     ),
                     overflow = TextOverflow.Ellipsis

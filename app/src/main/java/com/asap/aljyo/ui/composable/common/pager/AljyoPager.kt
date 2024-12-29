@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Red01
 
@@ -65,14 +66,14 @@ private fun PagerHeader(
             text = title,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Red01,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
         Text(
             text = subTitle,
             style = MaterialTheme.typography.headlineMedium.copy(
                 color = Color.Black,
-                fontSize = 20.sp,
+                fontSize = 20.fsp,
                 textAlign = TextAlign.Center
             )
         )

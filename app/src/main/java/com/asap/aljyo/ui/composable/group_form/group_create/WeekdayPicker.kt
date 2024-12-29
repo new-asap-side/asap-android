@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Grey02
@@ -39,7 +40,7 @@ fun WeekdayPicker(
             text = "알람 요일",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
 
@@ -70,7 +71,7 @@ fun WeekdayPicker(
                         modifier = Modifier.align(Alignment.Center),
                         text = day,
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 15.sp,
+                            fontSize = 15.fsp,
                             color = if (isSelected) Red01 else Black01
                         )
                     )

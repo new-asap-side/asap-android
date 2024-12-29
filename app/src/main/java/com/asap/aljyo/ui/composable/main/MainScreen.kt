@@ -3,7 +3,6 @@ package com.asap.aljyo.ui.composable.main
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,18 +43,23 @@ internal fun MainScreen(
     AljyoTheme {
         val navController = rememberNavController()
         Scaffold(
+            containerColor = White,
             bottomBar = {
                 BottomNavigationBar(
                     modifier = Modifier
                         .navigationBarsPadding()
                         .fillMaxWidth()
-                        .height(66.dp)
-                        .background(color = White),
+                        .height(66.dp),
                     navController = navController
                 )
             },
         ) { padding ->
-            Box(Modifier.padding(padding)) {
+            Box(
+                Modifier.padding(
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding() - 40.dp
+                )
+            ) {
                 MainNavHost(
                     screenNavController = screenNavController,
                     navController = navController,

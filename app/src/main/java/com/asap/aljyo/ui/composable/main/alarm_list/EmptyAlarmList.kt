@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
@@ -49,7 +50,7 @@ internal fun EmptyAlarmList(
             Text(
                 text = stringResource(R.string.empty_alarm),
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 22.sp,
+                    fontSize = 22.fsp,
                     color = Black01,
                 )
             )
@@ -57,7 +58,7 @@ internal fun EmptyAlarmList(
             Text(
                 text = stringResource(R.string.start_with_new_group),
                 style = MaterialTheme.typography.labelMedium.copy(
-                    fontSize = 15.sp,
+                    fontSize = 15.fsp,
                     color = Black03,
                 )
             )
@@ -73,7 +74,7 @@ internal fun EmptyAlarmList(
             Text(
                 text = stringResource(R.string.find_group),
                 style = MaterialTheme.typography.labelMedium.copy(
-                    fontSize = 15.sp,
+                    fontSize = 15.fsp,
                 )
             )
         }

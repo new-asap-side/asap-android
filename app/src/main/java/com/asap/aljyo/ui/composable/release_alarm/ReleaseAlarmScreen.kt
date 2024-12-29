@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.Alarm
@@ -111,7 +112,7 @@ internal fun ReleaseAlarmScreen(
                     Text(
                         text = alarm.alarmTime,
                         style = MaterialTheme.typography.headlineMedium.copy(
-                            fontSize = 86.sp,
+                            fontSize = 86.fsp,
                             color = White
                         ),
                         textAlign = TextAlign.Center
@@ -122,7 +123,7 @@ internal fun ReleaseAlarmScreen(
                     Text(
                         text = stringResource(content.descriptionId),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 24.sp,
+                            fontSize = 24.fsp,
                             color = White
                         ),
                         textAlign = TextAlign.Center
@@ -133,7 +134,7 @@ internal fun ReleaseAlarmScreen(
                     Text(
                         text = stringResource(content.titleId),
                         style = MaterialTheme.typography.labelMedium.copy(
-                            fontSize = 18.sp,
+                            fontSize = 18.fsp,
                             color = White
                         )
                     )

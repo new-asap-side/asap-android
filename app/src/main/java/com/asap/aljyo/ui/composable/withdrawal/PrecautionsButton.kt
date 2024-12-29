@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey02
@@ -71,7 +70,7 @@ internal fun PrecautionsButton(
                 text = stringResource(R.string.checked_precautions),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     color = if (checked) MaterialTheme.colorScheme.primary else Black01,
-                    fontSize = 16.sp
+                    fontSize = 16.fsp
                 )
             )
 

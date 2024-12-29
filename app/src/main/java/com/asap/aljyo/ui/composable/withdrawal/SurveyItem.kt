@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.custom.AljyoToggleButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -40,7 +40,7 @@ internal fun SurveyItem(
                 text = survey,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = Black01,
-                    fontSize = 15.sp
+                    fontSize = 15.fsp
                 )
             )
         }

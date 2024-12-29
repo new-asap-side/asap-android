@@ -45,6 +45,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -156,7 +157,7 @@ fun HomeScreen(
                                 text = stringResource(R.string.private_alarm_input_password),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     color = Black01,
-                                    fontSize = 18.sp
+                                    fontSize = 18.fsp
                                 )
                             )
                         }
@@ -192,7 +193,7 @@ fun HomeScreen(
                                 ),
                             textStyle = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black01,
-                                fontSize = 18.sp
+                                fontSize = 18.fsp
                             ),
                         ) { innerTextField ->
                             password.ifEmpty {
@@ -200,7 +201,7 @@ fun HomeScreen(
                                     text = stringResource(R.string.password_hint),
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         color = Black03,
-                                        fontSize = 18.sp
+                                        fontSize = 18.fsp
                                     )
                                 )
                             }
@@ -217,7 +218,7 @@ fun HomeScreen(
                                             text = stringResource(R.string.password),
                                             style = MaterialTheme.typography.labelMedium.copy(
                                                 color = Black03,
-                                                fontSize = 12.sp
+                                                fontSize = 12.fsp
                                             )
                                         )
                                     }
@@ -227,7 +228,7 @@ fun HomeScreen(
                                         text = stringResource(R.string.password_hint),
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             color = Black03,
-                                            fontSize = 18.sp
+                                            fontSize = 18.fsp
                                         )
                                     )
                                 },
@@ -256,7 +257,7 @@ fun HomeScreen(
                                 text = stringResource(R.string.password_error),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Error,
-                                    fontSize = 12.sp
+                                    fontSize = 12.fsp
                                 )
                             )
                         } else {
@@ -283,7 +284,7 @@ fun HomeScreen(
                                 Text(
                                     text = stringResource(R.string.exit),
                                     style = MaterialTheme.typography.titleMedium.copy(
-                                        fontSize = 16.sp
+                                        fontSize = 16.fsp
                                     )
                                 )
                             }
@@ -307,7 +308,7 @@ fun HomeScreen(
                                 Text(
                                     text = stringResource(R.string.join),
                                     style = MaterialTheme.typography.titleMedium.copy(
-                                        fontSize = 16.sp
+                                        fontSize = 16.fsp
                                     )
                                 )
                             }

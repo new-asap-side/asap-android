@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Grey01
@@ -29,8 +30,8 @@ internal fun Survey(modifier: Modifier = Modifier) {
             text = stringResource(R.string.survey_title),
             style = MaterialTheme.typography.labelMedium.copy(
                 color = Black02,
-                fontSize = 14.sp,
-                lineHeight = 22.sp
+                fontSize = 14.fsp,
+                lineHeight = 22.fsp
             ),
             textAlign = TextAlign.Center
         )

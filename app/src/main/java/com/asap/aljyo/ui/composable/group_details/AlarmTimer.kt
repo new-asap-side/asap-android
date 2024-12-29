@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
@@ -67,14 +68,14 @@ fun AlarmTimer(
             Text(
                 text = stringResource(R.string.next_alarm_timer_title),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = Black02
                 )
             )
             Text(
                 text = remainTime,
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = MaterialTheme.colorScheme.primary
                 )
             )
@@ -105,14 +106,14 @@ private fun NextAlarmTimerPreview() {
             Text(
                 text = stringResource(R.string.next_alarm_timer_title),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = Black02
                 )
             )
             Text(
                 text = "05:00:00",
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = MaterialTheme.colorScheme.primary
                 )
             )

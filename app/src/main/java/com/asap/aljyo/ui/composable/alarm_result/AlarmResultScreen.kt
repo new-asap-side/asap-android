@@ -30,9 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
@@ -79,7 +79,7 @@ internal fun AlarmResultScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     val style = MaterialTheme.typography.titleMedium.copy(
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                     )
 
                     Button(

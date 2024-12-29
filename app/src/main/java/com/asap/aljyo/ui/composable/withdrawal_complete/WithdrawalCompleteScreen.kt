@@ -24,8 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -49,7 +49,7 @@ internal fun WithdrawalCompleteScreen(
                             text = stringResource(R.string.membership_withdrawal),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
-                                fontSize = 16.sp
+                                fontSize = 16.fsp
                             ),
                         )
                     },
@@ -75,7 +75,7 @@ internal fun WithdrawalCompleteScreen(
                         text = stringResource(R.string.complete_withdrawal),
                         style = MaterialTheme.typography.headlineMedium.copy(
                             color = Black01,
-                            fontSize = 20.sp
+                            fontSize = 20.fsp
                         )
                     )
 
@@ -85,7 +85,7 @@ internal fun WithdrawalCompleteScreen(
                         text = stringResource(R.string.see_you),
                         style = MaterialTheme.typography.labelMedium.copy(
                             color = Black02,
-                            fontSize = 15.sp
+                            fontSize = 15.fsp
                         )
                     )
                 }
@@ -108,7 +108,7 @@ internal fun WithdrawalCompleteScreen(
                     Text(
                         text = stringResource(R.string.bye),
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 16.sp
+                            fontSize = 16.fsp
                         )
                     )
 

@@ -24,10 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -53,7 +53,7 @@ fun GroupMembers(
                 Text(
                     text = "${stringResource(R.string.member)} $count",
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         color = Black01
                     )
                 )
@@ -163,7 +163,7 @@ fun GroupMemberItem(
         Text(
             text = nickname,
             style = MaterialTheme.typography.labelMedium.copy(
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
                 color = Black01
             )
         )

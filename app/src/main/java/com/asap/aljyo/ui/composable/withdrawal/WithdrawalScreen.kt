@@ -56,6 +56,7 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
@@ -95,7 +96,7 @@ internal fun WithdrawalScreen(
                             text = stringResource(R.string.membership_withdrawal),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
-                                fontSize = 16.sp
+                                fontSize = 16.fsp
                             ),
                         )
                     },
@@ -171,7 +172,7 @@ internal fun WithdrawalScreen(
                         Text(
                             text = stringResource(R.string.cancel),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                fontSize = 16.sp
+                                fontSize = 16.fsp
                             )
                         )
                     }
@@ -192,7 +193,7 @@ internal fun WithdrawalScreen(
                         Text(
                             text = stringResource(R.string.withdrawal),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                fontSize = 16.sp
+                                fontSize = 16.fsp
                             )
                         )
                     }
@@ -226,8 +227,8 @@ internal fun WithdrawalScreen(
                     },
                     style = MaterialTheme.typography.headlineMedium.copy(
                         color = Black01,
-                        fontSize = 20.sp,
-                        lineHeight = 28.sp
+                        fontSize = 20.fsp,
+                        lineHeight = 28.fsp
                     ),
                     textAlign = TextAlign.Center
                 )
@@ -252,7 +253,7 @@ internal fun WithdrawalScreen(
                         text = stringResource(R.string.wait),
                         style = MaterialTheme.typography.headlineMedium.copy(
                             color = MaterialTheme.colorScheme.primary,
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                         )
                     )
 
@@ -268,7 +269,7 @@ internal fun WithdrawalScreen(
                     Text(
                         text = stringResource(R.string.withdrawal_information_title),
                         style = MaterialTheme.typography.headlineMedium.copy(
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                         )
                     )
 
@@ -286,7 +287,7 @@ internal fun WithdrawalScreen(
                                 text = "\u2022",
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Black02,
-                                    fontSize = 12.sp,
+                                    fontSize = 12.fsp,
                                 )
                             )
 
@@ -296,7 +297,7 @@ internal fun WithdrawalScreen(
                                 text = info,
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Black02,
-                                    fontSize = 12.sp,
+                                    fontSize = 12.fsp,
                                 )
                             )
 

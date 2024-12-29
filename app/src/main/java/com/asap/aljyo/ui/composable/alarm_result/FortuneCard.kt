@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -108,7 +109,7 @@ internal fun FortuneCard(
                     modifier = Modifier.align(Alignment.Center),
                     text = stringResource(R.string.alarm_rank, rank),
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontSize = 24.sp,
+                        fontSize = 24.fsp,
                         color = White
                     )
                 )
@@ -125,7 +126,7 @@ internal fun FortuneCard(
                 Text(
                     text = stringResource(fortune.titleId),
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontSize = 20.sp,
+                        fontSize = 20.fsp,
                         color = Black01
                     )
                 )
@@ -133,7 +134,7 @@ internal fun FortuneCard(
                 Text(
                     text = stringResource(fortune.descriptionId),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 15.sp,
+                        fontSize = 15.fsp,
                         color = Black02
                     )
                 )

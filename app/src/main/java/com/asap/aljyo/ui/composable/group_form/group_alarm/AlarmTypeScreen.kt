@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,11 +25,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,12 +34,12 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.Black01
@@ -95,7 +91,7 @@ fun AlarmTypeScreen(
                 text = "\"닉네임\"님만의 알람 방식을\n선택해주세요!",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,
-                    fontSize = 22.sp,
+                    fontSize = 22.fsp,
                     fontWeight = FontWeight.Bold,
                 )
             )
@@ -183,7 +179,7 @@ fun BoxWithIcon(
                 text = text,
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = if (isSelected) Red01 else Black01,
-                    fontSize = 16.sp,
+                    fontSize = 16.fsp,
                     fontWeight = FontWeight.Bold,
                 )
             )

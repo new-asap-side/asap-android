@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.core.components.usersetting.UserSettingMsgType
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black04
@@ -76,7 +76,7 @@ fun NicknameTextField(
             },
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 color = Black01,
-                fontSize = 18.sp,
+                fontSize = 18.fsp,
                 fontWeight = FontWeight.Medium,
             ),
             cursorBrush = SolidColor(Red01),
@@ -93,7 +93,7 @@ fun NicknameTextField(
                             text = "닉네임",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black04,
-                                fontSize = 18.sp,
+                                fontSize = 18.fsp,
                                 fontWeight = FontWeight.Medium,
                             ),
                             modifier = modifier.align(Alignment.CenterStart)
@@ -113,7 +113,7 @@ fun NicknameTextField(
                             text = "${nickname.length}/8",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black04,
-                                fontSize = 15.sp
+                                fontSize = 15.fsp
                             ),
                             modifier = Modifier
                                 .padding(end = 10.dp)
@@ -149,7 +149,7 @@ fun NicknameTextField(
                 text = msg.msg,
                 style = TextStyle(
                     color = if (msg == UserSettingMsgType.Success) Black02 else Error,
-                    fontSize = 12.sp
+                    fontSize = 12.fsp
                 )
             )
         }

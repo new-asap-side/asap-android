@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -59,7 +60,7 @@ fun CustomAlertDialog(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = Black01,
-                        fontSize = 18.sp,
+                        fontSize = 18.fsp,
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -69,7 +70,7 @@ fun CustomAlertDialog(
                     text = content,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Black02,
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                     )
                 )
 

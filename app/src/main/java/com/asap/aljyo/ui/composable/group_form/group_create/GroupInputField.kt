@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black04
@@ -39,7 +40,7 @@ fun GroupInputField(
             text = label,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
         Box {
@@ -51,7 +52,7 @@ fun GroupInputField(
                 maxLines = Int.MAX_VALUE,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Start,
-                    fontSize = 15.sp,
+                    fontSize = 15.fsp,
                     color = Black01
                 ),
                 placeholder = placeHolder,
@@ -72,7 +73,7 @@ fun GroupInputField(
                     text = "${value.length} / 50",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Black04,
-                        fontSize = 11.sp
+                        fontSize = 11.fsp
                     )
                 )
             }

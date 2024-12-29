@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
@@ -78,7 +79,7 @@ internal fun AlarmCard(
             Text(
                 text = alarm.title,
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = 16.sp,
+                    fontSize = 16.fsp,
                     color = if (!checked) Black01 else contentColor
                 )
             )
@@ -93,7 +94,7 @@ internal fun AlarmCard(
                         withStyle(
                             style = SpanStyle(
                                 fontFamily = MaterialTheme.typography.labelMedium.fontFamily,
-                                fontSize = 14.sp,
+                                fontSize = 14.fsp,
                                 baselineShift = BaselineShift(0.2f)
                             )
                         ) {
@@ -102,7 +103,7 @@ internal fun AlarmCard(
                         withStyle(
                             style = SpanStyle(
                                 fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
-                                fontSize = 24.sp,
+                                fontSize = 24.fsp,
                             ),
                         ) {
                             append(alarm.alarmTime)
@@ -134,7 +135,7 @@ internal fun AlarmCard(
                 Text(
                     alarm.alarmDay,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 14.sp
+                        fontSize = 14.fsp
                     )
                 )
             }

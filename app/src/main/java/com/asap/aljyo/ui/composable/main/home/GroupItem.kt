@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -57,7 +58,7 @@ internal fun GroupItem(
         Text(
             alarmGroup.title,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black01
             ),
             maxLines = 2,
@@ -134,7 +135,7 @@ fun GroupThumbnail(
             Text(
                 text,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 12.sp,
+                    fontSize = 12.fsp,
                     color = Grey01
                 )
             )
@@ -156,7 +157,7 @@ fun GreyBackgroundText(text: String) {
         Text(
             text,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 12.sp,
+                fontSize = 12.fsp,
                 color = Black02
             )
         )
@@ -179,7 +180,7 @@ fun GroupCounting(currentCount: Int, totalCount: Int) {
                     style = SpanStyle(
                         color = Black01,
                         fontFamily = MaterialTheme.typography.bodyMedium.fontFamily,
-                        fontSize = 12.sp
+                        fontSize = 12.fsp
                     )
                 ) {
                     append(currentCount.toString())
@@ -188,7 +189,7 @@ fun GroupCounting(currentCount: Int, totalCount: Int) {
             },
             style = MaterialTheme.typography.labelMedium.copy(
                 color = Black03,
-                fontSize = 12.sp
+                fontSize = 12.fsp
             )
         )
     }

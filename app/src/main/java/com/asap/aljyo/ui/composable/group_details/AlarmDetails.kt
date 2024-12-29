@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -117,11 +118,11 @@ fun AlarmDetails(
                                         textAlign = TextAlign.Center,
                                         style = if (selected) {
                                             MaterialTheme.typography.headlineMedium.copy(
-                                                fontSize = 15.sp
+                                                fontSize = 15.fsp
                                             )
                                         } else {
                                             MaterialTheme.typography.bodyMedium.copy(
-                                                fontSize = 15.sp,
+                                                fontSize = 15.fsp,
                                             )
                                         }
                                     )
@@ -303,7 +304,7 @@ private fun AlarmDetailsContent(
         Text(
             text = stringResource(R.string.alarm_information),
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -368,7 +369,7 @@ fun PrivateSetting(
         Text(
             text = stringResource(R.string.alarm_information),
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -415,15 +416,15 @@ private fun RowText(
         Text(
             text = title,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
                 color = Black03
             )
         )
         Text(
             text = content,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 15.sp,
-                lineHeight = 24.sp,
+                fontSize = 15.fsp,
+                lineHeight = 24.fsp,
                 color = Black02
             ),
             textAlign = TextAlign.End

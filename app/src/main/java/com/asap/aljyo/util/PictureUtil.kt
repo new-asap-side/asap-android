@@ -14,15 +14,44 @@ object PictureUtil {
         applicationContext = context.applicationContext
     }
 
-
-    fun getStringFromUri(uri: Uri?): String? {
-        return try {
-            uri?.let {
-                applicationContext.contentResolver.openInputStream(it)?.use { inputStream ->
-                    val byteArray = inputStream.readBytes()
-                    Base64.encodeToString(byteArray, Base64.DEFAULT)
+    fun encodeType(uri: Uri?): String? {
+        return uri?.let {
+            when (it.scheme) {
+                ContentResolver.SCHEME_ANDROID_RESOURCE -> {
+                    encodeDrawableToBase64(it)
                 }
+
+                ContentResolver.SCHEME_CONTENT -> {
+                    encodeUriToBase64(it)
+                }
+
+                else -> null
             }
+        }
+    }
+
+
+    private fun encodeUriToBase64(uri: Uri): String? {
+        return try {
+            applicationContext.contentResolver.openInputStream(uri)?.use { inputStream ->
+                val byteArray = inputStream.readBytes()
+                Base64.encodeToString(byteArray, Base64.DEFAULT)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun encodeDrawableToBase64(uri: Uri): String? {
+        return try {
+            val resourceId = uri.lastPathSegment?.toInt()
+            if (resourceId != null) {
+                val drawable = applicationContext.resources.openRawResource(resourceId)
+                val byteArray = drawable.use { it.readBytes() }
+                Base64.encodeToString(byteArray, Base64.DEFAULT)
+            } else null
         } catch (e: Exception) {
             e.printStackTrace()
             null

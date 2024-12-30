@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.main.home.latest
 
-import android.widget.Space
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -84,8 +83,14 @@ fun LatestScreen(
                     }
                 }
 
+                if (latestGroup.size % 2 == 1) {
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+
                 item {
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
 

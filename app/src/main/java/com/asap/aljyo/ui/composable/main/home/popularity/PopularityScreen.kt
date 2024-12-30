@@ -46,7 +46,7 @@ fun PopularityScreen(
         }
     }
 
-    if(popularityGroupState is UiState.Error) {
+    if (popularityGroupState is UiState.Error) {
         ErrorBox(modifier = Modifier.fillMaxSize()) {
             viewModel.fetchHomeData()
         }
@@ -55,7 +55,9 @@ fun PopularityScreen(
 
     LazyVerticalGrid(
         state = scrollState,
-        modifier = Modifier.padding(horizontal = 20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -70,8 +72,8 @@ fun PopularityScreen(
             }
 
             is UiState.Success -> {
-                val latestGroup = (popularityGroupState as UiState.Success).data ?: emptyList()
-                latestGroup.forEach { group ->
+                val popularGroup = (popularityGroupState as UiState.Success).data ?: emptyList()
+                popularGroup.forEach { group ->
                     item {
                         GroupItem(
                             modifier = Modifier.clickable {
@@ -79,6 +81,12 @@ fun PopularityScreen(
                             },
                             alarmGroup = group,
                         )
+                    }
+                }
+
+                if (popularGroup.size % 2 == 1) {
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
 

@@ -135,6 +135,10 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
 
+    fun parseAlarmDays(groupDetails: GroupDetails?): String {
+        return (groupDetails?.alarmDays ?: emptyList()).joinToString( separator = " ")
+    }
+
     override fun onCleared() {
         active = false
         super.onCleared()

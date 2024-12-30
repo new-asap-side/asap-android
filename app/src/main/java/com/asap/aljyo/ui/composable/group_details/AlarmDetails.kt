@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.core.fsp
@@ -80,6 +79,7 @@ fun AlarmDetails(
             val parsedAlarmTime = viewModel.parseToAmPm(
                 groupDetails?.alarmTime ?: ""
             )
+            val parsedAlarmDays = viewModel.parseAlarmDays(groupDetails)
 
             val privateSetting by viewModel.privateSettingState.collectAsState()
 
@@ -140,6 +140,7 @@ fun AlarmDetails(
                                     ),
                                 groupDetails = groupDetails,
                                 parsedAlarmTime = parsedAlarmTime,
+                                parsedAlarmDays = parsedAlarmDays,
                                 parsedAlarmEndDate = parsedAlarmEndDate
                             )
 
@@ -170,6 +171,7 @@ fun AlarmDetails(
                             ),
                         groupDetails = groupDetails,
                         parsedAlarmTime = parsedAlarmTime,
+                        parsedAlarmDays = parsedAlarmDays,
                         parsedAlarmEndDate = parsedAlarmEndDate
                     )
                 }
@@ -298,6 +300,7 @@ private fun AlarmDetailsContent(
     modifier: Modifier = Modifier,
     groupDetails: GroupDetails?,
     parsedAlarmTime: String,
+    parsedAlarmDays: String,
     parsedAlarmEndDate: String
 ) {
     Column(modifier = modifier) {
@@ -316,8 +319,7 @@ private fun AlarmDetailsContent(
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_time),
-                // TODO data entity
-                content = "$parsedAlarmTime\n월 화 수 목 금 토 일"
+                content = "$parsedAlarmTime\n$parsedAlarmDays"
             )
 
             RowText(

@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
@@ -108,8 +107,7 @@ fun GroupSummation(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     GroupAlarmDates(
-                        // TODO entity 변경 시 반영
-                        dates = "월 화 수",
+                        dates = viewModel.parseAlarmDays(groupDetails),
                         timeStamp = groupDetails?.alarmTime ?: ""
                     )
                     Spacer(modifier = Modifier.height(20.dp))

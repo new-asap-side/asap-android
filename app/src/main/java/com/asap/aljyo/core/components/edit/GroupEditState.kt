@@ -6,8 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GroupEditState(
+    val groupId: Int = 0,
     val alarmUnlockContents: String = "",
-    val groupImage: Uri? = null,
+    val groupImage: String? = null,
     val title: String = "",
     val description: String = "",
     val maxPerson: Int = 1,

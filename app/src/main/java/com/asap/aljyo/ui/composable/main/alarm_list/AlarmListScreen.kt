@@ -36,6 +36,7 @@ import com.asap.aljyo.ui.theme.White
 @Composable
 internal fun AlarmListScreen(
     navigateToHome: () -> Unit = {},
+    navigateToGroupDetails: (Int) -> Unit,
     viewModel: AlarmListViewModel = hiltViewModel()
 ) {
     Column(modifier = Modifier) {
@@ -121,7 +122,8 @@ internal fun AlarmListScreen(
                         AlarmList(
                             modifier = Modifier.padding(horizontal = 20.dp),
                             alarmList = alarmList ?: emptyList(),
-                            navigateToHome = navigateToHome
+                            navigateToHome = navigateToHome,
+                            navigateToGroupDetails = navigateToGroupDetails
                         )
                     }
                 }
@@ -134,6 +136,9 @@ internal fun AlarmListScreen(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        AlarmListScreen()
+        AlarmListScreen(
+            navigateToHome = {},
+            navigateToGroupDetails = {}
+        )
     }
 }

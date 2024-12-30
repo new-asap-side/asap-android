@@ -10,6 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -60,12 +63,13 @@ internal fun AlarmTimer(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val fastestAlarmTimeState = viewModel.fastestAlarmTimeState.collectAsStateWithLifecycle()
+        val nickname by remember { mutableStateOf(viewModel.nickname) }
         Text(
             modifier = Modifier
                 .weight(1f)
                 .wrapContentHeight(),
             text = buildAnnotatedString {
-                append(text = "${stringResource(R.string.sir, "Hi")},\n")
+                append(text = "${stringResource(R.string.sir, nickname)},\n")
                 withStyle(
                     style = SpanStyle(
                         fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,

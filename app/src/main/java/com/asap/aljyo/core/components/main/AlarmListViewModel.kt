@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.main
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
@@ -26,6 +27,9 @@ class AlarmListViewModel @Inject constructor(
 ) : ViewModel() {
     private var active = true
 
+    private val _nickname = mutableStateOf("")
+    val nickname get() = _nickname.value
+
     private val _alarmList = MutableStateFlow<UiState<List<AlarmSummary>?>>(UiState.Loading)
     val alarmList get() = _alarmList.asStateFlow()
 
@@ -47,6 +51,8 @@ class AlarmListViewModel @Inject constructor(
     fun fetchAlarmList() = viewModelScope.launch {
         _alarmList.value = UiState.Loading
         val userInfo = getUserInfoUseCase()
+
+        _nickname.value = userInfo.nickname ?: ""
 
         fetchAlarmListUseCase(userInfo.userId.toInt()).catch { e ->
             val errorCode = when (e) {

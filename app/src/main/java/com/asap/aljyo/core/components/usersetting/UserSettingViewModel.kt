@@ -59,7 +59,7 @@ class UserSettingViewModel @Inject constructor(
             val profileImage = _userSettingState.value.selectedProfileImage
 
             profileImage?.let {
-                saveUserProfileUseCase(nickname, PictureUtil.getStringFromUri(it))
+                saveUserProfileUseCase(nickname, PictureUtil.encodeType(it))
             }
         }
     }

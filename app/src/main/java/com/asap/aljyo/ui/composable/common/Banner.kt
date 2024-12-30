@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
@@ -93,7 +94,7 @@ fun Banner(
                     append(" / ${pagerState.pageCount}")
                 },
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 12.sp,
+                    fontSize = 12.fsp,
                     color = Grey03
                 )
             )
@@ -115,14 +116,14 @@ fun DefaultBanner(modifier: Modifier = Modifier) {
                 text = stringResource(R.string.default_banner_sub_title),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Black01,
-                    fontSize = 12.sp
+                    fontSize = 12.fsp
                 )
             )
             Text(
                 text = stringResource(R.string.default_banner_title),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     color = Black01,
-                    fontSize = 15.sp
+                    fontSize = 15.fsp
                 )
             )
         }

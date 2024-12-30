@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.common
 
-import android.graphics.Color
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
@@ -42,7 +41,7 @@ fun CustomButton(
             modifier = Modifier.padding(top = 14.dp, bottom = 14.dp),
             text = text,
             style = TextStyle.Default.copy(
-                fontSize = 16.sp
+                fontSize = 16.fsp
             )
         )
     }

@@ -19,32 +19,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.NicknameTextField
 import com.asap.aljyo.ui.composable.common.ProfileImagePicker
 import com.asap.aljyo.ui.theme.AljyoTheme
-import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
-import com.google.gson.annotations.Until
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +91,7 @@ fun UserSettingScreen(
                 text = "어떤 프로필로 시작할까요?",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Color.Black,
-                    fontSize = 22.sp,
+                    fontSize = 22.fsp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )

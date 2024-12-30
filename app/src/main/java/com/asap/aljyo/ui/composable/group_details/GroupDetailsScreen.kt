@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_details
 
+import android.app.Activity
 import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -7,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -36,6 +36,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,18 +46,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
+import com.asap.aljyo.core.navigation.ScreenRoute
+import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
-import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
+import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,14 +87,40 @@ fun GroupDetailsScreen(
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
+    val coroutineScope = rememberCoroutineScope()
+
+    val factory = EntryPointAccessors.fromActivity(
+        activity = context as Activity,
+        entryPoint = ViewModelFactoryProvider::class.java
+    ).groupDetailsViewModelFactory()
+
+    val viewModel: GroupDetailsViewModel = viewModel(
+        factory = GroupDetailsViewModel.provideGroupDetailsViewModelFactory(
+            factory = factory,
+            groupId = groupId
+        )
+    )
+
+    val userGroupType = viewModel.userGroupType
+
     AljyoTheme {
+        val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
         var showLeaveGroupDialog by remember { mutableStateOf(false) }
 
+        val hideBottomSheet = {
+            coroutineScope.launch {
+                sheetState.hide()
+            }.invokeOnCompletion {
+                showBottomSheet = false
+            }
+        }
+
         if (showBottomSheet) {
             BottomSheet(
-                sheetState = rememberModalBottomSheetState(),
-                onDismissRequest = {},
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp),
+                sheetState = sheetState,
+                onDismissRequest = { hideBottomSheet() },
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -98,12 +130,12 @@ fun GroupDetailsScreen(
                         Text(
                             text = stringResource(R.string.see_more),
                             style = MaterialTheme.typography.headlineMedium.copy(
-                                fontSize = 18.sp,
+                                fontSize = 18.fsp,
                                 color = Black01
                             )
                         )
                         IconButton(
-                            onClick = { showBottomSheet = false }
+                            onClick = { hideBottomSheet() }
                         ) {
                             Icon(
                                 Icons.Default.Close,
@@ -130,7 +162,7 @@ fun GroupDetailsScreen(
                     Text(
                         text = stringResource(R.string.leave_group),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                             color = Black02
                         )
                     )
@@ -138,7 +170,7 @@ fun GroupDetailsScreen(
             }
         }
 
-        if(showLeaveGroupDialog) {
+        if (showLeaveGroupDialog) {
             PrecautionsDialog(
                 title = stringResource(R.string.ask_leave_group),
                 description = stringResource(R.string.ranking_initialized),
@@ -149,39 +181,43 @@ fun GroupDetailsScreen(
             )
         }
 
-        Scaffold (
+        Scaffold(
             topBar = {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surface.copy(
                             alpha = 0f
                         ),
                     ),
                     title = {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            NextAlarmTimer(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(100))
-                                    .background(color = White.copy(alpha = 0.88f))
-                                    .padding(
-                                        vertical = 6.dp,
-                                        horizontal = 14.dp
-                                    )
-                            )
-                        }
+                        AlarmTimer(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(100))
+                                .background(color = White.copy(alpha = 0.88f))
+                                .padding(
+                                    vertical = 6.dp,
+                                    horizontal = 14.dp
+                                ),
+                            viewModel = viewModel
+                        )
                     },
                     actions = {
-                        IconButton(
-                            onClick = { showBottomSheet = true }
-                        ) {
-                            Icon(
-                                Icons.Default.MoreVert,
-                                tint = White,
-                                contentDescription = "Top app bar first action"
-                            )
+                        when (userGroupType) {
+                            null,
+                            UserGroupType.NonParticipant -> Unit
+
+                            UserGroupType.Leader,
+                            UserGroupType.Participant -> {
+                                IconButton(
+                                    onClick = { showBottomSheet = true }
+                                ) {
+                                    Icon(
+                                        Icons.Default.MoreVert,
+                                        tint = White,
+                                        contentDescription = "Top app bar first action"
+                                    )
+                                }
+                            }
                         }
                     },
                     navigationIcon = {
@@ -204,7 +240,7 @@ fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .background(White)
                         .padding(20.dp),
-                    userGroupType = UserGroupType.Leader,
+                    userGroupType = userGroupType,
                     onRankingClick = {
                         navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
                     }
@@ -220,13 +256,17 @@ fun GroupDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     item {
-                        GroupSummation(modifier = Modifier.fillMaxWidth())
+                        GroupSummation(
+                            modifier = Modifier.fillMaxWidth(),
+                            viewModel = viewModel
+                        )
                     }
                     item {
                         AlarmDetails(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(White)
+                                .background(White),
+                            viewModel = viewModel
                         )
                     }
                     item {
@@ -238,7 +278,7 @@ fun GroupDetailsScreen(
                                     vertical = 24.dp,
                                     horizontal = 20.dp
                                 ),
-                            count = 3
+                            viewModel = viewModel,
                         )
                     }
                 }

@@ -7,6 +7,7 @@ val Red01 = Color(0xFFFD2F7A)
 val Red02 = Color(0xFFFFEEF3)
 
 // Basic
+val Black00 = Color(0xFF000000)
 val Black01 = Color(0xFF222222)
 val Black02 = Color(0xFF666666)
 val Black03 = Color(0xFF888888)

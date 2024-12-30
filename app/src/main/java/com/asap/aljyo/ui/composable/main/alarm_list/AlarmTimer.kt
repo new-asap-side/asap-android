@@ -18,7 +18,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -26,6 +25,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.AlarmListViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 
@@ -78,9 +78,9 @@ internal fun AlarmTimer(
                 append(text = stringResource(R.string.the_alarm_goes_off))
             },
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 20.sp,
+                fontSize = 20.fsp,
                 color = Black01,
-                lineHeight = 28.sp,
+                lineHeight = 28.fsp,
             )
         )
         Image(

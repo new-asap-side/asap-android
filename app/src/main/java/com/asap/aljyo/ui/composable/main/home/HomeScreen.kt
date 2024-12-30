@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -87,7 +89,10 @@ fun HomeScreen(
                 )
             },
             floatingActionButton = {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(
+                    modifier = Modifier.offset(y = (-5).dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                     FloatingActionButton(
                         contentColor = White,
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -156,7 +161,7 @@ fun HomeScreen(
                                 text = stringResource(R.string.private_alarm_input_password),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     color = Black01,
-                                    fontSize = 18.sp
+                                    fontSize = 18.fsp
                                 )
                             )
                         }
@@ -192,7 +197,7 @@ fun HomeScreen(
                                 ),
                             textStyle = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black01,
-                                fontSize = 18.sp
+                                fontSize = 18.fsp
                             ),
                         ) { innerTextField ->
                             password.ifEmpty {
@@ -200,7 +205,7 @@ fun HomeScreen(
                                     text = stringResource(R.string.password_hint),
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         color = Black03,
-                                        fontSize = 18.sp
+                                        fontSize = 18.fsp
                                     )
                                 )
                             }
@@ -217,7 +222,7 @@ fun HomeScreen(
                                             text = stringResource(R.string.password),
                                             style = MaterialTheme.typography.labelMedium.copy(
                                                 color = Black03,
-                                                fontSize = 12.sp
+                                                fontSize = 12.fsp
                                             )
                                         )
                                     }
@@ -227,7 +232,7 @@ fun HomeScreen(
                                         text = stringResource(R.string.password_hint),
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             color = Black03,
-                                            fontSize = 18.sp
+                                            fontSize = 18.fsp
                                         )
                                     )
                                 },
@@ -256,7 +261,7 @@ fun HomeScreen(
                                 text = stringResource(R.string.password_error),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Error,
-                                    fontSize = 12.sp
+                                    fontSize = 12.fsp
                                 )
                             )
                         } else {
@@ -283,7 +288,7 @@ fun HomeScreen(
                                 Text(
                                     text = stringResource(R.string.exit),
                                     style = MaterialTheme.typography.titleMedium.copy(
-                                        fontSize = 16.sp
+                                        fontSize = 16.fsp
                                     )
                                 )
                             }
@@ -307,7 +312,7 @@ fun HomeScreen(
                                 Text(
                                     text = stringResource(R.string.join),
                                     style = MaterialTheme.typography.titleMedium.copy(
-                                        fontSize = 16.sp
+                                        fontSize = 16.fsp
                                     )
                                 )
                             }

@@ -2,7 +2,9 @@ package com.asap.aljyo.ui.composable.main.home.popularity
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -44,7 +46,7 @@ fun PopularityScreen(
         }
     }
 
-    if(popularityGroupState is UiState.Error) {
+    if (popularityGroupState is UiState.Error) {
         ErrorBox(modifier = Modifier.fillMaxSize()) {
             viewModel.fetchHomeData()
         }
@@ -53,7 +55,9 @@ fun PopularityScreen(
 
     LazyVerticalGrid(
         state = scrollState,
-        modifier = Modifier.padding(horizontal = 20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -68,8 +72,8 @@ fun PopularityScreen(
             }
 
             is UiState.Success -> {
-                val latestGroup = (popularityGroupState as UiState.Success).data ?: emptyList()
-                latestGroup.forEach { group ->
+                val popularGroup = (popularityGroupState as UiState.Success).data ?: emptyList()
+                popularGroup.forEach { group ->
                     item {
                         GroupItem(
                             modifier = Modifier.clickable {
@@ -78,6 +82,16 @@ fun PopularityScreen(
                             alarmGroup = group,
                         )
                     }
+                }
+
+                if (popularGroup.size % 2 == 1) {
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
 

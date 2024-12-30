@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
@@ -51,7 +52,7 @@ internal fun RankingArea(
             painter = painterResource(R.drawable.ic_silver_crown),
             size = 68.dp,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black01,
             ),
             ranking = rankings[1]
@@ -66,7 +67,7 @@ internal fun RankingArea(
                     ),
                 text = "${rankings[1].score}점",
                 style = MaterialTheme.typography.labelMedium.copy(
-                    fontSize = 12.sp,
+                    fontSize = 12.fsp,
                     color = Black03
                 )
             )
@@ -75,7 +76,7 @@ internal fun RankingArea(
             painter = painterResource(R.drawable.ic_gold_crown),
             size = 92.dp,
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01,
             ),
             isShowMeBadge = true,
@@ -91,7 +92,7 @@ internal fun RankingArea(
                     ),
                 text = "${rankings[0].score}점",
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = White
                 )
             )
@@ -100,7 +101,7 @@ internal fun RankingArea(
             painter = painterResource(R.drawable.ic_bronze_crown),
             size = 68.dp,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black01,
             ),
             ranking = rankings[2]
@@ -115,7 +116,7 @@ internal fun RankingArea(
                     ),
                 text = "${rankings[2].score}점",
                 style = MaterialTheme.typography.labelMedium.copy(
-                    fontSize = 12.sp,
+                    fontSize = 12.fsp,
                     color = Black03
                 )
             )

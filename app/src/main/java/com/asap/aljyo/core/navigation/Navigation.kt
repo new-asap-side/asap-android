@@ -65,7 +65,10 @@ internal fun AppNavHost() {
 
         composable(
             route = "${ScreenRoute.GroupDetails.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             GroupDetailsScreen(
@@ -76,7 +79,10 @@ internal fun AppNavHost() {
 
         composable(
             route = "${ScreenRoute.Ranking.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+            enterTransition = { defaultEnterTransition() },
+            exitTransition = { defaultExitTransition() },
+            popEnterTransition = null,
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             RankingScreen(

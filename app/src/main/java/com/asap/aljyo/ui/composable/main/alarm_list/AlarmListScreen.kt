@@ -24,10 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.AlarmListViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -49,7 +49,7 @@ internal fun AlarmListScreen(
                 modifier = Modifier.align(Alignment.Center),
                 text = stringResource(R.string.alarm_list),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 16.sp,
+                    fontSize = 16.fsp,
                     color = Black01
                 )
             )
@@ -68,7 +68,7 @@ internal fun AlarmListScreen(
                             Text(
                                 text = stringResource(R.string.load_fail),
                                 style = MaterialTheme.typography.titleMedium.copy(
-                                    fontSize = 20.sp,
+                                    fontSize = 20.fsp,
                                     color = Black01,
                                     textAlign = TextAlign.Center
                                 )
@@ -84,7 +84,7 @@ internal fun AlarmListScreen(
                                 Text(
                                     text = stringResource(R.string.retry),
                                     style = MaterialTheme.typography.titleMedium.copy(
-                                        fontSize = 16.sp,
+                                        fontSize = 16.fsp,
                                     )
                                 )
                             }

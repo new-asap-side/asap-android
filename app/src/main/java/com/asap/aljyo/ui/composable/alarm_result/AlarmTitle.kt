@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
@@ -49,7 +50,7 @@ internal fun AlarmTitle(
             Text(
                 text = stringResource(R.string.alarm_title),
                 style = MaterialTheme.typography.labelMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = Grey01
                 )
             )
@@ -57,7 +58,7 @@ internal fun AlarmTitle(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 15.sp,
+                    fontSize = 15.fsp,
                     color = White
                 )
             )

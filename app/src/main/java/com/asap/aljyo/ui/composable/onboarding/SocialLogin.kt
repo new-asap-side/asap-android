@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -83,7 +83,7 @@ fun KakaoLoginButton(
             text = stringResource(R.string.start_with_kakao),
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Color.Black,
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 textAlign = TextAlign.Center
             )
         )

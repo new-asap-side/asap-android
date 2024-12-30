@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -65,7 +66,7 @@ internal fun PrecautionsDialog(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontSize = 18.sp,
+                        fontSize = 18.fsp,
                         color = Black01
                     )
                 )
@@ -73,7 +74,7 @@ internal fun PrecautionsDialog(
                 Text(
                     text = description,
                     style = MaterialTheme.typography.labelMedium.copy(
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                         color = Black02
                     )
                 )

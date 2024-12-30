@@ -3,11 +3,13 @@ package com.asap.data.remote.service
 import com.asap.data.remote.request.PostGroupCreateRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupRanking
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GroupService {
@@ -16,6 +18,9 @@ interface GroupService {
 
     @GET("/group/latest")
     suspend fun fetchLatestGroup(): Response<List<AlarmGroup>>
+
+    @GET("/group/{groupId}")
+    suspend fun fetchGroupDetails(@Path("groupId") groupId: Int): Response<GroupDetails>
 
     @POST("/group/join")
     suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<Boolean>

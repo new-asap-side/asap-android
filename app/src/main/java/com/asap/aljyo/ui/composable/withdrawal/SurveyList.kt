@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -85,8 +86,8 @@ internal fun SurveyList(
                         },
                         textStyle = MaterialTheme.typography.bodyMedium.copy(
                             color = Black01,
-                            fontSize = 15.sp,
-                            lineHeight = 24.sp
+                            fontSize = 15.fsp,
+                            lineHeight = 24.fsp
                         ),
                     ) { innerTextField ->
                         Box(
@@ -107,8 +108,8 @@ internal fun SurveyList(
                                     text = stringResource(R.string.etc_hint),
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         color = Black04,
-                                        fontSize = 15.sp,
-                                        lineHeight = 24.sp
+                                        fontSize = 15.fsp,
+                                        lineHeight = 24.fsp
                                     )
                                 )
                             }
@@ -129,7 +130,7 @@ internal fun SurveyList(
                                 },
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     color = Black04,
-                                    fontSize = 11.sp
+                                    fontSize = 11.fsp
                                 )
                             )
                         }

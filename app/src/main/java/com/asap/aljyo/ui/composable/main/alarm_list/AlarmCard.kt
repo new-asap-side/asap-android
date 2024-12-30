@@ -31,19 +31,19 @@ import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.Alarm
+import com.asap.domain.entity.remote.AlarmInfomation
+import com.asap.domain.entity.remote.AlarmSummary
 
 @Composable
 internal fun AlarmCard(
     modifier: Modifier = Modifier,
-    alarm: Alarm
+    alarm: AlarmSummary
 ) {
     var checked by remember { mutableStateOf(true) }
 
@@ -77,7 +77,7 @@ internal fun AlarmCard(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
-                text = alarm.title,
+                text = alarm.group.title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 16.fsp,
                     color = if (!checked) Black01 else contentColor
@@ -106,7 +106,7 @@ internal fun AlarmCard(
                                 fontSize = 24.fsp,
                             ),
                         ) {
-                            append(alarm.alarmTime)
+                            append(alarm.group.alarmTime)
                         }
                     },
                 )
@@ -133,7 +133,7 @@ internal fun AlarmCard(
                     contentDescription = "Clock icon"
                 )
                 Text(
-                    alarm.alarmDay,
+                    alarm.group.alarmDays.joinToString(separator = " "),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.fsp
                     )
@@ -151,7 +151,16 @@ private fun Preview() {
             modifier = Modifier
                 .width(320.dp)
                 .wrapContentHeight(),
-            alarm = Alarm()
+            alarm = AlarmSummary(
+                groupId = -1,
+                group = AlarmInfomation(
+                    title = "Title",
+                    description = "",
+                    alarmTime = "21:30",
+                    alarmEndDate = "",
+                    alarmDays = listOf("월", "화", "수")
+                )
+            )
         )
     }
 }

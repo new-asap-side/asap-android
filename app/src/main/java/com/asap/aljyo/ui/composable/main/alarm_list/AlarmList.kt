@@ -23,12 +23,12 @@ import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.Alarm
+import com.asap.domain.entity.remote.AlarmSummary
 
 @Composable
 internal fun AlarmList(
     modifier: Modifier,
-    alarmList: List<Alarm>,
+    alarmList: List<AlarmSummary>,
     navigateToHome: () -> Unit,
 ) {
     LazyColumn(
@@ -82,11 +82,7 @@ private fun Preview() {
     AljyoTheme {
         AlarmList(
             modifier = Modifier.fillMaxSize(),
-            alarmList = listOf(
-                Alarm(),
-                Alarm(),
-                Alarm(),
-            ),
+            alarmList = emptyList(),
             navigateToHome = {}
         )
     }

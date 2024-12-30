@@ -4,6 +4,7 @@ import com.asap.data.remote.request.PostGroupCreateRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
 import com.asap.data.remote.service.GroupService
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupRanking
 import com.squareup.moshi.Json
@@ -36,6 +37,15 @@ class GroupRemoteDataSource @Inject constructor(
 
     suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> = flow {
         val response = groupService.fetchGroupDetails(groupId = groupId)
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(response.body())
+    }
+
+    suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> = flow {
+        val response = groupService.fetchUserAlarmList(userId = userId)
         if (!response.isSuccessful) {
             throw HttpException(response)
         }

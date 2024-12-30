@@ -30,14 +30,6 @@ class UserRemoteDataSource @Inject constructor(
         )
         emit(response.body())
     }
-
-    suspend fun fetchAlarmList(): Flow<List<Alarm>> = flow {
-        val response = userService.fetchAlarmList()
-//        if(!response.isSuccessful) {
-//            throw HttpException(response)
-//        }
-        emit(response.body() ?: listOf())
-    }
     
     suspend fun checkNickname(nickname: String): CheckNicknameResponse? {
         return userService.checkNickname(

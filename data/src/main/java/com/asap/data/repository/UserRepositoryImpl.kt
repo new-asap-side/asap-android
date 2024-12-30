@@ -7,7 +7,6 @@ import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.asap.domain.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
@@ -85,9 +84,6 @@ class UserRepositoryImpl @Inject constructor(
             }
         )
     }
-
-    override suspend fun fetchUserAlarmList(): Flow<List<Alarm>?> =
-        remoteDataSource.fetchAlarmList()
 
     override suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit> =
         remoteDataSource.deleteUser(survey = survey)

@@ -2,6 +2,8 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.group.FetchAlarmListUseCase
+import com.asap.domain.usecase.group.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase
@@ -22,8 +24,6 @@ import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCaseImpl
 import com.asap.domain.usecase.user.DeleteUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteUserInfoUseCaseImpl
-import com.asap.domain.usecase.user.FetchAlarmListUseCase
-import com.asap.domain.usecase.user.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
 import com.asap.domain.usecase.user.GetUserInfoUseCase
@@ -80,11 +80,6 @@ interface UseCaseModule {
     ): FetchGroupRankingUseCase
 
     @Binds
-    fun bindFetchAlarmListUseCase(
-        fetchAlarmListUseCaseImpl: FetchAlarmListUseCaseImpl
-    ): FetchAlarmListUseCase
-
-    @Binds
     fun bindDeleteUseCase(
         deleteUserInfoUseCaseImpl: DeleteUserInfoUseCaseImpl
     ): DeleteUserInfoUseCase
@@ -106,6 +101,11 @@ interface UseCaseModule {
     fun bindFetchLatestGroupUseCase(
         fetchGroupRankingUseCaseImpl: FetchLatestGroupUseCaseImpl
     ): FetchLatestGroupUseCase
+
+    @Binds
+    fun bindFetchAlarmListUseCase(
+        fetchAlarmListUseCaseImpl: FetchAlarmListUseCaseImpl
+    ): FetchAlarmListUseCase
 
     @Binds
     fun bindFetchGroupDetailsUseCase(

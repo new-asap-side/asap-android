@@ -2,7 +2,9 @@ package com.asap.data.remote.service
 
 import com.asap.data.remote.request.PostGroupCreateRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
+import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupRanking
 import retrofit2.Response
@@ -19,14 +21,18 @@ interface GroupService {
     @GET("/group/latest")
     suspend fun fetchLatestGroup(): Response<List<AlarmGroup>>
 
-    @GET("/group/{groupId}")
-    suspend fun fetchGroupDetails(@Path("groupId") groupId: Int): Response<GroupDetails>
+    @GET("/group/{group_id}")
+    suspend fun fetchGroupDetails(@Path("group_id") groupId: Int): Response<GroupDetails>
 
-    @POST("/group/join")
-    suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<Boolean>
+    // 유저 알람 리스트 조회
+    @GET("/group/user/{user_id}")
+    suspend fun fetchUserAlarmList(@Path("user_id") userId: Int): Response<List<AlarmSummary>>
 
     @GET("/group/ranking?")
     suspend fun fetchGroupRanking(@Query("groupId") groupId: Int): Response<List<GroupRanking>>
+
+    @POST("/group/join")
+    suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<Boolean>
 
     @POST("/group/create")
     suspend fun postCreateGroup(@Body body: PostGroupCreateRequest): Response<PostGroupCreateResponse>

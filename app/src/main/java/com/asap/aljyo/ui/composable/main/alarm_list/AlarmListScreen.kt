@@ -106,7 +106,7 @@ internal fun AlarmListScreen(
                 is UiState.Success -> {
                     val alarmList = (uiState as UiState.Success).data
 
-                    if (alarmList.isEmpty()) {
+                    if (alarmList?.isEmpty() == true) {
                         Box(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -120,7 +120,7 @@ internal fun AlarmListScreen(
                     } else {
                         AlarmList(
                             modifier = Modifier.padding(horizontal = 20.dp),
-                            alarmList = alarmList,
+                            alarmList = alarmList ?: emptyList(),
                             navigateToHome = navigateToHome
                         )
                     }

@@ -9,12 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.composable.common.custom.AljyoSwitch
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
@@ -111,15 +112,12 @@ internal fun AlarmCard(
                     },
                 )
 
-                Switch(
+                AljyoSwitch(
+                    modifier = Modifier
+                        .size(52.dp, 28.dp)
+                        .clip(CircleShape),
                     checked = checked,
-                    onCheckedChange = { checked = it },
-                    colors = SwitchDefaults.colors(
-                        uncheckedTrackColor = Grey03,
-                        uncheckedThumbColor = White,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        checkedThumbColor = White,
-                    )
+                    onCheckChanged = { checked = !checked }
                 )
             }
 

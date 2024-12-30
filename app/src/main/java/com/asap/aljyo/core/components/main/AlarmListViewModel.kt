@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.main
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -50,8 +51,8 @@ class AlarmListViewModel @Inject constructor(
 
     fun fetchAlarmList() = viewModelScope.launch {
         _alarmList.value = UiState.Loading
-        val userInfo = getUserInfoUseCase()
 
+        val userInfo = getUserInfoUseCase()
         _nickname.value = userInfo.nickname ?: ""
 
         fetchAlarmListUseCase(userInfo.userId.toInt()).catch { e ->
@@ -95,8 +96,10 @@ class AlarmListViewModel @Inject constructor(
     }
 
     fun resume() {
-        active = true
-        observeFastestAlarmTime()
+        if (!active) {
+            active = true
+            observeFastestAlarmTime()
+        }
     }
 
     fun pause() {

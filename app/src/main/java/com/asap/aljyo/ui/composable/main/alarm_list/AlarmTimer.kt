@@ -62,7 +62,7 @@ internal fun AlarmTimer(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        val fastestAlarmTimeState = viewModel.fastestAlarmTimeState.collectAsStateWithLifecycle()
+        val fastestAlarmTimeState by viewModel.fastestAlarmTimeState.collectAsStateWithLifecycle()
         val nickname by remember { mutableStateOf(viewModel.nickname) }
         Text(
             modifier = Modifier
@@ -76,7 +76,7 @@ internal fun AlarmTimer(
                     )
                 ) {
                     append(
-                        text = "${fastestAlarmTimeState.value} 뒤\n"
+                        text = "$fastestAlarmTimeState 뒤\n"
                     )
                 }
                 append(text = stringResource(R.string.the_alarm_goes_off))

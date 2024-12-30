@@ -122,10 +122,11 @@ fun GroupSummation(
                     GroupPersonnel(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8))
+                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 width = 1.dp,
-                                color = Color(0xFFFFD9E7)
+                                color = Color(0xFFFFD9E7),
+                                shape = RoundedCornerShape(8.dp)
                             )
                             .background(color = MaterialTheme.colorScheme.secondary)
                             .padding(
@@ -387,14 +388,14 @@ private fun GroupAlarmDates(
 
 @Preview(showBackground = true)
 @Composable
-fun GroupAlarmDates_Preview() {
+private fun GroupAlarmDates_Preview() {
     AljyoTheme {
         GroupAlarmDates(dates = "월 화 수", timeStamp = "21:00")
     }
 }
 
 @Composable
-fun GroupPersonnel(
+internal fun GroupPersonnel(
     modifier: Modifier = Modifier,
     personnel: Int = 0,
     participantsProfiles: List<String>
@@ -424,8 +425,12 @@ fun GroupPersonnel(
                 AsyncImage(
                     modifier = Modifier
                         .size(24.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .border(width = 1.dp, color = MaterialTheme.colorScheme.surface),
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                     model = profile,
                     contentScale = ContentScale.Crop,
                     contentDescription = "participant's profile icon"
@@ -441,11 +446,12 @@ private fun GroupPersonnel_Preview() {
     AljyoTheme {
         GroupPersonnel(
             modifier = Modifier
-                .clip(RoundedCornerShape(8))
                 .border(
                     width = 1.dp,
-                    color = Color(0xFFFFD9E7)
+                    color = Color(0xFFFFD9E7),
+                    shape = RoundedCornerShape(8f)
                 )
+                .clip(RoundedCornerShape(8f))
                 .background(color = MaterialTheme.colorScheme.secondary)
                 .padding(
                     vertical = 13.dp,

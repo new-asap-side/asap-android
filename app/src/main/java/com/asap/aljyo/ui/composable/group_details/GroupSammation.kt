@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -41,6 +42,7 @@ import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.custom.OverlappingRow
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Black00
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey03
@@ -62,15 +64,31 @@ fun GroupSummation(
             val groupDetails = (groupDetailsState as UiState.Success).data
 
             Column(modifier = modifier) {
-                AsyncImage(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(270.dp),
-                    model = groupDetails?.groupThumbnailImageUrl,
-                    contentDescription = "Group thumbnail",
-                    contentScale = ContentScale.Crop,
-                    error = painterResource(R.drawable.ic_my_page)
-                )
+                        .height(270.dp)
+                ) {
+                    AsyncImage(
+                        modifier = Modifier.fillMaxSize(),
+                        model = groupDetails?.groupThumbnailImageUrl,
+                        contentDescription = "Group thumbnail",
+                        contentScale = ContentScale.Crop,
+                        error = painterResource(R.drawable.ic_my_page)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    0.0f to Black00.copy(alpha = 0.6f),
+                                    0.22f to Black00.copy(alpha = 0.4f),
+                                    0.39f to Black00.copy(alpha = 0.0f),
+                                ),
+                            )
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

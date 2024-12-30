@@ -392,7 +392,12 @@ fun CreateGroupScreen(
                         .padding(bottom = 6.dp, top = 40.dp),
                     text = "다음",
                     enable = groupState.buttonState,
-                    onClick = onNextClick
+                    onClick = {
+                        if (groupState.groupImage == null) {
+                            viewModel.onGroupImageSelected(PictureUtil.groupRandomImage[1])
+                        }
+                        onNextClick()
+                    }
                 )
             }
         }
@@ -403,7 +408,7 @@ fun CreateGroupScreen(
 @Composable
 fun GroupImagePicker(
      groupImage: Uri?,
-    onImagePickerClick: () -> Unit
+     onImagePickerClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -412,7 +417,7 @@ fun GroupImagePicker(
             .padding(top = 8.dp)
     ) {
         AsyncImage(
-            model = groupImage ?: R.drawable.group_default_img,
+            model = groupImage ?: PictureUtil.groupRandomImage[1],
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -453,9 +458,10 @@ fun GroupImagePicker(
 @Composable
 @Preview
 fun PreviewCreateGroupScreen() {
-//    AljyoTheme {
-//        CreateGroupScreen(
-//            onBackClick = {}
-//        )
-//    }
+    AljyoTheme {
+        CreateGroupScreen(
+            onBackClick = {},
+            onNextClick = {}
+        )
+    }
 }

@@ -150,8 +150,4 @@ class GroupFormViewModel @Inject constructor(
             _complete.emit(groupId)
         }
     }
-
-    fun check() {
-        Log.d("GroupFormViewModel:","groupImage: ${_groupScreenState.value.groupImage}")
-    }
 }

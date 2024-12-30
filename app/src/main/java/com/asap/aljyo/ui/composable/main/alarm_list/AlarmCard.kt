@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.BaselineShift
@@ -38,6 +37,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
+import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.AlarmInfomation
 import com.asap.domain.entity.remote.AlarmSummary
 
@@ -90,26 +90,23 @@ internal fun AlarmCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val parsed = DateTimeManager.parseToAmPm(alarm.group.alarmTime).split(" ")
                 Text(
                     text = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
                                 fontFamily = MaterialTheme.typography.labelMedium.fontFamily,
                                 fontSize = 14.fsp,
-                                baselineShift = BaselineShift(0.2f)
+                                baselineShift = BaselineShift(0.135f)
                             )
                         ) {
-                            append("${stringResource(R.string.morning)} ")
+                            append("${parsed[0]} ")
                         }
-                        withStyle(
-                            style = SpanStyle(
-                                fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
-                                fontSize = 24.fsp,
-                            ),
-                        ) {
-                            append(alarm.group.alarmTime)
-                        }
+                        append(parsed[1])
                     },
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontSize = 24.fsp,
+                    ),
                 )
 
                 AljyoSwitch(

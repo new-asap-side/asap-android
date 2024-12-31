@@ -1,6 +1,7 @@
 package com.asap.aljyo.core.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -13,9 +14,11 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
+import com.asap.aljyo.core.navigation.navtype.CustomNavType
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
+import com.asap.aljyo.ui.composable.group_edit.GroupEditScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmTypeScreen
@@ -196,6 +199,8 @@ internal fun AppNavHost() {
         }
 
         groupCreateNavGraph(navController)
+
+        editNavGraph(navController)
     }
 }
 
@@ -312,4 +317,22 @@ fun NavGraphBuilder.groupCreateNavGraph(
             onCompleteClick = { navController.popBackStack() }
         )
     }
+}
+
+fun NavGraphBuilder.editNavGraph(
+    navController: NavHostController
+) {
+    composable(
+        route = "${ScreenRoute.GroupEdit.route}/{groupDetail}",
+        arguments = listOf(
+            navArgument("groupDetail") {type = CustomNavType.groupEditType}
+        )
+    ) {
+        GroupEditScreen(
+            onBackClick = { navController.popBackStack() }
+        )
+    }
+
+    composable(route = ScreenRoute.PersonalEdit.route) {  }
+
 }

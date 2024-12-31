@@ -11,8 +11,11 @@ data class GroupEditState(
     val groupImage: String? = null,
     val title: String = "",
     val description: String = "",
-    val maxPerson: Int = 1,
-    val isPublic: Boolean? = null,
+    val currentPerson: Int = 0,
+    val isPublic: Boolean = true,
     val groupPassword: String? = null,
-):Parcelable
-
+):Parcelable {
+    val buttonState: Boolean
+        get() = title.isNotBlank() &&
+                description.isNotBlank()
+}

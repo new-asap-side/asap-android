@@ -150,7 +150,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 groupImage = it.groupThumbnailImageUrl,
                 title = it.title,
                 description = it.description,
-                maxPerson = it.currentPerson,
+                currentPerson = it.currentPerson,
                 isPublic = it.isPublic,
                 groupPassword = null
             )

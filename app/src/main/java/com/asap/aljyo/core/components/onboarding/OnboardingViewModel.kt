@@ -30,7 +30,7 @@ class OnboardingViewModel @Inject constructor(
         // 기 로그인 정보 체크
         viewModelScope.launch {
             delay(500)
-            val cached = checkCacheUserCase.invoke()
+            val cached = checkCacheUserCase()
             if (cached) {
                 _state.value = RequestState.Success(SignupState.REGISTERED)
             }

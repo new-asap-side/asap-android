@@ -66,7 +66,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
             }.collect { result ->
                 Log.d(TAG, "$result")
 
-                val mId = getUserInfoUseCase.invoke().userId.toInt()
+                val mId = getUserInfoUseCase()?.userId?.toInt()
                 result?.users.also { participateUsers ->
                     val target = participateUsers?.find { participants ->
                         mId == participants.userId

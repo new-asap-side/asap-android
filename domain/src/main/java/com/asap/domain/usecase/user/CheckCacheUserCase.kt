@@ -10,5 +10,8 @@ interface CheckCacheUserCase {
 class CheckCacheUserCaseImpl @Inject constructor(
     private val repository: UserRepository
 ): CheckCacheUserCase {
-    override suspend fun invoke(): Boolean = repository.isCached()
+    override suspend fun invoke(): Boolean {
+        val userInfo = repository.getUserInfo()
+        return (userInfo?.nickname != null) && (userInfo.profileImg != null)
+    }
 }

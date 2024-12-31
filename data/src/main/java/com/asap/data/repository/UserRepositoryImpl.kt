@@ -21,13 +21,14 @@ class UserRepositoryImpl @Inject constructor(
     private val sessionLocalDataSource: SessionLocalDataSource
 ) : UserRepository {
     override suspend fun isCached(): Boolean {
-        val userDao = localDataSource.userDao()
-        return userDao.isCached()
+        val dao = localDataSource.userDao()
+        return dao.isCached()
     }
 
-    override suspend fun getUserInfo(): User {
+    override suspend fun getUserInfo(): User? {
         val dao = localDataSource.userDao()
-        return dao.selectAll().first()
+        val selected = dao.selectAll()
+        return if (selected.isEmpty()) null else selected.first()
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =

@@ -10,8 +10,7 @@ class SaveUserProfileUseCase @Inject constructor(
         nickname: String,
         profileImg: String?
     ) {
-        val userId = userRepository.getUserInfo().userId.toInt()
-        
+        val userId = userRepository.getUserInfo()?.userId?.toInt() ?: return
         profileImg?.let {
             userRepository.saveProfile(userId, nickname, it)
         }

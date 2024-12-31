@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository {
     suspend fun isCached(): Boolean
 
-    suspend fun getUserInfo(): User
+    suspend fun getUserInfo(): User?
 
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 

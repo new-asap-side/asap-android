@@ -4,9 +4,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,9 +19,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +43,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +51,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
@@ -53,7 +61,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.edit.GroupEditViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.group_create.GROUP_DESCRIPTION
@@ -61,6 +73,7 @@ import com.asap.aljyo.ui.composable.group_form.group_create.GROUP_TITLE
 import com.asap.aljyo.ui.composable.group_form.group_create.GroupImagePicker
 import com.asap.aljyo.ui.composable.group_form.group_create.GroupInputField
 import com.asap.aljyo.ui.composable.group_form.group_create.MemberPicker
+import com.asap.aljyo.ui.composable.group_form.group_type.UnderlineTextField
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -76,18 +89,25 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupEditScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: GroupEditViewModel = hiltViewModel()
 ) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-
-        }
+        onResult = viewModel::onGroupImageSelected
     )
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
     var isShowPhotoBottomSheet by remember { mutableStateOf(false) }
     val photoSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
+    val focusPasswordField = remember { FocusRequester() }
+
+    LaunchedEffect(state.isPublic) {
+        if (!state.isPublic) {
+            focusPasswordField.requestFocus()
+        }
+    }
 
     Scaffold(
         containerColor = White,
@@ -117,10 +137,11 @@ fun GroupEditScreen(
         bottomBar = {
             CustomButton(
                 modifier = Modifier
+                    .navigationBarsPadding()
                     .padding(horizontal = 20.dp)
                     .padding(top = 40.dp, bottom = 6.dp),
                 text = "다음",
-                enable = true,
+                enable = state.buttonState,
                 onClick = {}
             )
         }
@@ -137,7 +158,10 @@ fun GroupEditScreen(
                 .padding(top = 20.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            AlarmContentSelector("SLIDE")
+            AlarmContentSelector(
+                alarmContent = state.alarmUnlockContents,
+                onContentClick = viewModel::onAlarmTypeSelected
+            )
 
             Spacer(modifier = Modifier.height(28.dp))
 
@@ -150,7 +174,7 @@ fun GroupEditScreen(
             )
 
             GroupImagePicker(
-                groupImage = null,
+                groupImage = state.groupImage?.toUri(),
                 onImagePickerClick = { isShowPhotoBottomSheet = true }
             )
 
@@ -225,9 +249,9 @@ fun GroupEditScreen(
                         Row(
                             modifier = Modifier
                                 .clickable {
-//                                    PictureUtil.groupRandomImage.filterNot { it == groupState.groupImage }
-//                                        .random()
-//                                        .also { viewModel.onGroupImageSelected(it) }
+                                    PictureUtil.groupRandomImage.filterNot { it == state.groupImage?.toUri() }
+                                        .random()
+                                        .also { viewModel.onGroupImageSelected(it) }
                                     coroutineScope.launch { photoSheetState.hide() }
                                         .invokeOnCompletion {
                                             if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
@@ -260,8 +284,8 @@ fun GroupEditScreen(
                     .wrapContentHeight()
                     .heightIn(min = 50.dp, max = 80.dp),
                 label = "그룹명",
-                value = "그룹명 입니다",
-                onValueChange = { },
+                value = state.title,
+                onValueChange = viewModel::onGroupTitleChanged,
                 type = GROUP_TITLE,
                 placeHolder = {
                     Text(
@@ -279,8 +303,8 @@ fun GroupEditScreen(
                     .fillMaxWidth()
                     .height(128.dp),
                 label = "그룹 소개글",
-                value = "그룹 소개글 입니다",
-                onValueChange = { },
+                value = state.description,
+                onValueChange = viewModel::onGroupDescriptionChanged,
                 type = GROUP_DESCRIPTION,
                 placeHolder = {
                     Text(
@@ -294,9 +318,9 @@ fun GroupEditScreen(
             )
 
             MemberPicker(
-                value = 3,
-                onPlusClick = { },
-                onMinusClick = { }
+                value = state.currentPerson,
+                onPlusClick = viewModel::onGroupPersonSelected,
+                onMinusClick = viewModel::onGroupPersonSelected
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -311,15 +335,29 @@ fun GroupEditScreen(
 
             Spacer(modifier = Modifier.height(28.dp))
 
-            PublicSelector(true)
+            PublicSelector(
+                isPublic = state.isPublic,
+                onTypeClick = viewModel::onGroupTypeSelected
+            )
 
+            if (state.isPublic.not()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                UnderlineTextField(
+                    modifier = Modifier
+//                        .focusable()
+                        .focusRequester(focusPasswordField),
+                    value = state.groupPassword ?: "",
+                    onValueChange = viewModel::onGroupPasswordChanged
+                )
+            }
         }
     }
 }
 
 @Composable
 fun PublicSelector(
-    isPublic: Boolean
+    isPublic: Boolean,
+    onTypeClick: (Boolean) -> Unit
 ) {
     Column {
         Text(
@@ -334,21 +372,22 @@ fun PublicSelector(
         RadioButtonWithText(
             text = "공개",
             isSelected = isPublic,
-            onClick = {}
+            onClick = { onTypeClick(true) }
         )
         Spacer(modifier = Modifier.height(14.dp))
 
         RadioButtonWithText(
             text = "비공개",
             isSelected = !isPublic,
-            onClick = {}
+            onClick = { onTypeClick(false) }
         )
     }
 }
 
 @Composable
 fun AlarmContentSelector(
-    alarmContent: String
+    alarmContent: String,
+    onContentClick: (String) -> Unit
 ) {
     Column {
         Text(
@@ -365,7 +404,7 @@ fun AlarmContentSelector(
             icon = R.drawable.ic_hand,
 
             isSelected = alarmContent == "SLIDE",
-            onClick = {}
+            onClick = { onContentClick("SLIDE") }
         )
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -373,7 +412,7 @@ fun AlarmContentSelector(
             text = "캐릭터를 터치하여 알람 해제",
             icon = R.drawable.ic_card_touch,
             isSelected = alarmContent == "CARD",
-            onClick = {}
+            onClick = { onContentClick("CARD") }
         )
     }
 }
@@ -433,7 +472,9 @@ fun RadioButtonWithText(
 @Preview
 @Composable
 fun PreviewGroupEditScreen() {
-    GroupEditScreen { }
+    GroupEditScreen(
+        onBackClick = {}
+    )
 }
 
 @Preview(
@@ -443,7 +484,8 @@ fun PreviewGroupEditScreen() {
 fun PreviewPublicSelector() {
     AljyoTheme {
         PublicSelector(
-            true
+            isPublic = true,
+            onTypeClick = {}
         )
     }
 }
@@ -455,7 +497,8 @@ fun PreviewPublicSelector() {
 fun PreviewAlarmContentSelector() {
     AljyoTheme {
         AlarmContentSelector(
-            alarmContent = "SLIDE"
+            alarmContent = "SLIDE",
+            onContentClick = {}
         )
     }
 }

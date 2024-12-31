@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.navigation.navtype
 
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.navigation.NavType
@@ -28,7 +29,8 @@ object CustomNavType {
                 .add(KotlinJsonAdapterFactory())
                 .build()
             val adapter = moshi.adapter(GroupEditState::class.java)
-            return adapter.fromJsonValue(value) ?: throw IllegalArgumentException("Invaild Json")
+            val decodedValue = Uri.decode(value)
+            return adapter.lenient().fromJson(decodedValue) ?: throw IllegalArgumentException("Invaild Json")
         }
 
         override fun put(bundle: Bundle, key: String, value: GroupEditState) {

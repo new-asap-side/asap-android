@@ -17,5 +17,9 @@ data class GroupEditState(
 ):Parcelable {
     val buttonState: Boolean
         get() = title.isNotBlank() &&
-                description.isNotBlank()
+                description.isNotBlank() &&
+                when (isPublic) {
+                    true -> true
+                    false -> groupPassword?.length == 4
+                }
 }

@@ -54,6 +54,7 @@ internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType?,
     onRankingClick: () -> Unit,
+    navigateToGroupEdit: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -69,13 +70,15 @@ internal fun GroupBottomNavBar(
             UserGroupType.Leader -> ParticipantBottomBar(
                 modifier = mod,
                 isLeader = true,
-                onRankingClick = onRankingClick
+                onRankingClick = onRankingClick,
+                navigateToGroupEdit = navigateToGroupEdit
             )
 
             UserGroupType.Participant -> ParticipantBottomBar(
                 modifier = mod,
                 isLeader = false,
-                onRankingClick = onRankingClick
+                onRankingClick = onRankingClick,
+                navigateToGroupEdit = {}
             )
 
             null -> Unit
@@ -90,6 +93,7 @@ private fun ParticipantBottomBar(
     modifier: Modifier = Modifier,
     isLeader: Boolean,
     onRankingClick: () -> Unit,
+    navigateToGroupEdit: () -> Unit
 ) {
     var showPopup by remember { mutableStateOf(true) }
     var popupWidth by remember { mutableIntStateOf(0) }
@@ -146,6 +150,7 @@ private fun ParticipantBottomBar(
                         .fillMaxWidth()
                         .clickable {
                             // 그룹 수정 화면으로 이동
+                            navigateToGroupEdit()
                         }
                         .padding(vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -260,7 +265,8 @@ private fun ParticipantBottomBarPreview() {
             ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
                 isLeader = true,
-                onRankingClick = { }
+                onRankingClick = { },
+                navigateToGroupEdit = {}
             )
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.GroupDetails
@@ -17,7 +18,9 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -25,6 +28,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.util.LinkedList
 import java.util.Queue
+import kotlin.math.max
 
 class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
@@ -52,6 +56,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _nextAlarmTime = MutableStateFlow("")
     val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
+
+    private val _groupEdit = MutableSharedFlow<GroupEditState>()
+    val groupEdit = _groupEdit.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -134,6 +141,25 @@ class GroupDetailsViewModel @AssistedInject constructor(
     fun parseISOFormat(stringDate: String): String = DateTimeManager.parseISO(stringDate)
 
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
+
+    fun navigateToGroupEdit() {
+        (_groupDetailsState.value as UiState.Success).data?.let {
+            GroupEditState(
+                groupId = groupId,
+                alarmUnlockContents = it.alarmUnlockContents,
+                groupImage = it.groupThumbnailImageUrl,
+                title = it.title,
+                description = it.description,
+                maxPerson = it.currentPerson,
+                isPublic = it.isPublic,
+                groupPassword = null
+            )
+        }?.also {
+            viewModelScope.launch {
+                _groupEdit.emit(it)
+            }
+        }
+    }
 
     override fun onCleared() {
         active = false

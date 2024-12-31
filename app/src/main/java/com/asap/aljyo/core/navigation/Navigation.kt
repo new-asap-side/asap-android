@@ -235,7 +235,8 @@ fun MainNavHost(
                             inclusive = true
                         }
                     }
-                }
+                },
+                navigateToGroupDetails = navigateToGroupDetails
             )
         }
 

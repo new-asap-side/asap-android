@@ -36,6 +36,7 @@ import com.asap.aljyo.ui.theme.White
 @Composable
 internal fun AlarmListScreen(
     navigateToHome: () -> Unit = {},
+    navigateToGroupDetails: (Int) -> Unit,
     viewModel: AlarmListViewModel = hiltViewModel()
 ) {
     Column(modifier = Modifier) {
@@ -106,7 +107,7 @@ internal fun AlarmListScreen(
                 is UiState.Success -> {
                     val alarmList = (uiState as UiState.Success).data
 
-                    if (alarmList.isEmpty()) {
+                    if (alarmList?.isEmpty() == true) {
                         Box(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -120,8 +121,9 @@ internal fun AlarmListScreen(
                     } else {
                         AlarmList(
                             modifier = Modifier.padding(horizontal = 20.dp),
-                            alarmList = alarmList,
-                            navigateToHome = navigateToHome
+                            alarmList = alarmList ?: emptyList(),
+                            navigateToHome = navigateToHome,
+                            navigateToGroupDetails = navigateToGroupDetails
                         )
                     }
                 }
@@ -134,6 +136,9 @@ internal fun AlarmListScreen(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        AlarmListScreen()
+        AlarmListScreen(
+            navigateToHome = {},
+            navigateToGroupDetails = {}
+        )
     }
 }

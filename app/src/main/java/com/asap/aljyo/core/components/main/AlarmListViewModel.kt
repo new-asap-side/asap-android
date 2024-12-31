@@ -1,12 +1,14 @@
 package com.asap.aljyo.core.components.main
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
-import com.asap.domain.entity.remote.Alarm
-import com.asap.domain.usecase.user.FetchAlarmListUseCase
+import com.asap.domain.entity.remote.AlarmSummary
+import com.asap.domain.usecase.group.FetchAlarmListUseCase
+import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,38 +21,21 @@ import java.util.LinkedList
 import java.util.Queue
 import javax.inject.Inject
 
-private val tempAlarms = listOf(
-    Alarm(
-        alarmDay = "목 금",
-        alarmTime = "17:33"
-    ),
-    Alarm(
-        alarmDay = "목 금",
-        alarmTime = "13:30"
-    ),
-    Alarm(
-        alarmDay = "월 화 수 목 금",
-        alarmTime = "14:30"
-    ),
-    Alarm(
-        alarmDay = "화 토",
-        alarmTime = "15:30"
-    ),
-    Alarm(alarmTime = "12:30")
-)
-
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
-    private val fetchAlarmListUseCase: FetchAlarmListUseCase
+    private val fetchAlarmListUseCase: FetchAlarmListUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
     private var active = true
 
-    private val _alarmList = MutableStateFlow<UiState<List<Alarm>>>(UiState.Loading)
+    private val _nickname = mutableStateOf("")
+    val nickname get() = _nickname.value
+
+    private val _alarmList = MutableStateFlow<UiState<List<AlarmSummary>?>>(UiState.Loading)
     val alarmList get() = _alarmList.asStateFlow()
 
     private val fastestAlarmQueue: Queue<String> = LinkedList()
     private val _fastestAlarmTimeFlow = flow {
-        Log.d("VM", "emit alarm time !")
         val fastest = fastestAlarmQueue.peek()
         if (fastest != null) {
             emit(fastest)
@@ -66,32 +51,28 @@ class AlarmListViewModel @Inject constructor(
 
     fun fetchAlarmList() = viewModelScope.launch {
         _alarmList.value = UiState.Loading
-        fetchAlarmListUseCase.invoke().catch { e ->
-            if (e is HttpException) {
-                _alarmList.value = UiState.Error(errorCode = e.code())
-                return@catch
-            }
 
-            _alarmList.value = UiState.Error()
-        }.collect { result ->
-            if (result == null) {
-                // _alarmList.value = UiState.Error()
-                _alarmList.value =
-                    UiState.Success(listOf(Alarm(), Alarm(), Alarm(), Alarm(), Alarm(), Alarm()))
-                return@collect
+        val userInfo = getUserInfoUseCase()
+        _nickname.value = userInfo.nickname ?: ""
+
+        fetchAlarmListUseCase(userInfo.userId.toInt()).catch { e ->
+            val errorCode = when (e) {
+                is HttpException -> e.code()
+                else -> -1
             }
-            _alarmList.value = UiState.Success(tempAlarms)
-            // sortedByFastest(result)
-            sortedByFastest(tempAlarms)
+            _alarmList.value = UiState.Error(errorCode = errorCode)
+        }.collect { result ->
+            sortedByFastest(result ?: emptyList())
             observeFastestAlarmTime()
+
+            _alarmList.value = UiState.Success(result)
         }
     }
 
-    // TODO 실제 데이터 반영
-    private fun sortedByFastest(alarms: List<Alarm>) {
+    private fun sortedByFastest(alarms: List<AlarmSummary>) {
         mutableListOf<String>().apply {
             alarms.forEach { alarm ->
-                addAll(alarm.alarmDay.split(" ").map { alarm.parse(it) })
+                addAll(alarm.group.alarmDays.map { alarm.group.parse(it) })
             }
         }.sortedBy {
             DateTimeManager.diffFromNow(it)
@@ -115,8 +96,10 @@ class AlarmListViewModel @Inject constructor(
     }
 
     fun resume() {
-        active = true
-        observeFastestAlarmTime()
+        if (!active) {
+            active = true
+            observeFastestAlarmTime()
+        }
     }
 
     fun pause() {

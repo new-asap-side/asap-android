@@ -107,7 +107,7 @@ object DateTimeManager {
         )
         val minites = String.format(
             Locale.KOREAN,
-            "%02d", duration % 60
+            "%02d", (duration % 60) + 1
         )
 
         return if (days == 0L) {

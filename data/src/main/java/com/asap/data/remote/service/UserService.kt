@@ -4,7 +4,6 @@ import com.asap.data.remote.request.SaveProfileRequest
 import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.domain.entity.ResultCard
-import com.asap.domain.entity.remote.auth.AuthKakaoResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

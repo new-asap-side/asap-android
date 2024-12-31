@@ -1,6 +1,7 @@
 package com.asap.data.di
 
 import com.asap.data.remote.HeaderInterceptor
+import com.asap.data.remote.service.AuthService
 import com.asap.data.remote.service.GroupService
 import com.asap.data.remote.service.UserService
 import com.squareup.moshi.Moshi
@@ -53,7 +54,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideLoginApiService(retrofit: Retrofit): UserService {
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
     }
 

@@ -5,8 +5,6 @@ import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
-import com.asap.domain.entity.remote.Alarm
-import com.asap.domain.entity.remote.AuthKakaoResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -21,13 +19,6 @@ class UserRemoteDataSource @Inject constructor(
         if (!response.isSuccessful) {
             throw HttpException(response)
         }
-        emit(response.body())
-    }
-
-    suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> = flow {
-        val response = userService.authKakao(
-            hashMapOf("kakaoAccessToken" to kakaoAccessToken)
-        )
         emit(response.body())
     }
     

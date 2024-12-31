@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.onboarding.SignupState
-import com.asap.domain.usecase.user.AuthKakaoUseCase
-import com.asap.domain.usecase.user.CacheUserUseCase
+import com.asap.domain.usecase.auth.AuthKakaoUseCase
+import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val authKakaoUseCase: AuthKakaoUseCase,
-    private val cacheUserUseCase: CacheUserUseCase,
+    private val cacheAuthUseCase: CacheAuthUseCase,
     private val checkCacheUserCase: CheckCacheUserCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RequestState<SignupState>>(RequestState.Initial)
@@ -52,7 +52,7 @@ class OnboardingViewModel @Inject constructor(
         }.collect { response ->
             // 서버 토큰 Room DB 저장
             if(response != null) {
-                cacheUserUseCase.invoke(response)
+                cacheAuthUseCase.invoke(response)
                 _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
                 return@collect
             }

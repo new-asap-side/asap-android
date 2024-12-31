@@ -2,6 +2,10 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.auth.AuthKakaoUseCase
+import com.asap.domain.usecase.auth.AuthKakaoUseCaseImpl
+import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
+import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
@@ -14,10 +18,6 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
-import com.asap.domain.usecase.user.AuthKakaoUseCase
-import com.asap.domain.usecase.user.AuthKakaoUseCaseImpl
-import com.asap.domain.usecase.user.CacheUserUseCase
-import com.asap.domain.usecase.user.CacheUserUseCaseImpl
 import com.asap.domain.usecase.user.CheckCacheUserCase
 import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
@@ -37,18 +37,17 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface UseCaseModule {
     /**
-     * User usecase
+     * Auth usecase
      */
     @Binds
-    fun bindKakaoLoginUseCase(
-        kakaoLoginUseCaseImpl: AuthKakaoUseCaseImpl
-    ): AuthKakaoUseCase
+    fun bindAuthKakaoUseCase(authKakaoUseCaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase
 
     @Binds
-    fun bindCacheKakaoUserUseCase(
-        cacheUserUseCaseImpl: CacheUserUseCaseImpl
-    ): CacheUserUseCase
+    fun bindCachAuthUseCase(cacheAuthKakaoUseCaseImpl: CacheAuthKakaoUseCaseImpl): CacheAuthUseCase
 
+    /**
+     * User usecase
+     */
     @Binds
     fun bindCheckCacheUseCase(
         checkCacheUserCaseImpl: CheckCacheUserCaseImpl

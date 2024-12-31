@@ -16,7 +16,7 @@ class HeaderInterceptor @Inject constructor(
             .addHeader("Content-Type", "application/json")
 
         if (!requestPath.startsWith("/auth")) {
-            var accessToken = ""
+            var accessToken: String
             runBlocking { accessToken = sessionLocalDataSource.getAccessToken() ?: "" }
             requestBuilder.addHeader("Authorization", "Bearer $accessToken")
         }

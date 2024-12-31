@@ -139,6 +139,7 @@ fun SelectGroupTypeScreen(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 UnderlineTextField(
+                    modifier = Modifier.padding(horizontal = 20.dp),
                     value = groupState.groupPassword ?: "",
                     onValueChange = { viewModel.onGroupPasswordChanged(it) }
                 )
@@ -239,10 +240,6 @@ fun UnderlineTextField(
     ) { innerTextField ->
         Column(
             modifier = Modifier.fillMaxWidth()
-                .padding(
-                    start = 20.dp,
-                    end = 20.dp
-                )
         ) {
             Box(
                 modifier = Modifier,
@@ -260,7 +257,7 @@ fun UnderlineTextField(
                 innerTextField()
             }
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp)
                     .height(2.dp)

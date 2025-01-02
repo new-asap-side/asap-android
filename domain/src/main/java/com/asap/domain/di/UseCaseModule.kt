@@ -6,6 +6,8 @@ import com.asap.domain.usecase.auth.AuthKakaoUseCase
 import com.asap.domain.usecase.auth.AuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthUseCase
+import com.asap.domain.usecase.auth.CheckAuthUseCaseImpl
+import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
@@ -18,8 +20,8 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
-import com.asap.domain.usecase.user.CheckCacheUserCase
-import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
+import com.asap.domain.usecase.user.CheckCachedProfileUseCase
+import com.asap.domain.usecase.user.CheckCachedProfileUseCaseImpl
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCaseImpl
 import com.asap.domain.usecase.user.DeleteUserInfoUseCase
@@ -40,18 +42,21 @@ interface UseCaseModule {
      * Auth usecase
      */
     @Binds
-    fun bindAuthKakaoUseCase(authKakaoUseCaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase
+    fun bindAuthKakaoUseCase(usecaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase
 
     @Binds
-    fun bindCachAuthUseCase(cacheAuthKakaoUseCaseImpl: CacheAuthKakaoUseCaseImpl): CacheAuthUseCase
+    fun bindCacheAuthUseCase(usecaseImpl: CacheAuthKakaoUseCaseImpl): CacheAuthUseCase
+
+    @Binds
+    fun bindCheckCachedAuthUseCase(usecaseImpl: CheckAuthUseCaseImpl): CheckCachedAuthUseCase
 
     /**
      * User usecase
      */
     @Binds
     fun bindCheckCacheUseCase(
-        checkCacheUserCaseImpl: CheckCacheUserCaseImpl
-    ): CheckCacheUserCase
+        usecaseImpl: CheckCachedProfileUseCaseImpl
+    ): CheckCachedProfileUseCase
 
     @Binds
     fun bindGetUserInfoUseCase(

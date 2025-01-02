@@ -3,13 +3,13 @@ package com.asap.domain.usecase.user
 import com.asap.domain.repository.UserRepository
 import javax.inject.Inject
 
-interface CheckCacheUserCase {
+interface CheckCachedProfileUseCase {
     suspend operator fun invoke(): Boolean
 }
 
-class CheckCacheUserCaseImpl @Inject constructor(
+class CheckCachedProfileUseCaseImpl @Inject constructor(
     private val repository: UserRepository
-): CheckCacheUserCase {
+): CheckCachedProfileUseCase {
     override suspend fun invoke(): Boolean {
         val userInfo = repository.getUserInfo()
         return (userInfo?.nickname != null) && (userInfo.profileImg != null)

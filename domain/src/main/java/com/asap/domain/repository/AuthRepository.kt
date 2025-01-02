@@ -9,6 +9,8 @@ interface AuthRepository {
 
     suspend fun cacheKakaoAuth(response: AuthResponse)
 
+    suspend fun checkCachedAuth(): Boolean
+
     suspend fun refreshToken(): Flow<RefreshTokenResponse?>
 
     suspend fun updateToken(accessToken: String, refreshToken: String)

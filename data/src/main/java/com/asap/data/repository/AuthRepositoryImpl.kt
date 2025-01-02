@@ -34,6 +34,11 @@ class AuthRepositoryImpl @Inject constructor(
         sessionLocalDataSource.updateAccessToken(response.refreshToken)
     }
 
+    override suspend fun checkCachedAuth(): Boolean {
+        val userDao = localDataSource.userDao()
+        return userDao.isCached()
+    }
+
     override suspend fun refreshToken(): Flow<RefreshTokenResponse?> {
         TODO("Not yet implemented")
     }

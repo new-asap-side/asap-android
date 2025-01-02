@@ -92,8 +92,8 @@ fun PersonalEditScreen(
                     .navigationBarsPadding()
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 6.dp),
-                text = "다음",
-                enable = true,
+                text = "완료",
+                enable = state.buttonState,
                 onClick = {}
             )
         }

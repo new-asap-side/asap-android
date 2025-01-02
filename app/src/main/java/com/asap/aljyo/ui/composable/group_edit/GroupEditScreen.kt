@@ -140,7 +140,7 @@ fun GroupEditScreen(
                     .navigationBarsPadding()
                     .padding(horizontal = 20.dp)
                     .padding(top = 40.dp, bottom = 6.dp),
-                text = "다음",
+                text = "완료",
                 enable = state.buttonState,
                 onClick = {}
             )

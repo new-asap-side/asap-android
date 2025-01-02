@@ -58,6 +58,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.core.navigation.ScreenRoute
+import com.asap.aljyo.core.navigation.navtype.CustomNavType
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
@@ -111,10 +112,17 @@ fun GroupDetailsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect{
-            val json = Gson().toJson(it)
-            val encodeJson = Uri.encode(json)
+            navController.navigate(
+                "${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}"
+            )
+        }
+    }
 
-            navController.navigate("${ScreenRoute.GroupEdit.route}/$encodeJson")
+    LaunchedEffect(Unit) {
+        viewModel.personalEdit.collect {
+            navController.navigate(
+                "${ScreenRoute.PersonalEdit.route}/$groupId/${CustomNavType.PersonalEditType.serializeAsValue(it)}"
+            )
         }
     }
 
@@ -261,6 +269,9 @@ fun GroupDetailsScreen(
                     },
                     navigateToGroupEdit = {
                         viewModel.navigateToGroupEdit()
+                    },
+                    navigateToPersonalEdit = {
+                        viewModel.navigateToPersonalEdit()
                     }
                 )
             }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.core.components.edit.GroupEditState
+import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.GroupDetails
@@ -28,7 +29,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.util.LinkedList
 import java.util.Queue
-import kotlin.math.max
 
 class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
@@ -59,6 +59,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _groupEdit = MutableSharedFlow<GroupEditState>()
     val groupEdit = _groupEdit.asSharedFlow()
+
+    private val _personalEdit = MutableSharedFlow<PersonalEditState>()
+    val personalEdit = _personalEdit.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -157,6 +160,24 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }?.also {
             viewModelScope.launch {
                 _groupEdit.emit(it)
+            }
+        }
+    }
+
+    fun navigateToPersonalEdit() {
+        val memberList = (_groupDetailsState.value as UiState.Success).data?.users
+
+        viewModelScope.launch {
+            val userId = getUserInfoUseCase.invoke().userId.toInt()
+
+            memberList?.find { it.userId == userId }?.let {
+                PersonalEditState(
+                    alarmType = it.alarmType,
+                    musicTitle = it.musicTitle,
+                    alarmVolume = it.volume.toFloat()
+                ).also { personalEditState ->
+                    _personalEdit.emit(personalEditState)
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -38,7 +39,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.edit.PersonalEditViewModel
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSoundSlider
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmTypeBox
@@ -51,10 +55,11 @@ import com.asap.aljyo.ui.theme.Red01
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalEditScreen(
+    viewModel: PersonalEditViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     navigateToAlarmMusicScreen: () -> Unit
 ) {
-    var type by remember { mutableStateOf("") }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = White,
@@ -66,7 +71,7 @@ fun PersonalEditScreen(
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = Black01,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = Bold
                         ),
                     )
                 },
@@ -84,6 +89,7 @@ fun PersonalEditScreen(
         bottomBar = {
             CustomButton(
                 modifier = Modifier
+                    .navigationBarsPadding()
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 6.dp),
                 text = "다음",
@@ -100,11 +106,11 @@ fun PersonalEditScreen(
         ) {
 
             AlarmTypeBox(
-                selectedAlarmType = type,
-                onSelected = { type = it }
+                selectedAlarmType = state.alarmType,
+                onSelected = { viewModel.onAlarmTypeSelected(it) }
             )
 
-            if (type == "SOUND" || type == "ALL") {
+            if (state.alarmType == "SOUND" || state.alarmType == "ALL") {
                 Text(
                     modifier = Modifier.padding(top = 28.dp, bottom = 8.dp),
                     text = "알람음",
@@ -144,7 +150,7 @@ fun PersonalEditScreen(
                             modifier = Modifier
                                 .padding(start = 96.dp, end = 4.dp)
                                 .weight(1f),
-                            text = "노래를 선택해주세요",
+                            text = state.musicTitle ?: "노래를 선택해주세요!",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black03,
                                 fontSize = 15.sp,
@@ -162,8 +168,8 @@ fun PersonalEditScreen(
                 }
 
                 AlarmSoundSlider(
-                    sliderPosition = 10f,
-                    onValueChange = {  }
+                    sliderPosition = state.alarmVolume ?: 10f,
+                    onValueChange = { viewModel.onAlarmVolumeSelected(it) }
                 )
             }
 

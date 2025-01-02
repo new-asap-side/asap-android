@@ -1,6 +1,5 @@
 package com.asap.aljyo.core.components.main
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -53,9 +52,9 @@ class AlarmListViewModel @Inject constructor(
         _alarmList.value = UiState.Loading
 
         val userInfo = getUserInfoUseCase()
-        _nickname.value = userInfo.nickname ?: ""
+        _nickname.value = userInfo?.nickname ?: ""
 
-        fetchAlarmListUseCase(userInfo.userId.toInt()).catch { e ->
+        fetchAlarmListUseCase(userInfo?.userId?.toInt() ?: -1).catch { e ->
             val errorCode = when (e) {
                 is HttpException -> e.code()
                 else -> -1

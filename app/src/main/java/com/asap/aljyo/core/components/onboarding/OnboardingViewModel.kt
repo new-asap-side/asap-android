@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.onboarding.SignupState
-import com.asap.domain.usecase.user.AuthKakaoUseCase
-import com.asap.domain.usecase.user.CacheUserUseCase
-import com.asap.domain.usecase.user.CheckCacheUserCase
+import com.asap.domain.usecase.auth.AuthKakaoUseCase
+import com.asap.domain.usecase.auth.CacheAuthUseCase
+import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
+import com.asap.domain.usecase.user.CheckCachedProfileUseCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -20,8 +20,9 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val authKakaoUseCase: AuthKakaoUseCase,
-    private val cacheUserUseCase: CacheUserUseCase,
-    private val checkCacheUserCase: CheckCacheUserCase
+    private val cacheAuthUseCase: CacheAuthUseCase,
+    private val checkCachedAuthUseCase: CheckCachedAuthUseCase,
+    private val checkProfileUseCase: CheckCachedProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RequestState<SignupState>>(RequestState.Initial)
     val state get() = _state.asStateFlow()
@@ -29,9 +30,13 @@ class OnboardingViewModel @Inject constructor(
     init {
         // 기 로그인 정보 체크
         viewModelScope.launch {
-            delay(500)
-            val cached = checkCacheUserCase.invoke()
+            // auth 정보 유무 체크
+            val cached = checkCachedAuthUseCase()
             if (cached) {
+                if (!checkProfileUseCase()) {
+                    _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
+                    return@launch
+                }
                 _state.value = RequestState.Success(SignupState.REGISTERED)
             }
         }
@@ -52,7 +57,7 @@ class OnboardingViewModel @Inject constructor(
         }.collect { response ->
             // 서버 토큰 Room DB 저장
             if(response != null) {
-                cacheUserUseCase.invoke(response)
+                cacheAuthUseCase.invoke(response)
                 _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
                 return@collect
             }

@@ -2,6 +2,12 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.auth.AuthKakaoUseCase
+import com.asap.domain.usecase.auth.AuthKakaoUseCaseImpl
+import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
+import com.asap.domain.usecase.auth.CacheAuthUseCase
+import com.asap.domain.usecase.auth.CheckAuthUseCaseImpl
+import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
@@ -14,12 +20,8 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
-import com.asap.domain.usecase.user.AuthKakaoUseCase
-import com.asap.domain.usecase.user.AuthKakaoUseCaseImpl
-import com.asap.domain.usecase.user.CacheUserUseCase
-import com.asap.domain.usecase.user.CacheUserUseCaseImpl
-import com.asap.domain.usecase.user.CheckCacheUserCase
-import com.asap.domain.usecase.user.CheckCacheUserCaseImpl
+import com.asap.domain.usecase.user.CheckCachedProfileUseCase
+import com.asap.domain.usecase.user.CheckCachedProfileUseCaseImpl
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCaseImpl
 import com.asap.domain.usecase.user.DeleteUserInfoUseCase
@@ -37,22 +39,24 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface UseCaseModule {
     /**
+     * Auth usecase
+     */
+    @Binds
+    fun bindAuthKakaoUseCase(usecaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase
+
+    @Binds
+    fun bindCacheAuthUseCase(usecaseImpl: CacheAuthKakaoUseCaseImpl): CacheAuthUseCase
+
+    @Binds
+    fun bindCheckCachedAuthUseCase(usecaseImpl: CheckAuthUseCaseImpl): CheckCachedAuthUseCase
+
+    /**
      * User usecase
      */
     @Binds
-    fun bindKakaoLoginUseCase(
-        kakaoLoginUseCaseImpl: AuthKakaoUseCaseImpl
-    ): AuthKakaoUseCase
-
-    @Binds
-    fun bindCacheKakaoUserUseCase(
-        cacheUserUseCaseImpl: CacheUserUseCaseImpl
-    ): CacheUserUseCase
-
-    @Binds
     fun bindCheckCacheUseCase(
-        checkCacheUserCaseImpl: CheckCacheUserCaseImpl
-    ): CheckCacheUserCase
+        usecaseImpl: CheckCachedProfileUseCaseImpl
+    ): CheckCachedProfileUseCase
 
     @Binds
     fun bindGetUserInfoUseCase(

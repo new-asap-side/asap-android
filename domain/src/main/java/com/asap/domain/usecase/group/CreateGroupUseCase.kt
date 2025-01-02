@@ -25,7 +25,7 @@ class CreateGroupUseCase @Inject constructor(
         musicTitle: String?,
         title: String,
     ): Int? {
-        val userId = userRepository.getUserInfo().userId.toInt()
+        val userId = userRepository.getUserInfo()?.userId?.toInt()
 
         return groupRepository.postCreateGroup(
             groupImage = groupImage,
@@ -43,7 +43,7 @@ class CreateGroupUseCase @Inject constructor(
             maxPerson = maxPerson,
             musicTitle = musicTitle,
             title = title,
-            userId = userId
+            userId = userId ?: -1
         )
     }
 }

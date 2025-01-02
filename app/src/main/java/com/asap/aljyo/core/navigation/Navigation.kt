@@ -1,7 +1,6 @@
 package com.asap.aljyo.core.navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -19,6 +18,7 @@ import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
 import com.asap.aljyo.ui.composable.group_edit.GroupEditScreen
+import com.asap.aljyo.ui.composable.group_edit.PersonalEditScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmTypeScreen
@@ -333,6 +333,16 @@ fun NavGraphBuilder.editNavGraph(
         )
     }
 
-    composable(route = ScreenRoute.PersonalEdit.route) {  }
-
+    composable(
+        route = "${ScreenRoute.PersonalEdit.route}/{groupId}/{setting}",
+        arguments = listOf(
+            navArgument("groupId") { type = NavType.IntType },
+            navArgument("setting") { type = CustomNavType.PersonalEditType }
+        )
+    ) {
+        PersonalEditScreen(
+            onBackClick = {},
+            navigateToAlarmMusicScreen = {}
+        )
+    }
 }

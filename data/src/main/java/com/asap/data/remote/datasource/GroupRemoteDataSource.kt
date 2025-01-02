@@ -6,6 +6,7 @@ import com.asap.data.remote.service.GroupService
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.squareup.moshi.Json
 import kotlinx.coroutines.flow.Flow
@@ -53,8 +54,12 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> = flow {
+    suspend fun postJoinGroup(body: Map<String, Any>): Flow<GroupJoinResponse?> = flow {
         val response = groupService.postJoinGroup(body)
+        if(!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
         emit(response.body())
     }
 

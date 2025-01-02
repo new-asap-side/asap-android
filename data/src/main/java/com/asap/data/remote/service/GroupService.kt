@@ -6,6 +6,7 @@ import com.asap.domain.entity.remote.Alarm
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import retrofit2.Response
 import retrofit2.http.Body
@@ -32,7 +33,7 @@ interface GroupService {
     suspend fun fetchGroupRanking(@Query("groupId") groupId: Int): Response<List<GroupRanking>>
 
     @POST("/group/join")
-    suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<Boolean>
+    suspend fun postJoinGroup(@Body body: Map<String, Any>): Response<GroupJoinResponse>
 
     @POST("/group/create")
     suspend fun postCreateGroup(@Body body: PostGroupCreateRequest): Response<PostGroupCreateResponse>

@@ -4,6 +4,7 @@ import com.asap.data.remote.datasource.GroupRemoteDataSource
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?> {
-        return remoteDataSource.fetchTodayPopularGroup()
+        return remoteDataSource.fetchLatestGroup()
     }
 
     override suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> {
@@ -28,7 +29,7 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchUserAlarmList(userId = userId)
     }
 
-    override suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> {
+    override suspend fun postJoinGroup(body: Map<String, Any>): Flow<GroupJoinResponse?> {
         return remoteDataSource.postJoinGroup(body = body)
     }
 

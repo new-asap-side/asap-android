@@ -9,5 +9,10 @@ data class PersonalEditState (
     val musicTitle: String? = null,
     val alarmVolume: Float? = null
 ): Parcelable {
-
+    val buttonState: Boolean
+        get() = when (alarmType) {
+            "SOUND", "ALL" -> musicTitle.isNullOrEmpty().not()
+            "VIBRATION" -> true
+            else -> false
+        }
 }

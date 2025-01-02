@@ -57,7 +57,7 @@ import com.asap.aljyo.ui.theme.Red01
 fun PersonalEditScreen(
     viewModel: PersonalEditViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
-    navigateToAlarmMusicScreen: () -> Unit
+    navigateToAlarmMusicScreen: (String?) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -94,7 +94,7 @@ fun PersonalEditScreen(
                     .padding(bottom = 6.dp),
                 text = "완료",
                 enable = state.buttonState,
-                onClick = {}
+                onClick = {  }
             )
         }
     ) {innerPadding ->
@@ -132,7 +132,7 @@ fun PersonalEditScreen(
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = navigateToAlarmMusicScreen
+                            onClick = { navigateToAlarmMusicScreen(state.musicTitle) }
                         )
                 ) {
                     Row(

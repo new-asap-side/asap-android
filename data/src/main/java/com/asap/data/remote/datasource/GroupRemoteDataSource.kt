@@ -6,14 +6,13 @@ import com.asap.data.remote.service.GroupService
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
-import com.squareup.moshi.Json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import javax.inject.Inject
-import kotlin.math.max
 
 class GroupRemoteDataSource @Inject constructor(
     private val groupService: GroupService
@@ -54,7 +53,7 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun postJoinGroup(body: Map<String, Any>): Flow<GroupJoinResponse?> = flow {
+    suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?> = flow {
         val response = groupService.postJoinGroup(body)
         if(!response.isSuccessful) {
             throw HttpException(response)

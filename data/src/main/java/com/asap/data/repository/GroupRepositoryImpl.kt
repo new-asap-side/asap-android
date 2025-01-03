@@ -4,6 +4,7 @@ import com.asap.data.remote.datasource.GroupRemoteDataSource
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.repository.GroupRepository
@@ -29,7 +30,7 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchUserAlarmList(userId = userId)
     }
 
-    override suspend fun postJoinGroup(body: Map<String, Any>): Flow<GroupJoinResponse?> {
+    override suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?> {
         return remoteDataSource.postJoinGroup(body = body)
     }
 

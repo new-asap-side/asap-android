@@ -39,4 +39,14 @@ interface GroupRepository {
         title: String,
         userId: Int
     ): Int?
+
+    suspend fun postGroupEdit(
+        userId: Int,
+        groupId: Int,
+        title: String,
+        description: String,
+        maxPerson: Int,
+        alarmUnlockContents: String,
+        isPublic: Boolean
+    )
 }

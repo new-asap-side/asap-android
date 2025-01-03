@@ -83,6 +83,7 @@ import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.util.PictureUtil
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -102,6 +103,12 @@ fun GroupEditScreen(
     val photoSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     val focusPasswordField = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            onBackClick()
+        }
+    }
 
     LaunchedEffect(state.isPublic) {
         if (!state.isPublic) {
@@ -142,7 +149,7 @@ fun GroupEditScreen(
                     .padding(top = 40.dp, bottom = 6.dp),
                 text = "완료",
                 enable = state.buttonState,
-                onClick = {}
+                onClick = viewModel::onCompleteClick
             )
         }
     ) { innerPadding ->
@@ -344,7 +351,6 @@ fun GroupEditScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 UnderlineTextField(
                     modifier = Modifier
-//                        .focusable()
                         .focusRequester(focusPasswordField),
                     value = state.groupPassword ?: "",
                     onValueChange = viewModel::onGroupPasswordChanged

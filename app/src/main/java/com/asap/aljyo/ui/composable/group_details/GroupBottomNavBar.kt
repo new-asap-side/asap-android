@@ -192,7 +192,7 @@ private fun ParticipantBottomBar(
     Button(
         modifier = modifier,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary,
         ),
@@ -223,7 +223,7 @@ private fun ParticipantBottomBar(
             )
 
         },
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(10.dp),
         onClick = onRankingClick
     ) {
         if (showPopup) {
@@ -272,7 +272,7 @@ private fun NonParticipantBottomBar(
 ) {
     Button(
         modifier = modifier,
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(10.dp),
         onClick = {}
     ) {
         Text(

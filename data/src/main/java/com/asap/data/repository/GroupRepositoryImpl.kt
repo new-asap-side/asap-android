@@ -1,34 +1,44 @@
 package com.asap.data.repository
 
+import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.GroupRemoteDataSource
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinRequest
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
-    private val remoteDataSource: GroupRemoteDataSource
+    private val remoteDataSource: GroupRemoteDataSource,
+    private val localDataSource: AppDatabase,
 ): GroupRepository {
     override suspend fun fetchTodayPopularGroup(): Flow<List<AlarmGroup>?> {
         return remoteDataSource.fetchTodayPopularGroup()
     }
 
     override suspend fun fetchLatestGroup(): Flow<List<AlarmGroup>?> {
-        return remoteDataSource.fetchTodayPopularGroup()
+        return remoteDataSource.fetchLatestGroup()
     }
 
     override suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> {
-        return remoteDataSource.fetchGroupDetails(groupId = groupId)
+        val userDao = localDataSource.userDao()
+        val users = userDao.selectAll()
+
+        if (users.isEmpty()) throw NoSuchElementException("can't find user data")
+
+        val user = users.first()
+        return remoteDataSource.fetchGroupDetails(groupId = groupId, userId = user.userId.toInt())
     }
 
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {
         return remoteDataSource.fetchUserAlarmList(userId = userId)
     }
 
-    override suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> {
+    override suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?> {
         return remoteDataSource.postJoinGroup(body = body)
     }
 

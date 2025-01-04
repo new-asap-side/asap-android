@@ -66,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit> =
+    override suspend fun deleteRemoteUserInfo(survey: String): Flow<Boolean?> =
         remoteDataSource.deleteUser(survey = survey)
 
     override suspend fun deleteLocalUserInfo() {

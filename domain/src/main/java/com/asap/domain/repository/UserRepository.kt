@@ -21,7 +21,7 @@ interface UserRepository {
 
     suspend fun fetchFCMToken()
 
-    suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit>
+    suspend fun deleteRemoteUserInfo(survey: String): Flow<Boolean?>
 
     suspend fun deleteLocalUserInfo()
 

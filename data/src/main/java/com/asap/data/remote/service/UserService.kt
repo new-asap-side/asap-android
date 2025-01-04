@@ -21,7 +21,7 @@ interface UserService {
     suspend fun saveProfile(@Body body: SaveProfileRequest): Response<SaveProfileResponse>
 
     @HTTP(method = "DELETE", path = "/auth/user", hasBody = true)
-    suspend fun deleteUser(@Body body: Map<String, String>): Response<Unit>
+    suspend fun deleteUser(@Body body: Map<String, String>): Response<Boolean>
 
 }
 

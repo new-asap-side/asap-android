@@ -26,10 +26,16 @@ class WithdrawalViewModel @Inject constructor(
     private val _checkedPrecautions = mutableStateOf(false)
     val checkedPrecautions get() = _checkedPrecautions.value
 
-    var survey: String = ""
+    private val _survey = mutableStateOf("")
+
+    val enable get() = _checkedPrecautions.value &&  _survey.value.isNotEmpty()
 
     fun select(index: Int?) {
         _selectedIndex.value = index
+    }
+
+    fun inputSurvey(input: String) {
+        _survey.value = input
     }
 
     fun checkPrecautions() {
@@ -38,13 +44,13 @@ class WithdrawalViewModel @Inject constructor(
 
     fun deleteUser() = viewModelScope.launch {
         _withdrawalState.value = RequestState.Loading
-        deleteUserInfoUseCase.invoke(survey).catch { e ->
-            when (e) {
-                is HttpException -> {
-                    // TODO error handling
-                    _withdrawalState.value = RequestState.Success(true)
-                }
+        deleteUserInfoUseCase(_survey.value).catch { e ->
+            val errorCode = when (e) {
+                is HttpException -> e.code()
+                else -> -1
             }
+
+            _withdrawalState.value = RequestState.Error(errorCode)
         }.collect {
             _withdrawalState.value = RequestState.Success(true)
         }

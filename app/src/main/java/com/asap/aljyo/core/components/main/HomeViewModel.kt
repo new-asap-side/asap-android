@@ -114,12 +114,12 @@ class HomeViewModel @Inject constructor(
             )
         ).catch { e ->
             Log.e("VM", "$e")
-            when (e) {
-                is HttpException -> {
-                    _joinResponseState.value = RequestState.Error("${e.code()}")
-                }
-                else -> _joinResponseState.value = RequestState.Error("-1")
+            val errorCode = when (e) {
+                is HttpException -> e.code()
+                else -> -1
             }
+
+            _joinResponseState.value = RequestState.Error(errorCode)
         }.collect { result ->
             Log.d("VM", "$result")
             _joinResponseState.value = RequestState.Success(result)

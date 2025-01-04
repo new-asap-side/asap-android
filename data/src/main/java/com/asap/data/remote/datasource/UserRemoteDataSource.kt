@@ -42,7 +42,7 @@ class UserRemoteDataSource @Inject constructor(
         return userService.saveProfile(request).body()
     }
 
-    suspend fun deleteUser(survey: String): Flow<Unit> = flow {
+    suspend fun deleteUser(survey: String): Flow<Boolean?> = flow {
         val response = userService.deleteUser(
             hashMapOf("survey" to survey)
         )
@@ -50,6 +50,6 @@ class UserRemoteDataSource @Inject constructor(
             throw HttpException(response)
         }
 
-        emit(Unit)
+        emit(response.body())
     }
 }

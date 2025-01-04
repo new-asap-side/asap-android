@@ -35,8 +35,8 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> = flow {
-        val response = groupService.fetchGroupDetails(groupId = groupId)
+    suspend fun fetchGroupDetails(groupId: Int, userId: Int): Flow<GroupDetails?> = flow {
+        val response = groupService.fetchGroupDetails(groupId = groupId, userId = userId)
         if (!response.isSuccessful) {
             throw HttpException(response)
         }

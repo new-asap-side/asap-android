@@ -1,5 +1,6 @@
 package com.asap.data.repository
 
+import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.GroupRemoteDataSource
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
-    private val remoteDataSource: GroupRemoteDataSource
+    private val remoteDataSource: GroupRemoteDataSource,
+    private val localDataSource: AppDatabase,
 ): GroupRepository {
     override suspend fun fetchTodayPopularGroup(): Flow<List<AlarmGroup>?> {
         return remoteDataSource.fetchTodayPopularGroup()
@@ -23,7 +25,13 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> {
-        return remoteDataSource.fetchGroupDetails(groupId = groupId)
+        val userDao = localDataSource.userDao()
+        val users = userDao.selectAll()
+
+        if (users.isEmpty()) throw NoSuchElementException("can't find user data")
+
+        val user = users.first()
+        return remoteDataSource.fetchGroupDetails(groupId = groupId, userId = user.userId.toInt())
     }
 
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {

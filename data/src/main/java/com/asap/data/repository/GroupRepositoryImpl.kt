@@ -108,4 +108,20 @@ class GroupRepositoryImpl @Inject constructor(
             groupImage = groupImage
         )
     }
+
+    override suspend fun postPersonalEdit(
+        userId: Int,
+        groupId: Int,
+        alarmType: String,
+        alarmVolume: Int?,
+        musicTitle: String?
+    ) {
+        return remoteDataSource.postPersonalEdit(
+            userId = userId,
+            groupId = groupId,
+            alarmType = alarmType,
+            alarmVolume = alarmVolume,
+            musicTitle = musicTitle
+        )
+    }
 }

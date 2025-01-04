@@ -57,4 +57,12 @@ interface GroupRepository {
         groupPassword: String?,
         groupImage: String
     )
+
+    suspend fun postPersonalEdit(
+        userId: Int,
+        groupId: Int,
+        alarmType: String,
+        alarmVolume: Int?,
+        musicTitle: String?
+    )
 }

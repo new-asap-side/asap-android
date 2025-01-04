@@ -3,10 +3,13 @@ package com.asap.aljyo.ui.composable.main.home.main
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,10 +42,12 @@ fun NewGroupList(
         }
 
         val latestGroupState by viewModel.latestGroupState.collectAsState()
+        val gridState = rememberLazyGridState()
 
         LazyVerticalGrid(
+            state = gridState,
+            modifier = Modifier.heightIn(max = 2200.dp),
             columns = GridCells.Fixed(2),
-            modifier = Modifier.heightIn(max = 980.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
             userScrollEnabled = false
@@ -56,18 +61,25 @@ fun NewGroupList(
                 is UiState.Success -> {
                     val groups = (latestGroupState as UiState.Success).data ?: emptyList()
 
-                    groups.forEach {
+                    groups.forEachIndexed { index, group ->
+                        if (index > 7) {
+                            return@forEachIndexed
+                        }
                         item {
                             GroupItem(
                                 modifier = Modifier.clickable {
-                                    onGroupItemClick(it.isPublic, it.groupId)
-                                }
+                                    onGroupItemClick(group.isPublic, group.groupId)
+                                },
+                                alarmGroup = group
                             )
                         }
                     }
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
     }
 
 }

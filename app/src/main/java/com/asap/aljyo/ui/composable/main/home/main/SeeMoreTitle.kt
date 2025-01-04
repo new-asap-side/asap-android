@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black03
 
@@ -35,7 +36,7 @@ fun SeeMoreTitle(
         Text(
             title,
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 18.sp
+                fontSize = 18.fsp
             )
         )
         TextButton(
@@ -47,7 +48,7 @@ fun SeeMoreTitle(
                 Text(
                     stringResource(R.string.see_more),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                         color = Black03
                     )
                 )

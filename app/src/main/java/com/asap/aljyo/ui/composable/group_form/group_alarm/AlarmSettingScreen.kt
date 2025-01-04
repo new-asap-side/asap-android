@@ -1,11 +1,9 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,23 +31,17 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -59,18 +50,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.widget.Group
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
-import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
@@ -136,7 +126,7 @@ fun AlarmSettingScreen(
                 text = "\"닉네임\"님만의 알람 방식을\n선택해주세요!",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,
-                    fontSize = 22.sp,
+                    fontSize = 22.fsp,
                     fontWeight = Bold,
                 )
             )
@@ -152,7 +142,7 @@ fun AlarmSettingScreen(
                     text = "알람음",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Black02,
-                        fontSize = 14.sp
+                        fontSize = 14.fsp
                     )
                 )
 
@@ -178,7 +168,7 @@ fun AlarmSettingScreen(
                             text = "노래 선택",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black01,
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                             )
                         )
 
@@ -189,7 +179,7 @@ fun AlarmSettingScreen(
                             text = alarmState.musicTitle ?: "노래를 선택해주세요",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = Black03,
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                             ),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -217,7 +207,7 @@ fun AlarmSettingScreen(
                     text = "잠깐",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = Red01,
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         fontWeight = Bold
                     )
                 )
@@ -231,7 +221,7 @@ fun AlarmSettingScreen(
                     text = "알람을 설정하기 전 꼭 확인해 주세요!",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = Black01,
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         fontWeight = Bold
                     )
                 )
@@ -255,7 +245,7 @@ fun AlarmSettingScreen(
                         text = it,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Black02,
-                            fontSize = 12.sp
+                            fontSize = 12.fsp
                         )
                     )
                 }
@@ -295,7 +285,7 @@ fun AlarmTypeBox(
             text = "알람 방식",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
 
@@ -362,7 +352,7 @@ fun SelectBox(
             text = text,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = if (isSelected) Red01 else Black01,
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
             ),
         )
@@ -381,14 +371,14 @@ fun AlarmSoundSlider(
             text = "음량",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
         Text(
             text = "최저 음량 10 이상부터 설정이 가능합니다.",
             style = MaterialTheme.typography.bodySmall.copy(
                 color = Black03,
-                fontSize = 12.sp
+                fontSize = 12.fsp
             )
         )
         Row(

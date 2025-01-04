@@ -1,7 +1,5 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -22,9 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -63,7 +61,7 @@ fun MyPageProfile(
                 text = nickname,
                 style = MaterialTheme.typography.headlineMedium.copy(
                     color = Black01,
-                    fontSize = 16.sp
+                    fontSize = 16.fsp
                 )
             )
         }
@@ -80,7 +78,7 @@ fun MyPageProfile(
             Text(
                 text = stringResource(R.string.edit_my_info),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp
+                    fontSize = 14.fsp
                 )
             )
         }

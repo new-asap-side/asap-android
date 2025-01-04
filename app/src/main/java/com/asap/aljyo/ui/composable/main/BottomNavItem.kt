@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.MainScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Grey03
@@ -114,8 +115,8 @@ fun BottomNavItemSub(
                 stringResource(label),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = tint,
-                    fontSize = 11.sp,
-                    lineHeight = 17.sp
+                    fontSize = 11.fsp,
+                    lineHeight = 17.fsp
                 )
             )
         }

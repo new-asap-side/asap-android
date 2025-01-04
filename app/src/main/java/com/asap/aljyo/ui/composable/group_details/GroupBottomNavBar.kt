@@ -37,8 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -133,7 +133,7 @@ private fun ParticipantBottomBar(
                     Text(
                         text = stringResource(R.string.edit_alarm),
                         style = MaterialTheme.typography.headlineMedium.copy(
-                            fontSize = 18.sp,
+                            fontSize = 18.fsp,
                             color = Black01
                         )
                     )
@@ -166,7 +166,7 @@ private fun ParticipantBottomBar(
                     Text(
                         text = stringResource(R.string.edit_group),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                             color = Black02
                         )
                     )
@@ -189,7 +189,7 @@ private fun ParticipantBottomBar(
                 Text(
                     text = stringResource(R.string.edit_private_setting),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         color = Black02
                     )
                 )
@@ -200,7 +200,7 @@ private fun ParticipantBottomBar(
     Button(
         modifier = modifier,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary,
         ),
@@ -211,7 +211,7 @@ private fun ParticipantBottomBar(
         Text(
             text = stringResource(R.string.modifiy),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
             )
         )
     }
@@ -231,7 +231,7 @@ private fun ParticipantBottomBar(
             )
 
         },
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(10.dp),
         onClick = onRankingClick
     ) {
         if (showPopup) {
@@ -248,7 +248,7 @@ private fun ParticipantBottomBar(
         Text(
             text = stringResource(R.string.ranking),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = White
             )
         )
@@ -282,13 +282,13 @@ private fun NonParticipantBottomBar(
 ) {
     Button(
         modifier = modifier,
-        shape = RoundedCornerShape(10),
+        shape = RoundedCornerShape(10.dp),
         onClick = {}
     ) {
         Text(
             text = stringResource(R.string.participate),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = White
             )
         )

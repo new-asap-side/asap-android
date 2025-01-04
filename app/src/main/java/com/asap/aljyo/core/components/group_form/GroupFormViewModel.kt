@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -125,7 +124,7 @@ class GroupFormViewModel @Inject constructor(
     fun onCompleteClicked() {
         viewModelScope.launch {
             createGroupUseCase(
-                groupImage = PictureUtil.getStringFromUri(_groupScreenState.value.groupImage)
+                groupImage = PictureUtil.encodeType(_groupScreenState.value.groupImage)
                     ?: throw IllegalArgumentException("image encoded fail"),
                 alarmDay = _groupScreenState.value.alarmDays,
                 alarmEndDate = _groupScreenState.value.alarmEndDate!!.format(),

@@ -64,7 +64,12 @@ class GroupDetailsViewModel @AssistedInject constructor(
     val personalEdit = _personalEdit.asSharedFlow()
 
     init {
+        fetchGroupDetails()
+    }
+
+    fun fetchGroupDetails() {
         viewModelScope.launch {
+            _groupDetailsState.value = UiState.Loading
             delay(500)
             fetchGroupDetailsUseCase.invoke(groupId = groupId).catch { e ->
                 Log.e(TAG, "error: $e")
@@ -76,7 +81,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
             }.collect { result ->
                 Log.d(TAG, "$result")
 
-                val mId = getUserInfoUseCase.invoke().userId.toInt()
+                val mId = getUserInfoUseCase()?.userId?.toInt()
                 result?.users.also { participateUsers ->
                     val target = participateUsers?.find { participants ->
                         mId == participants.userId
@@ -145,6 +150,10 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
 
+    fun parseAlarmDays(groupDetails: GroupDetails?): String {
+        return (groupDetails?.alarmDays ?: emptyList()).joinToString( separator = " ")
+    }
+
     fun navigateToGroupEdit() {
         (_groupDetailsState.value as UiState.Success).data?.let {
             GroupEditState(
@@ -168,7 +177,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
         val memberList = (_groupDetailsState.value as UiState.Success).data?.users
 
         viewModelScope.launch {
-            val userId = getUserInfoUseCase.invoke().userId.toInt()
+            val userId = getUserInfoUseCase.invoke()?.userId?.toInt()
 
             memberList?.find { it.userId == userId }?.let {
                 PersonalEditState(

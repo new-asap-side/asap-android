@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,10 +32,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -88,7 +89,7 @@ fun ResultCard(
                                 append(stringResource(R.string.`is`))
                             },
                             style = MaterialTheme.typography.titleMedium.copy(
-                                fontSize = 20.sp,
+                                fontSize = 20.fsp,
                                 color = Black01
                             )
                         )
@@ -97,7 +98,7 @@ fun ResultCard(
                             text = stringResource(R.string.start_lively_today),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = Black03,
-                                fontSize = 15.sp
+                                fontSize = 15.fsp
                             )
                         )
                     }
@@ -110,6 +111,7 @@ fun ResultCard(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heightIn(min = 64.dp)
                         .clip(RoundedCornerShape(14.dp))
                         .background(
                             brush = Brush.linearGradient(
@@ -122,14 +124,16 @@ fun ResultCard(
                         )
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             text = stringResource(R.string.participating_group),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = Black01,
-                                fontSize = 15.sp
+                                fontSize = 15.fsp
                             )
                         )
                         Row(
@@ -147,7 +151,7 @@ fun ResultCard(
                                 ),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     color = MaterialTheme.colorScheme.primary,
-                                    fontSize = 16.sp
+                                    fontSize = 16.fsp
                                 )
                             )
                         }

@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Yellow
@@ -51,7 +51,7 @@ internal fun MenuItem(
                 text = title,
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = Black01,
-                    fontSize = 15.sp
+                    fontSize = 15.fsp
                 )
             )
         }

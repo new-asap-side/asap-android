@@ -18,10 +18,10 @@ class EditGroupUseCase @Inject constructor(
         groupPassword: String?,
         groupImage: String
     ) {
-        val userId = userRepository.getUserInfo().userId.toInt()
+        val userId = userRepository.getUserInfo()?.userId?.toInt()
 
         groupRepository.postGroupEdit(
-            userId = userId,
+            userId = userId ?: -1,
             groupId = groupId,
             title = title,
             description = description,

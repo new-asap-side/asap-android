@@ -7,8 +7,6 @@ import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.Alarm
-import com.asap.domain.entity.remote.AuthKakaoResponse
 import com.asap.domain.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -22,33 +20,15 @@ class UserRepositoryImpl @Inject constructor(
     private val localDataSource: AppDatabase,
     private val sessionLocalDataSource: SessionLocalDataSource
 ) : UserRepository {
-    override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?> {
-        return remoteDataSource.authKakao(kakaoAccessToken)
-    }
-
     override suspend fun isCached(): Boolean {
-        val userDao = localDataSource.userDao()
-        return userDao.isCached()
-    }
-
-    override suspend fun cacheKakaoUserInfo(response: AuthKakaoResponse) {
-        val userDao = localDataSource.userDao()
-        userDao.insert(
-            User(
-                userId = response.userId,
-                kakaoId = response.kakaoId,
-                accessToken = response.accessToken,
-                refreshToken = response.refreshToken,
-            )
-        )
-        // TokenDataStore 저장
-        sessionLocalDataSource.updateAccessToken(response.accessToken)
-        sessionLocalDataSource.updateAccessToken(response.refreshToken)
-    }
-
-    override suspend fun getUserInfo(): User {
         val dao = localDataSource.userDao()
-        return dao.selectAll().first()
+        return dao.isCached()
+    }
+
+    override suspend fun getUserInfo(): User? {
+        val dao = localDataSource.userDao()
+        val selected = dao.selectAll()
+        return if (selected.isEmpty()) null else selected.first()
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
@@ -85,9 +65,6 @@ class UserRepositoryImpl @Inject constructor(
             }
         )
     }
-
-    override suspend fun fetchUserAlarmList(): Flow<List<Alarm>?> =
-        remoteDataSource.fetchAlarmList()
 
     override suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit> =
         remoteDataSource.deleteUser(survey = survey)

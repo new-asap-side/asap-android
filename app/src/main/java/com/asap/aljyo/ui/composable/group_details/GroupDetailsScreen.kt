@@ -37,6 +37,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,16 +51,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.core.navigation.navtype.CustomNavType
 import com.asap.aljyo.di.ViewModelFactoryProvider
+import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -109,6 +112,7 @@ fun GroupDetailsScreen(
     )
 
     val userGroupType = viewModel.userGroupType
+    val groupDetails by viewModel.groupDetails.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect{
@@ -153,7 +157,7 @@ fun GroupDetailsScreen(
                         Text(
                             text = stringResource(R.string.see_more),
                             style = MaterialTheme.typography.headlineMedium.copy(
-                                fontSize = 18.sp,
+                                fontSize = 18.fsp,
                                 color = Black01
                             )
                         )
@@ -185,7 +189,7 @@ fun GroupDetailsScreen(
                     Text(
                         text = stringResource(R.string.leave_group),
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                             color = Black02
                         )
                     )
@@ -309,6 +313,12 @@ fun GroupDetailsScreen(
                                 ),
                             viewModel = viewModel,
                         )
+                    }
+                }
+
+                if (groupDetails is UiState.Error) {
+                    ErrorBox(modifier = Modifier.fillMaxSize()) {
+                        viewModel.fetchGroupDetails()
                     }
                 }
             }

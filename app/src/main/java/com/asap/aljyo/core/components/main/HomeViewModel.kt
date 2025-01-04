@@ -1,15 +1,22 @@
 package com.asap.aljyo.core.components.main
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
+import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.GroupJoinRequest
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
+import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
+import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +32,8 @@ class HomeViewModel @Inject constructor(
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchFCMTokenUseCase: FetchFCMTokenUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
     private val _cardState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
     val cardState get() = _cardState.asStateFlow()
@@ -34,6 +43,11 @@ class HomeViewModel @Inject constructor(
 
     private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
     val latestGroupState get() = _latestGroupState.asStateFlow()
+
+    val selectedGroupId = mutableStateOf<Int?>(null)
+
+    private val _joinResponseState = MutableStateFlow<RequestState<GroupJoinResponse?>>(RequestState.Initial)
+    val joinResponseState get() = _joinResponseState.asStateFlow()
 
     private val _scrollPositionMap = mutableMapOf(
         MAIN_TAB_SCROLL_KEY to Pair(0, 0),
@@ -85,6 +99,35 @@ class HomeViewModel @Inject constructor(
 
     fun saveScrollPosition(key: String, index: Int, offset: Int) {
         _scrollPositionMap[key] = Pair(index, offset)
+    }
+
+    fun joinGroup(password: String, alarmType: String) = viewModelScope.launch {
+        val userInfo = getUserInfoUseCase()
+        _joinResponseState.value = RequestState.Loading
+        joinGroupUseCase(
+            GroupJoinRequest(
+                userId = (userInfo?.userId?.toInt() ?: -1),
+                groupId = (selectedGroupId.value ?: -1),
+                deviceToken = FCMTokenManager.token,
+                groupPassword = password,
+                alarmType = alarmType,
+            )
+        ).catch { e ->
+            Log.e("VM", "$e")
+            when (e) {
+                is HttpException -> {
+                    _joinResponseState.value = RequestState.Error("${e.code()}")
+                }
+                else -> _joinResponseState.value = RequestState.Error("-1")
+            }
+        }.collect { result ->
+            Log.d("VM", "$result")
+            _joinResponseState.value = RequestState.Success(result)
+        }
+    }
+
+    fun joinStateClear() {
+        _joinResponseState.value = RequestState.Initial
     }
 
     private fun handleThrowable(e: Throwable): UiState.Error {

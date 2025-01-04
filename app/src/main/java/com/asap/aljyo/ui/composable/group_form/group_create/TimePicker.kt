@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black04
@@ -54,7 +55,7 @@ fun TimePicker(
             text = "알람 시간",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
         Row(
@@ -72,7 +73,7 @@ fun TimePicker(
             Text(
                 text = "$period $hour12:$minutes",
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 15.sp,
+                    fontSize = 15.fsp,
                     fontWeight = FontWeight.Bold,
                     color = Black01
                 )
@@ -120,7 +121,7 @@ fun TimeWheelPicker(
                     .width(80.dp),
                 text = hour,
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = if (idx == currentFirstItemIdx + 2) 18.sp else 16.sp,
+                    fontSize = if (idx == currentFirstItemIdx + 2) 18.fsp else 16.fsp,
                     fontWeight = FontWeight.Bold,
                     color = if (idx == currentFirstItemIdx + 2) Black01 else Black04
                 ),

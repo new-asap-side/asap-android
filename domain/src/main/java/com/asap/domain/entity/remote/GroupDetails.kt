@@ -38,6 +38,6 @@ data class GroupDetails(
     val alarmUnlockContents: String,
     @Json(name = "userGroups")
     val users: List<GroupMember>,
-//    @Json(name = "alarm_days")
-    val alarmDays: List<String> = listOf("월", "화", "수")
+    @Json(name = "alarm_days")
+    val alarmDays: List<String>
 )

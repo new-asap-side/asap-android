@@ -5,13 +5,13 @@ import com.asap.domain.repository.UserRepository
 import javax.inject.Inject
 
 interface GetUserInfoUseCase {
-    suspend operator fun invoke(): User
+    suspend operator fun invoke(): User?
 }
 
 class GetUserInfoUseCaseImpl @Inject constructor(
     private val userRepository: UserRepository
 ) : GetUserInfoUseCase {
-    override suspend fun invoke(): User {
+    override suspend fun invoke(): User? {
         return userRepository.getUserInfo()
     }
 }

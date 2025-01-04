@@ -45,10 +45,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
@@ -112,7 +112,7 @@ internal fun RankingScreen(
                         Text(
                             text = stringResource(R.string.select_time),
                             style = MaterialTheme.typography.headlineMedium.copy(
-                                fontSize = 18.sp,
+                                fontSize = 18.fsp,
                                 color = Black01
                             )
                         )
@@ -130,14 +130,14 @@ internal fun RankingScreen(
                 Text(
                     text = stringResource(R.string.rank_score_descript),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         color = Black02
                     )
                 )
                 Text(
                     text = stringResource(R.string.no_points_score),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         color = Black02
                     )
                 )
@@ -151,7 +151,7 @@ internal fun RankingScreen(
                     Text(
                         text = stringResource(R.string.confirm),
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                             color = White
                         )
                     )
@@ -170,7 +170,7 @@ internal fun RankingScreen(
                             modifier = Modifier.fillMaxWidth(),
                             text = stringResource(R.string.group_ranking),
                             style = MaterialTheme.typography.titleMedium.copy(
-                                fontSize = 16.sp,
+                                fontSize = 16.fsp,
                                 color = Black01
                             ),
                             textAlign = TextAlign.Center

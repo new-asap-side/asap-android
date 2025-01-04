@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,8 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,14 +17,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,10 +36,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -95,7 +89,7 @@ fun AlarmMusicScreen(
                     text = "노래선택",
                     style = MaterialTheme.typography.headlineLarge.copy(
                         color = Black,
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                         fontWeight = FontWeight.Bold
                     ),
                     modifier = Modifier.align(Alignment.Center)
@@ -161,7 +155,7 @@ fun MusicItem(
             text = "${item.musicTitle} - ${item.artist}",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black01,
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

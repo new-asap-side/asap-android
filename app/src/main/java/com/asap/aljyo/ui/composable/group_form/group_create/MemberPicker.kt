@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -46,7 +46,7 @@ fun MemberPicker(
             text = "그룹 인원",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
         Box(
@@ -66,7 +66,7 @@ fun MemberPicker(
                 Text(
                     text = "인원",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 15.sp,
+                        fontSize = 15.fsp,
                         fontWeight = FontWeight.Bold,
                         color = Black01
                     )
@@ -75,7 +75,7 @@ fun MemberPicker(
                     modifier = Modifier.padding(start = 4.dp),
                     text = "최대 8명",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 12.sp,
+                        fontSize = 12.fsp,
                         color = Black03
                     )
                 )
@@ -95,7 +95,7 @@ fun MemberPicker(
                     modifier = Modifier.padding(horizontal = 18.dp),
                     text = value.toString(),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 15.sp,
+                        fontSize = 15.fsp,
                         fontWeight = FontWeight.Bold,
                         color = Black01
                     )

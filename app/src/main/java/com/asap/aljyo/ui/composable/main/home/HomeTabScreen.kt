@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.main.home.latest.LatestScreen
 import com.asap.aljyo.ui.composable.main.home.main.MainScreen
 import com.asap.aljyo.ui.composable.main.home.popularity.PopularityScreen
@@ -80,7 +80,7 @@ fun HomeTabScreen(
                     withStyle(
                         style = SpanStyle(
                             color = MaterialTheme.colorScheme.primary,
-                            fontSize = 11.sp,
+                            fontSize = 11.fsp,
                             baselineShift = BaselineShift(0.3f)
                         ),
                     ) {
@@ -100,11 +100,11 @@ fun HomeTabScreen(
                         text = annotatedString,
                         style = if (selected) {
                             MaterialTheme.typography.headlineMedium.copy(
-                                fontSize = 15.sp
+                                fontSize = 15.fsp
                             )
                         } else {
                             MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                             )
                         }
                     )

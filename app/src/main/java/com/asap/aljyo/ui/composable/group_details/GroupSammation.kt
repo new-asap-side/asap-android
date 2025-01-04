@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -33,14 +34,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.custom.OverlappingRow
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.ui.theme.Black00
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey03
@@ -62,15 +64,31 @@ fun GroupSummation(
             val groupDetails = (groupDetailsState as UiState.Success).data
 
             Column(modifier = modifier) {
-                AsyncImage(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(270.dp),
-                    model = groupDetails?.groupThumbnailImageUrl,
-                    contentDescription = "Group thumbnail",
-                    contentScale = ContentScale.Crop,
-                    error = painterResource(R.drawable.ic_my_page)
-                )
+                        .height(270.dp)
+                ) {
+                    AsyncImage(
+                        modifier = Modifier.fillMaxSize(),
+                        model = groupDetails?.groupThumbnailImageUrl,
+                        contentDescription = "Group thumbnail",
+                        contentScale = ContentScale.Crop,
+                        error = painterResource(R.drawable.ic_my_page)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    0.0f to Black00.copy(alpha = 0.6f),
+                                    0.22f to Black00.copy(alpha = 0.4f),
+                                    0.39f to Black00.copy(alpha = 0.0f),
+                                ),
+                            )
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,7 +117,7 @@ fun GroupSummation(
                     Text(
                         text = groupDetails?.title ?: "",
                         style = MaterialTheme.typography.headlineMedium.copy(
-                            fontSize = 22.sp,
+                            fontSize = 22.fsp,
                             color = Black01,
                         ),
                         maxLines = 2,
@@ -107,15 +125,14 @@ fun GroupSummation(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     GroupAlarmDates(
-                        // TODO entity 변경 시 반영
-                        dates = "월 화 수",
+                        dates = viewModel.parseAlarmDays(groupDetails),
                         timeStamp = groupDetails?.alarmTime ?: ""
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = groupDetails?.description ?: "",
                         style = MaterialTheme.typography.labelMedium.copy(
-                            fontSize = 15.sp,
+                            fontSize = 15.fsp,
                             color = Color(0xFF666666),
                         ),
                     )
@@ -123,10 +140,11 @@ fun GroupSummation(
                     GroupPersonnel(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8))
+                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 width = 1.dp,
-                                color = Color(0xFFFFD9E7)
+                                color = Color(0xFFFFD9E7),
+                                shape = RoundedCornerShape(8.dp)
                             )
                             .background(color = MaterialTheme.colorScheme.secondary)
                             .padding(
@@ -323,7 +341,7 @@ private fun GroupLeader(
         Text(
             text = leaderNickname,
             style = MaterialTheme.typography.labelMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black01
             )
         )
@@ -365,7 +383,7 @@ private fun GroupAlarmDates(
         Text(
             text = dates,
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -379,7 +397,7 @@ private fun GroupAlarmDates(
         Text(
             text = timeStamp,
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -388,14 +406,14 @@ private fun GroupAlarmDates(
 
 @Preview(showBackground = true)
 @Composable
-fun GroupAlarmDates_Preview() {
+private fun GroupAlarmDates_Preview() {
     AljyoTheme {
         GroupAlarmDates(dates = "월 화 수", timeStamp = "21:00")
     }
 }
 
 @Composable
-fun GroupPersonnel(
+internal fun GroupPersonnel(
     modifier: Modifier = Modifier,
     personnel: Int = 0,
     participantsProfiles: List<String>
@@ -415,7 +433,7 @@ fun GroupPersonnel(
             Text(
                 text = stringResource(R.string.particularting_personnel, personnel),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
+                    fontSize = 14.fsp,
                     color = MaterialTheme.colorScheme.primary
                 )
             )
@@ -425,8 +443,12 @@ fun GroupPersonnel(
                 AsyncImage(
                     modifier = Modifier
                         .size(24.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .border(width = 1.dp, color = MaterialTheme.colorScheme.surface),
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                     model = profile,
                     contentScale = ContentScale.Crop,
                     contentDescription = "participant's profile icon"
@@ -442,11 +464,12 @@ private fun GroupPersonnel_Preview() {
     AljyoTheme {
         GroupPersonnel(
             modifier = Modifier
-                .clip(RoundedCornerShape(8))
                 .border(
                     width = 1.dp,
-                    color = Color(0xFFFFD9E7)
+                    color = Color(0xFFFFD9E7),
+                    shape = RoundedCornerShape(8f)
                 )
+                .clip(RoundedCornerShape(8f))
                 .background(color = MaterialTheme.colorScheme.secondary)
                 .padding(
                     vertical = 13.dp,

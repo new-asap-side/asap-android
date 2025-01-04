@@ -28,9 +28,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -79,6 +79,7 @@ fun AlarmDetails(
             val parsedAlarmTime = viewModel.parseToAmPm(
                 groupDetails?.alarmTime ?: ""
             )
+            val parsedAlarmDays = viewModel.parseAlarmDays(groupDetails)
 
             val privateSetting by viewModel.privateSettingState.collectAsState()
 
@@ -117,11 +118,11 @@ fun AlarmDetails(
                                         textAlign = TextAlign.Center,
                                         style = if (selected) {
                                             MaterialTheme.typography.headlineMedium.copy(
-                                                fontSize = 15.sp
+                                                fontSize = 15.fsp
                                             )
                                         } else {
                                             MaterialTheme.typography.bodyMedium.copy(
-                                                fontSize = 15.sp,
+                                                fontSize = 15.fsp,
                                             )
                                         }
                                     )
@@ -139,6 +140,7 @@ fun AlarmDetails(
                                     ),
                                 groupDetails = groupDetails,
                                 parsedAlarmTime = parsedAlarmTime,
+                                parsedAlarmDays = parsedAlarmDays,
                                 parsedAlarmEndDate = parsedAlarmEndDate
                             )
 
@@ -169,6 +171,7 @@ fun AlarmDetails(
                             ),
                         groupDetails = groupDetails,
                         parsedAlarmTime = parsedAlarmTime,
+                        parsedAlarmDays = parsedAlarmDays,
                         parsedAlarmEndDate = parsedAlarmEndDate
                     )
                 }
@@ -297,13 +300,14 @@ private fun AlarmDetailsContent(
     modifier: Modifier = Modifier,
     groupDetails: GroupDetails?,
     parsedAlarmTime: String,
+    parsedAlarmDays: String,
     parsedAlarmEndDate: String
 ) {
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.alarm_information),
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -315,8 +319,7 @@ private fun AlarmDetailsContent(
             RowText(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.alarm_time),
-                // TODO data entity
-                content = "$parsedAlarmTime\n월 화 수 목 금 토 일"
+                content = "$parsedAlarmTime\n$parsedAlarmDays"
             )
 
             RowText(
@@ -368,7 +371,7 @@ fun PrivateSetting(
         Text(
             text = stringResource(R.string.alarm_information),
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 16.sp,
+                fontSize = 16.fsp,
                 color = Black01
             )
         )
@@ -415,15 +418,15 @@ private fun RowText(
         Text(
             text = title,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
                 color = Black03
             )
         )
         Text(
             text = content,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 15.sp,
-                lineHeight = 24.sp,
+                fontSize = 15.fsp,
+                lineHeight = 24.fsp,
                 color = Black02
             ),
             textAlign = TextAlign.End

@@ -27,12 +27,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,15 +37,14 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
-import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -100,7 +95,7 @@ fun SelectGroupTypeScreen(
                 text = "어떤 알람을 만드시겠어요?",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,
-                    fontSize = 22.sp,
+                    fontSize = 22.fsp,
                     fontWeight = FontWeight.Bold,
                 )
             )
@@ -112,7 +107,7 @@ fun SelectGroupTypeScreen(
                 text = "그룹 생성 후에도 변경이 가능해요!",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = Color.Gray,
-                    fontSize = 15.sp,
+                    fontSize = 15.fsp,
                 )
             )
             Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -134,7 +129,7 @@ fun SelectGroupTypeScreen(
                 Text(
                     modifier = Modifier.padding(start = 20.dp),
                     text = "비밀번호",
-                    fontSize = 12.sp,
+                    fontSize = 12.fsp,
                     color = Black03
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -204,7 +199,7 @@ fun BoxWithCheckButton(
                 text = text,
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = if (isSelected) Red01 else Black01,
-                    fontSize = 16.sp,
+                    fontSize = 16.fsp,
                     fontWeight = FontWeight.Bold,
                 )
             )
@@ -234,7 +229,7 @@ fun UnderlineTextField(
         maxLines = 1,
         textStyle = MaterialTheme.typography.bodyMedium.copy(
             color = Black01,
-            fontSize = 18.sp
+            fontSize = 18.fsp
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     ) { innerTextField ->
@@ -250,7 +245,7 @@ fun UnderlineTextField(
                         text = "비밀번호를 입력해주세요(숫자 4자리)",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Black04,
-                            fontSize = 18.sp
+                            fontSize = 18.fsp
                         ),
                     )
                 }

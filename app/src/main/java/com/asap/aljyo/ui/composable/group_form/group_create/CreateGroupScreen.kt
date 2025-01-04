@@ -1,7 +1,6 @@
 package com.asap.aljyo.ui.composable.group_form.group_create
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,16 +35,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,7 +50,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
@@ -138,7 +133,7 @@ fun CreateGroupScreen(
                     text = "대표 이미지",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Black02,
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                         fontWeight = FontWeight.Medium
                     )
                 )
@@ -166,7 +161,7 @@ fun CreateGroupScreen(
                                 Text(
                                     text = "이미지 변경",
                                     style = MaterialTheme.typography.headlineMedium.copy(
-                                        fontSize = 18.sp,
+                                        fontSize = 18.fsp,
                                         color = Black01
                                     )
                                 )
@@ -206,7 +201,7 @@ fun CreateGroupScreen(
                                 Text(
                                     text = "앨범에서 선택하기",
                                     style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontSize = 16.sp,
+                                        fontSize = 16.fsp,
                                         color = Black02
                                     )
                                 )
@@ -237,7 +232,7 @@ fun CreateGroupScreen(
                                 Text(
                                     text = "랜덤으로 바꾸기",
                                     style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontSize = 16.sp,
+                                        fontSize = 16.fsp,
                                         color = Black02
                                     )
                                 )
@@ -259,7 +254,7 @@ fun CreateGroupScreen(
                         Text(
                             text = "그룹명을 입력해주세 (최대 30자 이내)",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                                 color = Black04
                             )
                         )
@@ -278,7 +273,7 @@ fun CreateGroupScreen(
                         Text(
                             text = "내용을 입력해세요",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                                 color = Black04
                             )
                         )
@@ -319,7 +314,7 @@ fun CreateGroupScreen(
                                 Text(
                                     text = "시간 선택",
                                     style = MaterialTheme.typography.headlineMedium.copy(
-                                        fontSize = 18.sp,
+                                        fontSize = 18.fsp,
                                         color = Black01
                                     )
                                 )
@@ -392,7 +387,12 @@ fun CreateGroupScreen(
                         .padding(bottom = 6.dp, top = 40.dp),
                     text = "다음",
                     enable = groupState.buttonState,
-                    onClick = onNextClick
+                    onClick = {
+                        if (groupState.groupImage == null) {
+                            viewModel.onGroupImageSelected(PictureUtil.groupRandomImage[1])
+                        }
+                        onNextClick()
+                    }
                 )
             }
         }
@@ -403,7 +403,7 @@ fun CreateGroupScreen(
 @Composable
 fun GroupImagePicker(
      groupImage: Uri?,
-    onImagePickerClick: () -> Unit
+     onImagePickerClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -412,7 +412,7 @@ fun GroupImagePicker(
             .padding(top = 8.dp)
     ) {
         AsyncImage(
-            model = groupImage ?: R.drawable.group_default_img,
+            model = groupImage ?: PictureUtil.groupRandomImage[1],
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -443,7 +443,7 @@ fun GroupImagePicker(
         text = "사진을 등록하지 않는 경우 랜덤 이미지로 보여집니다",
         style = MaterialTheme.typography.bodyMedium.copy(
             color = Black03,
-            fontSize = 12.sp
+            fontSize = 12.fsp
         ),
         modifier = Modifier
             .padding(top = 8.dp)
@@ -453,9 +453,10 @@ fun GroupImagePicker(
 @Composable
 @Preview
 fun PreviewCreateGroupScreen() {
-//    AljyoTheme {
-//        CreateGroupScreen(
-//            onBackClick = {}
-//        )
-//    }
+    AljyoTheme {
+        CreateGroupScreen(
+            onBackClick = {},
+            onNextClick = {}
+        )
+    }
 }

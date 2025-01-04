@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.Banner
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -46,7 +46,7 @@ internal fun MyPageScreen(
             text = stringResource(R.string.my_page),
             style = MaterialTheme.typography.titleMedium.copy(
                 color = Black01,
-                fontSize = 16.sp
+                fontSize = 16.fsp
             ),
             textAlign = TextAlign.Center
         )
@@ -87,6 +87,8 @@ internal fun MyPageScreen(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 

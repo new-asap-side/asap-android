@@ -1,8 +1,8 @@
 package com.asap.aljyo.ui.composable.main.alarm_list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,20 +16,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
-import com.asap.aljyo.ui.theme.AljyoTheme
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.Alarm
+import com.asap.domain.entity.remote.AlarmSummary
 
 @Composable
 internal fun AlarmList(
     modifier: Modifier,
-    alarmList: List<Alarm>,
+    alarmList: List<AlarmSummary>,
     navigateToHome: () -> Unit,
+    navigateToGroupDetails: (Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -40,7 +39,7 @@ internal fun AlarmList(
             AlarmTimer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 30.dp, vertical = 32.dp)
+                    .padding(horizontal = 20.dp, vertical = 32.dp)
             )
         }
 
@@ -49,8 +48,11 @@ internal fun AlarmList(
                 AlarmCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight(),
-                    alarm = alarm
+                        .wrapContentHeight()
+                        .clickable {
+                            navigateToGroupDetails(alarm.groupId)
+                        },
+                    alarm = alarm,
                 )
             }
         }
@@ -67,27 +69,11 @@ internal fun AlarmList(
                 Text(
                     text = stringResource(R.string.find_more_group),
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontSize = 16.sp,
+                        fontSize = 16.fsp,
                     )
                 )
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(62.dp))
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    AljyoTheme {
-        AlarmList(
-            modifier = Modifier.fillMaxSize(),
-            alarmList = listOf(
-                Alarm(),
-                Alarm(),
-                Alarm(),
-            ),
-            navigateToHome = {}
-        )
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.MenuItem
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -48,7 +49,7 @@ internal fun PreferencesScreen(
                             text = stringResource(R.string.preferences),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
-                                fontSize = 16.sp
+                                fontSize = 16.fsp
                             ),
                         )
                     },

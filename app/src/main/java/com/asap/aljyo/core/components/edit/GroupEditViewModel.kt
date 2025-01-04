@@ -84,7 +84,7 @@ class GroupEditViewModel @Inject constructor(
                 alarmUnlockContents = _state.value.alarmUnlockContents,
                 isPublic = _state.value.isPublic,
                 groupPassword = _state.value.groupPassword,
-                groupImage = PictureUtil.getStringFromUri(_state.value.groupImage?.toUri())
+                groupImage = PictureUtil.encodeType(_state.value.groupImage?.toUri())
                     ?: throw IllegalArgumentException("image encoded fail"),
             )
         }.invokeOnCompletion {

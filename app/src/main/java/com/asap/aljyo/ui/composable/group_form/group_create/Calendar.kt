@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -84,7 +85,7 @@ fun CalendarView(
             text = "알람 종료 날짜",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.sp
+                fontSize = 14.fsp
             )
         )
 
@@ -102,7 +103,7 @@ fun CalendarView(
                 Text(
                     text = day,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 15.sp,
+                        fontSize = 15.fsp,
                         color = if (day == "일") Red else Black03,
                     ),
                     modifier = Modifier.weight(1f),
@@ -150,7 +151,7 @@ fun CalendarMonthSelector(
             text = "${selectedYear}년 ${selectedMonth}월",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black01,
-                fontSize = 15.sp
+                fontSize = 15.fsp
             )
         )
 
@@ -250,7 +251,7 @@ fun CalendarDateItem(
             text = date.dayOfMonth.toString(),
             style = MaterialTheme.typography.headlineSmall.copy(
                 color = textColor,
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
                 fontWeight = FontWeight.Bold
             )
         )

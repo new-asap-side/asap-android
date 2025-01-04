@@ -54,7 +54,12 @@ class GroupDetailsViewModel @AssistedInject constructor(
     val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
 
     init {
+        fetchGroupDetails()
+    }
+
+    fun fetchGroupDetails() {
         viewModelScope.launch {
+            _groupDetailsState.value = UiState.Loading
             delay(500)
             fetchGroupDetailsUseCase.invoke(groupId = groupId).catch { e ->
                 Log.e(TAG, "error: $e")
@@ -96,6 +101,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 observingRemainTime()
                 _groupDetailsState.value = UiState.Success(result)
             }
+
         }
     }
 

@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,8 @@ import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.di.ViewModelFactoryProvider
+import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -102,6 +105,7 @@ fun GroupDetailsScreen(
     )
 
     val userGroupType = viewModel.userGroupType
+    val groupDetails by viewModel.groupDetails.collectAsState()
 
     AljyoTheme {
         val sheetState = rememberModalBottomSheetState()
@@ -280,6 +284,12 @@ fun GroupDetailsScreen(
                                 ),
                             viewModel = viewModel,
                         )
+                    }
+                }
+
+                if (groupDetails is UiState.Error) {
+                    ErrorBox(modifier = Modifier.fillMaxSize()) {
+                        viewModel.fetchGroupDetails()
                     }
                 }
             }

@@ -14,7 +14,9 @@ class EditGroupUseCase @Inject constructor(
         description: String,
         maxPerson: Int,
         alarmUnlockContents: String,
-        isPublic: Boolean
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
     ) {
         val userId = userRepository.getUserInfo().userId.toInt()
 
@@ -25,7 +27,9 @@ class EditGroupUseCase @Inject constructor(
             description = description,
             maxPerson = maxPerson,
             alarmUnlockContents = alarmUnlockContents,
-            isPublic = isPublic
+            isPublic = isPublic,
+            groupPassword = groupPassword,
+            groupImage = groupImage
         )
     }
 }

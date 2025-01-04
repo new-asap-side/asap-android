@@ -47,6 +47,8 @@ interface GroupRepository {
         description: String,
         maxPerson: Int,
         alarmUnlockContents: String,
-        isPublic: Boolean
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
     )
 }

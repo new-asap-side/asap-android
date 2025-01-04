@@ -100,7 +100,9 @@ class GroupRemoteDataSource @Inject constructor(
         description: String,
         maxPerson: Int,
         alarmUnlockContents: String,
-        isPublic: Boolean
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
     ) {
         return PostGroupEditRequest(
             userId = userId,
@@ -109,7 +111,9 @@ class GroupRemoteDataSource @Inject constructor(
             description = description,
             maxPerson = maxPerson,
             alarmUnlockContents = alarmUnlockContents,
-            isPublic = isPublic
+            isPublic = isPublic,
+            groupPassword = groupPassword,
+            groupImage = groupImage
         ).let { groupService.postGroupEdit(it) }
     }
 }

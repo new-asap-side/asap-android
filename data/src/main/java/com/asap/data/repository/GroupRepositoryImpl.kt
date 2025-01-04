@@ -77,7 +77,9 @@ class GroupRepositoryImpl @Inject constructor(
         description: String,
         maxPerson: Int,
         alarmUnlockContents: String,
-        isPublic: Boolean
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
     ) {
         return remoteDataSource.postGroupEdit(
             userId = userId,
@@ -86,7 +88,9 @@ class GroupRepositoryImpl @Inject constructor(
             description = description,
             maxPerson = maxPerson,
             alarmUnlockContents = alarmUnlockContents,
-            isPublic = isPublic
+            isPublic = isPublic,
+            groupPassword = groupPassword,
+            groupImage = groupImage
         )
     }
 }

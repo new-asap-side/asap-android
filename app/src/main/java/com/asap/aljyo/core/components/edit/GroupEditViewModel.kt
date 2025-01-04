@@ -2,10 +2,12 @@ package com.asap.aljyo.core.components.edit
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.core.components.group_form.GroupScreenState
+import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.group.EditGroupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -38,7 +40,10 @@ class GroupEditViewModel @Inject constructor(
     }
 
     fun onGroupTypeSelected(type: Boolean) {
-        _state.value = _state.value.copy(isPublic = type)
+        _state.value = _state.value.copy(
+            isPublic = type,
+            groupPassword = null
+        )
     }
 
     fun onGroupPasswordChanged(pw: String) {
@@ -77,7 +82,10 @@ class GroupEditViewModel @Inject constructor(
                 description = _state.value.description,
                 maxPerson = _state.value.currentPerson,
                 alarmUnlockContents = _state.value.alarmUnlockContents,
-                isPublic = _state.value.isPublic
+                isPublic = _state.value.isPublic,
+                groupPassword = _state.value.groupPassword,
+                groupImage = PictureUtil.getStringFromUri(_state.value.groupImage?.toUri())
+                    ?: throw IllegalArgumentException("image encoded fail"),
             )
         }.invokeOnCompletion {
             if (it == null) {

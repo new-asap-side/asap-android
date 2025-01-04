@@ -18,5 +18,9 @@ data class PostGroupEditRequest(
     @Json(name = "alarm_unlock_contents")
     val alarmUnlockContents: String,
     @Json(name = "is_public")
-    val isPublic: Boolean
+    val isPublic: Boolean,
+    @Json(name = "group_password")
+    val groupPassword: String?,
+    @Json(name = "base64_group_img")
+    val groupImage: String
 )

@@ -87,6 +87,8 @@ internal fun MyPageScreen(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 

@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,7 @@ import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
+import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +62,12 @@ fun PersonalEditScreen(
     navigateToAlarmMusicScreen: (String?) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            onBackClick()
+        }
+    }
 
     Scaffold(
         containerColor = White,
@@ -94,7 +102,7 @@ fun PersonalEditScreen(
                     .padding(bottom = 6.dp),
                 text = "완료",
                 enable = state.buttonState,
-                onClick = {  }
+                onClick = viewModel::onCompleteClick
             )
         }
     ) {innerPadding ->

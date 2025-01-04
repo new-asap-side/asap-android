@@ -362,7 +362,7 @@ fun NavGraphBuilder.editNavGraph(
         )
     ) {
         PersonalEditScreen(
-            onBackClick = {},
+            onBackClick = { navController.popBackStack() },
             navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") }
         )
     }

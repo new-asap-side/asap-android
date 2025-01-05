@@ -2,6 +2,7 @@ package com.asap.domain.repository
 
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -21,7 +22,7 @@ interface UserRepository {
 
     suspend fun fetchFCMToken()
 
-    suspend fun deleteRemoteUserInfo(survey: String): Flow<Boolean?>
+    suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?>
 
     suspend fun deleteLocalUserInfo()
 

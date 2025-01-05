@@ -119,14 +119,22 @@ internal fun WithdrawalScreen(
 
                 LaunchedEffect(withdrawalState) {
                     when (withdrawalState) {
-                        RequestState.Initial, RequestState.Loading -> Unit
+                        RequestState.Initial -> Unit
+                        RequestState.Loading -> showLoadingDialog = true
 
                         is RequestState.Success -> {
+                            val success = (withdrawalState as RequestState.Success).data
+                            if (!success) {
+                                Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                                return@LaunchedEffect
+                            }
+
                             showLoadingDialog = false
                             navigateToComplete()
                         }
 
                         is RequestState.Error -> {
+                            showLoadingDialog = false
                             Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
                         }
 
@@ -140,7 +148,6 @@ internal fun WithdrawalScreen(
                         onDismissRequest = { showWithdrawalDialog = false },
                         onConfirm = {
                             showWithdrawalDialog = false
-                            showLoadingDialog = true
                             viewModel.deleteUser()
                         }
                     )

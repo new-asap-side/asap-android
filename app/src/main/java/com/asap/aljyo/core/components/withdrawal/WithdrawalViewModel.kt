@@ -51,8 +51,8 @@ class WithdrawalViewModel @Inject constructor(
             }
 
             _withdrawalState.value = RequestState.Error(errorCode)
-        }.collect {
-            _withdrawalState.value = RequestState.Success(true)
+        }.collect { response ->
+            _withdrawalState.value = RequestState.Success(response?.result ?: false)
         }
     }
 }

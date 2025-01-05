@@ -7,6 +7,7 @@ import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -66,8 +67,14 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteRemoteUserInfo(survey: String): Flow<Boolean?> =
-        remoteDataSource.deleteUser(survey = survey)
+    override suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?> {
+        val userDao = localDataSource.userDao()
+        val user = userDao.selectAll().ifEmpty {
+            throw NoSuchElementException("can't access to user table")
+        }.first()
+
+        return remoteDataSource.deleteUser(userId = user.userId.toInt(), survey = survey)
+    }
 
     override suspend fun deleteLocalUserInfo() {
         // Room DB delete

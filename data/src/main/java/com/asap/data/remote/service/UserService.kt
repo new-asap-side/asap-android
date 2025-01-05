@@ -4,6 +4,8 @@ import com.asap.data.remote.request.SaveProfileRequest
 import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.domain.entity.ResultCard
+import com.asap.domain.entity.remote.DeleteUserRequestBody
+import com.asap.domain.entity.remote.WhetherResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -20,8 +22,8 @@ interface UserService {
     @POST("/profile/save-profile")
     suspend fun saveProfile(@Body body: SaveProfileRequest): Response<SaveProfileResponse>
 
-    @HTTP(method = "DELETE", path = "/auth/user", hasBody = true)
-    suspend fun deleteUser(@Body body: Map<String, String>): Response<Boolean>
+    @HTTP(method = "DELETE", path = "/admin/user", hasBody = true)
+    suspend fun deleteUser(@Body body: DeleteUserRequestBody): Response<WhetherResponse>
 
 }
 

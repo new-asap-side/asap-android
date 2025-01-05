@@ -28,7 +28,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
@@ -41,7 +40,8 @@ import com.asap.domain.entity.remote.GroupRanking
 @Composable
 internal fun RankingArea(
     modifier: Modifier = Modifier,
-    rankings: List<GroupRanking>
+    rankings: List<GroupRanking>,
+    mIndex: Int,
 ) {
     Row(
         modifier = modifier,
@@ -55,6 +55,7 @@ internal fun RankingArea(
                 fontSize = 14.fsp,
                 color = Black01,
             ),
+            isShowMeBadge = mIndex == 1,
             ranking = rankings[1]
         ) {
             Text(
@@ -65,7 +66,7 @@ internal fun RankingArea(
                         horizontal = 8.dp,
                         vertical = 2.dp
                     ),
-                text = "${rankings[1].score}점",
+                text = "${rankings[1].rankScore}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
                     color = Black03
@@ -79,8 +80,8 @@ internal fun RankingArea(
                 fontSize = 16.fsp,
                 color = Black01,
             ),
-            isShowMeBadge = true,
-            ranking = rankings[0]
+            isShowMeBadge = mIndex == 0,
+            ranking = rankings[0],
         ) {
             Text(
                 modifier = Modifier
@@ -90,7 +91,7 @@ internal fun RankingArea(
                         horizontal = 8.dp,
                         vertical = 2.dp
                     ),
-                text = "${rankings[0].score}점",
+                text = "${rankings[0].rankScore}점",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontSize = 14.fsp,
                     color = White
@@ -104,6 +105,7 @@ internal fun RankingArea(
                 fontSize = 14.fsp,
                 color = Black01,
             ),
+            isShowMeBadge = mIndex == 2,
             ranking = rankings[2]
         ) {
             Text(
@@ -114,7 +116,7 @@ internal fun RankingArea(
                         horizontal = 8.dp,
                         vertical = 2.dp
                     ),
-                text = "${rankings[2].score}점",
+                text = "${rankings[2].rankScore}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
                     color = Black03
@@ -177,7 +179,7 @@ private fun RankingProfile(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = ranking.nickname,
+            text = ranking.nickName,
             style = style
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -210,7 +212,27 @@ private fun Preview() {
                     horizontal = 20.dp,
                     vertical = 30.dp
                 ),
-            rankings = (0..3).map { GroupRanking.dummy()}
+            rankings = listOf(
+                GroupRanking(
+                    nickName = "NICKNAME",
+                    thumbnail = "",
+                    rankScore = 300,
+                    rankNumber = 1
+                ),
+                GroupRanking(
+                    nickName = "NICKNAME",
+                    thumbnail = "",
+                    rankScore = 200,
+                    rankNumber = 2
+                ),
+                GroupRanking(
+                    nickName = "NICKNAME",
+                    thumbnail = "",
+                    rankScore = 100,
+                    rankNumber = 3
+                )
+            ),
+            mIndex = 0
         )
     }
 }

@@ -18,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
@@ -37,7 +36,7 @@ internal fun UnRankingArea(
         modifier = modifier.verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(36.dp)
     ) {
-        unRakings.forEachIndexed { index, ranking ->
+        unRakings.forEachIndexed { index, rank ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -59,12 +58,12 @@ internal fun UnRankingArea(
                         modifier = Modifier
                             .size(36.dp)
                             .clip(CircleShape),
-                        model = ranking.thumbnail,
+                        model = rank.thumbnail,
                         contentDescription = "Group particular thumbnail",
                         error = painterResource(R.drawable.ic_my_page)
                     )
                     Text(
-                        text = ranking.nickname,
+                        text = rank.nickName,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontSize = 14.fsp,
                             color = Black01
@@ -72,7 +71,7 @@ internal fun UnRankingArea(
                     )
                 }
                 Text(
-                    text = "${ranking.score}점",
+                    text = "${rank.rankScore}점",
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontSize = 14.fsp,
                         color = Black03
@@ -90,7 +89,26 @@ private fun Preview() {
     AljyoTheme {
         UnRankingArea(
             modifier = Modifier.fillMaxWidth(),
-            unRakings = (0..4).map { GroupRanking.dummy() }
+            unRakings = listOf(
+                GroupRanking(
+                    nickName = "NICKNAME",
+                    thumbnail = "",
+                    rankScore = 100,
+                    rankNumber = 4,
+                ),
+                GroupRanking(
+                    nickName = "NICKNAME",
+                    thumbnail = "",
+                    rankScore = 50,
+                    rankNumber = 5,
+                ),
+                GroupRanking(
+                    nickName = "NICKNAME",
+                    thumbnail = "",
+                    rankScore = 10,
+                    rankNumber = 6,
+                )
+            )
         )
     }
 }

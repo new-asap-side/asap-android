@@ -110,8 +110,6 @@ class GroupFormViewModel @Inject constructor(
     fun onAlarmTypeSelected(alarmType: String) {
         _alarmScreenState.value = _alarmScreenState.value.copy(
             alarmType = alarmType,
-            musicTitle = if (alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
-            alarmVolume = if (alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume
         )
     }
 
@@ -131,14 +129,14 @@ class GroupFormViewModel @Inject constructor(
                 alarmTime = _groupScreenState.value.alarmTime,
                 alarmType = _alarmScreenState.value.alarmType,
                 alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
-                alarmVolume = _alarmScreenState.value.alarmVolume?.toInt(),
+                alarmVolume = if (_alarmScreenState.value.alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume?.toInt(),
                 description = _groupScreenState.value.description,
                 deviceType = "ANDROID",
                 groupPassword = _groupScreenState.value.groupPassword,
                 isPublic = _groupScreenState.value.isPublic!!,
                 maxPerson = _groupScreenState.value.maxPerson,
                 title = _groupScreenState.value.title,
-                musicTitle = _alarmScreenState.value.musicTitle,
+                musicTitle = if (_alarmScreenState.value.alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
                 deviceToken = FCMTokenManager.token
             ).let { id ->
                 groupId = id

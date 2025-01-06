@@ -52,7 +52,11 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
+
+    // moshi
+    implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapter)
 
     // room
     implementation(libs.room.runtime)

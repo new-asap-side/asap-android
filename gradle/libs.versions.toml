@@ -60,7 +60,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # moshi
+moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshi-adapter = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
 
 # placeholder
 compose-placeholder-material = { group = "com.eygraber", name = "compose-placeholder-material", version.ref = "placeholder" }

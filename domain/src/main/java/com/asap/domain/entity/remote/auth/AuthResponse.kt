@@ -1,8 +1,9 @@
 package com.asap.domain.entity.remote.auth
 
-abstract class AuthResponse {
-    abstract val accessToken: String
-    abstract val refreshToken: String
-    abstract val socialLoginId: String
-    abstract val userId: String
+
+interface AuthResponse {
+    val accessToken: String
+    val refreshToken: String
+    val userId: String
+    val socialLoginId: String
 }

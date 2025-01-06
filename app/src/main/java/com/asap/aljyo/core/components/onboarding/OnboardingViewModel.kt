@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,13 +52,19 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun kakaoLoginSuccess(token: OAuthToken) = viewModelScope.launch {
-        Log.d(TAG, "kakaoLoginSuccess")
-        authKakaoUseCase.invoke(token.accessToken).catch { _ ->
-            _state.value = RequestState.Error()
+        _state.value = RequestState.Loading
+
+        authKakaoUseCase.invoke(token.accessToken).catch { e ->
+            Log.e(TAG, "AuthKakaoUseCase error - $e")
+            val errorCode = when (e) {
+                is HttpException -> e.code()
+                else -> -1
+            }
+            _state.value = RequestState.Error(errorCode)
         }.collect { response ->
             // 서버 토큰 Room DB 저장
             if(response != null) {
-                cacheAuthUseCase.invoke(response)
+                cacheAuthUseCase(response)
                 _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
                 return@collect
             }

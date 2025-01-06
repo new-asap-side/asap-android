@@ -14,6 +14,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -24,7 +25,7 @@ class GroupRankingViewModel @AssistedInject constructor(
     @Assisted private val groupId: Int
 ) : ViewModel() {
     private val _state = MutableStateFlow<UiState<List<GroupRanking>?>>(UiState.Loading)
-    val state get() = _state
+    val state get() = _state.asStateFlow()
 
     private val _mIndex = mutableStateOf<Int?>(null)
     val mIndex get() = _mIndex.value
@@ -47,6 +48,32 @@ class GroupRankingViewModel @AssistedInject constructor(
 
                 _state.value = UiState.Success(rankingList)
             }
+        }
+    }
+
+    fun getRankList(): List<GroupRanking> {
+        if (_state.value !is UiState.Success) {
+            return emptyList()
+        }
+
+        val ranklist = (_state.value as UiState.Success).data ?: emptyList()
+        return if (ranklist.size < 3) {
+            ranklist
+        } else {
+            ranklist.subList(0, 3)
+        }
+    }
+
+    fun getUnRankList(): List<GroupRanking> {
+        if (_state.value !is UiState.Success) {
+            return emptyList()
+        }
+
+        val ranklist = (_state.value as UiState.Success).data ?: emptyList()
+        return if (ranklist.size < 3) {
+            emptyList()
+        } else {
+            ranklist.subList(3, ranklist.size)
         }
     }
 

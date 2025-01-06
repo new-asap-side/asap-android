@@ -56,7 +56,7 @@ internal fun RankingArea(
                 color = Black01,
             ),
             isShowMeBadge = mIndex == 1,
-            ranking = rankings[1]
+            ranking = rankings.getOrNull(1)
         ) {
             Text(
                 modifier = Modifier
@@ -66,7 +66,7 @@ internal fun RankingArea(
                         horizontal = 8.dp,
                         vertical = 2.dp
                     ),
-                text = "${rankings[1].rankScore}점",
+                text = "${rankings.getOrNull(1)?.rankScore ?: 0}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
                     color = Black03
@@ -81,7 +81,7 @@ internal fun RankingArea(
                 color = Black01,
             ),
             isShowMeBadge = mIndex == 0,
-            ranking = rankings[0],
+            ranking = rankings.getOrNull(0),
         ) {
             Text(
                 modifier = Modifier
@@ -91,7 +91,7 @@ internal fun RankingArea(
                         horizontal = 8.dp,
                         vertical = 2.dp
                     ),
-                text = "${rankings[0].rankScore}점",
+                text = "${rankings.getOrNull(0)?.rankScore ?: 0}점",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontSize = 14.fsp,
                     color = White
@@ -106,7 +106,7 @@ internal fun RankingArea(
                 color = Black01,
             ),
             isShowMeBadge = mIndex == 2,
-            ranking = rankings[2]
+            ranking = rankings.getOrNull(2)
         ) {
             Text(
                 modifier = Modifier
@@ -116,7 +116,7 @@ internal fun RankingArea(
                         horizontal = 8.dp,
                         vertical = 2.dp
                     ),
-                text = "${rankings[2].rankScore}점",
+                text = "${rankings.getOrNull(2)?.rankScore ?: 0}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
                     color = Black03
@@ -133,7 +133,7 @@ private fun RankingProfile(
     size: Dp,
     style: TextStyle,
     isShowMeBadge: Boolean = false,
-    ranking: GroupRanking,
+    ranking: GroupRanking?,
     score: @Composable () -> Unit,
 ) {
     Column(
@@ -144,7 +144,7 @@ private fun RankingProfile(
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
-                model = ranking.thumbnail,
+                model = ranking?.thumbnail ?: "",
                 modifier = Modifier
                     .size(size)
                     .clip(CircleShape),
@@ -179,7 +179,7 @@ private fun RankingProfile(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = ranking.nickName,
+            text = ranking?.nickName ?: "",
             style = style
         )
         Spacer(modifier = Modifier.height(4.dp))

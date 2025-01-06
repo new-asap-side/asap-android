@@ -228,7 +228,6 @@ internal fun RankingScreen(
                 }
 
                 is UiState.Success -> {
-                    val ranks = (state.value as UiState.Success).data ?: emptyList()
                     val mIndex = viewModel.mIndex ?: -1
 
                     Column(
@@ -241,11 +240,12 @@ internal fun RankingScreen(
                                     horizontal = 20.dp,
                                     vertical = 60.dp
                                 ),
-                            rankings = ranks,
+                            rankings = viewModel.getRankList(),
                             mIndex = mIndex
                         )
                         UnRankingArea(
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .dropShadow(
                                     RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
                                     offsetY = (-1).dp
@@ -254,7 +254,7 @@ internal fun RankingScreen(
                                 .background(White)
                                 .padding(28.dp)
                                 .weight(1f),
-                            unRakings = ranks.subList(3, ranks.size),
+                            unRakings = viewModel.getUnRankList(),
                         )
                     }
                 }

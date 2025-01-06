@@ -38,8 +38,8 @@ interface GroupService {
     suspend fun fetchUserAlarmList(@Path("user_id") userId: Int): Response<List<AlarmSummary>>
 
     // 그룹 랭킹
-    @GET("/group/ranking?")
-    suspend fun fetchGroupRanking(@Query("groupId") groupId: Int): Response<List<GroupRanking>>
+    @GET("/group/ranking/{group_id}")
+    suspend fun fetchGroupRanking(@Query("group_id") groupId: Int): Response<List<GroupRanking>>
 
     // 그룹 참여
     @POST("/group/join")

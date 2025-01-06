@@ -1,7 +1,11 @@
 package com.asap.aljyo.core.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -11,11 +15,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.asap.aljyo.core.components.edit.PersonalEditViewModel
+import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
+import com.asap.aljyo.core.navigation.navtype.CustomNavType
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
+import com.asap.aljyo.ui.composable.group_edit.GroupEditScreen
+import com.asap.aljyo.ui.composable.group_edit.PersonalEditScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmMusicScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmSettingScreen
 import com.asap.aljyo.ui.composable.group_form.group_alarm.AlarmTypeScreen
@@ -196,6 +205,8 @@ internal fun AppNavHost() {
         }
 
         groupCreateNavGraph(navController)
+
+        editNavGraph(navController)
     }
 }
 
@@ -265,7 +276,7 @@ fun NavGraphBuilder.groupCreateNavGraph(
 ) {
     composable(route = ScreenRoute.GroupType.route) {
         SelectGroupTypeScreen(
-            viewModel = hiltViewModel(),
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
             navigateToCreateGroup = {
                 navController.navigate(ScreenRoute.GroupCreate.route)
             },
@@ -277,7 +288,7 @@ fun NavGraphBuilder.groupCreateNavGraph(
 
     composable(route = ScreenRoute.GroupCreate.route) {
         CreateGroupScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
             onBackClick = { navController.popBackStack() },
             onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
         )
@@ -285,7 +296,7 @@ fun NavGraphBuilder.groupCreateNavGraph(
 
     composable(route = ScreenRoute.AlarmType.route) {
         AlarmTypeScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmSetting = {
                 navController.navigate(ScreenRoute.AlarmSetting.route)
@@ -295,9 +306,9 @@ fun NavGraphBuilder.groupCreateNavGraph(
 
     composable(route = ScreenRoute.AlarmSetting.route) {
         AlarmSettingScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
             onBackClick = { navController.popBackStack() },
-            navigateToAlarmMusicScreen = { navController.navigate(ScreenRoute.AlarmMusic.route) },
+            navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}/create?musicTitle=$it") },
             onCompleteClick = { groupId ->
                 navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId") {
                     popUpTo(ScreenRoute.GroupType.route) { inclusive = true }
@@ -306,11 +317,75 @@ fun NavGraphBuilder.groupCreateNavGraph(
         )
     }
 
-    composable(route = ScreenRoute.AlarmMusic.route) {
+    composable(
+        route = "${ScreenRoute.AlarmMusic.route}/create?musicTitle={musicTitle}",
+        arguments = listOf(
+            navArgument("musicTitle") {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
+    ) { backStackEntry ->
+        val musicTitle = backStackEntry.arguments?.getString("musicTitle")
+        val previousViewModel = hiltViewModel<GroupFormViewModel>(navController.getBackStackEntry(ScreenRoute.Main.route))
+
         AlarmMusicScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.GroupType.route)),
+            musicTitle = musicTitle,
             onBackClick = { navController.popBackStack() },
-            onCompleteClick = { navController.popBackStack() }
+            onCompleteClick = {
+                previousViewModel.saveStateHandle["selectedMusic"] = it
+                navController.popBackStack()
+            }
+        )
+    }
+}
+
+fun NavGraphBuilder.editNavGraph(
+    navController: NavHostController
+) {
+    composable(
+        route = "${ScreenRoute.GroupEdit.route}/{groupDetail}",
+        arguments = listOf(
+            navArgument("groupDetail") {type = CustomNavType.groupEditType}
+        )
+    ) {
+        GroupEditScreen(
+            onBackClick = { navController.popBackStack() }
+        )
+    }
+
+    composable(
+        route = "${ScreenRoute.PersonalEdit.route}/{groupId}/{setting}",
+        arguments = listOf(
+            navArgument("groupId") { type = NavType.IntType },
+            navArgument("setting") { type = CustomNavType.PersonalEditType }
+        )
+    ) {
+        PersonalEditScreen(
+            onBackClick = { navController.popBackStack() },
+            navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") }
+        )
+    }
+
+    composable(
+        route = "${ ScreenRoute.AlarmMusic.route }?musicTitle={musicTitle}",
+        arguments = listOf(
+            navArgument("musicTitle") {
+                type = NavType.StringType
+                nullable = true
+            }
+        )
+    ) { backStackEntry ->
+        val musicTitle = backStackEntry.arguments?.getString("musicTitle")
+        val previousViewModel = hiltViewModel<PersonalEditViewModel>(navController.previousBackStackEntry!!)
+
+        AlarmMusicScreen(
+            musicTitle = musicTitle,
+            onBackClick = { navController.popBackStack() },
+            onCompleteClick = {
+                previousViewModel.saveStateHandle["selectedMusic"] = it
+                navController.popBackStack()
+            }
         )
     }
 }

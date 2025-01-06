@@ -11,6 +11,7 @@ import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import kotlin.math.max
 
 class GroupRepositoryImpl @Inject constructor(
     private val remoteDataSource: GroupRemoteDataSource,
@@ -82,5 +83,45 @@ class GroupRepositoryImpl @Inject constructor(
             title = title,
             userId = userId
         )?.groupId
+    }
+
+    override suspend fun postGroupEdit(
+        userId: Int,
+        groupId: Int,
+        title: String,
+        description: String,
+        maxPerson: Int,
+        alarmUnlockContents: String,
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
+    ) {
+        return remoteDataSource.postGroupEdit(
+            userId = userId,
+            groupId = groupId,
+            title = title,
+            description = description,
+            maxPerson = maxPerson,
+            alarmUnlockContents = alarmUnlockContents,
+            isPublic = isPublic,
+            groupPassword = groupPassword,
+            groupImage = groupImage
+        )
+    }
+
+    override suspend fun postPersonalEdit(
+        userId: Int,
+        groupId: Int,
+        alarmType: String,
+        alarmVolume: Int?,
+        musicTitle: String?
+    ) {
+        return remoteDataSource.postPersonalEdit(
+            userId = userId,
+            groupId = groupId,
+            alarmType = alarmType,
+            alarmVolume = alarmVolume,
+            musicTitle = musicTitle
+        )
     }
 }

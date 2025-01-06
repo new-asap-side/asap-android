@@ -54,6 +54,8 @@ internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType?,
     onRankingClick: () -> Unit,
+    navigateToGroupEdit: () -> Unit,
+    navigateToPersonalEdit: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -69,13 +71,17 @@ internal fun GroupBottomNavBar(
             UserGroupType.Leader -> ParticipantBottomBar(
                 modifier = mod,
                 isLeader = true,
-                onRankingClick = onRankingClick
+                onRankingClick = onRankingClick,
+                navigateToGroupEdit = navigateToGroupEdit,
+                navigateToPersonalEdit = navigateToPersonalEdit
             )
 
             UserGroupType.Participant -> ParticipantBottomBar(
                 modifier = mod,
                 isLeader = false,
-                onRankingClick = onRankingClick
+                onRankingClick = onRankingClick,
+                navigateToPersonalEdit = navigateToPersonalEdit,
+                navigateToGroupEdit = {}
             )
 
             null -> Unit
@@ -90,6 +96,8 @@ private fun ParticipantBottomBar(
     modifier: Modifier = Modifier,
     isLeader: Boolean,
     onRankingClick: () -> Unit,
+    navigateToGroupEdit: () -> Unit,
+    navigateToPersonalEdit: () -> Unit
 ) {
     var showPopup by remember { mutableStateOf(true) }
     var popupWidth by remember { mutableIntStateOf(0) }
@@ -145,7 +153,7 @@ private fun ParticipantBottomBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            // 그룹 수정 화면으로 이동
+                            navigateToGroupEdit()
                         }
                         .padding(vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -168,7 +176,7 @@ private fun ParticipantBottomBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        // 개인 설정 화면으로 이동
+                        navigateToPersonalEdit()
                     }
                     .padding(vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -260,7 +268,9 @@ private fun ParticipantBottomBarPreview() {
             ParticipantBottomBar(
                 modifier = Modifier.weight(1f),
                 isLeader = true,
-                onRankingClick = { }
+                onRankingClick = { },
+                navigateToGroupEdit = {},
+                navigateToPersonalEdit = {}
             )
         }
     }

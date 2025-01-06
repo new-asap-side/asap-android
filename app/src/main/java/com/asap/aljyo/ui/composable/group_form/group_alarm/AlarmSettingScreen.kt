@@ -70,7 +70,7 @@ import com.asap.aljyo.ui.theme.Red02
 @Composable
 fun AlarmSettingScreen(
     onBackClick: () -> Unit,
-    navigateToAlarmMusicScreen: () -> Unit,
+    navigateToAlarmMusicScreen: (String?) -> Unit,
     onCompleteClick: (Int) -> Unit,
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
@@ -158,7 +158,7 @@ fun AlarmSettingScreen(
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = navigateToAlarmMusicScreen
+                            onClick = { navigateToAlarmMusicScreen(alarmState.musicTitle) }
                         )
                 ) {
                     Row(

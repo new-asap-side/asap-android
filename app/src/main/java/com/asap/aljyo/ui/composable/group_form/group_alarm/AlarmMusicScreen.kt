@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -52,12 +53,11 @@ data class Music(
 
 @Composable
 fun AlarmMusicScreen(
+    musicTitle: String? = null,
     onBackClick: () -> Unit,
-    onCompleteClick: () -> Unit,
-    viewModel: GroupFormViewModel = hiltViewModel()
-//    itemList: List<Music>
+    onCompleteClick: (String) -> Unit,
 ) {
-    var selectedIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedMusic by remember { mutableStateOf(musicTitle) }
     val dummyMusicList = listOf(
         Music("Song A", "Artist A"),
         Music("Song B", "Artist B"),
@@ -108,12 +108,12 @@ fun AlarmMusicScreen(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                itemsIndexed(dummyMusicList) { idx, music ->
+                items(dummyMusicList) { music ->
                     MusicItem(
                         modifier = Modifier.padding(bottom = 24.dp),
                         item = music,
-                        isSelected = idx == selectedIndex,
-                        onClick = { selectedIndex = idx }
+                        isSelected = music.musicTitle == selectedMusic,
+                        onClick = { selectedMusic = music.musicTitle }
                     )
                 }
             }
@@ -121,10 +121,9 @@ fun AlarmMusicScreen(
             CustomButton(
                 modifier = Modifier.padding(bottom = 6.dp),
                 text = "완료",
-                enable = selectedIndex != null,
+                enable = selectedMusic.isNullOrEmpty().not(),
                 onClick = {
-                    viewModel.onAlarmMusicSelected(dummyMusicList[selectedIndex!!].musicTitle)
-                    onCompleteClick()
+                    onCompleteClick(selectedMusic!!)
                 }
             )
         }
@@ -178,10 +177,10 @@ fun MusicItem(
 @Preview
 @Composable
 fun PreviewAlarmMusicScreen() {
-    AljyoTheme() {
-        AlarmMusicScreen(
-            onBackClick = {},
-            onCompleteClick = {}
-        )
-    }
+//    AljyoTheme() {
+//        AlarmMusicScreen(
+//            onBackClick = {},
+//            onCompleteClick = {}
+//        )
+//    }
 }

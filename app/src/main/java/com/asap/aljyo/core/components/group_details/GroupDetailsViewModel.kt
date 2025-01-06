@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.core.components.edit.GroupEditState
+import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.GroupDetails
@@ -17,7 +19,9 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -52,6 +56,12 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _nextAlarmTime = MutableStateFlow("")
     val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
+
+    private val _groupEdit = MutableSharedFlow<GroupEditState>()
+    val groupEdit = _groupEdit.asSharedFlow()
+
+    private val _personalEdit = MutableSharedFlow<PersonalEditState>()
+    val personalEdit = _personalEdit.asSharedFlow()
 
     init {
         fetchGroupDetails()
@@ -101,7 +111,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 observingRemainTime()
                 _groupDetailsState.value = UiState.Success(result)
             }
-
         }
     }
 
@@ -143,6 +152,43 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     fun parseAlarmDays(groupDetails: GroupDetails?): String {
         return (groupDetails?.alarmDays ?: emptyList()).joinToString( separator = " ")
+    }
+
+    fun navigateToGroupEdit() {
+        (_groupDetailsState.value as UiState.Success).data?.let {
+            GroupEditState(
+                groupId = groupId,
+                alarmUnlockContents = it.alarmUnlockContents,
+                groupImage = it.groupThumbnailImageUrl,
+                title = it.title,
+                description = it.description,
+                currentPerson = it.currentPerson,
+                isPublic = it.isPublic,
+                groupPassword = null
+            )
+        }?.also {
+            viewModelScope.launch {
+                _groupEdit.emit(it)
+            }
+        }
+    }
+
+    fun navigateToPersonalEdit() {
+        val memberList = (_groupDetailsState.value as UiState.Success).data?.users
+
+        viewModelScope.launch {
+            val userId = getUserInfoUseCase.invoke()?.userId?.toInt()
+
+            memberList?.find { it.userId == userId }?.let {
+                PersonalEditState(
+                    alarmType = it.alarmType,
+                    musicTitle = it.musicTitle,
+                    alarmVolume = it.volume.toFloat()
+                ).also { personalEditState ->
+                    _personalEdit.emit(personalEditState)
+                }
+            }
+        }
     }
 
     override fun onCleared() {

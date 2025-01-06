@@ -385,7 +385,7 @@ fun PrivateSetting(
                 title = stringResource(R.string.alarm_method),
                 content = when (alarmType) {
                     "SOUND" -> "소리"
-                    "SOUND, VIBRATE" -> "소리, 진동"
+                    "ALL" -> "소리, 진동"
                     "VIBRATE" -> "진동"
                     else -> ""
                 }

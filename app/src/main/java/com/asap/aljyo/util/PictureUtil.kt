@@ -25,7 +25,7 @@ object PictureUtil {
                     encodeUriToBase64(it)
                 }
 
-                else -> null
+                else -> uri.toString()
             }
         }
     }

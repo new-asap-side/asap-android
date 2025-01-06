@@ -2,6 +2,7 @@ package com.asap.aljyo.core.components.group_form
 
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.util.PictureUtil
@@ -20,6 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupFormViewModel @Inject constructor(
+    val saveStateHandle: SavedStateHandle,
     private val createGroupUseCase: CreateGroupUseCase
 ): ViewModel() {
     private val _groupScreenState = MutableStateFlow(GroupScreenState())
@@ -35,6 +37,15 @@ class GroupFormViewModel @Inject constructor(
     val showDialog = _showDialog.asSharedFlow()
 
     private var groupId: Int? = null
+
+    init {
+        viewModelScope.launch {
+            saveStateHandle.getStateFlow("selectedMusic", _alarmScreenState.value.musicTitle)
+                .collect {
+                    _alarmScreenState.value = _alarmScreenState.value.copy(musicTitle = it)
+                }
+        }
+    }
 
     fun onGroupTypeSelected(groupType: Boolean) {
         _groupScreenState.value = _groupScreenState.value.copy(
@@ -101,12 +112,6 @@ class GroupFormViewModel @Inject constructor(
             alarmType = alarmType,
             musicTitle = if (alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
             alarmVolume = if (alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume
-        )
-    }
-
-    fun onAlarmMusicSelected(music: String) {
-        _alarmScreenState.value = _alarmScreenState.value.copy(
-            musicTitle = music
         )
     }
 

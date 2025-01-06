@@ -38,6 +38,8 @@ fun MemberPicker(
     onPlusClick: (Int) -> Unit,
     onMinusClick:(Int) -> Unit
 ) {
+    val currentPerson by remember { mutableIntStateOf(value) }
+
     Column {
         Text(
             modifier = Modifier.padding(top = 28.dp, bottom = 8.dp),
@@ -81,7 +83,7 @@ fun MemberPicker(
 
                 IconButton(
                     onClick = { onMinusClick(value - 1) },
-                    enabled = value != 1
+                    enabled = value > currentPerson
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_minus),
@@ -101,7 +103,7 @@ fun MemberPicker(
 
                 IconButton(
                     onClick = { onPlusClick(value + 1) },
-                    enabled = value != 8
+                    enabled = value < 8
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_plus),

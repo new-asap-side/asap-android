@@ -1,6 +1,8 @@
 package com.asap.data.remote.datasource
 
 import com.asap.data.remote.request.PostGroupCreateRequest
+import com.asap.data.remote.request.PostGroupEditRequest
+import com.asap.data.remote.request.PostPersonalEditRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
 import com.asap.data.remote.service.GroupService
 import com.asap.domain.entity.remote.AlarmGroup
@@ -104,5 +106,45 @@ class GroupRemoteDataSource @Inject constructor(
             userId = userId
         )
         return groupService.postCreateGroup(groupCreateRequest).body()
+    }
+
+    suspend fun postGroupEdit(
+        userId: Int,
+        groupId: Int,
+        title: String,
+        description: String,
+        maxPerson: Int,
+        alarmUnlockContents: String,
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
+    ) {
+        return PostGroupEditRequest(
+            userId = userId,
+            groupId = groupId,
+            title = title,
+            description = description,
+            maxPerson = maxPerson,
+            alarmUnlockContents = alarmUnlockContents,
+            isPublic = isPublic,
+            groupPassword = groupPassword,
+            groupImage = groupImage
+        ).let { groupService.postGroupEdit(it) }
+    }
+
+    suspend fun postPersonalEdit(
+        userId: Int,
+        groupId: Int,
+        alarmType: String,
+        alarmVolume: Int?,
+        musicTitle: String?
+    ) {
+        return PostPersonalEditRequest(
+            userId = userId,
+            groupId = groupId,
+            alarmType = alarmType,
+            alarmVolume = alarmVolume,
+            musicTitle = musicTitle
+        ).let { groupService.postPersonalEdit(it) }
     }
 }

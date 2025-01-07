@@ -1,11 +1,14 @@
 package com.asap.aljyo.core.components.main
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.AlarmSummary
+import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
     private val fetchAlarmListUseCase: FetchAlarmListUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getDeactivatedAlarmListUseCase: GetDeactivatedAlarmListUseCase
 ) : ViewModel() {
     private var active = true
 
@@ -32,6 +36,8 @@ class AlarmListViewModel @Inject constructor(
 
     private val _alarmList = MutableStateFlow<UiState<List<AlarmSummary>?>>(UiState.Loading)
     val alarmList get() = _alarmList.asStateFlow()
+
+    private val _deactivatedAlarms = mutableSetOf<Int>()
 
     private val fastestAlarmQueue: Queue<String> = LinkedList()
     private val _fastestAlarmTimeFlow = flow {
@@ -45,6 +51,11 @@ class AlarmListViewModel @Inject constructor(
     val fastestAlarmTimeState get() = _fastestAlarmTimeState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            _deactivatedAlarms.addAll(getDeactivatedAlarmListUseCase().map { it.groupId })
+            Log.d("VM", "deactivated list - $_deactivatedAlarms")
+        }
+
         fetchAlarmList()
     }
 
@@ -93,6 +104,9 @@ class AlarmListViewModel @Inject constructor(
             }
         }
     }
+
+    fun isDeactivatedAlarm(groupId: Int): Boolean =
+        _deactivatedAlarms.contains(groupId)
 
     fun resume() {
         if (!active) {

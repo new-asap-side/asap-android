@@ -14,6 +14,7 @@ import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.wait
 import retrofit2.HttpException
 import java.util.LinkedList
 import java.util.Queue
@@ -85,20 +87,16 @@ class AlarmListViewModel @Inject constructor(
         }
     }
 
-    fun onCheckChanged(check: Boolean, alarmSummary: AlarmSummary): Boolean {
+    fun onCheckChanged(check: Boolean, alarmSummary: AlarmSummary): Deferred<Boolean> {
         return if (check) deactivate(alarmSummary) else activate(alarmSummary)
     }
 
-    private fun activate(alarmSummary: AlarmSummary): Boolean = runBlocking {
-        return@runBlocking viewModelScope.async {
-            activateAlarmUseCase(alarmSummary)
-        }.await()
+    private fun activate(alarmSummary: AlarmSummary) = viewModelScope.async {
+        activateAlarmUseCase(alarmSummary)
     }
 
-    private fun deactivate(alarmSummary: AlarmSummary): Boolean = runBlocking {
-        return@runBlocking viewModelScope.async {
-            deactivateAlarmUseCase(alarmSummary)
-        }.await()
+    private fun deactivate(alarmSummary: AlarmSummary) = viewModelScope.async {
+        deactivateAlarmUseCase(alarmSummary)
     }
 
     fun isDeactivatedAlarm(groupId: Int): Boolean = _deactivatedAlarms.contains(groupId)

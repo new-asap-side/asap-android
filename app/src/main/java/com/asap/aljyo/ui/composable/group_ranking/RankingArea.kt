@@ -148,7 +148,7 @@ private fun RankingProfile(
                 modifier = Modifier
                     .size(size)
                     .clip(CircleShape),
-                error = painterResource(R.drawable.ic_my_page),
+                error = painterResource(R.drawable.ic_empty_profile),
                 contentDescription = "Ranking profile thumbnail"
             )
             Icon(
@@ -179,7 +179,7 @@ private fun RankingProfile(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = ranking?.nickName ?: "",
+            text = ranking?.nickName ?: "-",
             style = style
         )
         Spacer(modifier = Modifier.height(4.dp))

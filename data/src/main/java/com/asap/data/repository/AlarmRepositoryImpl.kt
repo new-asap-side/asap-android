@@ -18,7 +18,7 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun activate(alarmSummary: AlarmSummary) {
-        dao.insert(
+        dao.delete(
             DeactivatedAlarm(
                 groupId = alarmSummary.groupId,
                 groupTitle = alarmSummary.group.title,

@@ -51,6 +51,7 @@ import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
@@ -213,10 +214,23 @@ internal fun RankingScreen(
                     groupId = groupId
                 )
             )
-            val state = viewModel.state.collectAsState()
+            val state by viewModel.state.collectAsState()
 
-            when (state.value) {
-                is UiState.Error -> TODO()
+            when (state) {
+                is UiState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    ) {
+                        ErrorBox(
+                            modifier = Modifier.align(Alignment.Center)
+                        ) {
+                            viewModel.fetchGroupRanking()
+                        }
+                    }
+                }
+
                 UiState.Loading -> Box(
                     modifier = Modifier
                         .padding(paddingValues)

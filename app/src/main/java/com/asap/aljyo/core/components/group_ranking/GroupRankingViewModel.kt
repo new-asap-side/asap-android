@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class GroupRankingViewModel @AssistedInject constructor(
-    fetchGroupRankingUseCase: FetchGroupRankingUseCase,
-    getUserInfoUseCase: GetUserInfoUseCase,
+    private val fetchGroupRankingUseCase: FetchGroupRankingUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase,
     @Assisted private val groupId: Int
 ) : ViewModel() {
     private val _state = MutableStateFlow<UiState<List<GroupRanking>?>>(UiState.Loading)
@@ -31,23 +31,26 @@ class GroupRankingViewModel @AssistedInject constructor(
     val mIndex get() = _mIndex.value
 
     init {
-        viewModelScope.launch {
-            delay(500)
-            fetchGroupRankingUseCase(groupId).catch { e ->
-                Log.e(TAG, "fetchGroupRanking error - $e")
-                val errorCode = when (e) {
-                    is HttpException -> e.code()
-                    else -> -1
-                }
-                 _state.value = UiState.Error(errorCode = errorCode)
-            }.collect { rankingList ->
-                val mNickname = getUserInfoUseCase().let { it?.nickname }
-                _mIndex.value = rankingList?.indexOf(
-                    rankingList.find { mNickname == it.nickName }
-                )
+        fetchGroupRanking()
+    }
 
-                _state.value = UiState.Success(rankingList)
+    fun fetchGroupRanking() = viewModelScope.launch {
+        _state.value = UiState.Loading
+        delay(500)
+        fetchGroupRankingUseCase(groupId).catch { e ->
+            Log.e(TAG, "fetchGroupRanking error - $e")
+            val errorCode = when (e) {
+                is HttpException -> e.code()
+                else -> -1
             }
+            _state.value = UiState.Error(errorCode = errorCode)
+        }.collect { rankingList ->
+            val mNickname = getUserInfoUseCase().let { it?.nickname }
+            _mIndex.value = rankingList?.indexOf(
+                rankingList.find { mNickname == it.nickName }
+            )
+
+            _state.value = UiState.Success(rankingList)
         }
     }
 

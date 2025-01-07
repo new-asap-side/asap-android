@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,9 +20,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.AlarmListViewModel
@@ -37,26 +32,6 @@ internal fun AlarmTimer(
     modifier: Modifier = Modifier,
     viewModel: AlarmListViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val observer = LifecycleEventObserver { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> viewModel.resume()
-            Lifecycle.Event.ON_STOP -> viewModel.pause()
-            else -> {}
-        }
-    }
-
-    LaunchedEffect(lifecycleOwner) {
-        lifecycleOwner.lifecycle.addObserver(observer)
-    }
-
-    DisposableEffect(viewModel) {
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-            viewModel.dispose()
-        }
-    }
-
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,

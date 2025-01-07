@@ -13,8 +13,6 @@ import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +20,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.util.LinkedList
+import java.util.PriorityQueue
 import java.util.Queue
 import javax.inject.Inject
 
@@ -36,7 +34,7 @@ class AlarmListViewModel @Inject constructor(
 ) : ViewModel() {
     private var active = true
 
-    private val _nickname = mutableStateOf("")
+    private val _nickname = mutableStateOf("-")
     val nickname get() = _nickname.value
 
     private val _alarmList = MutableStateFlow<UiState<List<AlarmSummary>?>>(UiState.Loading)
@@ -44,21 +42,28 @@ class AlarmListViewModel @Inject constructor(
 
     private val _deactivatedAlarms = mutableSetOf<Int>()
 
-    private val fastestAlarmQueue: Queue<String> = LinkedList()
-    private val _fastestAlarmTimeFlow = flow {
-        val fastest = fastestAlarmQueue.peek()
-        if (fastest != null) {
-            emit(fastest)
-        }
+    private val alarmQueue: Queue<String> = PriorityQueue { alarm1, alarm2 ->
+        val diff1 = DateTimeManager.diffFromNow(alarm1)
+        val diff2 = DateTimeManager.diffFromNow(alarm2)
+        return@PriorityQueue (diff1 - diff2).toInt()
     }
 
-    private val _fastestAlarmTimeState = MutableStateFlow("")
+    private val _fastestAlarmTimeFlow = flow {
+        val fastest = alarmQueue.peek()
+        if (fastest != null) {
+            emit(fastest)
+            return@flow
+        }
+        _fastestAlarmTimeState.value = "-"
+    }
+
+    private val _fastestAlarmTimeState = MutableStateFlow("-")
     val fastestAlarmTimeState get() = _fastestAlarmTimeState.asStateFlow()
 
     init {
         viewModelScope.launch {
             _deactivatedAlarms.addAll(getDeactivatedAlarmListUseCase().map { it.groupId })
-            Log.d("VM", "deactivated list - $_deactivatedAlarms")
+            Log.d("VM", "Deactivated alarm group-id: $_deactivatedAlarms")
         }
 
         fetchAlarmList()
@@ -71,64 +76,77 @@ class AlarmListViewModel @Inject constructor(
         _nickname.value = userInfo?.nickname ?: ""
 
         fetchAlarmListUseCase(userInfo?.userId?.toInt() ?: -1).catch { e ->
+            Log.e(TAG, "$e")
             val errorCode = when (e) {
                 is HttpException -> e.code()
                 else -> -1
             }
             _alarmList.value = UiState.Error(errorCode = errorCode)
         }.collect { result ->
-            sortedByFastest(result ?: emptyList())
-            observeFastestAlarmTime()
+            initAlarmQueue(result ?: emptyList())
+            observeNextAlarmTime()
 
             _alarmList.value = UiState.Success(result)
         }
     }
 
-    fun onCheckChanged(check: Boolean, alarmSummary: AlarmSummary): Deferred<Boolean> {
-        return if (check) deactivate(alarmSummary) else activate(alarmSummary)
+    fun onCheckChanged(check: Boolean, alarmSummary: AlarmSummary) = viewModelScope.launch {
+        if (check) deactivate(alarmSummary) else activate(alarmSummary)
     }
 
-    private fun activate(alarmSummary: AlarmSummary) = viewModelScope.async {
-        activateAlarmUseCase(alarmSummary)
+    private suspend fun activate(alarm: AlarmSummary) {
+        val isSuccess = activateAlarmUseCase(alarm)
+        if (isSuccess) {
+            _deactivatedAlarms.remove(alarm.groupId)
+            alarmQueue.addAll(
+                alarm.group.alarmDays.map { alarm.group.parse(it) }
+            )
+        }
     }
 
-    private fun deactivate(alarmSummary: AlarmSummary) = viewModelScope.async {
-        deactivateAlarmUseCase(alarmSummary)
+    private suspend fun deactivate(alarm: AlarmSummary) {
+        val isSuccess = deactivateAlarmUseCase(alarm)
+        if (isSuccess) {
+            _deactivatedAlarms.add(alarm.groupId)
+            alarm.group.alarmDays.map { alarm.group.parse(it) }.forEach {
+                alarmQueue.remove(it)
+            }
+        }
     }
 
     fun isDeactivatedAlarm(groupId: Int): Boolean = _deactivatedAlarms.contains(groupId)
 
-    private fun sortedByFastest(alarms: List<AlarmSummary>) {
+    private fun initAlarmQueue(alarms: List<AlarmSummary>) {
         mutableListOf<String>().apply {
             alarms.forEach { alarm ->
-                addAll(alarm.group.alarmDays.map { alarm.group.parse(it) })
+                if (!isDeactivatedAlarm(alarm.groupId)) {
+                    addAll(alarm.group.alarmDays.map { alarm.group.parse(it) })
+                }
             }
-        }.sortedBy {
-            DateTimeManager.diffFromNow(it)
         }.also {
-            fastestAlarmQueue.addAll(it)
+            alarmQueue.addAll(it)
+            Log.d(TAG, "$alarmQueue")
         }
     }
 
-    private fun observeFastestAlarmTime() = viewModelScope.launch {
+    private fun observeNextAlarmTime() = viewModelScope.launch {
         while (active) {
             delay(1000L)
             _fastestAlarmTimeFlow.collect {
                 val duration = DateTimeManager.diffFromNow(it)
                 _fastestAlarmTimeState.value = DateTimeManager.parseToDay(duration)
                 if (duration == 0L) {
-                    val lastest = fastestAlarmQueue.poll()
-                    fastestAlarmQueue.add(lastest)
+                    val lastest = alarmQueue.poll()
+                    alarmQueue.add(lastest)
                 }
             }
         }
     }
 
-    // composable lifecycle listener
     fun resume() {
         if (!active) {
             active = true
-            observeFastestAlarmTime()
+            observeNextAlarmTime()
         }
     }
 
@@ -136,9 +154,13 @@ class AlarmListViewModel @Inject constructor(
         active = false
     }
 
-    fun dispose() {
+    override fun onCleared() {
         active = false
-        fastestAlarmQueue.clear()
+        alarmQueue.clear()
+        super.onCleared()
     }
 
+    companion object {
+        const val TAG = "AlarmListViewModel"
+    }
 }

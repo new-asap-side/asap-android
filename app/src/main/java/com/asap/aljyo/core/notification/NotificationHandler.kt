@@ -52,9 +52,10 @@ class AlarmNotificationHandler @Inject constructor(
             context,
             notificationId
         )
-            .setSmallIcon(R.mipmap.ic_launcher_round)
-            .setContentTitle("알죠에서 알려드려요")
-            .setContentText("알람이 울리고 있어요. 빠르게 해제하세요!")
+            .setSmallIcon(R.drawable.img_app_icon)
+            .setColor(context.getColor(R.color.ic_launcher_background))
+            .setContentTitle(context.getString(R.string.notification_alarm_title))
+            .setContentText(context.getString(R.string.notification_alarm_description))
             .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)

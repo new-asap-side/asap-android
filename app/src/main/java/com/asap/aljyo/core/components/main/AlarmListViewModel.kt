@@ -8,16 +8,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.AlarmSummary
+import com.asap.domain.usecase.alarm.ActivateAlarmUseCase
+import com.asap.domain.usecase.alarm.DeactivateAlarmUseCase
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.HttpException
 import java.util.LinkedList
 import java.util.Queue
@@ -27,7 +31,9 @@ import javax.inject.Inject
 class AlarmListViewModel @Inject constructor(
     private val fetchAlarmListUseCase: FetchAlarmListUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getDeactivatedAlarmListUseCase: GetDeactivatedAlarmListUseCase
+    private val getDeactivatedAlarmListUseCase: GetDeactivatedAlarmListUseCase,
+    private val activateAlarmUseCase: ActivateAlarmUseCase,
+    private val deactivateAlarmUseCase: DeactivateAlarmUseCase
 ) : ViewModel() {
     private var active = true
 
@@ -79,6 +85,24 @@ class AlarmListViewModel @Inject constructor(
         }
     }
 
+    fun onCheckChanged(check: Boolean, alarmSummary: AlarmSummary): Boolean {
+        return if (check) deactivate(alarmSummary) else activate(alarmSummary)
+    }
+
+    private fun activate(alarmSummary: AlarmSummary): Boolean = runBlocking {
+        return@runBlocking viewModelScope.async {
+            activateAlarmUseCase(alarmSummary)
+        }.await()
+    }
+
+    private fun deactivate(alarmSummary: AlarmSummary): Boolean = runBlocking {
+        return@runBlocking viewModelScope.async {
+            deactivateAlarmUseCase(alarmSummary)
+        }.await()
+    }
+
+    fun isDeactivatedAlarm(groupId: Int): Boolean = _deactivatedAlarms.contains(groupId)
+
     private fun sortedByFastest(alarms: List<AlarmSummary>) {
         mutableListOf<String>().apply {
             alarms.forEach { alarm ->
@@ -105,9 +129,7 @@ class AlarmListViewModel @Inject constructor(
         }
     }
 
-    fun isDeactivatedAlarm(groupId: Int): Boolean =
-        _deactivatedAlarms.contains(groupId)
-
+    // composable lifecycle listener
     fun resume() {
         if (!active) {
             active = true

@@ -21,7 +21,7 @@ class GetDeactivatedAlarmlistUseCaseImpl @Inject constructor(
 
 // 알람 활성화
 interface ActivateAlarmUseCase {
-    suspend fun invoke(alarmSummary: AlarmSummary): Boolean
+    suspend operator fun invoke(alarmSummary: AlarmSummary): Boolean
 }
 
 class ActivateAlarmUseCaseImpl @Inject constructor(
@@ -41,7 +41,7 @@ class ActivateAlarmUseCaseImpl @Inject constructor(
 
 // 알람 비활성화
 interface DeactivateAlarmUseCase {
-    suspend fun invoke(alarmSummary: AlarmSummary): Boolean
+    suspend operator fun invoke(alarmSummary: AlarmSummary): Boolean
 }
 
 class DeactivateAlarmUseCaseImpl @Inject constructor(

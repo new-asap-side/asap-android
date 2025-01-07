@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class AlarmRepositoryImpl @Inject constructor(
     private val remoteDataSource: AlarmService,
-    private val localDataSource: AppDatabase
+    localDataSource: AppDatabase
 ) : AlarmRepository{
     private val dao = localDataSource.deactivatedAlarmDao()
 

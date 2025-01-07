@@ -2,6 +2,8 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
+import com.asap.domain.usecase.alarm.GetDeactivatedAlarmlistUseCaseImpl
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
 import com.asap.domain.usecase.auth.AuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
@@ -115,4 +117,12 @@ interface UseCaseModule {
     fun bindFetchGroupDetailsUseCase(
         fetchGroupDetailsUseCaseImpl: FetchGroupDetailsUseCaseImpl
     ): FetchGroupDetailsUseCase
+
+    /**
+     * Alarm usecases
+     */
+    @Binds
+    fun bindGetDeactivatedAlarmListUseCase(
+        getDeactivatedAlarmlistUseCaseImpl: GetDeactivatedAlarmlistUseCaseImpl
+    ): GetDeactivatedAlarmListUseCase
 }

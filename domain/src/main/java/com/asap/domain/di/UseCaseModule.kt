@@ -2,6 +2,10 @@ package com.asap.domain.di
 
 import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
+import com.asap.domain.usecase.alarm.ActivateAlarmUseCase
+import com.asap.domain.usecase.alarm.ActivateAlarmUseCaseImpl
+import com.asap.domain.usecase.alarm.DeactivateAlarmUseCase
+import com.asap.domain.usecase.alarm.DeactivateAlarmUseCaseImpl
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmlistUseCaseImpl
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
@@ -125,4 +129,14 @@ interface UseCaseModule {
     fun bindGetDeactivatedAlarmListUseCase(
         getDeactivatedAlarmlistUseCaseImpl: GetDeactivatedAlarmlistUseCaseImpl
     ): GetDeactivatedAlarmListUseCase
+
+    @Binds
+    fun bindActivateAlarmUseCase(
+        activateAlarmUseCaseImpl: ActivateAlarmUseCaseImpl
+    ): ActivateAlarmUseCase
+
+    @Binds
+    fun bindDeactivateAlarmUseCase(
+        deactivateAlarmUseCaseImpl: DeactivateAlarmUseCaseImpl
+    ): DeactivateAlarmUseCase
 }

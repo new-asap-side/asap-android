@@ -1,6 +1,8 @@
 package com.asap.domain.usecase.alarm
 
+import android.util.Log
 import com.asap.domain.entity.local.DeactivatedAlarm
+import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.repository.AlarmRepository
 import javax.inject.Inject
 
@@ -15,6 +17,44 @@ class GetDeactivatedAlarmlistUseCaseImpl @Inject constructor(
     override suspend fun invoke(): List<DeactivatedAlarm> {
         return alarmRepository.getDeactivatedAlarmList()
     }
+}
 
+// 알람 활성화
+interface ActivateAlarmUseCase {
+    suspend fun invoke(alarmSummary: AlarmSummary): Boolean
+}
+
+class ActivateAlarmUseCaseImpl @Inject constructor(
+    private val alarmRepository: AlarmRepository
+): ActivateAlarmUseCase {
+    override suspend fun invoke(alarmSummary: AlarmSummary): Boolean {
+        return try {
+            alarmRepository.activate(alarmSummary)
+            true
+        } catch (e: Exception) {
+            Log.e("ActivateAlarmUseCaseImpl", "$e")
+            false
+        }
+    }
+
+}
+
+// 알람 비활성화
+interface DeactivateAlarmUseCase {
+    suspend fun invoke(alarmSummary: AlarmSummary): Boolean
+}
+
+class DeactivateAlarmUseCaseImpl @Inject constructor(
+    private val alarmRepository: AlarmRepository
+): DeactivateAlarmUseCase {
+    override suspend fun invoke(alarmSummary: AlarmSummary): Boolean {
+        return try {
+            alarmRepository.deactivate(alarmSummary = alarmSummary)
+            true
+        } catch (e: Exception) {
+            Log.e("DeactivateAlarmUseCaseImpl", "$e")
+            false
+        }
+    }
 }
 

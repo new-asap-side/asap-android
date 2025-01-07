@@ -8,7 +8,7 @@ interface AlarmRepository {
     suspend fun getDeactivatedAlarmList(): List<DeactivatedAlarm>
 
     // 알람 활성화
-    suspend fun activate()
+    suspend fun activate(alarmSummary: AlarmSummary)
 
     // 알람 비활성화
     suspend fun deactivate(alarmSummary: AlarmSummary)

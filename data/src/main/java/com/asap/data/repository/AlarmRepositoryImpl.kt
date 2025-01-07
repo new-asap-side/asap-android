@@ -11,17 +11,24 @@ class AlarmRepositoryImpl @Inject constructor(
     private val remoteDataSource: AlarmService,
     private val localDataSource: AppDatabase
 ) : AlarmRepository{
+    private val dao = localDataSource.deactivatedAlarmDao()
+
     override suspend fun getDeactivatedAlarmList(): List<DeactivatedAlarm> {
-        val dao = localDataSource.deactivatedAlarmDao()
         return dao.getDeactivatedAlarmList()
     }
 
-    override suspend fun activate() {
-        TODO("Not yet implemented")
+    override suspend fun activate(alarmSummary: AlarmSummary) {
+        dao.insert(
+            DeactivatedAlarm(
+                groupId = alarmSummary.groupId,
+                groupTitle = alarmSummary.group.title,
+                alarmTime = alarmSummary.group.alarmTime,
+                alarmDates = alarmSummary.group.alarmDays.toString()
+            )
+        )
     }
 
     override suspend fun deactivate(alarmSummary: AlarmSummary) {
-        val dao = localDataSource.deactivatedAlarmDao()
         dao.insert(
             DeactivatedAlarm(
                 groupId = alarmSummary.groupId,

@@ -14,7 +14,8 @@ import androidx.core.net.toUri
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.MainActivity
 import com.asap.aljyo.core.navigation.ScreenRoute
-import com.google.gson.GsonBuilder
+import com.asap.data.utility.mapToJson
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -24,15 +25,16 @@ interface NotificationHandler {
 
 class AlarmNotificationHandler @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val moshi: Moshi,
 ) : NotificationHandler {
     private val uri = "aljyo://${ScreenRoute.ReleaseAlarm.route}"
 
     override fun showNotification(data: Map<String, String>) {
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        val json = gson.toJson(data)
+        val json = moshi.mapToJson(
+            key = String::class.java,
+            value = Any::class.java,
+            raw = data
+        )
 
         val deeplinkIntent = Intent(
             Intent.ACTION_VIEW,

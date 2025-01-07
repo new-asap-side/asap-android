@@ -51,27 +51,16 @@ fun ProfileImagePicker(
                 onClick = onClick
             )
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(CircleShape)
-        ) {
-//            Image(
-//                painter = profileImage,
-//                contentDescription = "Profile Image",
-//                modifier = Modifier
-//                    .align(Alignment.Center)
-//                    .offset(y = 12.dp)
-//            )
             AsyncImage(
                 model = profileImage ?: R.drawable.ic_profile_default,
                 contentDescription = "Profile Image",
                 contentScale = if (profileImage == null) ContentScale.Fit else ContentScale.Crop,
                 modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
                     .align(Alignment.Center)
                     .then(if(profileImage == null) Modifier.offset(y = 12.dp) else Modifier)
             )
-        }
         Box(
             modifier = Modifier
                 .size(28.dp)

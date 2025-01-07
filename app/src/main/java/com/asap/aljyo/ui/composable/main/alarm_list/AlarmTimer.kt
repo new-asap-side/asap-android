@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,16 +46,19 @@ internal fun AlarmTimer(
                 .wrapContentHeight(),
             text = buildAnnotatedString {
                 append(text = "${stringResource(R.string.sir, nickname)},\n")
-                withStyle(
-                    style = SpanStyle(
-                        fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
-                    )
-                ) {
-                    append(
-                        text = "$fastestAlarmTimeState 뒤\n"
-                    )
+                if (fastestAlarmTimeState == AlarmListViewModel.NO_ACTIVATED_ALARM) {
+                    append(text = stringResource(R.string.no_activated_alarm))
+                } else {
+                    withStyle(
+                        style = SpanStyle(
+                            fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
+                            fontWeight = FontWeight.Bold
+                        )
+                    ) {
+                        append(text = "$fastestAlarmTimeState 뒤\n")
+                    }
+                    append(text = stringResource(R.string.the_alarm_goes_off))
                 }
-                append(text = stringResource(R.string.the_alarm_goes_off))
             },
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = 20.fsp,

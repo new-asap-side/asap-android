@@ -54,10 +54,10 @@ class AlarmListViewModel @Inject constructor(
             emit(fastest)
             return@flow
         }
-        _fastestAlarmTimeState.value = "-"
+        _fastestAlarmTimeState.value = NO_ACTIVATED_ALARM
     }
 
-    private val _fastestAlarmTimeState = MutableStateFlow("-")
+    private val _fastestAlarmTimeState = MutableStateFlow(LOADING)
     val fastestAlarmTimeState get() = _fastestAlarmTimeState.asStateFlow()
 
     init {
@@ -161,6 +161,9 @@ class AlarmListViewModel @Inject constructor(
     }
 
     companion object {
-        const val TAG = "AlarmListViewModel"
+        private const val TAG = "AlarmListViewModel"
+
+        const val LOADING = "-"
+        const val NO_ACTIVATED_ALARM = "_"
     }
 }

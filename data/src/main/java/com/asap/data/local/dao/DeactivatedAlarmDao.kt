@@ -8,6 +8,9 @@ import com.asap.domain.entity.local.DeactivatedAlarm
 
 @Dao
 interface DeactivatedAlarmDao {
+    @Query("SELECT * FROM DeactivatedAlarm")
+    suspend fun getDeactivatedAlarmList(): List<DeactivatedAlarm>
+
     @Query("SELECT * FROM DeactivatedAlarm WHERE group_id = :groupId")
     suspend fun find(groupId: Int): DeactivatedAlarm?
 

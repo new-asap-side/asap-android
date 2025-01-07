@@ -9,6 +9,7 @@ import com.asap.aljyo.util.PictureUtil
 import com.asap.aljyo.util.format
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.usecase.group.CreateGroupUseCase
+import com.asap.domain.usecase.group.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class GroupFormViewModel @Inject constructor(
     val saveStateHandle: SavedStateHandle,
-    private val createGroupUseCase: CreateGroupUseCase
-): ViewModel() {
+    private val createGroupUseCase: CreateGroupUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
+) : ViewModel() {
     private val _groupScreenState = MutableStateFlow(GroupScreenState())
     val groupScreenState: StateFlow<GroupScreenState> get() = _groupScreenState.asStateFlow()
 
@@ -40,6 +42,10 @@ class GroupFormViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            _alarmScreenState.value = _alarmScreenState.value.copy(
+                nickName = getUserInfoUseCase()?.nickname
+            )
+
             saveStateHandle.getStateFlow("selectedMusic", _alarmScreenState.value.musicTitle)
                 .collect {
                     _alarmScreenState.value = _alarmScreenState.value.copy(musicTitle = it)

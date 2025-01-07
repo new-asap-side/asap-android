@@ -276,7 +276,7 @@ fun NavGraphBuilder.groupCreateNavGraph(
 ) {
     composable(route = ScreenRoute.GroupType.route) {
         SelectGroupTypeScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
+            viewModel = hiltViewModel(),
             navigateToCreateGroup = {
                 navController.navigate(ScreenRoute.GroupCreate.route)
             },
@@ -286,17 +286,25 @@ fun NavGraphBuilder.groupCreateNavGraph(
         )
     }
 
-    composable(route = ScreenRoute.GroupCreate.route) {
+    composable(route = ScreenRoute.GroupCreate.route) { backStackEntry ->
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(ScreenRoute.GroupType.route)
+        }
+
         CreateGroupScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
+            viewModel = hiltViewModel(parentEntry),
             onBackClick = { navController.popBackStack() },
             onNextClick = { navController.navigate(ScreenRoute.AlarmType.route) }
         )
     }
 
-    composable(route = ScreenRoute.AlarmType.route) {
+    composable(route = ScreenRoute.AlarmType.route) { backStackEntry ->
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(ScreenRoute.GroupType.route)
+        }
+
         AlarmTypeScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
+            viewModel = hiltViewModel(parentEntry),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmSetting = {
                 navController.navigate(ScreenRoute.AlarmSetting.route)
@@ -304,9 +312,13 @@ fun NavGraphBuilder.groupCreateNavGraph(
         )
     }
 
-    composable(route = ScreenRoute.AlarmSetting.route) {
+    composable(route = ScreenRoute.AlarmSetting.route) { backStackEntry ->
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(ScreenRoute.GroupType.route)
+        }
+
         AlarmSettingScreen(
-            viewModel = hiltViewModel(navController.getBackStackEntry(ScreenRoute.Main.route)),
+            viewModel = hiltViewModel(parentEntry),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}/create?musicTitle=$it") },
             onCompleteClick = { groupId ->
@@ -326,8 +338,11 @@ fun NavGraphBuilder.groupCreateNavGraph(
             }
         )
     ) { backStackEntry ->
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(ScreenRoute.GroupType.route)
+        }
         val musicTitle = backStackEntry.arguments?.getString("musicTitle")
-        val previousViewModel = hiltViewModel<GroupFormViewModel>(navController.getBackStackEntry(ScreenRoute.Main.route))
+        val previousViewModel = hiltViewModel<GroupFormViewModel>(parentEntry)
 
         AlarmMusicScreen(
             musicTitle = musicTitle,

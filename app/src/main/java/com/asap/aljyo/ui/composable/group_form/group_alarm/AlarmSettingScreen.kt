@@ -56,6 +56,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
+import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -76,9 +77,11 @@ fun AlarmSettingScreen(
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
     var openAlertDialog by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.showDialog.collect{
+            isLoading = false
             openAlertDialog = true
         }
     }
@@ -256,9 +259,14 @@ fun AlarmSettingScreen(
                 text = "완료",
                 enable = alarmState.buttonState,
                 onClick = {
+                    isLoading = true
                     viewModel.onCompleteClicked()
                 }
             )
+            if (isLoading) {
+                LoadingDialog()
+            }
+
             if (openAlertDialog) {
                 CustomAlertDialog(
                     title = "그룹 생성 완료!",

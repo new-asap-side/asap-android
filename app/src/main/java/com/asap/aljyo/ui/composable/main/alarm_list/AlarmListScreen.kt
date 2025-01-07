@@ -32,6 +32,7 @@ import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.AlarmSummary
 
 @Composable
 internal fun AlarmListScreen(
@@ -39,6 +40,13 @@ internal fun AlarmListScreen(
     navigateToGroupDetails: (Int) -> Unit,
     viewModel: AlarmListViewModel = hiltViewModel()
 ) {
+    val onCheckChanged: (Boolean, AlarmSummary, () -> Unit) -> Unit =
+        { check, alarmSummary, update ->
+            viewModel.onCheckChanged(check, alarmSummary).invokeOnCompletion {
+                update()
+            }
+        }
+
     Column(modifier = Modifier) {
         Box(
             modifier = Modifier
@@ -123,7 +131,8 @@ internal fun AlarmListScreen(
                             modifier = Modifier.padding(horizontal = 20.dp),
                             alarmList = alarmList ?: emptyList(),
                             navigateToHome = navigateToHome,
-                            navigateToGroupDetails = navigateToGroupDetails
+                            navigateToGroupDetails = navigateToGroupDetails,
+                            onCheckChanged = onCheckChanged
                         )
                     }
                 }

@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.AlarmListViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
@@ -29,6 +31,8 @@ internal fun AlarmList(
     alarmList: List<AlarmSummary>,
     navigateToHome: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
+    onCheckChanged: (Boolean, AlarmSummary, () -> Unit) -> Unit,
+    viewModel: AlarmListViewModel = hiltViewModel()
 ) {
     LazyColumn(
         modifier = modifier,
@@ -53,6 +57,8 @@ internal fun AlarmList(
                             navigateToGroupDetails(alarm.groupId)
                         },
                     alarm = alarm,
+                    onCheckChanged = onCheckChanged,
+                    isDeactivated = viewModel.isDeactivatedAlarm(alarm.groupId)
                 )
             }
         }

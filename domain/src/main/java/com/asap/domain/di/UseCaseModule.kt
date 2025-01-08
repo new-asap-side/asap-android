@@ -26,6 +26,8 @@ import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
+import com.asap.domain.usecase.group.FetchRankingNumberUseCase
+import com.asap.domain.usecase.group.FetchRankingNumberUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
@@ -87,11 +89,6 @@ interface UseCaseModule {
     ): JoinGroupUseCase
 
     @Binds
-    fun bindFetchGroupRankingUseCase(
-        fetchGroupRankingUseCaseImpl: FetchGroupRankingUseCaseImpl
-    ): FetchGroupRankingUseCase
-
-    @Binds
     fun bindDeleteUseCase(
         deleteUserInfoUseCaseImpl: DeleteUserInfoUseCaseImpl
     ): DeleteUserInfoUseCase
@@ -113,6 +110,16 @@ interface UseCaseModule {
     fun bindFetchLatestGroupUseCase(
         fetchGroupRankingUseCaseImpl: FetchLatestGroupUseCaseImpl
     ): FetchLatestGroupUseCase
+
+    @Binds
+    fun bindFetchGroupRankingUseCase(
+        fetchGroupRankingUseCaseImpl: FetchGroupRankingUseCaseImpl
+    ): FetchGroupRankingUseCase
+
+    @Binds
+    fun bindFetchRankingNumberUseCase(
+        fetchRankingNumberUseCaseImpl: FetchRankingNumberUseCaseImpl
+    ): FetchRankingNumberUseCase
 
     @Binds
     fun bindFetchAlarmListUseCase(

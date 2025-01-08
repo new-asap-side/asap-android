@@ -6,6 +6,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.RankingNumberResponse
 import kotlinx.coroutines.flow.Flow
 
 interface GroupRepository {
@@ -26,6 +27,9 @@ interface GroupRepository {
 
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>
+
+    // 그룹 랭킹 등수 조회
+    suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?>
 
     suspend fun postCreateGroup(
         groupImage: String,

@@ -11,6 +11,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.RankingNumberResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -66,6 +67,19 @@ class GroupRemoteDataSource @Inject constructor(
 
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> = flow {
         val response = groupService.fetchGroupRanking(groupId = groupId)
+        if(!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(response.body())
+    }
+
+    suspend fun fetchRankingNumber(groupId: Int, userId: Int): Flow<RankingNumberResponse?> = flow {
+        val response = groupService.fetchRankingNumber(groupId = groupId, userId = userId)
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
         emit(response.body())
     }
 

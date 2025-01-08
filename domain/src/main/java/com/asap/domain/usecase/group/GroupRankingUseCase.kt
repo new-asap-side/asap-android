@@ -26,7 +26,6 @@ class FetchRankingNumberUseCaseImpl @Inject constructor(
     private val groupRepository: GroupRepository
 ) : FetchRankingNumberUseCase {
     override suspend fun invoke(groupId: Int): Flow<RankingNumberResponse?> {
-        TODO("Not yet implemented")
+        return groupRepository.fetchRankingNumber(groupId = groupId)
     }
-
 }

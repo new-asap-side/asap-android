@@ -10,6 +10,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.RankingNumberResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -40,6 +41,13 @@ interface GroupService {
     // 그룹 랭킹
     @GET("/group/ranking/{group_id}")
     suspend fun fetchGroupRanking(@Query("group_id") groupId: Int): Response<List<GroupRanking>>
+
+    // 랭킹 등수 조회
+    @GET("/group/ranking/{group_id}/{user_id}")
+    suspend fun fetchRankingNumber(
+        @Path("group_id") groupId: Int,
+        @Path("user_id") userId: Int
+    ): Response<RankingNumberResponse>
 
     // 그룹 참여
     @POST("/group/join")

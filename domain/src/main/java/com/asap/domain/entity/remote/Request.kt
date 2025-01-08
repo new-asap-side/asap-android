@@ -11,3 +11,11 @@ data class DeleteUserRequestBody(
     @Json(name = "userLeaveReason")
     val userLeaveReason: String
 )
+
+@JsonClass(generateAdapter = true)
+data class AlarmOffRequestBody(
+    @Json(name = "userId")
+    val userId: Int,
+    @Json(name = "groupId")
+    val groupId: Int
+)

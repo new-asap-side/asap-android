@@ -4,6 +4,8 @@ import com.asap.domain.usecase.ResultCardUseCase
 import com.asap.domain.usecase.ResultCardUseCaseImpl
 import com.asap.domain.usecase.alarm.ActivateAlarmUseCase
 import com.asap.domain.usecase.alarm.ActivateAlarmUseCaseImpl
+import com.asap.domain.usecase.alarm.AlarmOffUseCase
+import com.asap.domain.usecase.alarm.AlarmOffUseCaseImpl
 import com.asap.domain.usecase.alarm.DeactivateAlarmUseCase
 import com.asap.domain.usecase.alarm.DeactivateAlarmUseCaseImpl
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
@@ -139,4 +141,9 @@ interface UseCaseModule {
     fun bindDeactivateAlarmUseCase(
         deactivateAlarmUseCaseImpl: DeactivateAlarmUseCaseImpl
     ): DeactivateAlarmUseCase
+
+    @Binds
+    fun bindAlarmOffUseCase(
+        alarmOffUseCaseImpl: AlarmOffUseCaseImpl
+    ): AlarmOffUseCase
 }

@@ -48,7 +48,7 @@ class UserRemoteDataSource @Inject constructor(
         userService.deleteUser(
             DeleteUserRequestBody(
                 userId = userId,
-                survey = survey
+                userLeaveReason = survey
             )
         ).also { response ->
             if (response.isSuccessful) throw HttpException(response)

@@ -2,6 +2,8 @@ package com.asap.domain.repository
 
 import com.asap.domain.entity.local.DeactivatedAlarm
 import com.asap.domain.entity.remote.AlarmSummary
+import com.asap.domain.entity.remote.WhetherResponse
+import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
     // 비활성화 알람 조회
@@ -14,5 +16,5 @@ interface AlarmRepository {
     suspend fun deactivate(alarmSummary: AlarmSummary)
 
     // 알람 해제
-    suspend fun release()
+    suspend fun release(groupId: Int): Flow<WhetherResponse?>
 }

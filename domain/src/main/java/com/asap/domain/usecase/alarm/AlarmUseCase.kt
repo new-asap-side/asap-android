@@ -3,7 +3,9 @@ package com.asap.domain.usecase.alarm
 import android.util.Log
 import com.asap.domain.entity.local.DeactivatedAlarm
 import com.asap.domain.entity.remote.AlarmSummary
+import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.AlarmRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 // 비활성화 알람 리스트 조회
@@ -56,5 +58,20 @@ class DeactivateAlarmUseCaseImpl @Inject constructor(
             false
         }
     }
+}
+
+// 알람 해제
+// /alarm/off
+interface AlarmOffUseCase {
+    suspend operator fun invoke(groupId: Int): Flow<WhetherResponse?>
+}
+
+class AlarmOffUseCaseImpl @Inject constructor(
+    private val alarmRepository: AlarmRepository
+) : AlarmOffUseCase {
+    override suspend fun invoke(groupId: Int): Flow<WhetherResponse?> {
+        return alarmRepository.release(groupId = groupId)
+    }
+
 }
 

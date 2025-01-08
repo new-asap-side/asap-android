@@ -13,3 +13,9 @@ data class WhetherResponse(
     @Json(name = "result")
     val result: Boolean
 )
+
+@JsonClass(generateAdapter = true)
+data class RankingNumberResponse(
+    @Json(name = "rank_number")
+    val rankNumber: Int
+)

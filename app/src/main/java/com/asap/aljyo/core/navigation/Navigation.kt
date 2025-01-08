@@ -120,7 +120,8 @@ internal fun AppNavHost() {
             ReleaseAlarmScreen(
                 alarm = alarm,
                 navigateToResult = { index ->
-                    navController.navigate("${ScreenRoute.AlarmResult.route}/$index") {
+                    val route = "${ScreenRoute.AlarmResult.route}/${alarm.groupId}/$index"
+                    navController.navigate(route) {
                         popUpTo("${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}") {
                             inclusive = true
                         }
@@ -130,11 +131,28 @@ internal fun AppNavHost() {
         }
 
         composable(
-            route = "${ScreenRoute.AlarmResult.route}/{illustIndex}",
-            arguments = listOf(navArgument("illustIndex") { type = NavType.IntType })
+            route = "${ScreenRoute.AlarmResult.route}/{groupId}/{illustIndex}",
+            arguments = listOf(
+                navArgument("groupId") { type = NavType.IntType },
+                navArgument("illustIndex") { type = NavType.IntType },
+            )
         ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             val index = backStackEntry.arguments?.getInt("illustIndex") ?: 0
-            AlarmResultScreen(illustIndex = index)
+            AlarmResultScreen(
+                groupId = groupId,
+                illustIndex = index,
+                navigateToHome = {
+                    navController.navigate(ScreenRoute.Main.route) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                    }
+                },
+                navigateToRanking = {
+                    navController.navigate("${ScreenRoute.Ranking.route}/$groupId")
+                }
+            )
         }
 
         composable(route = ScreenRoute.UserSetting.route) {
@@ -323,7 +341,8 @@ fun NavGraphBuilder.groupCreateNavGraph(
         )
     ) { backStackEntry ->
         val musicTitle = backStackEntry.arguments?.getString("musicTitle")
-        val previousViewModel = hiltViewModel<GroupFormViewModel>(navController.getBackStackEntry(ScreenRoute.Main.route))
+        val previousViewModel =
+            hiltViewModel<GroupFormViewModel>(navController.getBackStackEntry(ScreenRoute.Main.route))
 
         AlarmMusicScreen(
             musicTitle = musicTitle,
@@ -342,7 +361,7 @@ fun NavGraphBuilder.editNavGraph(
     composable(
         route = "${ScreenRoute.GroupEdit.route}/{groupDetail}",
         arguments = listOf(
-            navArgument("groupDetail") {type = CustomNavType.groupEditType}
+            navArgument("groupDetail") { type = CustomNavType.groupEditType }
         )
     ) {
         GroupEditScreen(
@@ -364,7 +383,7 @@ fun NavGraphBuilder.editNavGraph(
     }
 
     composable(
-        route = "${ ScreenRoute.AlarmMusic.route }?musicTitle={musicTitle}",
+        route = "${ScreenRoute.AlarmMusic.route}?musicTitle={musicTitle}",
         arguments = listOf(
             navArgument("musicTitle") {
                 type = NavType.StringType
@@ -373,7 +392,8 @@ fun NavGraphBuilder.editNavGraph(
         )
     ) { backStackEntry ->
         val musicTitle = backStackEntry.arguments?.getString("musicTitle")
-        val previousViewModel = hiltViewModel<PersonalEditViewModel>(navController.previousBackStackEntry!!)
+        val previousViewModel =
+            hiltViewModel<PersonalEditViewModel>(navController.previousBackStackEntry!!)
 
         AlarmMusicScreen(
             musicTitle = musicTitle,

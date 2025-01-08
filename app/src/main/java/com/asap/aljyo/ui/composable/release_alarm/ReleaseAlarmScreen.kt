@@ -79,7 +79,12 @@ internal fun ReleaseAlarmScreen(
         when (requestState) {
             RequestState.Initial, RequestState.Loading -> Unit
 
-            is RequestState.Success -> navigateToResult(index)
+            is RequestState.Success -> {
+                val result = (requestState as RequestState.Success).data
+                if (result) {
+                    navigateToResult(index)
+                }
+            }
 
             is RequestState.Error -> {
                 Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()

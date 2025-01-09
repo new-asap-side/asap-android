@@ -63,6 +63,7 @@ import com.asap.aljyo.core.navigation.navtype.CustomNavType
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.ErrorBox
+import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -113,6 +114,7 @@ fun GroupDetailsScreen(
 
     val userGroupType = viewModel.userGroupType
     val groupDetails by viewModel.groupDetails.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect{
@@ -178,6 +180,7 @@ fun GroupDetailsScreen(
                         .clickable {
                             // show leave group dialog
                             showLeaveGroupDialog = true
+                            hideBottomSheet()
                         }
                         .padding(vertical = 10.dp),
                 ) {
@@ -203,7 +206,8 @@ fun GroupDetailsScreen(
                 description = stringResource(R.string.ranking_initialized),
                 onDismissRequest = { showLeaveGroupDialog = false },
                 onConfirm = {
-                    // 그룹 탈퇴 api
+                    showLeaveGroupDialog = false
+                    viewModel.withdrawGroup()
                 }
             )
         }
@@ -276,6 +280,9 @@ fun GroupDetailsScreen(
                     },
                     navigateToPersonalEdit = {
                         viewModel.navigateToPersonalEdit()
+                    },
+                    onJoinClick = {
+                        viewModel.joinGroup()
                     }
                 )
             }
@@ -320,6 +327,10 @@ fun GroupDetailsScreen(
                     ErrorBox(modifier = Modifier.fillMaxSize()) {
                         viewModel.fetchGroupDetails()
                     }
+                }
+
+                if (isLoading) {
+                    LoadingDialog()
                 }
             }
         }

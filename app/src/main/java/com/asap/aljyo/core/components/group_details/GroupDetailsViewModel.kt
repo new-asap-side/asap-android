@@ -12,6 +12,7 @@ import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.utility.DateTimeManager
+import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupMember
@@ -19,6 +20,7 @@ import com.asap.domain.entity.remote.UserGroupType
 import com.asap.domain.usecase.group.CreateGroupUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
+import com.asap.domain.usecase.group.WithdrawGroupUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -42,6 +44,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase,
+    private val withdrawGroupUseCase: WithdrawGroupUseCase,
     @Assisted private val groupId: Int
 ) : ViewModel() {
     private val _groupDetailsState = MutableStateFlow<UiState<GroupDetails?>>(UiState.Loading)
@@ -219,6 +222,21 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 if (response != null) _userGroupType.value = UserGroupType.Participant
             }
             _isLoading.value = false
+        }
+    }
+
+    fun withdrawGroup() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val userInfo = getUserInfoUseCase()
+
+            withdrawGroupUseCase(
+                userId = userInfo?.userId?.toInt() ?: -1,
+                groupId = groupId
+            )
+        }.invokeOnCompletion {
+            _isLoading.value = false
+            _userGroupType.value = UserGroupType.NonParticipant
         }
     }
 

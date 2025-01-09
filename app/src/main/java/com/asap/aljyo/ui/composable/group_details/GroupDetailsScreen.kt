@@ -180,6 +180,7 @@ fun GroupDetailsScreen(
                         .clickable {
                             // show leave group dialog
                             showLeaveGroupDialog = true
+                            hideBottomSheet()
                         }
                         .padding(vertical = 10.dp),
                 ) {
@@ -205,7 +206,8 @@ fun GroupDetailsScreen(
                 description = stringResource(R.string.ranking_initialized),
                 onDismissRequest = { showLeaveGroupDialog = false },
                 onConfirm = {
-                    // TODO: 그룹 탈퇴 api
+                    showLeaveGroupDialog = false
+                    viewModel.withdrawGroup()
                 }
             )
         }

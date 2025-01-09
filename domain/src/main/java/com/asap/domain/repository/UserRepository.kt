@@ -2,6 +2,7 @@ package com.asap.domain.repository
 
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -9,6 +10,8 @@ interface UserRepository {
     suspend fun isCached(): Boolean
 
     suspend fun getUserInfo(): User?
+
+    suspend fun fetchUserProfile(userId: Int): Flow<UserProfile?>
 
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 

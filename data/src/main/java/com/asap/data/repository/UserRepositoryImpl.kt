@@ -7,6 +7,7 @@ import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
@@ -30,6 +31,10 @@ class UserRepositoryImpl @Inject constructor(
         val dao = localDataSource.userDao()
         val selected = dao.selectAll()
         return if (selected.isEmpty()) null else selected.first()
+    }
+
+    override suspend fun fetchUserProfile(userId: Int): Flow<UserProfile?> {
+        return remoteDataSource.fetchUserProfile(userId = userId)
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =

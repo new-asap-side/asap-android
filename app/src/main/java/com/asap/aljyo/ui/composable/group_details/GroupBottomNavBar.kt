@@ -53,6 +53,7 @@ import kotlin.math.roundToInt
 internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType?,
+    onJoinClick: () -> Unit,
     onRankingClick: () -> Unit,
     navigateToGroupEdit: () -> Unit,
     navigateToPersonalEdit: () -> Unit
@@ -65,7 +66,8 @@ internal fun GroupBottomNavBar(
 
         when (userGroupType) {
             UserGroupType.NonParticipant -> NonParticipantBottomBar(
-                modifier = mod
+                modifier = mod,
+                onClick = onJoinClick
             )
 
             UserGroupType.Leader -> ParticipantBottomBar(
@@ -278,12 +280,13 @@ private fun ParticipantBottomBarPreview() {
 
 @Composable
 private fun NonParticipantBottomBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Button(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
-        onClick = {}
+        onClick = onClick
     ) {
         Text(
             text = stringResource(R.string.participate),
@@ -306,7 +309,8 @@ private fun NonParticipantPreview() {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             NonParticipantBottomBar(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onClick = {}
             )
         }
     }

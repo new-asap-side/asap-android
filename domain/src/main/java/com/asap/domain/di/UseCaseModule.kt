@@ -1,13 +1,13 @@
 package com.asap.domain.di
 
-import com.asap.domain.usecase.ResultCardUseCase
-import com.asap.domain.usecase.ResultCardUseCaseImpl
 import com.asap.domain.usecase.alarm.ActivateAlarmUseCase
 import com.asap.domain.usecase.alarm.ActivateAlarmUseCaseImpl
 import com.asap.domain.usecase.alarm.AlarmOffUseCase
 import com.asap.domain.usecase.alarm.AlarmOffUseCaseImpl
 import com.asap.domain.usecase.alarm.DeactivateAlarmUseCase
 import com.asap.domain.usecase.alarm.DeactivateAlarmUseCaseImpl
+import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
+import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCaseImpl
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmlistUseCaseImpl
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
@@ -28,8 +28,6 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchRankingNumberUseCase
 import com.asap.domain.usecase.group.FetchRankingNumberUseCaseImpl
-import com.asap.domain.usecase.user.FetchUserProfileUseCase
-import com.asap.domain.usecase.user.FetchUserProfileUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
@@ -40,6 +38,8 @@ import com.asap.domain.usecase.user.DeleteUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteUserInfoUseCaseImpl
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
+import com.asap.domain.usecase.user.FetchUserProfileUseCase
+import com.asap.domain.usecase.user.FetchUserProfileUseCaseImpl
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCaseImpl
 import dagger.Binds
@@ -74,11 +74,6 @@ interface UseCaseModule {
     fun bindGetUserInfoUseCase(
         getUserInfoUseCaseImpl: GetUserInfoUseCaseImpl
     ): GetUserInfoUseCase
-
-    @Binds
-    fun bindResultCardUseCase(
-        resultCardUseCaseImpl: ResultCardUseCaseImpl
-    ): ResultCardUseCase
 
     @Binds
     fun bindFetchUserProfileUseCase(
@@ -160,4 +155,9 @@ interface UseCaseModule {
     fun bindAlarmOffUseCase(
         alarmOffUseCaseImpl: AlarmOffUseCaseImpl
     ): AlarmOffUseCase
+
+    @Binds
+    fun bindFetchAlarmOffUseCase(
+        fetchAlarmOffRateUseCaseImpl: FetchAlarmOffRateUseCaseImpl
+    ): FetchAlarmOffRateUseCase
 }

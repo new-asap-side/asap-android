@@ -7,18 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.remote.firebase.FCMTokenManager
-import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
-import com.asap.domain.usecase.ResultCardUseCase
+import com.asap.domain.entity.remote.alarm.AlarmOffRate
+import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,14 +27,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val resultCardUseCase: ResultCardUseCase,
+    private val fetchALarmOffRateUseCase: FetchAlarmOffRateUseCase,
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchFCMTokenUseCase: FetchFCMTokenUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
-    private val _cardState = MutableStateFlow<UiState<ResultCard?>>(UiState.Loading)
+    private val _cardState = MutableStateFlow<UiState<AlarmOffRate?>>(UiState.Loading)
     val cardState get() = _cardState.asStateFlow()
 
     private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
@@ -46,8 +45,12 @@ class HomeViewModel @Inject constructor(
 
     val selectedGroupId = mutableStateOf<Int?>(null)
 
-    private val _joinResponseState = MutableStateFlow<RequestState<GroupJoinResponse?>>(RequestState.Initial)
+    private val _joinResponseState =
+        MutableStateFlow<RequestState<GroupJoinResponse?>>(RequestState.Initial)
     val joinResponseState get() = _joinResponseState.asStateFlow()
+
+    private val _nickname = mutableStateOf("-")
+    val nickname get() = _nickname.value
 
     private val _scrollPositionMap = mutableMapOf(
         MAIN_TAB_SCROLL_KEY to Pair(0, 0),
@@ -61,6 +64,10 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchHomeData()
+
+        viewModelScope.launch {
+            _nickname.value = getUserInfoUseCase()?.nickname ?: "-"
+        }
     }
 
     fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
@@ -71,31 +78,19 @@ class HomeViewModel @Inject constructor(
             _latestGroupState.value = UiState.Loading
         }
 
-        delay(1000)
-        resultCardUseCase.invoke()
-            .catch { e ->
-//                _cardState.value = handleThrowable(e)
-                _cardState.value = UiState.Success(ResultCard())
-            }
+        fetchALarmOffRateUseCase()
+            .catch { e -> _cardState.value = handleThrowable(e) }
             .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
 
-        fetchPopularGroupUseCase.invoke()
-            .catch { e ->
-                _popularGroupState.value = handleThrowable(e)
-            }
-            .collect { popularGroup ->
-                _popularGroupState.value = UiState.Success(popularGroup)
-            }
+        fetchPopularGroupUseCase()
+            .catch { e -> _popularGroupState.value = handleThrowable(e) }
+            .collect { popularGroup -> _popularGroupState.value = UiState.Success(popularGroup) }
 
-        fetchLatestGroupUseCase.invoke()
-            .catch { e ->
-                _latestGroupState.value = handleThrowable(e)
-            }
-            .collect { latestGroup ->
-                _latestGroupState.value = UiState.Success(latestGroup)
-            }
+        fetchLatestGroupUseCase()
+            .catch { e -> _latestGroupState.value = handleThrowable(e) }
+            .collect { latestGroup -> _latestGroupState.value = UiState.Success(latestGroup) }
 
-        fetchFCMTokenUseCase.invoke()
+        fetchFCMTokenUseCase()
 
     }
 

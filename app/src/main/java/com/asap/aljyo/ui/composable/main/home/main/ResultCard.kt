@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,11 +71,11 @@ fun ResultCard(
                                 withStyle(
                                     style = SpanStyle(
                                         color = Black01,
-                                        fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
+                                        fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
+                                        fontWeight = FontWeight.Bold
                                     )
                                 ) {
-                                    // TODO 닉네임
-                                    append("알죠")
+                                    append(viewModel.nickname)
                                 }
                                 append("${stringResource(R.string.of)}\n")
                                 append("${stringResource(R.string.release_alarm_succes_rate)}\n")
@@ -84,7 +85,7 @@ fun ResultCard(
                                         fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
                                     )
                                 ) {
-                                    append("${card?.successRate ?: 0.0f}%")
+                                    append("${card?.offRate ?: 0.0f}%")
                                 }
                                 append(stringResource(R.string.`is`))
                             },
@@ -145,10 +146,7 @@ fun ResultCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = stringResource(
-                                    R.string.counting,
-                                    card?.participatingGroup ?: 0
-                                ),
+                                text = stringResource(R.string.counting, 0),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     color = MaterialTheme.colorScheme.primary,
                                     fontSize = 16.fsp

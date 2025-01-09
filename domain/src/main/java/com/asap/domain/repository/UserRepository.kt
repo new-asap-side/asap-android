@@ -1,9 +1,8 @@
 package com.asap.domain.repository
 
-import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -12,8 +11,6 @@ interface UserRepository {
     suspend fun getUserInfo(): User?
 
     suspend fun fetchUserProfile(): Flow<UserProfile?>
-
-    suspend fun fetchResultCardData(): Flow<ResultCard?>
 
     suspend fun checkNickname(nickname: String): Boolean?
 

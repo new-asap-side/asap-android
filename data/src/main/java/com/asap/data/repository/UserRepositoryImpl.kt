@@ -5,10 +5,9 @@ import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
-import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.repository.UserRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -35,9 +34,6 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun fetchUserProfile(): Flow<UserProfile?> {
         return remoteDataSource.fetchUserProfile(userId = getUserId().toString())
     }
-
-    override suspend fun fetchResultCardData(): Flow<ResultCard?> =
-        remoteDataSource.fetchResultCard()
 
     override suspend fun checkNickname(nickname: String): Boolean? {
         return remoteDataSource.checkNickname(nickname)?.isPossible

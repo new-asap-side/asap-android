@@ -4,7 +4,6 @@ import com.asap.data.remote.request.SaveProfileRequest
 import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.data.remote.service.UserService
-import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.DeleteUserRequestBody
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.user.UserProfile
@@ -16,15 +15,6 @@ import javax.inject.Inject
 class UserRemoteDataSource @Inject constructor(
     private val userService: UserService
 ) {
-    suspend fun fetchResultCard(): Flow<ResultCard?> = flow {
-        val response = userService.fetchResultCard()
-
-        if (!response.isSuccessful) {
-            throw HttpException(response)
-        }
-        emit(response.body())
-    }
-    
     suspend fun checkNickname(nickname: String): CheckNicknameResponse? {
         return userService.checkNickname(
             hashMapOf("nickName" to nickname)

@@ -5,6 +5,7 @@ import com.asap.data.remote.datasource.AlarmRemoteDataSource
 import com.asap.domain.entity.local.DeactivatedAlarm
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.alarm.AlarmOffRate
 import com.asap.domain.repository.AlarmRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -15,6 +16,12 @@ class AlarmRepositoryImpl @Inject constructor(
 ) : AlarmRepository{
     private val userDao = localDataSource.userDao()
     private val dao = localDataSource.deactivatedAlarmDao()
+
+    override suspend fun fetchAlarmOffRate(): Flow<AlarmOffRate?> {
+        val userId = userDao.selectAll().firstOrNull()?.userId ?: "-1"
+
+        return remoteDataSource.fetchAlarmOffRate(userId = userId)
+    }
 
     override suspend fun getDeactivatedAlarmList(): List<DeactivatedAlarm> {
         return dao.getDeactivatedAlarmList()

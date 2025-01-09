@@ -3,7 +3,6 @@ package com.asap.data.remote.service
 import com.asap.data.remote.request.SaveProfileRequest
 import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
-import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.remote.DeleteUserRequestBody
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.user.UserProfile
@@ -15,9 +14,6 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface UserService {
-    @GET("/")
-    suspend fun fetchResultCard(): Response<ResultCard>
-
     @POST("/profile/check-nick-name")
     suspend fun checkNickname(@Body body: Map<String, String>): Response<CheckNicknameResponse>
 

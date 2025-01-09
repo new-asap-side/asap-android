@@ -4,6 +4,7 @@ import android.util.Log
 import com.asap.domain.entity.local.DeactivatedAlarm
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.alarm.AlarmOffRate
 import com.asap.domain.repository.AlarmRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -72,6 +73,19 @@ class AlarmOffUseCaseImpl @Inject constructor(
     override suspend fun invoke(groupId: Int): Flow<WhetherResponse?> {
         return alarmRepository.release(groupId = groupId)
     }
+}
 
+// 알람 해제율 조회
+// /alarm/off-rate/{user_id}
+interface FetchAlarmOffRateUseCase {
+    suspend operator fun invoke(): Flow<AlarmOffRate?>
+}
+
+class FetchAlarmOffRateUseCaseImpl @Inject constructor(
+    private val alarmRepository: AlarmRepository
+) : FetchAlarmOffRateUseCase {
+    override suspend fun invoke(): Flow<AlarmOffRate?> {
+        return alarmRepository.fetchAlarmOffRate()
+    }
 }
 

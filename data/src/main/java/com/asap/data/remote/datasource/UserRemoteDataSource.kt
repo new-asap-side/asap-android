@@ -45,7 +45,7 @@ class UserRemoteDataSource @Inject constructor(
         return userService.saveProfile(request).body()
     }
 
-    suspend fun fetchUserProfile(userId: Int): Flow<UserProfile?> = flow {
+    suspend fun fetchUserProfile(userId: String): Flow<UserProfile?> = flow {
         val response = userService.fetchUserProfile(userId)
         if(!response.isSuccessful) {
             throw HttpException(response)

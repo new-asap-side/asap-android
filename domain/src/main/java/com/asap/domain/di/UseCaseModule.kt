@@ -28,8 +28,8 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchRankingNumberUseCase
 import com.asap.domain.usecase.group.FetchRankingNumberUseCaseImpl
-import com.asap.domain.usecase.group.FetchUserProfileUseCase
-import com.asap.domain.usecase.group.FetchUserProfileUseCaseImpl
+import com.asap.domain.usecase.user.FetchUserProfileUseCase
+import com.asap.domain.usecase.user.FetchUserProfileUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase

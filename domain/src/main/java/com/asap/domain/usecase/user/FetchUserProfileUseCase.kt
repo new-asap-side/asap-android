@@ -1,4 +1,4 @@
-package com.asap.domain.usecase.group
+package com.asap.domain.usecase.user
 
 import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.repository.UserRepository

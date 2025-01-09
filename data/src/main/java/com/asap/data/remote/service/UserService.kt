@@ -12,7 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface UserService {
     @GET("/")
@@ -25,7 +25,7 @@ interface UserService {
     suspend fun saveProfile(@Body body: SaveProfileRequest): Response<SaveProfileResponse>
 
     @GET("/admin/{user_id}")
-    suspend fun fetchUserProfile(@Query("user_id") userId: Int): Response<UserProfile>
+    suspend fun fetchUserProfile(@Path("user_id") userId: String): Response<UserProfile>
 
     @HTTP(method = "DELETE", path = "/admin/user", hasBody = true)
     suspend fun deleteUser(@Body body: DeleteUserRequestBody): Response<WhetherResponse>

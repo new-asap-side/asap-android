@@ -9,6 +9,6 @@ data class UserProfile(
     val userId: Int,
     @Json(name = "profile_image_url")
     val profileImageUrl: String,
-    @Json(name = "profile_image_url")
+    @Json(name = "nick_name")
     val nickName: String
 )

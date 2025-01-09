@@ -8,7 +8,9 @@ import com.asap.aljyo.ui.composable.onboarding.SignupState
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
 import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
+import com.asap.domain.usecase.user.FetchUserProfileUseCase
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
+import com.asap.domain.usecase.user.SaveUserProfileUseCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,9 @@ class OnboardingViewModel @Inject constructor(
     private val authKakaoUseCase: AuthKakaoUseCase,
     private val cacheAuthUseCase: CacheAuthUseCase,
     private val checkCachedAuthUseCase: CheckCachedAuthUseCase,
-    private val checkProfileUseCase: CheckCachedProfileUseCase
+    private val checkProfileUseCase: CheckCachedProfileUseCase,
+    private val fetchUserProfileUseCase: FetchUserProfileUseCase,
+    private val updateUserProfileUseCase: SaveUserProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RequestState<SignupState>>(RequestState.Initial)
     val state get() = _state.asStateFlow()
@@ -38,6 +42,7 @@ class OnboardingViewModel @Inject constructor(
                     _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
                     return@launch
                 }
+
                 _state.value = RequestState.Success(SignupState.REGISTERED)
             }
         }
@@ -56,20 +61,38 @@ class OnboardingViewModel @Inject constructor(
 
         authKakaoUseCase.invoke(token.accessToken).catch { e ->
             Log.e(TAG, "AuthKakaoUseCase error - $e")
-            val errorCode = when (e) {
-                is HttpException -> e.code()
-                else -> -1
-            }
-            _state.value = RequestState.Error(errorCode)
+            handleThrowable(e)
         }.collect { response ->
             // 서버 토큰 Room DB 저장
-            if(response != null) {
-                cacheAuthUseCase(response)
-                _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
-                return@collect
+            if (response == null) {
+                _state.value = RequestState.Error()
             }
-            _state.value = RequestState.Error()
+
+            cacheAuthUseCase(response!!)
+            fetchUserProfile()
         }
+    }
+
+    private fun fetchUserProfile() = viewModelScope.launch {
+        fetchUserProfileUseCase().catch { e ->
+            Log.e(TAG, "$e")
+            handleThrowable(e)
+        }.collect { profile ->
+            if (profile == null) {
+                _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
+            } else {
+                updateUserProfileUseCase(profile.nickName, profile.profileImageUrl)
+                _state.value = RequestState.Success(SignupState.REGISTERED)
+            }
+        }
+    }
+
+    private fun handleThrowable(e: Throwable) {
+        val errorCode = when (e) {
+            is HttpException -> e.code()
+            else -> -1
+        }
+        _state.value = RequestState.Error(errorCode)
     }
 
     companion object {

@@ -33,7 +33,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchUserProfile(): Flow<UserProfile?> {
-        return remoteDataSource.fetchUserProfile(userId = getUserId())
+        return remoteDataSource.fetchUserProfile(userId = getUserId().toString())
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =

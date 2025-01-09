@@ -9,8 +9,8 @@ data class AuthKakaoResponse(
     override val accessToken: String,
     @Json(name = "refreshToken")
     override val refreshToken: String,
-    @Json(name = "kakao_id")
-    override val socialLoginId: String,
     @Json(name = "user_id")
-    override val userId: String
-): AuthResponse()
+    override val userId: String,
+    @Json(name = "kakao_id")
+    override val socialLoginId: String
+): AuthResponse

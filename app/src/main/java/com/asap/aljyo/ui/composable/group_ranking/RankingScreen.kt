@@ -51,6 +51,7 @@ import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
@@ -213,10 +214,23 @@ internal fun RankingScreen(
                     groupId = groupId
                 )
             )
-            val state = viewModel.state.collectAsState()
+            val state by viewModel.state.collectAsState()
 
-            when (state.value) {
-                is UiState.Error -> TODO()
+            when (state) {
+                is UiState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    ) {
+                        ErrorBox(
+                            modifier = Modifier.align(Alignment.Center)
+                        ) {
+                            viewModel.fetchGroupRanking()
+                        }
+                    }
+                }
+
                 UiState.Loading -> Box(
                     modifier = Modifier
                         .padding(paddingValues)
@@ -228,8 +242,8 @@ internal fun RankingScreen(
                 }
 
                 is UiState.Success -> {
-                    val success = state.value as UiState.Success
-                    val rankings = success.data
+                    val mIndex = viewModel.mIndex ?: -1
+
                     Column(
                         modifier = Modifier.padding(paddingValues)
                     ) {
@@ -240,10 +254,12 @@ internal fun RankingScreen(
                                     horizontal = 20.dp,
                                     vertical = 60.dp
                                 ),
-                            rankings = rankings.slice(0..2)
+                            rankings = viewModel.getRankList(),
+                            mIndex = mIndex
                         )
                         UnRankingArea(
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .dropShadow(
                                     RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
                                     offsetY = (-1).dp
@@ -252,7 +268,7 @@ internal fun RankingScreen(
                                 .background(White)
                                 .padding(28.dp)
                                 .weight(1f),
-                            unRakings = rankings.subList(3, rankings.size),
+                            unRakings = viewModel.getUnRankList(),
                         )
                     }
                 }

@@ -117,18 +117,24 @@ internal fun WithdrawalScreen(
                 var showLoadingDialog by remember { mutableStateOf(false) }
                 val withdrawalState by viewModel.withdrawalState.collectAsState()
 
-
                 LaunchedEffect(withdrawalState) {
                     when (withdrawalState) {
                         RequestState.Initial -> Unit
-                        RequestState.Loading -> Unit
+                        RequestState.Loading -> showLoadingDialog = true
 
                         is RequestState.Success -> {
+                            val success = (withdrawalState as RequestState.Success).data
+                            if (!success) {
+                                Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                                return@LaunchedEffect
+                            }
+
                             showLoadingDialog = false
                             navigateToComplete()
                         }
 
                         is RequestState.Error -> {
+                            showLoadingDialog = false
                             Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
                         }
 
@@ -142,7 +148,6 @@ internal fun WithdrawalScreen(
                         onDismissRequest = { showWithdrawalDialog = false },
                         onConfirm = {
                             showWithdrawalDialog = false
-                            showLoadingDialog = true
                             viewModel.deleteUser()
                         }
                     )
@@ -181,7 +186,7 @@ internal fun WithdrawalScreen(
                         modifier = Modifier
                             .weight(1f)
                             .height(52.dp),
-                        enabled = viewModel.checkedPrecautions,
+                        enabled = viewModel.enable,
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.textButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,

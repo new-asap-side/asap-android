@@ -50,7 +50,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -252,7 +251,7 @@ fun CreateGroupScreen(
                     type = GROUP_TITLE,
                     placeHolder = {
                         Text(
-                            text = "그룹명을 입력해주세 (최대 30자 이내)",
+                            text = "그룹명을 입력해주세요 (최대 30자 이내)",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontSize = 15.fsp,
                                 color = Black04

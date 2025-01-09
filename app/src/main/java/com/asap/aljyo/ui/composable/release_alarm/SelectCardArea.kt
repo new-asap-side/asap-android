@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,8 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.manager.VibratorManager
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 private const val maximumCardNumber = 5
@@ -31,7 +28,7 @@ private const val maximumCardNumber = 5
 internal fun SelectCardArea(
     modifier: Modifier = Modifier,
     resourceId: Int,
-    navigateToResult: () -> Unit
+    onComplete: () -> Unit = {},
 ) {
     val targetIndex by remember {
         val index = Random.run { nextInt(maximumCardNumber) }
@@ -39,18 +36,13 @@ internal fun SelectCardArea(
     }
 
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
     val cardModifier = Modifier.size(90.dp, 130.dp)
     val vibratorManager = VibratorManager(context)
 
     val onSelect: (Int) -> Unit = { index ->
         if (targetIndex == index) {
             // success
-            coroutineScope.launch {
-                delay(300)
-                navigateToResult()
-            }
+            onComplete()
         } else {
             // vibrate
             vibratorManager.vibrate(
@@ -123,6 +115,5 @@ private fun Preview() {
     SelectCardArea(
         modifier = Modifier.wrapContentWidth(),
         resourceId = R.drawable.img_illust_water_drop,
-        navigateToResult = {}
     )
 }

@@ -1,6 +1,7 @@
 package com.asap.data.di
 
 import com.asap.data.remote.HeaderInterceptor
+import com.asap.data.remote.service.AlarmService
 import com.asap.data.remote.service.AuthService
 import com.asap.data.remote.service.GroupService
 import com.asap.data.remote.service.UserService
@@ -47,7 +48,7 @@ object NetworkModule {
     fun provideRetrofit(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
             .baseUrl(baseUrl)
             .build()
     }
@@ -66,8 +67,14 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAlarmGroupService(retrofit: Retrofit): GroupService {
+    fun provideGroupService(retrofit: Retrofit): GroupService {
         return retrofit.create(GroupService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlarmService(retrofit: Retrofit): AlarmService {
+        return retrofit.create(AlarmService::class.java)
     }
 
 }

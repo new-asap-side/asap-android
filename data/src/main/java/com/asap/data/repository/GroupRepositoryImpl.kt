@@ -8,15 +8,21 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import kotlin.math.max
 
 class GroupRepositoryImpl @Inject constructor(
     private val remoteDataSource: GroupRemoteDataSource,
-    private val localDataSource: AppDatabase,
+    localDataSource: AppDatabase,
 ): GroupRepository {
+    private val userDao = localDataSource.userDao()
+
+    private suspend fun getUserId(): Int {
+        return (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
+    }
+
     override suspend fun fetchTodayPopularGroup(): Flow<List<AlarmGroup>?> {
         return remoteDataSource.fetchTodayPopularGroup()
     }
@@ -26,13 +32,8 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> {
-        val userDao = localDataSource.userDao()
-        val users = userDao.selectAll()
-
-        if (users.isEmpty()) throw NoSuchElementException("can't find user data")
-
-        val user = users.first()
-        return remoteDataSource.fetchGroupDetails(groupId = groupId, userId = user.userId.toInt())
+        val userId = getUserId()
+        return remoteDataSource.fetchGroupDetails(groupId = groupId, userId = userId)
     }
 
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {
@@ -49,6 +50,11 @@ class GroupRepositoryImpl @Inject constructor(
 
     override suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> {
         return remoteDataSource.fetchGroupRanking(groupId = groupId)
+    }
+
+    override suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?> {
+        val userId = getUserId()
+        return remoteDataSource.fetchRankingNumber(groupId = groupId, userId = userId)
     }
 
     override suspend fun postCreateGroup(

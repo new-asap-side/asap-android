@@ -10,5 +10,5 @@ sealed class RequestState<out T> {
     data object Initial : RequestState<Nothing>()
     data object Loading : RequestState<Nothing>()
     data class Success<out T>(val data: T) : RequestState<T>()
-    data class Error(val errorCode: String? = null) : RequestState<Nothing>()
+    data class Error(val errorCode: Int? = null) : RequestState<Nothing>()
 }

@@ -10,10 +10,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.ui.composable.common.Banner
 import com.asap.aljyo.ui.composable.common.ErrorBox
@@ -33,6 +37,18 @@ internal fun MainScreen(
     )
 
     val error = viewModel.error
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val observer = LifecycleEventObserver { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> viewModel.fetchHomeData(internal = true)
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.addObserver(observer)
+    }
 
     DisposableEffect(scrollState) {
         onDispose {

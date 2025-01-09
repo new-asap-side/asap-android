@@ -1,6 +1,7 @@
 package com.asap.aljyo.core.components.group_form
 
 data class AlarmScreenState(
+    val nickName: String? = "",
     val alarmUnlockContents: String = "",
     val alarmType: String = "",
     val musicTitle: String? = null,

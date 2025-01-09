@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -57,7 +56,7 @@ fun WeekdayPicker(
                         .clip(CircleShape)
                         .background(color = if (isSelected) Red02 else White)
                         .border(
-                            width = if (isSelected) 1.dp else 2.dp,
+                            width = 1.dp,
                             color = if (isSelected) Red01 else Grey02,
                             shape = CircleShape,
                         )

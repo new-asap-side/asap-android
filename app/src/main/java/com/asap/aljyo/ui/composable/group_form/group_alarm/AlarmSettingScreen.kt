@@ -339,8 +339,9 @@ fun SelectBox(
 ) {
     Box(
         modifier = modifier
+            .height(48.dp)
             .border(
-                width = 2.dp,
+                width = 1.dp,
                 color = if (isSelected) Red01 else Grey02,
                 shape = RoundedCornerShape(6.dp)
             )

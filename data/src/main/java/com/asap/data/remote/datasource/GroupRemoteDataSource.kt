@@ -64,6 +64,12 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
+    suspend fun withdrawGroup(userId: Int, groupId: Int) {
+        val request = mapOf("user_id" to userId, "group_id" to groupId)
+
+        groupService.withdrawGroup(request)
+    }
+
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> = flow {
         val response = groupService.fetchGroupRanking(groupId = groupId)
         emit(response.body())

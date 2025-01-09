@@ -19,22 +19,21 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
-    private val localDataSource: AppDatabase,
+    localDataSource: AppDatabase,
     private val sessionLocalDataSource: SessionLocalDataSource
 ) : UserRepository {
+    private val userDao = localDataSource.userDao()
+
     override suspend fun isCached(): Boolean {
-        val dao = localDataSource.userDao()
-        return dao.isCached()
+        return userDao.isCached()
     }
 
     override suspend fun getUserInfo(): User? {
-        val dao = localDataSource.userDao()
-        val selected = dao.selectAll()
-        return if (selected.isEmpty()) null else selected.first()
+        return userDao.selectAll().firstOrNull()
     }
 
-    override suspend fun fetchUserProfile(userId: Int): Flow<UserProfile?> {
-        return remoteDataSource.fetchUserProfile(userId = userId)
+    override suspend fun fetchUserProfile(): Flow<UserProfile?> {
+        return remoteDataSource.fetchUserProfile(userId = getUserId())
     }
 
     override suspend fun fetchResultCardData(): Flow<ResultCard?> =
@@ -52,7 +51,7 @@ class UserRepositoryImpl @Inject constructor(
         // profileImg를 DB에 저장시키면
         remoteDataSource.saveProfile(userId, nickname, profileImg)
             .also {
-                localDataSource.userDao().apply {
+                userDao.run {
                     updateProfileImg(it?.profileImageUrl, userId)
                     updateNickname(nickname, userId)
                 }
@@ -73,21 +72,19 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?> {
-        val userDao = localDataSource.userDao()
-        val user = userDao.selectAll().ifEmpty {
-            throw NoSuchElementException("can't access to user table")
-        }.first()
-
-        return remoteDataSource.deleteUser(userId = user.userId.toInt(), survey = survey)
+        return remoteDataSource.deleteUser(userId = getUserId(), survey = survey)
     }
 
     override suspend fun deleteLocalUserInfo() {
         // Room DB delete
-        val userDao = localDataSource.userDao()
         userDao.deleteAll()
 
         // session data store clear
         sessionLocalDataSource.clear()
+    }
+
+    private suspend fun getUserId(): Int {
+        return (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
     }
 
     companion object {

@@ -11,7 +11,7 @@ interface UserRepository {
 
     suspend fun getUserInfo(): User?
 
-    suspend fun fetchUserProfile(userId: Int): Flow<UserProfile?>
+    suspend fun fetchUserProfile(): Flow<UserProfile?>
 
     suspend fun fetchResultCardData(): Flow<ResultCard?>
 

@@ -43,6 +43,10 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.postJoinGroup(body = body)
     }
 
+    override suspend fun withdrawGroup(userId: Int, groupId: Int) {
+        remoteDataSource.withdrawGroup(userId, groupId)
+    }
+
     override suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> {
         return remoteDataSource.fetchGroupRanking(groupId = groupId)
     }

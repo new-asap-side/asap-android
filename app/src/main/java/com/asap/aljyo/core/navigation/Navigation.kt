@@ -37,8 +37,7 @@ import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
-import com.asap.domain.entity.remote.Alarm
-import com.google.gson.Gson
+import com.asap.domain.entity.remote.alarm.AlarmPayload
 
 
 @Composable
@@ -112,7 +111,7 @@ internal fun AppNavHost() {
         ) { navBackstackEntry ->
             val arguments = navBackstackEntry.arguments
             val alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                arguments?.getParcelable(AlarmNavType.name, Alarm::class.java)
+                arguments?.getParcelable(AlarmNavType.name, AlarmPayload::class.java)
             } else {
                 @Suppress("DEPRECATION")
                 arguments?.getParcelable(AlarmNavType.name)
@@ -241,10 +240,6 @@ fun MainNavHost(
 
         composable(route = MainScreenRoute.Home.route) {
             HomeScreen(
-                navigateToReleaseAlarm = { alarm ->
-                    val json = Gson().toJson(alarm)
-                    screenNavController.navigate("${ScreenRoute.ReleaseAlarm.route}/$json")
-                },
                 navigateToDescript = {
                     screenNavController.navigate(ScreenRoute.AljyoDescript.route)
                 },

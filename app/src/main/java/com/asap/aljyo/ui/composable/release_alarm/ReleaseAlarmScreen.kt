@@ -1,5 +1,7 @@
 package com.asap.aljyo.ui.composable.release_alarm
 
+import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Color
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -39,12 +41,14 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.release_alarm.ReleaseAlarmViewModel
+import com.asap.aljyo.core.components.service.AlarmService
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.core.notification.AlarmMessageHandler
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.Alarm
-import com.asap.domain.entity.remote.AlarmUnlockContent
+import com.asap.domain.entity.remote.alarm.AlarmPayload
+import com.asap.domain.entity.remote.alarm.AlarmUnlockContent
 import kotlin.random.Random
 import androidx.compose.ui.graphics.Color as compose
 
@@ -65,7 +69,7 @@ private val illusts = listOf(
 
 @Composable
 internal fun ReleaseAlarmScreen(
-    alarm: Alarm,
+    alarm: AlarmPayload,
     navigateToResult: (Int) -> Unit,
     viewModel: ReleaseAlarmViewModel = hiltViewModel()
 ) {
@@ -73,8 +77,8 @@ internal fun ReleaseAlarmScreen(
         mutableIntStateOf(Random.run { nextInt(illusts.size) })
     }
     val context = LocalContext.current
-
     val requestState by viewModel.rState.collectAsState()
+
     LaunchedEffect(requestState) {
         when (requestState) {
             RequestState.Initial, RequestState.Loading -> Unit
@@ -82,6 +86,12 @@ internal fun ReleaseAlarmScreen(
             is RequestState.Success -> {
                 val result = (requestState as RequestState.Success).data
                 if (result) {
+                    // notification 제거
+                    (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).run {
+                        cancel(AlarmMessageHandler.CHANNEL_ID)
+                    }
+                    // 알람 서비스 종료
+                    AlarmService.stopAlarmService(context)
                     navigateToResult(index)
                 }
             }
@@ -119,8 +129,8 @@ internal fun ReleaseAlarmScreen(
             if (requestState is RequestState.Loading) {
                 Box(
                     modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
+                        .padding(paddingValues)
+                        .fillMaxSize()
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -137,8 +147,8 @@ internal fun ReleaseAlarmScreen(
                     .padding(paddingValues)
             ) {
                 val content: AlarmContent = when (alarm.content) {
-                    AlarmUnlockContent.Card -> AlarmContent.SelectCard
-                    AlarmUnlockContent.Drag -> AlarmContent.Drag
+                    AlarmUnlockContent.Card -> AlarmContent.Slide
+                    AlarmUnlockContent.Slide -> AlarmContent.Card
                 }
 
                 Column(
@@ -148,7 +158,7 @@ internal fun ReleaseAlarmScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = alarm.alarmTime,
+                        text = "21:30",
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontSize = 86.fsp,
                             color = White
@@ -180,7 +190,7 @@ internal fun ReleaseAlarmScreen(
                     Spacer(modifier = Modifier.height(40.dp))
 
                     when (content) {
-                        AlarmContent.Drag ->
+                        AlarmContent.Slide ->
                             DragArea(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -191,7 +201,7 @@ internal fun ReleaseAlarmScreen(
                                 }
                             )
 
-                        AlarmContent.SelectCard ->
+                        AlarmContent.Card ->
                             SelectCardArea(
                                 modifier = Modifier
                                     .fillMaxWidth()

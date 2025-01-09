@@ -44,17 +44,19 @@ import com.asap.domain.entity.remote.AlarmSummary
 @Composable
 internal fun AlarmCard(
     modifier: Modifier = Modifier,
-    alarm: AlarmSummary
+    alarm: AlarmSummary,
+    onCheckChanged: (Boolean, AlarmSummary, () -> Unit) -> Unit,
+    isDeactivated: Boolean,
 ) {
-    var checked by remember { mutableStateOf(true) }
+    var activate by remember { mutableStateOf(!isDeactivated) }
 
-    val containerColor = if (checked) {
+    val containerColor = if (activate) {
         MaterialTheme.colorScheme.primaryContainer
     } else {
         White
     }
 
-    val contentColor = if (checked) {
+    val contentColor = if (activate) {
         MaterialTheme.colorScheme.primary
     } else {
         Grey03
@@ -81,7 +83,7 @@ internal fun AlarmCard(
                 text = alarm.group.title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 16.fsp,
-                    color = if (!checked) Black01 else contentColor
+                    color = if (!activate) Black01 else contentColor
                 )
             )
 
@@ -113,8 +115,12 @@ internal fun AlarmCard(
                     modifier = Modifier
                         .size(52.dp, 28.dp)
                         .clip(CircleShape),
-                    checked = checked,
-                    onCheckChanged = { checked = !checked }
+                    checked = activate,
+                    onCheckChanged = {
+                        onCheckChanged(activate, alarm) {
+                            activate = !activate
+                        }
+                    }
                 )
             }
 
@@ -155,7 +161,9 @@ private fun Preview() {
                     alarmEndDate = "",
                     alarmDays = listOf("월", "화", "수")
                 )
-            )
+            ),
+            onCheckChanged = { _, _, _ -> },
+            isDeactivated = true
         )
     }
 }

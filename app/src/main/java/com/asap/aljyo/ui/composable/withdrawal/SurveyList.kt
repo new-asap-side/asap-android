@@ -28,7 +28,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
@@ -63,10 +62,14 @@ internal fun SurveyList(
                 onSelect = {
                     if (selectedIndex == index) {
                         viewModel.select(null)
+                        viewModel.inputSurvey("")
                         return@SurveyItem
                     }
-                    viewModel.survey = survey
+
                     viewModel.select(index)
+                    viewModel.inputSurvey(
+                        if (index == surveyContents.lastIndex) "" else survey
+                    )
                 }
             ) {
                 if (index == surveyContents.lastIndex && index == selectedIndex) {
@@ -81,7 +84,7 @@ internal fun SurveyList(
 
                             if (value.length <= maxLength) {
                                 text = value
-                                viewModel.survey = value
+                                viewModel.inputSurvey(value)
                             }
                         },
                         textStyle = MaterialTheme.typography.bodyMedium.copy(

@@ -5,6 +5,9 @@ import com.asap.data.remote.response.CheckNicknameResponse
 import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.ResultCard
+import com.asap.domain.entity.remote.DeleteUserRequestBody
+import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.UserProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -42,14 +45,24 @@ class UserRemoteDataSource @Inject constructor(
         return userService.saveProfile(request).body()
     }
 
-    suspend fun deleteUser(survey: String): Flow<Unit> = flow {
-        val response = userService.deleteUser(
-            hashMapOf("survey" to survey)
-        )
-        if (!response.isSuccessful) {
+    suspend fun fetchUserProfile(userId: String): Flow<UserProfile?> = flow {
+        val response = userService.fetchUserProfile(userId)
+        if(!response.isSuccessful) {
             throw HttpException(response)
         }
 
-        emit(Unit)
+        emit(response.body())
+    }
+
+    suspend fun deleteUser(userId: Int, survey: String): Flow<WhetherResponse?> = flow {
+        userService.deleteUser(
+            DeleteUserRequestBody(
+                userId = userId,
+                userLeaveReason = survey
+            )
+        ).also { response ->
+            if (response.isSuccessful) throw HttpException(response)
+            emit(response.body())
+        }
     }
 }

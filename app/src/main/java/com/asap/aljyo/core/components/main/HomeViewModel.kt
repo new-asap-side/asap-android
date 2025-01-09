@@ -63,11 +63,13 @@ class HomeViewModel @Inject constructor(
         fetchHomeData()
     }
 
-    fun fetchHomeData() = viewModelScope.launch {
+    fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
         _error.value = false
-        _cardState.value = UiState.Loading
-        _popularGroupState.value = UiState.Loading
-        _latestGroupState.value = UiState.Loading
+        if (!internal) {
+            _cardState.value = UiState.Loading
+            _popularGroupState.value = UiState.Loading
+            _latestGroupState.value = UiState.Loading
+        }
 
         delay(1000)
         resultCardUseCase.invoke()
@@ -114,12 +116,12 @@ class HomeViewModel @Inject constructor(
             )
         ).catch { e ->
             Log.e("VM", "$e")
-            when (e) {
-                is HttpException -> {
-                    _joinResponseState.value = RequestState.Error("${e.code()}")
-                }
-                else -> _joinResponseState.value = RequestState.Error("-1")
+            val errorCode = when (e) {
+                is HttpException -> e.code()
+                else -> -1
             }
+
+            _joinResponseState.value = RequestState.Error(errorCode)
         }.collect { result ->
             Log.d("VM", "$result")
             _joinResponseState.value = RequestState.Success(result)

@@ -1,7 +1,5 @@
 package com.asap.aljyo.ui.composable.release_alarm
 
-import android.app.NotificationManager
-import android.content.Context
 import android.graphics.Color
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -43,7 +41,6 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.release_alarm.ReleaseAlarmViewModel
 import com.asap.aljyo.core.components.service.AlarmService
 import com.asap.aljyo.core.fsp
-import com.asap.aljyo.core.notification.AlarmMessageHandler
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
@@ -86,10 +83,6 @@ internal fun ReleaseAlarmScreen(
             is RequestState.Success -> {
                 val result = (requestState as RequestState.Success).data
                 if (result) {
-                    // notification 제거
-                    (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).run {
-                        cancel(AlarmMessageHandler.CHANNEL_ID)
-                    }
                     // 알람 서비스 종료
                     AlarmService.stopAlarmService(context)
                     navigateToResult(index)

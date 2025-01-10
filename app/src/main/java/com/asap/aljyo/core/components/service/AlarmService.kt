@@ -30,6 +30,10 @@ class AlarmService : Service() {
     private lateinit var player: MediaPlayer
     private lateinit var vibratorManager: VibratorManager
 
+    // vibrate array
+    private val timings = longArrayOf(200, 100, 200, 100, 200, 350)
+    private val amps = intArrayOf(100, 0, 100, 0, 100, 0)
+
     @SuppressLint("DiscouragedApi")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val uri = (intent?.extras?.getString(DEEP_LINK_URI) ?: "").toUri()
@@ -76,15 +80,9 @@ class AlarmService : Service() {
     }
 
     private fun vibrate() {
-        vibratorManager = VibratorManager(this)
-
-        val timings = longArrayOf(200, 100, 200, 100, 200, 350)
-        val amps = intArrayOf(100, 0, 100, 0, 100, 0)
-        vibratorManager.vibrate(
-            VibrationEffect.createWaveform(
-                timings, amps, 0
-            )
-        )
+        vibratorManager = VibratorManager(this).also {
+            it.vibrate(VibrationEffect.createWaveform(timings, amps, 0))
+        }
     }
 
     private fun startForeground(uri: Uri) {
@@ -101,17 +99,16 @@ class AlarmService : Service() {
                 addNextIntentWithParentStack(deeplinkIntent)
                 getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
             }
-            val notificationId = getString(R.string.default_notification_channel_id)
             val notificationBuilder = NotificationCompat.Builder(
-                this,
-                notificationId
+                this, getString(R.string.default_notification_channel_id)
             )
                 .setSmallIcon(R.drawable.img_app_icon)
                 .setColor(getColor(R.color.ic_launcher_background))
                 .setContentTitle(getString(R.string.notification_alarm_title))
                 .setContentText(getString(R.string.notification_alarm_description))
-                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+                .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(false)
                 .setOngoing(true)
 
             ServiceCompat.startForeground(
@@ -149,6 +146,7 @@ class AlarmService : Service() {
         }
 
         super.onDestroy()
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
     companion object Key {

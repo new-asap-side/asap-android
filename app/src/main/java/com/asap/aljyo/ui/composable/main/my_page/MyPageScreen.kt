@@ -19,7 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.MyPageViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.Banner
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -32,6 +34,7 @@ internal fun MyPageScreen(
     navigateToDescript: () -> Unit,
     navigateToPreferences: () -> Unit,
     navigateToOnboarding: () -> Unit,
+    viewModel: MyPageViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
@@ -57,7 +60,8 @@ internal fun MyPageScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
-            nickname = "알죠"
+            profile = viewModel.profile,
+            nickname = viewModel.nickname
         )
 
         Spacer(modifier = Modifier.height(28.dp))

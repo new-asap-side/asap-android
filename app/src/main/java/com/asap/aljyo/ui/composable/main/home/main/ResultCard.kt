@@ -146,7 +146,10 @@ fun ResultCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = stringResource(R.string.counting, 0),
+                                text = stringResource(
+                                    R.string.counting,
+                                    card?.joinedGroupCount ?: 0
+                                ),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     color = MaterialTheme.colorScheme.primary,
                                     fontSize = 16.fsp

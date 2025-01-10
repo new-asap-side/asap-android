@@ -98,6 +98,7 @@ internal fun ReleaseAlarmScreen(
 
             is RequestState.Error -> {
                 Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                AlarmService.stopAlarmService(context = context.applicationContext)
             }
         }
     }
@@ -147,8 +148,8 @@ internal fun ReleaseAlarmScreen(
                     .padding(paddingValues)
             ) {
                 val content: AlarmContent = when (alarm.content) {
-                    AlarmUnlockContent.Card -> AlarmContent.Slide
-                    AlarmUnlockContent.Slide -> AlarmContent.Card
+                    AlarmUnlockContent.Card -> AlarmContent.Card
+                    AlarmUnlockContent.Slide -> AlarmContent.Slide
                 }
 
                 Column(

@@ -6,13 +6,8 @@ import android.os.Bundle
 import androidx.navigation.NavType
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.edit.PersonalEditState
-import com.asap.domain.entity.remote.Alarm
-import com.google.gson.Gson
-import com.google.gson.JsonParseException
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.delay
 
 object CustomNavType {
     private val moshi = Moshi.Builder()

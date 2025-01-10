@@ -1,6 +1,7 @@
 package com.asap.data.di
 
 import com.asap.data.remote.HeaderInterceptor
+import com.asap.data.remote.TokenAuthenticator
 import com.asap.data.remote.service.AlarmService
 import com.asap.data.remote.service.AuthService
 import com.asap.data.remote.service.GroupService
@@ -30,22 +31,57 @@ object NetworkModule {
             .build()
     }
 
+    @GenenralOkHttpClient
     @Singleton
     @Provides
-    fun provideOkHttpClient(
-        headerInterceptor: HeaderInterceptor
-    ): OkHttpClient {
+    fun provideOkHttpClient(headerInterceptor: HeaderInterceptor): OkHttpClient {
         val client = OkHttpClient.Builder()
-            .addInterceptor(headerInterceptor)
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            .addInterceptor(headerInterceptor)
+
         return client.build()
     }
 
+    @AuthOkHttpClient
     @Singleton
     @Provides
-    fun provideRetrofit(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit {
+    fun provideAuthOkHttpClient(
+        headerInterceptor: HeaderInterceptor,
+        authenticator: TokenAuthenticator
+    ): OkHttpClient {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .addInterceptor(headerInterceptor)
+            .authenticator(authenticator)
+
+        return client.build()
+    }
+
+    @AuthRetrofit
+    @Singleton
+    @Provides
+    fun provideAuthRetrofit(
+        moshi: Moshi,
+        @AuthOkHttpClient okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+            .baseUrl(baseUrl)
+            .build()
+    }
+
+    @GeneralRetrofit
+    @Singleton
+    @Provides
+    fun provideRetrofit(
+        moshi: Moshi,
+        @GenenralOkHttpClient okHttpClient: OkHttpClient
+    ): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
@@ -55,25 +91,25 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAuthService(retrofit: Retrofit): AuthService {
+    fun provideAuthService(@GeneralRetrofit retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideUserService(retrofit: Retrofit): UserService {
+    fun provideUserService(@AuthRetrofit retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideGroupService(retrofit: Retrofit): GroupService {
+    fun provideGroupService(@AuthRetrofit retrofit: Retrofit): GroupService {
         return retrofit.create(GroupService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideAlarmService(retrofit: Retrofit): AlarmService {
+    fun provideAlarmService(@AuthRetrofit retrofit: Retrofit): AlarmService {
         return retrofit.create(AlarmService::class.java)
     }
 

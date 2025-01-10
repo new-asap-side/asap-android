@@ -56,6 +56,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
+import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -70,15 +71,17 @@ import com.asap.aljyo.ui.theme.Red02
 @Composable
 fun AlarmSettingScreen(
     onBackClick: () -> Unit,
-    navigateToAlarmMusicScreen: () -> Unit,
+    navigateToAlarmMusicScreen: (String?) -> Unit,
     onCompleteClick: (Int) -> Unit,
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
     var openAlertDialog by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.showDialog.collect{
+            isLoading = false
             openAlertDialog = true
         }
     }
@@ -123,7 +126,7 @@ fun AlarmSettingScreen(
                 .padding(start = 20.dp, end = 20.dp, top = 16.dp)
         ) {
             Text(
-                text = "\"닉네임\"님만의 알람 방식을\n선택해주세요!",
+                text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,
                     fontSize = 22.fsp,
@@ -158,7 +161,7 @@ fun AlarmSettingScreen(
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = navigateToAlarmMusicScreen
+                            onClick = { navigateToAlarmMusicScreen(alarmState.musicTitle) }
                         )
                 ) {
                     Row(
@@ -256,9 +259,14 @@ fun AlarmSettingScreen(
                 text = "완료",
                 enable = alarmState.buttonState,
                 onClick = {
+                    isLoading = true
                     viewModel.onCompleteClicked()
                 }
             )
+            if (isLoading) {
+                LoadingDialog()
+            }
+
             if (openAlertDialog) {
                 CustomAlertDialog(
                     title = "그룹 생성 완료!",
@@ -331,8 +339,9 @@ fun SelectBox(
 ) {
     Box(
         modifier = modifier
+            .height(48.dp)
             .border(
-                width = 2.dp,
+                width = 1.dp,
                 color = if (isSelected) Red01 else Grey02,
                 shape = RoundedCornerShape(6.dp)
             )

@@ -1,21 +1,16 @@
 package com.asap.domain.repository
 
-import com.asap.domain.entity.ResultCard
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.Alarm
-import com.asap.domain.entity.remote.AuthKakaoResponse
+import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-    suspend fun authKakao(kakaoAccessToken: String): Flow<AuthKakaoResponse?>
-
     suspend fun isCached(): Boolean
 
-    suspend fun cacheKakaoUserInfo(response: AuthKakaoResponse)
+    suspend fun getUserInfo(): User?
 
-    suspend fun getUserInfo(): User
-
-    suspend fun fetchResultCardData(): Flow<ResultCard?>
+    suspend fun fetchUserProfile(): Flow<UserProfile?>
 
     suspend fun checkNickname(nickname: String): Boolean?
 
@@ -25,11 +20,7 @@ interface UserRepository {
         profileImg: String
     )
 
-    suspend fun fetchFCMToken()
-
-    suspend fun fetchUserAlarmList(): Flow<List<Alarm>?>
-
-    suspend fun deleteRemoteUserInfo(survey: String): Flow<Unit>
+    suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?>
 
     suspend fun deleteLocalUserInfo()
 

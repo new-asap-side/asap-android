@@ -51,7 +51,7 @@ private val arrowStroke = 4.dp
 internal fun DragArea(
     modifier: Modifier,
     resourceId: Int,
-    navigateToResult: () -> Unit
+    onComplete: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -87,7 +87,7 @@ internal fun DragArea(
                             },
                             onDragEnd = {
                                 if (draggedOffset >= minimumOffset) {
-                                    navigateToResult()
+                                    onComplete()
                                     return@detectDragGestures
                                 }
                                 draggedOffset = 0f
@@ -205,7 +205,7 @@ private fun Preview() {
                 .width(300.dp)
                 .wrapContentHeight(),
             resourceId = R.drawable.img_illust_water_drop,
-            navigateToResult = {}
+            onComplete = {}
         )
     }
 }

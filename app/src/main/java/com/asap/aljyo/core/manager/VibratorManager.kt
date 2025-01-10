@@ -24,4 +24,8 @@ class VibratorManager(context: Context) {
     fun vibrate(vibe: VibrationEffect) {
         vibrator.vibrate(vibe)
     }
+
+    fun cancel() {
+        vibrator.cancel()
+    }
 }

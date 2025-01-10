@@ -1,9 +1,10 @@
 package com.asap.data.utility
 
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZonedDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
@@ -14,19 +15,29 @@ object DateTimeManager {
 
     private const val DAY_BY_SECOND = 86400
 
+    // ex) 2024.12.31
+    private val yearFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+
     // ex) 월요일 13:30
     private val dayFormatter = DateTimeFormatter.ofPattern("EEEE HH:mm", Locale.KOREAN)
 
     // ex) 13:30
     private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREAN)
 
-    private fun formatCurrentTime(): String {
+    private fun formatCurrentTimeByDate(): String {
         val now = LocalDateTime.now()
         return now.format(dayFormatter)
     }
 
-    fun parseISO(stringDate: String): String {
-        return ZonedDateTime.parse(stringDate).toLocalDate().toString()
+    fun formatCurrentTime(): String {
+        val now = LocalDateTime.now()
+        return now.format(timeFormatter)
+    }
+
+    fun parseISO(input: String): String {
+        val instant = Instant.parse(input)
+        val date = instant.atZone(ZoneId.of("UTC")).toLocalDate()
+        return yearFormatter.format(date)
     }
 
     fun parseToAmPm(time: String): String {
@@ -44,7 +55,7 @@ object DateTimeManager {
         val today = if (isTest) {
             parseToDayOfWeek("월")
         } else {
-            parseToDayOfWeek(formatCurrentTime().split(" ")[0])
+            parseToDayOfWeek(formatCurrentTimeByDate().split(" ")[0])
         }
 
         return input.sortedWith(
@@ -61,7 +72,7 @@ object DateTimeManager {
         val today = if (isTest) {
             parseToDayOfWeek("월요일")
         } else {
-            parseToDayOfWeek(formatCurrentTime().split(" ")[0])
+            parseToDayOfWeek(formatCurrentTimeByDate().split(" ")[0])
         }
 
         val startOfWeek = LocalDateTime.now().with(today)
@@ -101,7 +112,7 @@ object DateTimeManager {
         )
         val minites = String.format(
             Locale.KOREAN,
-            "%02d", duration % 60
+            "%02d", (duration % 60) + 1
         )
 
         return if (days == 0L) {

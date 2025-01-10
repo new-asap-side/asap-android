@@ -16,12 +16,17 @@ class HeaderInterceptor @Inject constructor(
             .addHeader("Content-Type", "application/json")
 
         if (!requestPath.startsWith("/auth")) {
-            var accessToken = ""
-            runBlocking { accessToken = sessionLocalDataSource.getAccessToken() ?: "" }
-            requestBuilder.addHeader("Authorization", "Bearer $accessToken")
+            val accessToken = runBlocking {
+                sessionLocalDataSource.getAccessToken() ?: ""
+            }
+            requestBuilder.addHeader(AUTH_KEY, "Bearer $accessToken")
         }
         Log.d("HeaderInterceptor:","${requestBuilder.build()}")
 
         return chain.proceed(requestBuilder.build())
+    }
+
+    companion object {
+        const val AUTH_KEY = "Authorization"
     }
 }

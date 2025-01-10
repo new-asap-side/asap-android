@@ -5,21 +5,35 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asap.aljyo.core.components.edit.GroupEditState
+import com.asap.aljyo.core.components.edit.PersonalEditState
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
+import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.utility.DateTimeManager
+import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupMember
 import com.asap.domain.entity.remote.UserGroupType
+import com.asap.domain.usecase.group.CreateGroupUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
+import com.asap.domain.usecase.group.JoinGroupUseCase
+import com.asap.domain.usecase.group.WithdrawGroupUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -29,6 +43,8 @@ import java.util.Queue
 class GroupDetailsViewModel @AssistedInject constructor(
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val joinGroupUseCase: JoinGroupUseCase,
+    private val withdrawGroupUseCase: WithdrawGroupUseCase,
     @Assisted private val groupId: Int
 ) : ViewModel() {
     private val _groupDetailsState = MutableStateFlow<UiState<GroupDetails?>>(UiState.Loading)
@@ -53,8 +69,22 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _nextAlarmTime = MutableStateFlow("")
     val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
 
+    private val _groupEdit = MutableSharedFlow<GroupEditState>()
+    val groupEdit = _groupEdit.asSharedFlow()
+
+    private val _personalEdit = MutableSharedFlow<PersonalEditState>()
+    val personalEdit = _personalEdit.asSharedFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     init {
+        fetchGroupDetails()
+    }
+
+    fun fetchGroupDetails() {
         viewModelScope.launch {
+            _groupDetailsState.value = UiState.Loading
             delay(500)
             fetchGroupDetailsUseCase.invoke(groupId = groupId).catch { e ->
                 Log.e(TAG, "error: $e")
@@ -66,7 +96,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
             }.collect { result ->
                 Log.d(TAG, "$result")
 
-                val mId = getUserInfoUseCase.invoke().userId.toInt()
+                val mId = getUserInfoUseCase()?.userId?.toInt()
                 result?.users.also { participateUsers ->
                     val target = participateUsers?.find { participants ->
                         mId == participants.userId
@@ -134,6 +164,81 @@ class GroupDetailsViewModel @AssistedInject constructor(
     fun parseISOFormat(stringDate: String): String = DateTimeManager.parseISO(stringDate)
 
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
+
+    fun parseAlarmDays(groupDetails: GroupDetails?): String {
+        return (groupDetails?.alarmDays ?: emptyList()).joinToString( separator = " ")
+    }
+
+    fun navigateToGroupEdit() {
+        (_groupDetailsState.value as UiState.Success).data?.let {
+            GroupEditState(
+                groupId = groupId,
+                alarmUnlockContents = it.alarmUnlockContents,
+                groupImage = it.groupThumbnailImageUrl,
+                title = it.title,
+                description = it.description,
+                currentPerson = it.currentPerson,
+                isPublic = it.isPublic,
+                groupPassword = null
+            )
+        }?.also {
+            viewModelScope.launch {
+                _groupEdit.emit(it)
+            }
+        }
+    }
+
+    fun navigateToPersonalEdit() {
+        val memberList = (_groupDetailsState.value as UiState.Success).data?.users
+
+        viewModelScope.launch {
+            val userId = getUserInfoUseCase()?.userId?.toInt()
+
+            memberList?.find { it.userId == userId }?.let {
+                PersonalEditState(
+                    alarmType = it.alarmType,
+                    musicTitle = it.musicTitle,
+                    alarmVolume = it.volume.toFloat()
+                ).also { personalEditState ->
+                    _personalEdit.emit(personalEditState)
+                }
+            }
+        }
+    }
+
+    fun joinGroup() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val userInfo = getUserInfoUseCase()
+
+            joinGroupUseCase(
+                GroupJoinRequest(
+                    userId = userInfo?.userId?.toInt() ?: -1,
+                    groupId = groupId,
+                    deviceToken = FCMTokenManager.token,
+                    groupPassword = null,
+                )
+            ).firstOrNull().let { response ->
+                if (response != null) _userGroupType.value = UserGroupType.Participant
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun withdrawGroup() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val userInfo = getUserInfoUseCase()
+
+            withdrawGroupUseCase(
+                userId = userInfo?.userId?.toInt() ?: -1,
+                groupId = groupId
+            )
+        }.invokeOnCompletion {
+            _isLoading.value = false
+            _userGroupType.value = UserGroupType.NonParticipant
+        }
+    }
 
     override fun onCleared() {
         active = false

@@ -50,7 +50,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,6 +60,7 @@ import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -251,7 +251,7 @@ fun CreateGroupScreen(
                     type = GROUP_TITLE,
                     placeHolder = {
                         Text(
-                            text = "그룹명을 입력해주세 (최대 30자 이내)",
+                            text = "그룹명을 입력해주세요 (최대 30자 이내)",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontSize = 15.fsp,
                                 color = Black04
@@ -386,7 +386,12 @@ fun CreateGroupScreen(
                         .padding(bottom = 6.dp, top = 40.dp),
                     text = "다음",
                     enable = groupState.buttonState,
-                    onClick = onNextClick
+                    onClick = {
+                        if (groupState.groupImage == null) {
+                            viewModel.onGroupImageSelected(PictureUtil.groupRandomImage[1])
+                        }
+                        onNextClick()
+                    }
                 )
             }
         }
@@ -397,7 +402,7 @@ fun CreateGroupScreen(
 @Composable
 fun GroupImagePicker(
      groupImage: Uri?,
-    onImagePickerClick: () -> Unit
+     onImagePickerClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -406,7 +411,7 @@ fun GroupImagePicker(
             .padding(top = 8.dp)
     ) {
         AsyncImage(
-            model = groupImage ?: R.drawable.group_default_img,
+            model = groupImage ?: PictureUtil.groupRandomImage[1],
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -447,9 +452,10 @@ fun GroupImagePicker(
 @Composable
 @Preview
 fun PreviewCreateGroupScreen() {
-//    AljyoTheme {
-//        CreateGroupScreen(
-//            onBackClick = {}
-//        )
-//    }
+    AljyoTheme {
+        CreateGroupScreen(
+            onBackClick = {},
+            onNextClick = {}
+        )
+    }
 }

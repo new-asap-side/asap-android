@@ -9,6 +9,7 @@ import com.asap.aljyo.util.PictureUtil
 import com.asap.aljyo.util.format
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.usecase.group.CreateGroupUseCase
+import com.asap.domain.usecase.group.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,13 +18,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupFormViewModel @Inject constructor(
-    private val createGroupUseCase: CreateGroupUseCase
-): ViewModel() {
+    val saveStateHandle: SavedStateHandle,
+    private val createGroupUseCase: CreateGroupUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
+) : ViewModel() {
     private val _groupScreenState = MutableStateFlow(GroupScreenState())
     val groupScreenState: StateFlow<GroupScreenState> get() = _groupScreenState.asStateFlow()
 
@@ -37,6 +39,19 @@ class GroupFormViewModel @Inject constructor(
     val showDialog = _showDialog.asSharedFlow()
 
     private var groupId: Int? = null
+
+    init {
+        viewModelScope.launch {
+            _alarmScreenState.value = _alarmScreenState.value.copy(
+                nickName = getUserInfoUseCase()?.nickname
+            )
+
+            saveStateHandle.getStateFlow("selectedMusic", _alarmScreenState.value.musicTitle)
+                .collect {
+                    _alarmScreenState.value = _alarmScreenState.value.copy(musicTitle = it)
+                }
+        }
+    }
 
     fun onGroupTypeSelected(groupType: Boolean) {
         _groupScreenState.value = _groupScreenState.value.copy(
@@ -101,14 +116,6 @@ class GroupFormViewModel @Inject constructor(
     fun onAlarmTypeSelected(alarmType: String) {
         _alarmScreenState.value = _alarmScreenState.value.copy(
             alarmType = alarmType,
-            musicTitle = if (alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
-            alarmVolume = if (alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume
-        )
-    }
-
-    fun onAlarmMusicSelected(music: String) {
-        _alarmScreenState.value = _alarmScreenState.value.copy(
-            musicTitle = music
         )
     }
 
@@ -121,21 +128,21 @@ class GroupFormViewModel @Inject constructor(
     fun onCompleteClicked() {
         viewModelScope.launch {
             createGroupUseCase(
-                groupImage = PictureUtil.getStringFromUri(_groupScreenState.value.groupImage)
+                groupImage = PictureUtil.encodeType(_groupScreenState.value.groupImage)
                     ?: throw IllegalArgumentException("image encoded fail"),
                 alarmDay = _groupScreenState.value.alarmDays,
                 alarmEndDate = _groupScreenState.value.alarmEndDate!!.format(),
                 alarmTime = _groupScreenState.value.alarmTime,
                 alarmType = _alarmScreenState.value.alarmType,
                 alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
-                alarmVolume = _alarmScreenState.value.alarmVolume?.toInt(),
+                alarmVolume = if (_alarmScreenState.value.alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume?.toInt(),
                 description = _groupScreenState.value.description,
                 deviceType = "ANDROID",
                 groupPassword = _groupScreenState.value.groupPassword,
                 isPublic = _groupScreenState.value.isPublic!!,
                 maxPerson = _groupScreenState.value.maxPerson,
                 title = _groupScreenState.value.title,
-                musicTitle = _alarmScreenState.value.musicTitle,
+                musicTitle = if (_alarmScreenState.value.alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
                 deviceToken = FCMTokenManager.token
             ).let { id ->
                 groupId = id

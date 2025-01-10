@@ -16,6 +16,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,6 +27,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.AlarmListViewModel
 import com.asap.aljyo.core.fsp
@@ -32,12 +37,42 @@ import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.AlarmSummary
 
 @Composable
 internal fun AlarmListScreen(
     navigateToHome: () -> Unit = {},
+    navigateToGroupDetails: (Int) -> Unit,
     viewModel: AlarmListViewModel = hiltViewModel()
 ) {
+    val onCheckChanged: (Boolean, AlarmSummary, () -> Unit) -> Unit =
+        { check, alarmSummary, update ->
+            viewModel.onCheckChanged(check, alarmSummary).invokeOnCompletion { result ->
+                if (result == null) {
+                    update()
+                }
+            }
+        }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val observer = LifecycleEventObserver { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> viewModel.resume()
+            Lifecycle.Event.ON_STOP -> viewModel.pause()
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.addObserver(observer)
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     Column(modifier = Modifier) {
         Box(
             modifier = Modifier
@@ -106,7 +141,7 @@ internal fun AlarmListScreen(
                 is UiState.Success -> {
                     val alarmList = (uiState as UiState.Success).data
 
-                    if (alarmList.isEmpty()) {
+                    if (alarmList?.isEmpty() == true) {
                         Box(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -120,8 +155,10 @@ internal fun AlarmListScreen(
                     } else {
                         AlarmList(
                             modifier = Modifier.padding(horizontal = 20.dp),
-                            alarmList = alarmList,
-                            navigateToHome = navigateToHome
+                            alarmList = alarmList ?: emptyList(),
+                            navigateToHome = navigateToHome,
+                            navigateToGroupDetails = navigateToGroupDetails,
+                            onCheckChanged = onCheckChanged
                         )
                     }
                 }
@@ -134,6 +171,9 @@ internal fun AlarmListScreen(
 @Composable
 private fun Preview() {
     AljyoTheme {
-        AlarmListScreen()
+        AlarmListScreen(
+            navigateToHome = {},
+            navigateToGroupDetails = {}
+        )
     }
 }

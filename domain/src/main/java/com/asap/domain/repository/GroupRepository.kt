@@ -1,8 +1,12 @@
 package com.asap.domain.repository
 
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinRequest
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.RankingNumberResponse
 import kotlinx.coroutines.flow.Flow
 
 interface GroupRepository {
@@ -15,11 +19,19 @@ interface GroupRepository {
     // 그룹 상세 조회
     suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?>
 
+    // 유저 알람 리스트 조회
+    suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?>
+
     // 그룹 참여
-    suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?>
+    suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?>
+
+    suspend fun withdrawGroup(userId: Int, groupId: Int)
 
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>
+
+    // 그룹 랭킹 등수 조회
+    suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?>
 
     suspend fun postCreateGroup(
         groupImage: String,
@@ -39,4 +51,24 @@ interface GroupRepository {
         title: String,
         userId: Int
     ): Int?
+
+    suspend fun postGroupEdit(
+        userId: Int,
+        groupId: Int,
+        title: String,
+        description: String,
+        maxPerson: Int,
+        alarmUnlockContents: String,
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
+    )
+
+    suspend fun postPersonalEdit(
+        userId: Int,
+        groupId: Int,
+        alarmType: String,
+        alarmVolume: Int?,
+        musicTitle: String?
+    )
 }

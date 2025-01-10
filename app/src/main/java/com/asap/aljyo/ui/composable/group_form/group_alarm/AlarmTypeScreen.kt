@@ -88,7 +88,7 @@ fun AlarmTypeScreen(
                 .padding(start = 20.dp, end = 20.dp, top = 16.dp)
         ) {
             Text(
-                text = "\"닉네임\"님만의 알람 방식을\n선택해주세요!",
+                text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Black,
                     fontSize = 22.fsp,

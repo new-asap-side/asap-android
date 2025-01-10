@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -76,7 +75,7 @@ private val fortunes = listOf(
 internal fun FortuneCard(
     modifier: Modifier = Modifier,
     index: Int,
-    rank: Int
+    rank: String
 ) {
     val fortune by remember { mutableStateOf(fortunes[index]) }
 
@@ -160,7 +159,7 @@ private fun Preview() {
         FortuneCard(
             modifier = Modifier.fillMaxWidth(),
             index = index,
-            rank = 1
+            rank = "-"
         )
     }
 }

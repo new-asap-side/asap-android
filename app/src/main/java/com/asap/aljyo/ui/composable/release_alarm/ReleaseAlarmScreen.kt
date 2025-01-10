@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.release_alarm
 
 import android.graphics.Color
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
@@ -13,12 +14,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,14 +35,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.release_alarm.ReleaseAlarmViewModel
+import com.asap.aljyo.core.components.service.AlarmService
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.Alarm
-import com.asap.domain.entity.remote.AlarmUnlockContent
+import com.asap.domain.entity.remote.alarm.AlarmPayload
+import com.asap.domain.entity.remote.alarm.AlarmUnlockContent
 import kotlin.random.Random
 import androidx.compose.ui.graphics.Color as compose
 
@@ -58,15 +66,35 @@ private val illusts = listOf(
 
 @Composable
 internal fun ReleaseAlarmScreen(
-    alarm: Alarm,
-    navigateToResult: (Int) -> Unit
+    alarm: AlarmPayload,
+    navigateToResult: (Int) -> Unit,
+    viewModel: ReleaseAlarmViewModel = hiltViewModel()
 ) {
     val index by rememberSaveable {
         mutableIntStateOf(Random.run { nextInt(illusts.size) })
     }
-    val navigateToResultByIndex = { navigateToResult(index) }
-
     val context = LocalContext.current
+    val requestState by viewModel.rState.collectAsState()
+
+    LaunchedEffect(requestState) {
+        when (requestState) {
+            RequestState.Initial, RequestState.Loading -> Unit
+
+            is RequestState.Success -> {
+                val result = (requestState as RequestState.Success).data
+                if (result) {
+                    // 알람 서비스 종료
+                    AlarmService.stopAlarmService(context)
+                    navigateToResult(index)
+                }
+            }
+
+            is RequestState.Error -> {
+                Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                AlarmService.stopAlarmService(context = context.applicationContext)
+            }
+        }
+    }
 
     SideEffect {
         val activity = context as ComponentActivity
@@ -92,6 +120,20 @@ internal fun ReleaseAlarmScreen(
                 activity.finish()
             }
 
+            if (requestState is RequestState.Loading) {
+                Box(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(30.dp)
+                            .align(Alignment.Center)
+                    )
+                }
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -99,8 +141,8 @@ internal fun ReleaseAlarmScreen(
                     .padding(paddingValues)
             ) {
                 val content: AlarmContent = when (alarm.content) {
-                    AlarmUnlockContent.Card -> AlarmContent.SelectCard
-                    AlarmUnlockContent.Drag -> AlarmContent.Drag
+                    AlarmUnlockContent.Card -> AlarmContent.Card
+                    AlarmUnlockContent.Slide -> AlarmContent.Slide
                 }
 
                 Column(
@@ -109,8 +151,10 @@ internal fun ReleaseAlarmScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    val currentTime = viewModel.currentTime
+
                     Text(
-                        text = alarm.alarmTime,
+                        text = currentTime,
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontSize = 86.fsp,
                             color = White
@@ -142,21 +186,26 @@ internal fun ReleaseAlarmScreen(
                     Spacer(modifier = Modifier.height(40.dp))
 
                     when (content) {
-                        AlarmContent.Drag ->
+                        AlarmContent.Slide ->
                             DragArea(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
                                 resourceId = illusts[index],
-                                navigateToResult = navigateToResultByIndex,
+                                onComplete = {
+                                    viewModel.alarmOff(alarm.groupId)
+                                }
                             )
-                        AlarmContent.SelectCard ->
+
+                        AlarmContent.Card ->
                             SelectCardArea(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
                                 resourceId = illusts[index],
-                                navigateToResult = navigateToResultByIndex
+                                onComplete = {
+                                    viewModel.alarmOff(alarm.groupId)
+                                }
                             )
                     }
                 }

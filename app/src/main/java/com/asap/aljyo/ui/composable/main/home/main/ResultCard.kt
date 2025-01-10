@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,11 +71,11 @@ fun ResultCard(
                                 withStyle(
                                     style = SpanStyle(
                                         color = Black01,
-                                        fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
+                                        fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
+                                        fontWeight = FontWeight.Bold
                                     )
                                 ) {
-                                    // TODO 닉네임
-                                    append("알죠")
+                                    append(viewModel.nickname)
                                 }
                                 append("${stringResource(R.string.of)}\n")
                                 append("${stringResource(R.string.release_alarm_succes_rate)}\n")
@@ -83,7 +85,7 @@ fun ResultCard(
                                         fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
                                     )
                                 ) {
-                                    append("${card?.successRate ?: 0.0f}%")
+                                    append("${card?.offRate ?: 0.0f}%")
                                 }
                                 append(stringResource(R.string.`is`))
                             },
@@ -110,6 +112,7 @@ fun ResultCard(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heightIn(min = 64.dp)
                         .clip(RoundedCornerShape(14.dp))
                         .background(
                             brush = Brush.linearGradient(
@@ -122,7 +125,9 @@ fun ResultCard(
                         )
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -143,7 +148,7 @@ fun ResultCard(
                             Text(
                                 text = stringResource(
                                     R.string.counting,
-                                    card?.participatingGroup ?: 0
+                                    card?.joinedGroupCount ?: 0
                                 ),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     color = MaterialTheme.colorScheme.primary,

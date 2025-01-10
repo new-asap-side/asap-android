@@ -1,17 +1,21 @@
 package com.asap.data.remote.datasource
 
 import com.asap.data.remote.request.PostGroupCreateRequest
+import com.asap.data.remote.request.PostGroupEditRequest
+import com.asap.data.remote.request.PostPersonalEditRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
 import com.asap.data.remote.service.GroupService
 import com.asap.domain.entity.remote.AlarmGroup
+import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
+import com.asap.domain.entity.remote.GroupJoinRequest
+import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
-import com.squareup.moshi.Json
+import com.asap.domain.entity.remote.RankingNumberResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import javax.inject.Inject
-import kotlin.math.max
 
 class GroupRemoteDataSource @Inject constructor(
     private val groupService: GroupService
@@ -34,8 +38,8 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?> = flow {
-        val response = groupService.fetchGroupDetails(groupId = groupId)
+    suspend fun fetchGroupDetails(groupId: Int, userId: Int): Flow<GroupDetails?> = flow {
+        val response = groupService.fetchGroupDetails(groupId = groupId, userId = userId)
         if (!response.isSuccessful) {
             throw HttpException(response)
         }
@@ -43,13 +47,45 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun postJoinGroup(body: Map<String, Any>): Flow<Boolean?> = flow {
-        val response = groupService.postJoinGroup(body)
+    suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> = flow {
+        val response = groupService.fetchUserAlarmList(userId = userId)
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
         emit(response.body())
+    }
+
+    suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?> = flow {
+        val response = groupService.postJoinGroup(body)
+        if(!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(response.body())
+    }
+
+    suspend fun withdrawGroup(userId: Int, groupId: Int) {
+        val request = mapOf("user_id" to userId, "group_id" to groupId)
+
+        groupService.withdrawGroup(request)
     }
 
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> = flow {
         val response = groupService.fetchGroupRanking(groupId = groupId)
+        if(!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        emit(response.body())
+    }
+
+    suspend fun fetchRankingNumber(groupId: Int, userId: Int): Flow<RankingNumberResponse?> = flow {
+        val response = groupService.fetchRankingNumber(groupId = groupId, userId = userId)
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
         emit(response.body())
     }
 
@@ -90,5 +126,45 @@ class GroupRemoteDataSource @Inject constructor(
             userId = userId
         )
         return groupService.postCreateGroup(groupCreateRequest).body()
+    }
+
+    suspend fun postGroupEdit(
+        userId: Int,
+        groupId: Int,
+        title: String,
+        description: String,
+        maxPerson: Int,
+        alarmUnlockContents: String,
+        isPublic: Boolean,
+        groupPassword: String?,
+        groupImage: String
+    ) {
+        return PostGroupEditRequest(
+            userId = userId,
+            groupId = groupId,
+            title = title,
+            description = description,
+            maxPerson = maxPerson,
+            alarmUnlockContents = alarmUnlockContents,
+            isPublic = isPublic,
+            groupPassword = groupPassword,
+            groupImage = groupImage
+        ).let { groupService.postGroupEdit(it) }
+    }
+
+    suspend fun postPersonalEdit(
+        userId: Int,
+        groupId: Int,
+        alarmType: String,
+        alarmVolume: Int?,
+        musicTitle: String?
+    ) {
+        return PostPersonalEditRequest(
+            userId = userId,
+            groupId = groupId,
+            alarmType = alarmType,
+            alarmVolume = alarmVolume,
+            musicTitle = musicTitle
+        ).let { groupService.postPersonalEdit(it) }
     }
 }

@@ -13,14 +13,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -32,6 +30,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,9 +43,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -56,16 +58,15 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
-import com.asap.domain.entity.remote.Alarm
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigateToReleaseAlarm: (Alarm) -> Unit,
     navigateToDescript: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
     onCreateButtonClick: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     AljyoTheme {
         Scaffold(
@@ -88,35 +89,10 @@ fun HomeScreen(
                 )
             },
             floatingActionButton = {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    FloatingActionButton(
-                        contentColor = White,
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape,
-                        elevation = FloatingActionButtonDefaults.elevation(
-                            defaultElevation = 5.dp
-                        ),
-                        onClick = {
-                            navigateToReleaseAlarm(Alarm(alarmUnlockContents = "card"))
-                        }
-                    ) {
-                        Text("Card")
-                    }
-
-                    FloatingActionButton(
-                        contentColor = White,
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape,
-                        elevation = FloatingActionButtonDefaults.elevation(
-                            defaultElevation = 5.dp
-                        ),
-                        onClick = {
-                            navigateToReleaseAlarm(Alarm(alarmUnlockContents = "drag"))
-                        }
-                    ) {
-                        Text("Drag")
-                    }
-
+                Column(
+                    modifier = Modifier.offset(y = (-5).dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                     NewGroupButton(onClick = onCreateButtonClick)
                 }
             }
@@ -131,7 +107,10 @@ fun HomeScreen(
 
                 var showPasswordBottomSheet by remember { mutableStateOf(false) }
                 var password by remember { mutableStateOf("") }
+                var isLoading by remember { mutableStateOf(false) }
+                var isError by remember { mutableStateOf(false) }
                 val sheetState = rememberModalBottomSheetState()
+                val requestJoinState by viewModel.joinResponseState.collectAsState()
 
                 val hideSheet = {
                     coroutineScope.launch {
@@ -139,6 +118,30 @@ fun HomeScreen(
                     }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
                             showPasswordBottomSheet = false
+                        }
+                    }
+                }
+
+                LaunchedEffect(requestJoinState) {
+                    when (requestJoinState) {
+                        is RequestState.Error -> {
+                            isError = true
+                            isLoading = false
+                        }
+                        is RequestState.Success -> {
+                            isLoading = false
+                            val groupId = viewModel.selectedGroupId.value!!
+                            coroutineScope.launch {
+                                hideSheet()
+                            }.invokeOnCompletion {
+                                viewModel.joinStateClear()
+                                navigateToGroupDetails(groupId)
+                            }
+                        }
+
+                        RequestState.Initial -> Unit
+                        RequestState.Loading -> {
+                            isLoading = true
                         }
                     }
                 }
@@ -163,7 +166,6 @@ fun HomeScreen(
                         }
                     ) {
                         val interactionSource = remember { MutableInteractionSource() }
-                        var isError by remember { mutableStateOf(false) }
 
                         Spacer(modifier = Modifier.height(20.dp))
 
@@ -293,7 +295,7 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .weight(1f)
                                     .fillMaxHeight(),
-                                enabled = password.length >= 4,
+                                enabled = password.length >= 4 && !isLoading,
                                 colors = ButtonDefaults.textButtonColors(
                                     disabledContainerColor = Grey02,
                                     disabledContentColor = Black04,
@@ -302,7 +304,7 @@ fun HomeScreen(
                                 ),
                                 shape = RoundedCornerShape(10.dp),
                                 onClick = {
-                                    isError = true
+                                    viewModel.joinGroup(password = password, alarmType = "SOUND")
                                 }
                             ) {
                                 Text(
@@ -321,6 +323,7 @@ fun HomeScreen(
                     onGroupItemClick = { isPublic, groupId ->
                         if (!isPublic) {
                             showPasswordBottomSheet = true
+                            viewModel.selectedGroupId.value = groupId
                             return@HomeTabScreen
                         }
                         navigateToGroupDetails(groupId)

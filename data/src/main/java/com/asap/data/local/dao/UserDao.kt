@@ -20,6 +20,12 @@ interface UserDao {
     @Query("UPDATE User SET nickname = :nickname WHERE user_id = :userId")
     suspend fun updateNickname(nickname: String, userId: Int)
 
+    @Query("UPDATE User SET access_token = :accessToken WHERE user_id = :userId")
+    suspend fun updateAccessToken(accessToken: String, userId: Int)
+
+    @Query("UPDATE User SET refresh_token = :refreshToken WHERE user_id = :userId")
+    suspend fun updateRefreshToken(refreshToken: String, userId: Int)
+
     @Query("SELECT * FROM User")
     suspend fun selectAll(): List<User>
 

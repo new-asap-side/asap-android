@@ -3,6 +3,7 @@ package com.asap.aljyo.ui.composable.onboarding
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -45,23 +46,34 @@ internal fun OnboardingScreen(
             ) {}
 
             LaunchedEffect(state) {
-                if (state is RequestState.Success) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val permission = Manifest.permission.POST_NOTIFICATIONS
-
-                        val checkPermission = ContextCompat.checkSelfPermission(context, permission)
-                        val granted = checkPermission == PackageManager.PERMISSION_GRANTED
-
-                        if (!granted) {
-                            // 알람 권한 요청
-                            launcher.launch(permission)
-                        }
+                when (state) {
+                    RequestState.Initial,
+                    RequestState.Loading -> Unit
+                    is RequestState.Error -> {
+                        Toast.makeText(
+                            context,
+                            "잠시 후 다시 시도해 주세요.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+                    is RequestState.Success -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            val permission = Manifest.permission.POST_NOTIFICATIONS
 
-                    if ((state as RequestState.Success).data == SignupState.REGISTERED) {
-                        navigateToMain()
-                    } else {
-                        navigateToUserSetting()
+                            val checkPermission = ContextCompat.checkSelfPermission(context, permission)
+                            val granted = checkPermission == PackageManager.PERMISSION_GRANTED
+
+                            if (!granted) {
+                                // 알람 권한 요청
+                                launcher.launch(permission)
+                            }
+                        }
+
+                        if ((state as RequestState.Success).data == SignupState.REGISTERED) {
+                            navigateToMain()
+                        } else {
+                            navigateToUserSetting()
+                        }
                     }
                 }
             }

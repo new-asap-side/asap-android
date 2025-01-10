@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Foreground service permission -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:name=".core.components.AljyoApplication"
@@ -41,10 +44,10 @@
 
         <activity
             android:name=".core.components.MainActivity"
+            android:clearTaskOnLaunch="true"
             android:exported="true"
-            android:theme="@style/Theme.SplashScreen.Custom"
             android:launchMode="singleTask"
-            android:clearTaskOnLaunch="true">
+            android:theme="@style/Theme.SplashScreen.Custom">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,6 +74,12 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+        </service>
+
+        <service
+            android:name=".core.components.service.AlarmService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
         </service>
 
     </application>

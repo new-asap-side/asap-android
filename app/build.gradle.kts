@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -125,7 +126,9 @@ dependencies {
     implementation(libs.firebase.analytics)
 
     // moshi
+    implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapter)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

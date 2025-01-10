@@ -1,5 +1,7 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
+import android.media.MediaPlayer
+import androidx.annotation.RawRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,7 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,14 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -47,21 +49,29 @@ import com.asap.aljyo.ui.theme.Red01
 
 data class Music(
     val musicTitle: String,
-    val artist: String
+    @RawRes val music: Int
 )
 
 @Composable
 fun AlarmMusicScreen(
+    musicTitle: String? = null,
     onBackClick: () -> Unit,
-    onCompleteClick: () -> Unit,
-    viewModel: GroupFormViewModel = hiltViewModel()
-//    itemList: List<Music>
+    onCompleteClick: (String) -> Unit,
 ) {
-    var selectedIndex by remember { mutableStateOf<Int?>(null) }
-    val dummyMusicList = listOf(
-        Music("Song A", "Artist A"),
-        Music("Song B", "Artist B"),
-        Music("Song C", "Artist C")
+    val context = LocalContext.current
+    var mediaPlayer by remember { mutableStateOf<MediaPlayer?>(null) }
+    var selectedMusic by remember { mutableStateOf(musicTitle) }
+    val alarmMusicList = listOf(
+        Music("Alarm01", R.raw.alarm1),
+        Music("Alarm02", R.raw.alarm2),
+        Music("Alarm03", R.raw.alarm3),
+        Music("Alarm04", R.raw.alarm4),
+        Music("Alarm05", R.raw.alarm5),
+        Music("Alarm06", R.raw.alarm6),
+        Music("Alarm07", R.raw.alarm7),
+        Music("Alarm08", R.raw.alarm8),
+        Music("Alarm09", R.raw.alarm9),
+        Music("Alarm10", R.raw.alarm10)
     )
 
     Scaffold(
@@ -108,12 +118,19 @@ fun AlarmMusicScreen(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                itemsIndexed(dummyMusicList) { idx, music ->
+                items(alarmMusicList) { music ->
                     MusicItem(
                         modifier = Modifier.padding(bottom = 24.dp),
                         item = music,
-                        isSelected = idx == selectedIndex,
-                        onClick = { selectedIndex = idx }
+                        isSelected = music.musicTitle == selectedMusic,
+                        onClick = {
+                            selectedMusic = music.musicTitle
+                            mediaPlayer?.release()
+                            mediaPlayer = MediaPlayer.create(context, music.music).apply {
+                                isLooping = true
+                                start()
+                            }
+                        }
                     )
                 }
             }
@@ -121,12 +138,17 @@ fun AlarmMusicScreen(
             CustomButton(
                 modifier = Modifier.padding(bottom = 6.dp),
                 text = "완료",
-                enable = selectedIndex != null,
+                enable = selectedMusic.isNullOrEmpty().not(),
                 onClick = {
-                    viewModel.onAlarmMusicSelected(dummyMusicList[selectedIndex!!].musicTitle)
-                    onCompleteClick()
+                    onCompleteClick(selectedMusic!!)
                 }
             )
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer?.release()
+            mediaPlayer = null
         }
     }
 }
@@ -153,7 +175,7 @@ fun MusicItem(
             modifier = Modifier
                 .weight(1f)
                 .padding(end = 4.dp),
-            text = "${item.musicTitle} - ${item.artist}",
+            text = item.musicTitle,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black01,
                 fontSize = 15.fsp,

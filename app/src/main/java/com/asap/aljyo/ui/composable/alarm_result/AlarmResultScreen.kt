@@ -22,7 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -31,8 +34,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.alarm_result.AlarmResultViewModel
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
@@ -45,9 +51,17 @@ private val colors = listOf(
 
 @Composable
 internal fun AlarmResultScreen(
-    illustIndex: Int
+    groupId: Int,
+    illustIndex: Int,
+    navigateToHome: () -> Unit,
+    navigateToRanking: () -> Unit,
+    viewModel: AlarmResultViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+
+    LaunchedEffect(groupId) {
+        viewModel.fetchRankingNumber((groupId))
+    }
 
     SideEffect {
         val activity = (context as ComponentActivity)
@@ -91,7 +105,7 @@ internal fun AlarmResultScreen(
                             contentColor = MaterialTheme.colorScheme.primary,
                             containerColor = White
                         ),
-                        onClick = {}
+                        onClick = { navigateToRanking() }
                     ) {
                         Text(
                             text = stringResource(R.string.ranking),
@@ -110,7 +124,7 @@ internal fun AlarmResultScreen(
                             contentColor = White,
                             containerColor = MaterialTheme.colorScheme.primary
                         ),
-                        onClick = {}
+                        onClick = { navigateToHome() }
                     ) {
                         Text(
                             text = stringResource(R.string.finish),
@@ -130,10 +144,17 @@ internal fun AlarmResultScreen(
                     .background(brush = Brush.linearGradient(colors))
                     .padding(paddingValues)
             ) {
+                val rankNumberState by viewModel.rankingNumber.collectAsState()
+                val rankNumber = if (rankNumberState is UiState.Success) {
+                    (rankNumberState as UiState.Success).data
+                } else {
+                    "-"
+                }
+
                 FortuneCard(
                     modifier = Modifier.fillMaxWidth(),
                     index = illustIndex,
-                    rank = 1
+                    rank = rankNumber
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -147,7 +168,6 @@ internal fun AlarmResultScreen(
                         .padding(horizontal = 20.dp, vertical = 16.dp),
                     title = "Title"
                 )
-
             }
         }
     }

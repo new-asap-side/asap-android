@@ -2,7 +2,6 @@ package com.asap.aljyo.core.components.service
 
 import android.annotation.SuppressLint
 import android.app.ForegroundServiceStartNotAllowedException
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
@@ -13,6 +12,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+import android.os.VibrationEffect
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
@@ -20,6 +20,7 @@ import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.MainActivity
+import com.asap.aljyo.core.manager.VibratorManager
 import com.asap.aljyo.core.notification.AlarmMessageHandler
 import com.asap.domain.entity.remote.alarm.AlarmPayload
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AlarmService : Service() {
     private lateinit var player: MediaPlayer
+    private lateinit var vibratorManager: VibratorManager
 
     @SuppressLint("DiscouragedApi")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -40,35 +42,49 @@ class AlarmService : Service() {
             intent?.extras?.getParcelable(ALARM_PAYLOAD)
         }
 
-        val music = resources.getIdentifier(
+        val resource = resources.getIdentifier(
             payload?.musicTitle ?: "alarm01",
             "raw",
             packageName
         )
+        val volume = payload?.musicVolume ?: 10f
 
-        player = MediaPlayer.create(this, music).apply {
-            val volume = payload?.musicVolume ?: 10f
-            isLooping = true
-            setVolume(volume, volume)
-            start()
+        when (payload?.alarmType) {
+            "ALL" -> {
+                initPlayer(resource, volume)
+                vibrate()
+            }
+            "SOUND" -> {
+                initPlayer(resource, volume)
+            }
+            "VIBRATION" -> {
+                vibrate()
+            }
+            else -> return START_NOT_STICKY
         }
 
         startForeground(uri = uri)
         return START_NOT_STICKY
     }
 
-    private fun createNotificationChannel() {
-        NotificationChannel(
-            getString(R.string.default_notification_channel_id),
-            "Aljo alarm",
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = "Default Notification Channel"
-        }.also { notificationChannel ->
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).run {
-                createNotificationChannel(notificationChannel)
-            }
+    private fun initPlayer(resource: Int, volume: Float) {
+        player = MediaPlayer.create(this, resource).apply {
+            isLooping = true
+            setVolume(volume, volume)
+            start()
         }
+    }
+
+    private fun vibrate() {
+        vibratorManager = VibratorManager(this)
+
+        val timings = longArrayOf(200, 100, 200, 100, 200, 350)
+        val amps = intArrayOf(100, 0, 100, 0, 100, 0)
+        vibratorManager.vibrate(
+            VibrationEffect.createWaveform(
+                timings, amps, 0
+            )
+        )
     }
 
     private fun startForeground(uri: Uri) {
@@ -80,8 +96,6 @@ class AlarmService : Service() {
             ).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-
-            createNotificationChannel()
 
             val pendingIntent = TaskStackBuilder.create(this).run {
                 addNextIntentWithParentStack(deeplinkIntent)
@@ -123,15 +137,17 @@ class AlarmService : Service() {
         return null
     }
 
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.d(TAG, "onTaskRemoved")
-        super.onTaskRemoved(rootIntent)
-    }
-
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
-        player.stop()
-        player.release()
+        if (this::player.isInitialized) {
+            player.stop()
+            player.release()
+        }
+
+        if (this::vibratorManager.isInitialized) {
+            vibratorManager.cancel()
+        }
+
         super.onDestroy()
     }
 

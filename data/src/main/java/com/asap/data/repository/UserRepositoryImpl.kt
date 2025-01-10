@@ -1,16 +1,12 @@
 package com.asap.data.repository
 
-import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
-import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.repository.UserRepository
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,19 +48,6 @@ class UserRepositoryImpl @Inject constructor(
                     updateNickname(nickname, userId)
                 }
             }
-    }
-
-    override suspend fun fetchFCMToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(
-            OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    return@OnCompleteListener
-                }
-
-                FCMTokenManager.token = task.result
-                Log.d(TAG, FCMTokenManager.token)
-            }
-        )
     }
 
     override suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?> {

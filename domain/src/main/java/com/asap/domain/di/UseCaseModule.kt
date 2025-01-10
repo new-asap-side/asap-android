@@ -16,6 +16,8 @@ import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.auth.CheckAuthUseCaseImpl
 import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
+import com.asap.domain.usecase.auth.RegisterTokenUseCase
+import com.asap.domain.usecase.auth.RegisterTokenUseCaseImpl
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
@@ -36,8 +38,6 @@ import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCaseImpl
 import com.asap.domain.usecase.user.DeleteUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteUserInfoUseCaseImpl
-import com.asap.domain.usecase.user.FetchFCMTokenUseCase
-import com.asap.domain.usecase.user.FetchFCMTokenUseCaseImpl
 import com.asap.domain.usecase.user.FetchUserProfileUseCase
 import com.asap.domain.usecase.user.FetchUserProfileUseCaseImpl
 import com.asap.domain.usecase.user.GetUserInfoUseCase
@@ -53,6 +53,9 @@ interface UseCaseModule {
     /**
      * Auth usecase
      */
+    @Binds
+    fun bindRegisterTokenUseCase(useCaseImpl: RegisterTokenUseCaseImpl): RegisterTokenUseCase
+
     @Binds
     fun bindAuthKakaoUseCase(usecaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase
 
@@ -79,11 +82,6 @@ interface UseCaseModule {
     fun bindFetchUserProfileUseCase(
         fetchUserProfileUseCaseImpl: FetchUserProfileUseCaseImpl
     ): FetchUserProfileUseCase
-
-    @Binds
-    fun bindFetchFCMTokenUseCase(
-        fetchFCMTokenUseCaseImpl: FetchFCMTokenUseCaseImpl
-    ): FetchFCMTokenUseCase
 
     @Binds
     fun bindPostJoinGroupUseCase(

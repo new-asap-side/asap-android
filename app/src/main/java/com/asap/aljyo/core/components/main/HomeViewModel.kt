@@ -15,7 +15,6 @@ import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
-import com.asap.domain.usecase.user.FetchFCMTokenUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +29,6 @@ class HomeViewModel @Inject constructor(
     private val fetchALarmOffRateUseCase: FetchAlarmOffRateUseCase,
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
-    private val fetchFCMTokenUseCase: FetchFCMTokenUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
@@ -89,9 +87,6 @@ class HomeViewModel @Inject constructor(
         fetchLatestGroupUseCase()
             .catch { e -> _latestGroupState.value = handleThrowable(e) }
             .collect { latestGroup -> _latestGroupState.value = UiState.Success(latestGroup) }
-
-        fetchFCMTokenUseCase()
-
     }
 
     fun saveScrollPosition(key: String, index: Int, offset: Int) {

@@ -1,12 +1,16 @@
 package com.asap.data.repository
 
+import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.AuthRemoteDataSource
+import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.entity.remote.auth.RefreshTokenResponse
 import com.asap.domain.repository.AuthRepository
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -17,6 +21,20 @@ class AuthRepositoryImpl @Inject constructor(
 ): AuthRepository {
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> {
         return remoteDataSource.authKakao(kakaoAccessToken = kakaoAccessToken)
+    }
+
+    /// FCM Token
+    override suspend fun registerToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    return@OnCompleteListener
+                }
+
+                FCMTokenManager.token = task.result
+                Log.d(TAG, FCMTokenManager.token)
+            }
+        )
     }
 
     override suspend fun cacheKakaoAuth(response: AuthResponse) {
@@ -45,5 +63,9 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun updateToken(accessToken: String, refreshToken: String) {
         TODO("Not yet implemented")
+    }
+
+    companion object {
+        const val TAG = "AuthRepositoryImpl"
     }
 }

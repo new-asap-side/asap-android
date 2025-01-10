@@ -20,8 +20,6 @@ interface UserRepository {
         profileImg: String
     )
 
-    suspend fun fetchFCMToken()
-
     suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?>
 
     suspend fun deleteLocalUserInfo()

@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
     suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?>
 
+    suspend fun registerToken()
+
     suspend fun cacheKakaoAuth(response: AuthResponse)
 
     suspend fun checkCachedAuth(): Boolean

@@ -1,6 +1,8 @@
 package com.asap.data.remote.datasource
 
+import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.remote.service.AuthService
+import com.asap.domain.entity.remote.AuthKakaoBody
 import com.asap.domain.entity.remote.auth.AuthResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,7 +14,10 @@ class AuthRemoteDataSource @Inject constructor(
 ) {
     suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> = flow {
         val response = authService.authKakao(
-            hashMapOf("kakaoAccessToken" to kakaoAccessToken)
+            AuthKakaoBody(
+                kakaoAccessToken = kakaoAccessToken,
+                alarmToken = FCMTokenManager.token
+            )
         )
         if (!response.isSuccessful) {
             throw HttpException(response)

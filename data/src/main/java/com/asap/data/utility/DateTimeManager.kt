@@ -24,9 +24,14 @@ object DateTimeManager {
     // ex) 13:30
     private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREAN)
 
-    private fun formatCurrentTime(): String {
+    private fun formatCurrentTimeByDate(): String {
         val now = LocalDateTime.now()
         return now.format(dayFormatter)
+    }
+
+    fun formatCurrentTime(): String {
+        val now = LocalDateTime.now()
+        return now.format(timeFormatter)
     }
 
     fun parseISO(input: String): String {
@@ -50,7 +55,7 @@ object DateTimeManager {
         val today = if (isTest) {
             parseToDayOfWeek("월")
         } else {
-            parseToDayOfWeek(formatCurrentTime().split(" ")[0])
+            parseToDayOfWeek(formatCurrentTimeByDate().split(" ")[0])
         }
 
         return input.sortedWith(
@@ -67,7 +72,7 @@ object DateTimeManager {
         val today = if (isTest) {
             parseToDayOfWeek("월요일")
         } else {
-            parseToDayOfWeek(formatCurrentTime().split(" ")[0])
+            parseToDayOfWeek(formatCurrentTimeByDate().split(" ")[0])
         }
 
         val startOfWeek = LocalDateTime.now().with(today)

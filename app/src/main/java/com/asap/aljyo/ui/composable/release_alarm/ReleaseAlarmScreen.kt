@@ -151,8 +151,10 @@ internal fun ReleaseAlarmScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    val currentTime = viewModel.currentTime
+
                     Text(
-                        text = "21:30",
+                        text = currentTime,
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontSize = 86.fsp,
                             color = White

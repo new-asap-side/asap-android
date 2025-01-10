@@ -13,7 +13,7 @@ interface AuthRepository {
 
     suspend fun checkCachedAuth(): Boolean
 
-    suspend fun refreshToken(): Flow<RefreshTokenResponse?>
+    suspend fun refreshToken(): Boolean
 
     suspend fun updateToken(accessToken: String, refreshToken: String)
 }

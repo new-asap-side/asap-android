@@ -4,6 +4,7 @@ import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.remote.service.AuthService
 import com.asap.domain.entity.remote.AuthKakaoBody
 import com.asap.domain.entity.remote.auth.AuthResponse
+import com.asap.domain.entity.remote.auth.RefreshTokenResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -23,5 +24,13 @@ class AuthRemoteDataSource @Inject constructor(
             throw HttpException(response)
         }
         emit(response.body())
+    }
+
+    suspend fun refreshToken(token: String): RefreshTokenResponse? {
+        val response = authService.refreshToken(refreshToken = token)
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+        return response.body()
     }
 }

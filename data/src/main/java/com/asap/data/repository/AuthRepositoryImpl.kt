@@ -7,18 +7,20 @@ import com.asap.data.remote.datasource.AuthRemoteDataSource
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.auth.AuthResponse
-import com.asap.domain.entity.remote.auth.RefreshTokenResponse
 import com.asap.domain.repository.AuthRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
-    private val localDataSource: AppDatabase,
-    private val sessionLocalDataSource: SessionLocalDataSource
-): AuthRepository {
+    private val sessionLocalDataSource: SessionLocalDataSource,
+    localDataSource: AppDatabase
+) : AuthRepository {
+    private val userDao = localDataSource.userDao()
+
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> {
         return remoteDataSource.authKakao(kakaoAccessToken = kakaoAccessToken)
     }
@@ -38,7 +40,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun cacheKakaoAuth(response: AuthResponse) {
-        val userDao = localDataSource.userDao()
         userDao.insert(
             User(
                 userId = response.userId,
@@ -49,20 +50,36 @@ class AuthRepositoryImpl @Inject constructor(
         )
 
         sessionLocalDataSource.updateAccessToken(response.accessToken)
-        sessionLocalDataSource.updateAccessToken(response.refreshToken)
+        sessionLocalDataSource.updateRefreshToken(response.refreshToken)
     }
 
     override suspend fun checkCachedAuth(): Boolean {
-        val userDao = localDataSource.userDao()
         return userDao.isCached()
     }
 
-    override suspend fun refreshToken(): Flow<RefreshTokenResponse?> {
-        TODO("Not yet implemented")
+    override suspend fun refreshToken(): Boolean {
+        try {
+            val refreshToken = sessionLocalDataSource.getRefreshToken() ?: ""
+            val response = remoteDataSource.refreshToken("Bearer $refreshToken")
+            updateToken(
+                response?.accessToken ?: "",
+                response?.refreshToken ?: ""
+            )
+            return true
+        } catch (e: HttpException) {
+            return false
+        }
     }
 
     override suspend fun updateToken(accessToken: String, refreshToken: String) {
-        TODO("Not yet implemented")
+        val userId = (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
+        // Room update
+        userDao.updateAccessToken(accessToken = accessToken, userId = userId)
+        userDao.updateRefreshToken(refreshToken = refreshToken, userId = userId)
+
+        // session update
+        sessionLocalDataSource.updateAccessToken(accessToken)
+        sessionLocalDataSource.updateRefreshToken(refreshToken)
     }
 
     companion object {

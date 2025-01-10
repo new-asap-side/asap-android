@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.alarm_result
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
@@ -58,7 +57,6 @@ internal fun AlarmResultScreen(
     navigateToRanking: () -> Unit,
     viewModel: AlarmResultViewModel = hiltViewModel()
 ) {
-    Log.d("AlarmResult", "$groupId")
     val context = LocalContext.current
 
     LaunchedEffect(groupId) {

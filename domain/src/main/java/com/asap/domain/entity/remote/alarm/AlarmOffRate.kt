@@ -8,5 +8,7 @@ data class AlarmOffRate(
     @Json(name = "userId")
     val userId: Int,
     @Json(name = "offRate")
-    val offRate: Float
+    val offRate: Float,
+    @Json(name = "joinedGroupCount")
+    val joinedGroupCount: Int
 )

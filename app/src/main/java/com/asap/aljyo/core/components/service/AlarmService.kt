@@ -54,7 +54,7 @@ class AlarmService : Service() {
         }
 
         startForeground(uri = uri)
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     private fun createNotificationChannel() {
@@ -99,7 +99,6 @@ class AlarmService : Service() {
                 .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
-                .setAutoCancel(false)
 
             ServiceCompat.startForeground(
                 this, AlarmMessageHandler.CHANNEL_ID,

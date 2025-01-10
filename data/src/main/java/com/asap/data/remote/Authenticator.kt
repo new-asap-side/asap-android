@@ -17,8 +17,10 @@ class TokenAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         val tag = "Authenticator"
         Log.i(tag, "Access token is expired ...")
+
         return try {
-            Log.i("Authenticator", "Retry with refresh token ..")
+            Log.i(tag, "Retry with refresh token ..")
+
             val isSuccess = runBlocking { refreshTokenUseCase() }
             if (isSuccess) {
                 response.request.newBuilder().removeHeader(HeaderInterceptor.AUTH_KEY).apply {
@@ -27,7 +29,7 @@ class TokenAuthenticator @Inject constructor(
                 }.build()
             } else null
         } catch (e: Exception) {
-            Log.d(tag, "$e")
+            Log.e(tag, "$e")
             null
         }
     }

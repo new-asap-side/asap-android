@@ -242,10 +242,15 @@ internal fun AppNavHost() {
             )
         }
 
-        composable(route = ScreenRoute.Report.route) {
+        composable(
+            route = "${ScreenRoute.Report.route}/{groupId}",
+            arguments = listOf(
+                navArgument("groupId") { type = NavType.IntType }
+            )
+        ) {
             ReportScreen(
-                onBackClick = {},
-                navigateToComplete = {}
+                onBackClick = { navController.popBackStack() },
+                navigateToComplete = { navController.popBackStack()  }
             )
         }
     }

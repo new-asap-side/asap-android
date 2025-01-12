@@ -209,7 +209,7 @@ fun GroupDetailsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navController.navigate(ScreenRoute.Report.route)
+                                navController.navigate("${ScreenRoute.Report.route}/$groupId")
                                 hideBottomSheet()
                             }
                     ) {

@@ -1,6 +1,6 @@
 package com.asap.domain.repository
 
-import com.asap.domain.entity.local.DeactivatedAlarm
+import com.asap.domain.entity.local.AlarmEntity
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.alarm.AlarmOffRate
@@ -11,7 +11,7 @@ interface AlarmRepository {
     suspend fun fetchAlarmOffRate(): Flow<AlarmOffRate?>
 
     // 비활성화 알람 조회
-    suspend fun getDeactivatedAlarmList(): List<DeactivatedAlarm>
+    suspend fun getDeactivatedAlarmList(): List<AlarmEntity>
 
     // 알람 활성화
     suspend fun activate(alarmSummary: AlarmSummary)

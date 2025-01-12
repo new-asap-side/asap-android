@@ -2,7 +2,7 @@ package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.AlarmRemoteDataSource
-import com.asap.domain.entity.local.DeactivatedAlarm
+import com.asap.domain.entity.local.AlarmEntity
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.alarm.AlarmOffRate
@@ -23,13 +23,13 @@ class AlarmRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchAlarmOffRate(userId = userId)
     }
 
-    override suspend fun getDeactivatedAlarmList(): List<DeactivatedAlarm> {
+    override suspend fun getDeactivatedAlarmList(): List<AlarmEntity> {
         return dao.getDeactivatedAlarmList()
     }
 
     override suspend fun activate(alarmSummary: AlarmSummary) {
         dao.delete(
-            DeactivatedAlarm(
+            AlarmEntity(
                 groupId = alarmSummary.groupId,
                 groupTitle = alarmSummary.group.title,
                 alarmTime = alarmSummary.group.alarmTime,
@@ -40,7 +40,7 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun deactivate(alarmSummary: AlarmSummary) {
         dao.insert(
-            DeactivatedAlarm(
+            AlarmEntity(
                 groupId = alarmSummary.groupId,
                 groupTitle = alarmSummary.group.title,
                 alarmTime = alarmSummary.group.alarmTime,

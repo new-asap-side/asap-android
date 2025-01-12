@@ -96,7 +96,7 @@ class GroupRemoteDataSource @Inject constructor(
         alarmTime: String,
         alarmType: String,
         alarmUnlockContents: String,
-        alarmVolume: Int?,
+        alarmVolume: Float?,
         description: String,
         deviceToken: String,
         deviceType: String,

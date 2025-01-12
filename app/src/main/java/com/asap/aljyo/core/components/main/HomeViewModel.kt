@@ -99,10 +99,6 @@ class HomeViewModel @Inject constructor(
         _scrollPositionMap[key] = Pair(index, offset)
     }
 
-    fun hideBottomSheet() {
-        _privateGroupState.value.showPasswordSheet = false
-    }
-
     fun checkJoinedGroup(groupId: Int) = viewModelScope.launch {
         fetchGroupDetailsUseCase(groupId = groupId).catch { e ->
             Log.e(TAG, "$e")

@@ -117,7 +117,7 @@ fun HomeScreen(
                         sheetState.hide()
                     }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
-                            viewModel.hideBottomSheet()
+                            viewModel.clearPrivateGroupState()
                         }
                     }
                 }
@@ -160,7 +160,7 @@ fun HomeScreen(
                                 vertical = 24.dp
                             ),
                         sheetState = sheetState,
-                        onDismissRequest = { viewModel.hideBottomSheet() },
+                        onDismissRequest = { viewModel.clearPrivateGroupState() },
                         arrangement = Arrangement.SpaceBetween,
                         title = {
                             Text(

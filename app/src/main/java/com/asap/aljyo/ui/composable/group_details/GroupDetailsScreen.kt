@@ -272,6 +272,7 @@ fun GroupDetailsScreen(
                         .background(White)
                         .padding(20.dp),
                     userGroupType = userGroupType,
+                    enabled = viewModel.checkJoinGroup(),
                     onRankingClick = {
                         navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
                     },

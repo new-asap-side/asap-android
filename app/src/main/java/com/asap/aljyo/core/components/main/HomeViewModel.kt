@@ -61,8 +61,6 @@ class HomeViewModel @Inject constructor(
     val error get() = _error.value
 
     init {
-        fetchHomeData()
-
         viewModelScope.launch {
             _nickname.value = getUserInfoUseCase()?.nickname ?: "-"
         }

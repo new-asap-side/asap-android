@@ -74,7 +74,7 @@ fun GroupSummation(
                         model = groupDetails?.groupThumbnailImageUrl,
                         contentDescription = "Group thumbnail",
                         contentScale = ContentScale.Crop,
-                        error = painterResource(R.drawable.ic_my_page)
+                        error = painterResource(R.drawable.ic_empty_profile)
                     )
 
                     Box(
@@ -335,7 +335,7 @@ private fun GroupLeader(
             model = leaderThumbnail,
             contentScale = ContentScale.Crop,
             contentDescription = "Group leader profile",
-            error = painterResource(R.drawable.ic_my_page),
+            error = painterResource(R.drawable.ic_empty_profile),
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
@@ -425,7 +425,7 @@ internal fun GroupPersonnel(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(R.drawable.ic_my_page),
+                painter = painterResource(R.drawable.ic_empty_profile),
                 contentDescription = "Group personnel icon",
                 tint = MaterialTheme.colorScheme.primary
             )
@@ -450,6 +450,7 @@ internal fun GroupPersonnel(
                             shape = RoundedCornerShape(8.dp)
                         ),
                     model = profile,
+                    error = painterResource(R.drawable.ic_empty_profile),
                     contentScale = ContentScale.Crop,
                     contentDescription = "participant's profile icon"
                 )

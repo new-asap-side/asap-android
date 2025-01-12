@@ -157,7 +157,7 @@ fun GroupMemberItem(
             model = thumbnail,
             contentScale = ContentScale.Crop,
             contentDescription = "Group member thumbnail",
-            error = painterResource(R.drawable.ic_my_page)
+            error = painterResource(R.drawable.ic_empty_profile)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(

@@ -52,7 +52,7 @@ fun MyPageProfile(
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),
                     model = profile,
-                    error = painterResource(R.drawable.ic_my_page),
+                    error = painterResource(R.drawable.ic_empty_profile),
                     contentDescription = "My page profile image",
                     contentScale = ContentScale.Crop
                 )

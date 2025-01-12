@@ -3,6 +3,7 @@ package com.asap.data.remote.service
 import com.asap.data.remote.request.PostGroupCreateRequest
 import com.asap.data.remote.request.PostGroupEditRequest
 import com.asap.data.remote.request.PostPersonalEditRequest
+import com.asap.data.remote.request.PostReportGroupRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
@@ -68,4 +69,7 @@ interface GroupService {
 
     @POST("/group/edit-personal")
     suspend fun postPersonalEdit(@Body body: PostPersonalEditRequest): Response<Unit>
+
+    @POST("/admin/Report")
+    suspend fun postReportGroup(@Body body: PostReportGroupRequest): Response<Unit>
 }

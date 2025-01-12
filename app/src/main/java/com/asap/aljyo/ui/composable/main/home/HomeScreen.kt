@@ -105,7 +105,7 @@ fun HomeScreen(
             ) {
                 val coroutineScope = rememberCoroutineScope()
 
-                var showPasswordBottomSheet by remember { mutableStateOf(false) }
+                val privateGroupState = viewModel.privateGroupState
                 var password by remember { mutableStateOf("") }
                 var isLoading by remember { mutableStateOf(false) }
                 var isError by remember { mutableStateOf(false) }
@@ -117,7 +117,7 @@ fun HomeScreen(
                         sheetState.hide()
                     }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
-                            showPasswordBottomSheet = false
+                            viewModel.hideBottomSheet()
                         }
                     }
                 }
@@ -146,14 +146,21 @@ fun HomeScreen(
                     }
                 }
 
-                if (showPasswordBottomSheet) {
+                LaunchedEffect(privateGroupState) {
+                    if (privateGroupState.isJoinedGroup == true) {
+                        navigateToGroupDetails(viewModel.selectedGroupId.value ?: 0)
+                        viewModel.clearPrivateGroupState()
+                    }
+                }
+
+                if (privateGroupState.showPasswordSheet) {
                     BottomSheet(
                         modifier = Modifier.padding(
                                 horizontal = 20.dp,
                                 vertical = 24.dp
                             ),
                         sheetState = sheetState,
-                        onDismissRequest = { showPasswordBottomSheet = false },
+                        onDismissRequest = { viewModel.hideBottomSheet() },
                         arrangement = Arrangement.SpaceBetween,
                         title = {
                             Text(
@@ -304,7 +311,7 @@ fun HomeScreen(
                                 ),
                                 shape = RoundedCornerShape(10.dp),
                                 onClick = {
-                                    viewModel.joinGroup(password = password, alarmType = "SOUND")
+                                    viewModel.joinGroup(password = password, alarmType = "VIBRATION")
                                 }
                             ) {
                                 Text(
@@ -322,7 +329,7 @@ fun HomeScreen(
                     navigateToDescript = navigateToDescript,
                     onGroupItemClick = { isPublic, groupId ->
                         if (!isPublic) {
-                            showPasswordBottomSheet = true
+                            viewModel.checkJoinedGroup(groupId)
                             viewModel.selectedGroupId.value = groupId
                             return@HomeTabScreen
                         }

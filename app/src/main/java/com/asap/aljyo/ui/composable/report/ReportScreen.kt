@@ -54,7 +54,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.report.ReportViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.custom.AljyoToggleButton
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
@@ -75,8 +78,10 @@ private const val maxLength = 50
 fun ReportScreen(
     onBackClick: () -> Unit,
     navigateToComplete: () -> Unit,
+    viewModel: ReportViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    val survey by viewModel.survey.collectAsStateWithLifecycle()
+    var selectedIdx by remember { mutableIntStateOf(-1) }
 
     AljyoTheme {
         Scaffold(
@@ -154,7 +159,7 @@ fun ReportScreen(
                         modifier = Modifier
                             .weight(1f)
                             .height(52.dp),
-                        enabled = true,
+                        enabled = selectedIdx != -1 && (selectedIdx != 4 || survey.isNotEmpty()),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.textButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
@@ -192,7 +197,13 @@ fun ReportScreen(
                         .padding(
                             horizontal = 20.dp,
                             vertical = 24.dp
-                        )
+                        ),
+                    selectedIdx = selectedIdx,
+                    onChangeIdx = {
+                        selectedIdx = it
+                    },
+                    survey = survey,
+                    onChangeSurvey = viewModel::updateSurvey
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -259,7 +270,11 @@ fun ReportScreen(
 
 @Composable
 internal fun ReportSurvey(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectedIdx: Int,
+    onChangeIdx: (Int) -> Unit,
+    survey: String,
+    onChangeSurvey: (String) -> Unit
 ) {
     Column(modifier = modifier) {
         Text(
@@ -275,18 +290,26 @@ internal fun ReportSurvey(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ReportSurveyList(modifier = Modifier.fillMaxWidth())
+        ReportSurveyList(
+            modifier = Modifier.fillMaxWidth(),
+            selectedIdx = selectedIdx,
+            onChangeIdx = onChangeIdx,
+            value = survey,
+            onChangeValue = onChangeSurvey
+        )
     }
 }
 
 @Composable
 internal fun ReportSurveyList(
     modifier: Modifier = Modifier,
+    selectedIdx: Int,
+    onChangeIdx: (Int) -> Unit,
+    value: String,
+    onChangeValue: (String) -> Unit
 //    viewModel: WithdrawalViewModel = hiltViewModel()
 ) {
     val surveyContents = stringArrayResource(R.array.report_survey_list)
-    var selectedIndex by remember { mutableIntStateOf(-1) }
-    var text by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier,
@@ -296,20 +319,22 @@ internal fun ReportSurveyList(
             ReportSurveyItem(
                 modifier = Modifier.fillMaxWidth(),
                 survey = survey,
-                selected = selectedIndex == index,
-                onSelect = { selectedIndex = index }
+                selected = selectedIdx == index,
+                onSelect = { onChangeIdx(index) }
             ) {
-                if (index == surveyContents.lastIndex && index == selectedIndex) {
+                if (index == surveyContents.lastIndex && index == selectedIdx) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     BasicTextField(
-                        value = text,
+                        value = value,
                         onValueChange = { value ->
                             if (value.contains("\n")) {
                                 return@BasicTextField
                             }
 
-                            if (value.length <= maxLength) { text = value }
+                            if (value.length <= maxLength) {
+                                onChangeValue(value)
+                            }
                         },
                         textStyle = MaterialTheme.typography.bodyMedium.copy(
                             color = Black01,
@@ -330,7 +355,7 @@ internal fun ReportSurveyList(
                                 .background(White)
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                         ) {
-                            if (text.isEmpty()) {
+                            if (value.isEmpty()) {
                                 Text(
                                     text = stringResource(R.string.etc_hint),
                                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -350,7 +375,7 @@ internal fun ReportSurveyList(
                                             color = Black02
                                         )
                                     ) {
-                                        append("${text.length}")
+                                        append("${value.length}")
                                     }
 
                                     append(" / $maxLength")

@@ -43,6 +43,7 @@ import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 import kotlinx.coroutines.launch
@@ -293,10 +294,10 @@ private fun NonParticipantBottomBar(
         enabled = enabled
     ) {
         Text(
-            text = stringResource(R.string.participate),
+            text = if (enabled) stringResource(R.string.participate) else stringResource(R.string.participate_max),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 16.fsp,
-                color = White
+                color = if (enabled) White else Black04
             )
         )
     }

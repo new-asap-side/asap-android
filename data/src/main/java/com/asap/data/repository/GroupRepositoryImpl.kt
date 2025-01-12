@@ -134,4 +134,8 @@ class GroupRepositoryImpl @Inject constructor(
             musicTitle = musicTitle
         )
     }
+
+    override suspend fun postReportGroup(userId: Int, groupId: Int, survey: String) {
+        remoteDataSource.postReportGroup(userId, groupId, survey)
+    }
 }

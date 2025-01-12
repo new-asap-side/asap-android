@@ -38,6 +38,7 @@ import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
+import com.asap.aljyo.ui.composable.report.ReportScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
 import com.asap.domain.entity.remote.alarm.AlarmPayload
@@ -238,6 +239,18 @@ internal fun AppNavHost() {
                 type = CHANGE,
                 onBackClick = { navController.popBackStack() },
                 navigateToMain = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = "${ScreenRoute.Report.route}/{groupId}",
+            arguments = listOf(
+                navArgument("groupId") { type = NavType.IntType }
+            )
+        ) {
+            ReportScreen(
+                onBackClick = { navController.popBackStack() },
+                navigateToComplete = { navController.popBackStack()  }
             )
         }
     }

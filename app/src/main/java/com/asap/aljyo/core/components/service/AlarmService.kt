@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.VibrationEffect
 import android.util.Log
+import androidx.compose.ui.text.toLowerCase
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.app.TaskStackBuilder
@@ -24,6 +25,7 @@ import com.asap.aljyo.core.manager.VibratorManager
 import com.asap.aljyo.core.notification.AlarmMessageHandler
 import com.asap.domain.entity.remote.alarm.AlarmPayload
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class AlarmService : Service() {
@@ -47,7 +49,7 @@ class AlarmService : Service() {
         }
 
         val resource = resources.getIdentifier(
-            payload?.musicTitle ?: "alarm01",
+            payload?.musicTitle?.lowercase(Locale.KOREAN) ?: "alarm01",
             "raw",
             packageName
         )

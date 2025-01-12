@@ -8,13 +8,9 @@ import com.asap.aljyo.ui.composable.onboarding.SignupState
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
 import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
-import com.asap.domain.usecase.group.FetchAlarmListUseCase
-import com.asap.domain.usecase.user.FetchUserProfileUseCase
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
-import com.asap.domain.usecase.user.SaveUserProfileUseCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,9 +24,6 @@ class OnboardingViewModel @Inject constructor(
     private val cacheAuthUseCase: CacheAuthUseCase,
     private val checkCachedAuthUseCase: CheckCachedAuthUseCase,
     private val checkProfileUseCase: CheckCachedProfileUseCase,
-    private val fetchUserProfileUseCase: FetchUserProfileUseCase,
-    private val fetchAlarmListUseCase: FetchAlarmListUseCase,
-    private val updateUserProfileUseCase: SaveUserProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RequestState<SignupState>>(RequestState.Initial)
     val state get() = _state.asStateFlow()
@@ -38,7 +31,7 @@ class OnboardingViewModel @Inject constructor(
     init {
         // 기 로그인 정보 체크
         viewModelScope.launch {
-            // auth 정보 유무 체크
+            // auth 정보 유무 체크 (room)
             val cached = checkCachedAuthUseCase()
             if (cached) {
                 if (!checkProfileUseCase()) {
@@ -72,31 +65,11 @@ class OnboardingViewModel @Inject constructor(
             }
 
             cacheAuthUseCase(response!!)
-            fetchJoinedAlarm((response.userId).toInt()).await()
-            fetchUserProfile()
-        }
-    }
-
-    private fun fetchUserProfile() = viewModelScope.launch {
-        fetchUserProfileUseCase().catch { e ->
-            Log.e(TAG, "$e")
-            handleThrowable(e)
-        }.collect { profile ->
-            if (profile == null) {
-                _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
-            } else {
-                updateUserProfileUseCase(profile.nickName, profile.profileImageUrl)
+            if(response.isJoinedUser) {
                 _state.value = RequestState.Success(SignupState.REGISTERED)
+            } else {
+                _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
             }
-        }
-    }
-
-    private fun fetchJoinedAlarm(userId: Int) = viewModelScope.async {
-        fetchAlarmListUseCase(userId = userId).catch { e ->
-            Log.e(TAG, "$e")
-            handleThrowable(e)
-        }.collect { response ->
-            Log.d(TAG, "$response")
         }
     }
 

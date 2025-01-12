@@ -1,10 +1,12 @@
 package com.asap.data.repository
 
+import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.SaveProfileResponse
 import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -39,13 +41,15 @@ class UserRepositoryImpl @Inject constructor(
         userId: Int,
         nickname: String,
         profileImg: String
-    ) {
-        // profileImg를 DB에 저장시키면
-        remoteDataSource.saveProfile(userId, nickname, profileImg)
-            .also {
-                userDao.run {
-                    updateProfileImg(it?.profileImageUrl, userId)
-                    updateNickname(nickname, userId)
+    ): SaveProfileResponse? {
+        return remoteDataSource.saveProfile(userId, nickname, profileImg)
+            .also { response ->
+                Log.d("SaveProfile", "$response")
+                if (response?.result == true) {
+                    userDao.run {
+                        updateProfileImg(response.profileImageUrl, userId)
+                        updateNickname(nickname, userId)
+                    }
                 }
             }
     }

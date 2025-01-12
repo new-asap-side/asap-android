@@ -21,13 +21,15 @@ class UserSettingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _userSettingState = MutableStateFlow(UserSettingState())
-    val userSettingState: StateFlow<UserSettingState> = _userSettingState
+    val userSettingState: StateFlow<UserSettingState> get() = _userSettingState
 
     init {
         savedStateHandle.get<String>("nickName").let {
-            _userSettingState.value = _userSettingState.value.copy(
-                nickname = Uri.decode(it)
-            )
+            if (it != null) {
+                _userSettingState.value = _userSettingState.value.copy(
+                    nickname = Uri.decode(it)
+                )
+            }
         }
         savedStateHandle.get<String>("profileImage").let {
             _userSettingState.value = _userSettingState.value.copy(

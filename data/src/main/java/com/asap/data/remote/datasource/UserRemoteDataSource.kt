@@ -2,10 +2,10 @@ package com.asap.data.remote.datasource
 
 import com.asap.data.remote.request.SaveProfileRequest
 import com.asap.data.remote.response.CheckNicknameResponse
-import com.asap.data.remote.response.SaveProfileResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.remote.DeleteUserRequestBody
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.SaveProfileResponse
 import com.asap.domain.entity.remote.user.UserProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -31,8 +31,12 @@ class UserRemoteDataSource @Inject constructor(
             nickname = nickname,
             profileImg = profileImg
         )
+        val response = userService.saveProfile(request)
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
 
-        return userService.saveProfile(request).body()
+        return response.body()
     }
 
     suspend fun fetchUserProfile(userId: String): Flow<UserProfile?> = flow {

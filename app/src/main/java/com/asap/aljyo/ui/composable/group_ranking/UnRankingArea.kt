@@ -67,7 +67,7 @@ internal fun UnRankingArea(
                                 .clip(CircleShape),
                             model = rank.thumbnail,
                             contentDescription = "Group particular thumbnail",
-                            error = painterResource(R.drawable.ic_my_page)
+                            error = painterResource(R.drawable.ic_empty_profile)
                         )
                         Text(
                             text = rank.nickName,

@@ -62,15 +62,15 @@ fun AlarmMusicScreen(
     var mediaPlayer by remember { mutableStateOf<MediaPlayer?>(null) }
     var selectedMusic by remember { mutableStateOf(musicTitle) }
     val alarmMusicList = listOf(
-        Music("Alarm01", R.raw.alarm1),
-        Music("Alarm02", R.raw.alarm2),
-        Music("Alarm03", R.raw.alarm3),
-        Music("Alarm04", R.raw.alarm4),
-        Music("Alarm05", R.raw.alarm5),
-        Music("Alarm06", R.raw.alarm6),
-        Music("Alarm07", R.raw.alarm7),
-        Music("Alarm08", R.raw.alarm8),
-        Music("Alarm09", R.raw.alarm9),
+        Music("Alarm01", R.raw.alarm01),
+        Music("Alarm02", R.raw.alarm02),
+        Music("Alarm03", R.raw.alarm03),
+        Music("Alarm04", R.raw.alarm04),
+        Music("Alarm05", R.raw.alarm05),
+        Music("Alarm06", R.raw.alarm06),
+        Music("Alarm07", R.raw.alarm07),
+        Music("Alarm08", R.raw.alarm08),
+        Music("Alarm09", R.raw.alarm09),
         Music("Alarm10", R.raw.alarm10)
     )
 

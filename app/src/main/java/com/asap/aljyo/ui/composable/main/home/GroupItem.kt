@@ -109,7 +109,7 @@ fun GroupThumbnail(
             contentScale = ContentScale.Crop,
             contentDescription = "Group thumbnail",
             placeholder = null,
-            error = painterResource(R.drawable.ic_my_page)
+            error = painterResource(R.drawable.ic_empty_profile)
         )
         Row(
             modifier = Modifier

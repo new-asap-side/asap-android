@@ -55,6 +55,7 @@ fun ProfileImagePicker(
                 model = profileImage ?: R.drawable.ic_profile_default,
                 contentDescription = "Profile Image",
                 contentScale = if (profileImage == null) ContentScale.Fit else ContentScale.Crop,
+                error = painterResource(R.drawable.ic_empty_profile),
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(CircleShape)

@@ -14,7 +14,6 @@ import android.os.Build
 import android.os.IBinder
 import android.os.VibrationEffect
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.app.TaskStackBuilder

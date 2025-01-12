@@ -43,6 +43,13 @@ android {
             storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
             storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE"))
         }
+
+        create("release") {
+            keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS")
+            keyPassword = localProperties.getProperty("SIGNED_KEY_PASSWORD")
+            storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
+            storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE"))
+        }
     }
 
     buildTypes {
@@ -52,6 +59,7 @@ android {
         }
 
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

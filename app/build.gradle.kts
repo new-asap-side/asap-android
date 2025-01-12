@@ -45,7 +45,7 @@ android {
         }
 
         create("release") {
-            keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS")
+            keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS_RELEASE")
             keyPassword = localProperties.getProperty("SIGNED_KEY_PASSWORD")
             storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
             storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE_RELEASE"))

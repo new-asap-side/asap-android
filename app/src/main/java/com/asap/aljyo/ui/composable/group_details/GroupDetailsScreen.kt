@@ -11,10 +11,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -136,6 +138,7 @@ fun GroupDetailsScreen(
         val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
         var showLeaveGroupDialog by remember { mutableStateOf(false) }
+        var showReportGroupDialog by remember { mutableStateOf(false) }
 
         val hideBottomSheet = {
             coroutineScope.launch {
@@ -174,28 +177,55 @@ fun GroupDetailsScreen(
                     }
                 }
             ) {
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            // show leave group dialog
-                            showLeaveGroupDialog = true
-                            hideBottomSheet()
-                        }
-                        .padding(vertical = 10.dp),
+                        .padding(top = 10.dp),
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_leave_group),
-                        contentDescription = "Leave group icon"
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = stringResource(R.string.leave_group),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 16.fsp,
-                            color = Black02
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                showLeaveGroupDialog = true
+                                hideBottomSheet()
+                            }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_leave_group),
+                            contentDescription = "Leave group icon"
                         )
-                    )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(R.string.leave_group),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.fsp,
+                                color = Black02
+                            )
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(ScreenRoute.Report.route)
+                                hideBottomSheet()
+                            }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_leave_group),
+                            contentDescription = "Leave group icon"
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(R.string.report_group),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.fsp,
+                                color = Black02
+                            )
+                        )
+                    }
                 }
             }
         }

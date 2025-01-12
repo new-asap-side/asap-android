@@ -18,9 +18,9 @@ data class AlarmPayload(
     @Json(name = "group_title")
     val groupTitle: String,
     @Json(name = "music_title")
-    val musicTitle: String,
+    val musicTitle: String?,
     @Json(name = "music_volume")
-    val musicVolume: Float,
+    val musicVolume: Float?,
     @Json(name = "alarm_type")
     val alarmType: String,
     @Json(name = "alarm_unlock_contents")

@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.navigation
 
+import android.net.Uri
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,6 +15,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.edit.PersonalEditViewModel
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
+import com.asap.aljyo.core.components.usersetting.CHANGE
+import com.asap.aljyo.core.components.usersetting.NEW
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.core.navigation.navtype.CustomNavType
@@ -157,6 +160,7 @@ internal fun AppNavHost() {
 
         composable(route = ScreenRoute.UserSetting.route) {
             UserSettingScreen(
+                type = NEW,
                 navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(0) { inclusive = true }
@@ -221,6 +225,21 @@ internal fun AppNavHost() {
         groupCreateNavGraph(navController)
 
         editNavGraph(navController)
+
+        // 개인 프로필 수정 경로
+        composable(
+            route = "${ScreenRoute.UserSetting.route}/{nickName}/{profileImage}",
+            arguments = listOf(
+                navArgument("nickName") { type = NavType.StringType },
+                navArgument("profileImage") { type = NavType.StringType }
+            )
+        ) {
+            UserSettingScreen(
+                type = CHANGE,
+                onBackClick = { navController.popBackStack() },
+                navigateToMain = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -275,6 +294,9 @@ fun MainNavHost(
                     screenNavController.navigate(ScreenRoute.Onboarding.route) {
                         popUpTo(0)
                     }
+                },
+                navigateToProfileSetting = { nickName, profileImage ->
+                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
                 }
             )
         }

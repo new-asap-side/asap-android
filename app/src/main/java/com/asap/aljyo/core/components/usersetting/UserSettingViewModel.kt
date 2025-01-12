@@ -1,6 +1,8 @@
 package com.asap.aljyo.core.components.usersetting
 
 import android.net.Uri
+import androidx.core.net.toUri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.util.PictureUtil
@@ -15,10 +17,24 @@ import javax.inject.Inject
 @HiltViewModel
 class UserSettingViewModel @Inject constructor(
     private val checkNicknameUseCase: CheckNicknameUseCase,
-    private val saveUserProfileUseCase: SaveUserProfileUseCase
+    private val saveUserProfileUseCase: SaveUserProfileUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _userSettingState = MutableStateFlow(UserSettingState())
     val userSettingState: StateFlow<UserSettingState> = _userSettingState
+
+    init {
+        savedStateHandle.get<String>("nickName").let {
+            _userSettingState.value = _userSettingState.value.copy(
+                nickname = Uri.decode(it)
+            )
+        }
+        savedStateHandle.get<String>("profileImage").let {
+            _userSettingState.value = _userSettingState.value.copy(
+                selectedProfileImage = it?.toUri()
+            )
+        }
+    }
 
     fun setProfileImage(uri: Uri?) {
         if (uri != null) {

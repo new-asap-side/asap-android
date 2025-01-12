@@ -240,6 +240,16 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    fun checkJoinGroup(): Boolean {
+        val groupState =  (_groupDetailsState.value as? UiState.Success)?.data
+
+        return if (groupState != null) {
+            groupState.maxPerson > groupState.currentPerson
+        } else {
+            false
+        }
+    }
+
     override fun onCleared() {
         active = false
         super.onCleared()

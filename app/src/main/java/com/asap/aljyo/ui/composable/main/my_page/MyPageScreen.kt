@@ -37,6 +37,7 @@ internal fun MyPageScreen(
     navigateToDescript: () -> Unit,
     navigateToPreferences: () -> Unit,
     navigateToOnboarding: () -> Unit,
+    navigateToProfileSetting: (String?, String?) -> Unit,
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val myPageState by viewModel.state.collectAsStateWithLifecycle()
@@ -72,7 +73,8 @@ internal fun MyPageScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     nickname = state.nickName,
-                    profileImage = state.profileImage
+                    profileImage = state.profileImage,
+                    navigateToSetting = navigateToProfileSetting
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -116,7 +118,8 @@ private fun Preview() {
         MyPageScreen(
             navigateToDescript = {},
             navigateToOnboarding = {},
-            navigateToPreferences = {}
+            navigateToPreferences = {},
+            navigateToProfileSetting = {_,_ ->}
         )
     }
 }

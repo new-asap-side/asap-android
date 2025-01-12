@@ -386,20 +386,22 @@ fun PrivateSetting(
                 content = when (alarmType) {
                     "SOUND" -> "소리"
                     "ALL" -> "소리, 진동"
-                    "VIBRATE" -> "진동"
+                    "VIBRATION" -> "진동"
                     else -> ""
                 }
             )
-            RowText(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.alarm_music),
-                content = musicTitle
-            )
-            RowText(
-                modifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.alarm_sound),
-                content = "$volume%"
-            )
+            if (alarmType != "VIBRATION") {
+                RowText(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.alarm_music),
+                    content = musicTitle
+                )
+                RowText(
+                    modifier = Modifier.fillMaxWidth(),
+                    title = stringResource(R.string.alarm_sound),
+                    content = "$volume%"
+                )
+            }
         }
     }
 }

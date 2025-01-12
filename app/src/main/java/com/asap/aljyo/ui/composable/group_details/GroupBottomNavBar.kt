@@ -43,6 +43,7 @@ import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 import kotlinx.coroutines.launch
@@ -53,6 +54,7 @@ import kotlin.math.roundToInt
 internal fun GroupBottomNavBar(
     modifier: Modifier = Modifier,
     userGroupType: UserGroupType?,
+    enabled: Boolean,
     onJoinClick: () -> Unit,
     onRankingClick: () -> Unit,
     navigateToGroupEdit: () -> Unit,
@@ -67,7 +69,8 @@ internal fun GroupBottomNavBar(
         when (userGroupType) {
             UserGroupType.NonParticipant -> NonParticipantBottomBar(
                 modifier = mod,
-                onClick = onJoinClick
+                onClick = onJoinClick,
+                enabled = enabled
             )
 
             UserGroupType.Leader -> ParticipantBottomBar(
@@ -281,18 +284,20 @@ private fun ParticipantBottomBarPreview() {
 @Composable
 private fun NonParticipantBottomBar(
     modifier: Modifier = Modifier,
+    enabled: Boolean,
     onClick: () -> Unit
 ) {
     Button(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
-        onClick = onClick
+        onClick = onClick,
+        enabled = enabled
     ) {
         Text(
-            text = stringResource(R.string.participate),
+            text = if (enabled) stringResource(R.string.participate) else stringResource(R.string.participate_max),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 16.fsp,
-                color = White
+                color = if (enabled) White else Black04
             )
         )
     }
@@ -310,6 +315,7 @@ private fun NonParticipantPreview() {
         ) {
             NonParticipantBottomBar(
                 modifier = Modifier.weight(1f),
+                enabled = false,
                 onClick = {}
             )
         }

@@ -31,9 +31,9 @@ import com.asap.aljyo.ui.theme.Grey02
 @Composable
 fun MyPageProfile(
     modifier: Modifier = Modifier,
-    profile: String,
-    nickname: String,
-    navigateToSetting: () -> Unit = {}
+    profileImage: String?,
+    nickname: String?,
+    navigateToSetting: (String?, String?) -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -51,7 +51,7 @@ fun MyPageProfile(
             ) {
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = profile,
+                    model = profileImage,
                     error = painterResource(R.drawable.ic_empty_profile),
                     contentDescription = "My page profile image",
                     contentScale = ContentScale.Crop
@@ -59,7 +59,7 @@ fun MyPageProfile(
             }
 
             Text(
-                text = nickname,
+                text = nickname ?: "알 수 없음",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     color = Black01,
                     fontSize = 16.fsp
@@ -73,7 +73,7 @@ fun MyPageProfile(
                 contentColor = Black02
             ),
             onClick = {
-                navigateToSetting()
+                navigateToSetting(nickname, profileImage)
             }
         ) {
             Text(
@@ -92,8 +92,9 @@ private fun Preview() {
     AljyoTheme {
         MyPageProfile(
             modifier = Modifier.fillMaxWidth(),
-            profile = "",
-            nickname = "알죠"
+            profileImage = "",
+            nickname = "알죠",
+            navigateToSetting = {_, _ -> }
         )
     }
 }

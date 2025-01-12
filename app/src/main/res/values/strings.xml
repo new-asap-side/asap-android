@@ -76,6 +76,7 @@
     <string name="modifiy">수정</string>
     <string name="ranking">랭킹</string>
     <string name="participate">참여하기</string>
+    <string name="participate_max">멤버가 모두 찼어요</string>
     <string name="confirm_rank">현재 순위를 확인해보세요!</string>
     <string name="edit_alarm">알람 수정</string>
     <string name="edit_group">그룹 수정</string>

@@ -22,9 +22,6 @@ interface GroupRepository {
     // 유저 알람 리스트 조회
     suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?>
 
-    // 유저 알람 리스트 저장
-    suspend fun cacheJoinedAlarm(alarms: List<AlarmSummary>)
-
     // 그룹 참여
     suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?>
 

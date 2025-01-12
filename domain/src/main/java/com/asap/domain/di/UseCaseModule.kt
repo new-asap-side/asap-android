@@ -20,8 +20,6 @@ import com.asap.domain.usecase.auth.RefreshTokenUseCase
 import com.asap.domain.usecase.auth.RefreshTokenUseCaseImpl
 import com.asap.domain.usecase.auth.RegisterTokenUseCase
 import com.asap.domain.usecase.auth.RegisterTokenUseCaseImpl
-import com.asap.domain.usecase.group.CacheAlarmListUseCase
-import com.asap.domain.usecase.group.CacheAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
 import com.asap.domain.usecase.group.FetchAlarmListUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
@@ -132,11 +130,6 @@ interface UseCaseModule {
     fun bindFetchAlarmListUseCase(
         fetchAlarmListUseCaseImpl: FetchAlarmListUseCaseImpl
     ): FetchAlarmListUseCase
-
-    @Binds
-    fun bindCacheAlarmListUseCase(
-        cacheAlarmListUseCaseImpl: CacheAlarmListUseCaseImpl
-    ): CacheAlarmListUseCase
 
     @Binds
     fun bindFetchGroupDetailsUseCase(

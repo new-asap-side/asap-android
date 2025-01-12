@@ -2,7 +2,6 @@ package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.GroupRemoteDataSource
-import com.asap.domain.entity.local.JoinedAlarmEntity
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
@@ -19,7 +18,6 @@ class GroupRepositoryImpl @Inject constructor(
     localDataSource: AppDatabase,
 ): GroupRepository {
     private val userDao = localDataSource.userDao()
-    private val joinedAlarmDao = localDataSource.joinedGroupDao()
 
     private suspend fun getUserId(): Int {
         return (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
@@ -40,17 +38,6 @@ class GroupRepositoryImpl @Inject constructor(
 
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {
         return remoteDataSource.fetchUserAlarmList(userId = userId)
-    }
-
-    override suspend fun cacheJoinedAlarm(alarms: List<AlarmSummary>) {
-        alarms.forEach { alarm ->
-            joinedAlarmDao.insert(
-                JoinedAlarmEntity(
-                    groupId = alarm.groupId,
-                    groupTitle = alarm.group.title,
-                )
-            )
-        }
     }
 
     override suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?> {

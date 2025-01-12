@@ -8,10 +8,10 @@ import com.asap.domain.entity.local.AlarmEntity
 
 @Dao
 interface DeactivatedAlarmDao {
-    @Query("SELECT * FROM AlarmEntity")
+    @Query("SELECT * FROM Deactivated_alarm")
     suspend fun getDeactivatedAlarmList(): List<AlarmEntity>
 
-    @Query("SELECT * FROM AlarmEntity WHERE group_id = :groupId")
+    @Query("SELECT * FROM Deactivated_alarm WHERE group_id = :groupId")
     suspend fun find(groupId: Int): AlarmEntity?
 
     @Insert

@@ -4,9 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
-@Entity(tableName = "Deactivated_alarm")
-data class AlarmEntity(
+@Entity(tableName = "Joined_alarms")
+data class JoinedAlarmEntity(
     @PrimaryKey
     @ColumnInfo("group_id")
     val groupId: Int,

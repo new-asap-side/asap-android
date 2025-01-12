@@ -81,7 +81,15 @@ fun ReportScreen(
     viewModel: ReportViewModel = hiltViewModel()
 ) {
     val survey by viewModel.survey.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     var selectedIdx by remember { mutableIntStateOf(-1) }
+    var showReportDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            showReportDialog = true
+        }
+    }
 
     AljyoTheme {
         Scaffold(
@@ -113,19 +121,19 @@ fun ReportScreen(
                 )
             },
             bottomBar = {
-                var showReportDialog by remember { mutableStateOf(false) }
-                var showLoadingDialog by remember { mutableStateOf(false) }
-
                 if (showReportDialog) {
                     PrecautionsDialog(
                         title = stringResource(R.string.complete_report_group),
                         description = stringResource(R.string.complete_report_group_detail),
                         onDismissRequest = { showReportDialog = false },
-                        onConfirm = { showReportDialog = false }
+                        onConfirm = {
+                            showReportDialog = false
+                            navigateToComplete()
+                        }
                     )
                 }
 
-                if (showLoadingDialog) {
+                if (isLoading) {
                     LoadingDialog()
                 }
 
@@ -167,7 +175,8 @@ fun ReportScreen(
                             disabledContainerColor = Grey02,
                         ),
                         onClick = {
-                            // TODO: 신고하기 API 연결
+                            if (selectedIdx == 4) viewModel.updateSurvey("")
+                            viewModel.reportGroup(survey)
                         },
                     ) {
                         Text(
@@ -307,7 +316,6 @@ internal fun ReportSurveyList(
     onChangeIdx: (Int) -> Unit,
     value: String,
     onChangeValue: (String) -> Unit
-//    viewModel: WithdrawalViewModel = hiltViewModel()
 ) {
     val surveyContents = stringArrayResource(R.array.report_survey_list)
 

@@ -1,10 +1,12 @@
 package com.asap.aljyo.core.components.usersetting
 
 import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.user.CheckNicknameUseCase
 import com.asap.domain.usecase.user.SaveUserProfileUseCase
@@ -22,6 +24,9 @@ class UserSettingViewModel @Inject constructor(
 ) : ViewModel() {
     private val _userSettingState = MutableStateFlow(UserSettingState())
     val userSettingState: StateFlow<UserSettingState> get() = _userSettingState
+
+    private val _requestState = mutableStateOf<RequestState<Boolean>>(RequestState.Initial)
+    val requestState get() = _requestState.value
 
     init {
         savedStateHandle.get<String>("nickName").let {
@@ -77,7 +82,8 @@ class UserSettingViewModel @Inject constructor(
             val profileImage = _userSettingState.value.selectedProfileImage
 
             profileImage?.let {
-                saveUserProfileUseCase(nickname, PictureUtil.encodeType(it))
+                val result = saveUserProfileUseCase(nickname, PictureUtil.encodeType(it))
+                _requestState.value = RequestState.Success(result)
             }
         }
     }

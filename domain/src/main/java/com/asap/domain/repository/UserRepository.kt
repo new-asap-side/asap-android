@@ -11,7 +11,7 @@ interface UserRepository {
 
     suspend fun getUserInfo(): User?
 
-    suspend fun fetchUserProfile(): Flow<UserProfile?>
+    suspend fun fetchUserProfile(): UserProfile?
 
     suspend fun checkNickname(nickname: String): Boolean?
 

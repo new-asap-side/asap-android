@@ -39,13 +39,13 @@ class UserRemoteDataSource @Inject constructor(
         return response.body()
     }
 
-    suspend fun fetchUserProfile(userId: String): Flow<UserProfile?> = flow {
+    suspend fun fetchUserProfile(userId: String): UserProfile? {
         val response = userService.fetchUserProfile(userId)
         if(!response.isSuccessful) {
             throw HttpException(response)
         }
 
-        emit(response.body())
+        return response.body()
     }
 
     suspend fun deleteUser(userId: Int, survey: String): Flow<WhetherResponse?> = flow {

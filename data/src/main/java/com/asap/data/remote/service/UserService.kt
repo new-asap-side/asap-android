@@ -21,7 +21,7 @@ interface UserService {
     suspend fun saveProfile(@Body body: SaveProfileRequest): Response<SaveProfileResponse?>
 
     @GET("/admin/{user_id}")
-    suspend fun fetchUserProfile(@Path("user_id") userId: String): Response<UserProfile>
+    suspend fun fetchUserProfile(@Path("user_id") userId: String): Response<UserProfile?>
 
     @HTTP(method = "DELETE", path = "/admin/user", hasBody = true)
     suspend fun deleteUser(@Body body: DeleteUserRequestBody): Response<WhetherResponse>

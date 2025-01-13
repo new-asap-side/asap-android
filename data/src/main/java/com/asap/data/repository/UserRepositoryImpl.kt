@@ -12,6 +12,7 @@ import com.asap.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,8 +32,20 @@ class UserRepositoryImpl @Inject constructor(
         return userDao.selectAll().firstOrNull()
     }
 
-    override suspend fun fetchUserProfile(): Flow<UserProfile?> {
-        return remoteDataSource.fetchUserProfile(userId = getUserId().toString())
+    override suspend fun fetchUserProfile(): UserProfile? {
+        try {
+            val userId = getUserId()
+
+            val response = remoteDataSource.fetchUserProfile(userId = getUserId().toString())
+            if (response != null) {
+                userDao.updateNickname(userId = userId, nickname = response.nickName)
+                userDao.updateProfileImg(userId = userId, profileImg = response.profileImageUrl)
+            }
+
+            return response
+        } catch (e: HttpException) {
+            return null
+        }
     }
 
     override suspend fun checkNickname(nickname: String): Boolean? {
@@ -45,6 +58,7 @@ class UserRepositoryImpl @Inject constructor(
         profileImg: String
     ): Boolean {
         return remoteDataSource.saveProfile(userId, nickname, profileImg).let { response ->
+            Log.d(TAG, "$response")
             if (response?.result == true) {
                 Log.d("UserRepository", "Room DB update [${response.profileImageUrl}, $nickname]")
                 userDao.updateProfileImg(response.profileImageUrl ?: "", userId = userId)

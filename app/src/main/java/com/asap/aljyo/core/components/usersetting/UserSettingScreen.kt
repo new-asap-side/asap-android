@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.NicknameTextField
 import com.asap.aljyo.ui.composable.common.ProfileImagePicker
@@ -63,6 +65,16 @@ fun UserSettingScreen(
     val userSettingState by userSettingViewModel.userSettingState.collectAsStateWithLifecycle()
     val buttonState = userSettingState.run {
         msg == UserSettingMsgType.Success && selectedProfileImage != null
+    }
+
+    val requestState = userSettingViewModel.requestState
+
+    LaunchedEffect(requestState) {
+        if(requestState is RequestState.Success) {
+            if(requestState.data) {
+                navigateToMain()
+            }
+        }
     }
 
     Scaffold(
@@ -145,7 +157,6 @@ fun UserSettingScreen(
                 text = "확인",
                 onClick = {
                     userSettingViewModel.saveUserProfile()
-                    navigateToMain()
                 },
                 enable = buttonState
             )

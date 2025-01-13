@@ -15,8 +15,6 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.asap.aljyo.core.components.edit.PersonalEditViewModel
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
-import com.asap.aljyo.core.components.usersetting.CHANGE
-import com.asap.aljyo.core.components.usersetting.NEW
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.core.navigation.navtype.CustomNavType
@@ -161,7 +159,7 @@ internal fun AppNavHost() {
 
         composable(route = ScreenRoute.UserSetting.route) {
             UserSettingScreen(
-                type = NEW,
+                isEditMode = false,
                 navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(0) { inclusive = true }
@@ -238,7 +236,7 @@ internal fun AppNavHost() {
             )
         ) {
             UserSettingScreen(
-                type = CHANGE,
+                isEditMode = true,
                 onBackClick = { navController.popBackStack() },
                 navigateToMain = { navController.popBackStack() }
             )

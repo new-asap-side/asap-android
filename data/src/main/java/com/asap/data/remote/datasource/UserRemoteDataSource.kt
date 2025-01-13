@@ -55,7 +55,7 @@ class UserRemoteDataSource @Inject constructor(
                 userLeaveReason = survey
             )
         ).also { response ->
-            if (response.isSuccessful) throw HttpException(response)
+            if (!response.isSuccessful) throw HttpException(response)
             emit(response.body())
         }
     }

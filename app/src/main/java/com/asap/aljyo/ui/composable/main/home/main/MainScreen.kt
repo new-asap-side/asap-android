@@ -2,8 +2,10 @@ package com.asap.aljyo.ui.composable.main.home.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -72,6 +74,8 @@ internal fun MainScreen(
         verticalArrangement = Arrangement.spacedBy(40.dp)
     ) {
         item {
+            Spacer(modifier = Modifier.height(32.dp))
+
             ResultCard(
                 modifier = Modifier
                     .background(color = White)

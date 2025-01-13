@@ -113,7 +113,7 @@ fun GroupDetailsScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.groupEdit.collect{
+        viewModel.groupEdit.collect {
             navController.navigate(
                 "${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}"
             )
@@ -123,7 +123,11 @@ fun GroupDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.personalEdit.collect {
             navController.navigate(
-                "${ScreenRoute.PersonalEdit.route}/$groupId/${CustomNavType.PersonalEditType.serializeAsValue(it)}"
+                "${ScreenRoute.PersonalEdit.route}/$groupId/${
+                    CustomNavType.PersonalEditType.serializeAsValue(
+                        it
+                    )
+                }"
             )
         }
     }
@@ -172,8 +176,7 @@ fun GroupDetailsScreen(
                 }
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                 ) {
                     Row(
                         modifier = Modifier
@@ -181,7 +184,8 @@ fun GroupDetailsScreen(
                             .clickable {
                                 showLeaveGroupDialog = true
                                 hideBottomSheet()
-                            },
+                            }
+                            .padding(vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -206,7 +210,8 @@ fun GroupDetailsScreen(
                             .clickable {
                                 navController.navigate("${ScreenRoute.Report.route}/$groupId")
                                 hideBottomSheet()
-                            },
+                            }
+                            .padding(vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(

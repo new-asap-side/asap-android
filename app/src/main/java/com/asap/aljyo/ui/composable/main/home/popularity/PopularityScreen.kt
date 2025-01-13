@@ -57,7 +57,11 @@ fun PopularityScreen(
         state = scrollState,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
+            .padding(
+                top = 32.dp,
+                start = 20.dp,
+                end = 20.dp
+            ),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)

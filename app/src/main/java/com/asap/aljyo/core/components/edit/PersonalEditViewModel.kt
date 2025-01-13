@@ -39,9 +39,7 @@ class PersonalEditViewModel @Inject constructor(
 
     fun onAlarmTypeSelected(alarmType: String) {
         _state.value = _state.value.copy(
-            alarmType = alarmType,
-            musicTitle = if (alarmType == "VIBRATION") null else _state.value.musicTitle,
-            alarmVolume = if (alarmType == "VIBRATION") null else _state.value.alarmVolume
+            alarmType = alarmType
         )
     }
 
@@ -56,8 +54,8 @@ class PersonalEditViewModel @Inject constructor(
             editPersonalUseCase(
                 groupId = groupId,
                 alarmType = _state.value.alarmType,
-                alarmVolume = _state.value.alarmVolume?.toInt(),
-                musicTitle = _state.value.musicTitle
+                alarmVolume = if (_state.value.alarmType == "VIBRATION") null else _state.value.alarmVolume?.toInt(),
+                musicTitle = if (_state.value.alarmType == "VIBRATION") null else _state.value.musicTitle,
             )
         }.invokeOnCompletion {
             if (it == null) {

@@ -8,9 +8,8 @@ import com.asap.aljyo.ui.composable.onboarding.SignupState
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
 import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
-import com.asap.domain.usecase.user.FetchUserProfileUseCase
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
-import com.asap.domain.usecase.user.SaveUserProfileUseCase
+import com.asap.domain.usecase.user.FetchUserProfileUseCase
 import com.kakao.sdk.auth.model.OAuthToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,8 +25,7 @@ class OnboardingViewModel @Inject constructor(
     private val cacheAuthUseCase: CacheAuthUseCase,
     private val checkCachedAuthUseCase: CheckCachedAuthUseCase,
     private val checkProfileUseCase: CheckCachedProfileUseCase,
-    private val fetchUserProfileUseCase: FetchUserProfileUseCase,
-    private val updateUserProfileUseCase: SaveUserProfileUseCase
+    private val fetchUserProfileUseCase: FetchUserProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow<RequestState<SignupState>>(RequestState.Initial)
     val state get() = _state.asStateFlow()
@@ -35,7 +33,7 @@ class OnboardingViewModel @Inject constructor(
     init {
         // 기 로그인 정보 체크
         viewModelScope.launch {
-            // auth 정보 유무 체크
+            // auth 정보 유무 체크 (room)
             val cached = checkCachedAuthUseCase()
             if (cached) {
                 if (!checkProfileUseCase()) {
@@ -63,27 +61,20 @@ class OnboardingViewModel @Inject constructor(
             Log.e(TAG, "AuthKakaoUseCase error - $e")
             handleThrowable(e)
         }.collect { response ->
-            // 서버 토큰 Room DB 저장
             if (response == null) {
                 _state.value = RequestState.Error()
             }
 
+            // 유저 정보 Room DB 저장
             cacheAuthUseCase(response!!)
-            fetchUserProfile()
-        }
-    }
-
-    private fun fetchUserProfile() = viewModelScope.launch {
-        fetchUserProfileUseCase().catch { e ->
-            Log.e(TAG, "$e")
-            handleThrowable(e)
-        }.collect { profile ->
-            if (profile == null) {
-                _state.value = RequestState.Success(SignupState.NOT_REGISTERED)
-            } else {
-                updateUserProfileUseCase(profile.nickName, profile.profileImageUrl)
-                _state.value = RequestState.Success(SignupState.REGISTERED)
-            }
+            _state.value = RequestState.Success(
+                if (response.isJoinedUser) {
+                    fetchUserProfileUseCase()
+                    SignupState.REGISTERED
+                } else {
+                    SignupState.NOT_REGISTERED
+                }
+            )
         }
     }
 

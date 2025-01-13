@@ -5,11 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-/**
- * 비활성화 알람 정보
- */
-@Entity
-data class DeactivatedAlarm(
+@Entity(tableName = "Deactivated_alarm")
+data class AlarmEntity(
     @PrimaryKey
     @ColumnInfo("group_id")
     val groupId: Int,

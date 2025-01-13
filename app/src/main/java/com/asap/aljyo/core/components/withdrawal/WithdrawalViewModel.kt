@@ -1,9 +1,11 @@
 package com.asap.aljyo.core.components.withdrawal
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
+import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WithdrawalViewModel @Inject constructor(
-    private val deleteUserInfoUseCase: DeleteUserInfoUseCase
+    private val deleteUserInfoUseCase: DeleteUserInfoUseCase,
+    private val deleteLocalUserInfoUseCase: DeleteLocalUserInfoUseCase
 ) : ViewModel() {
     private val _selectedIndex = mutableStateOf<Int?>(null)
     val selectedIndex get() = _selectedIndex.value
@@ -28,7 +31,7 @@ class WithdrawalViewModel @Inject constructor(
 
     private val _survey = mutableStateOf("")
 
-    val enable get() = _checkedPrecautions.value &&  _survey.value.isNotEmpty()
+    val enable get() = _checkedPrecautions.value && _survey.value.isNotEmpty()
 
     fun select(index: Int?) {
         _selectedIndex.value = index
@@ -45,6 +48,7 @@ class WithdrawalViewModel @Inject constructor(
     fun deleteUser() = viewModelScope.launch {
         _withdrawalState.value = RequestState.Loading
         deleteUserInfoUseCase(_survey.value).catch { e ->
+            Log.e(TAG, "$e")
             val errorCode = when (e) {
                 is HttpException -> e.code()
                 else -> -1
@@ -52,7 +56,16 @@ class WithdrawalViewModel @Inject constructor(
 
             _withdrawalState.value = RequestState.Error(errorCode)
         }.collect { response ->
-            _withdrawalState.value = RequestState.Success(response?.result ?: false)
+            Log.e(TAG, "$response")
+            val result = response?.result ?: false
+            if (result) {
+                deleteLocalUserInfoUseCase()
+                _withdrawalState.value = RequestState.Success(true)
+            }
         }
+    }
+
+    companion object {
+        const val TAG = "WithdrawalViewModel"
     }
 }

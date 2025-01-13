@@ -18,7 +18,7 @@ data class PostGroupCreateRequest(
     @Json(name = "alarm_unlock_contents")
     val alarmUnlockContents: String,
     @Json(name = "alarm_volume")
-    val alarmVolume: Int?,
+    val alarmVolume: Float?,
     @Json(name = "description")
     val description: String,
     @Json(name = "device_token")

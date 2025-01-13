@@ -11,22 +11,20 @@ class HeaderInterceptor @Inject constructor(
     private val sessionLocalDataSource: SessionLocalDataSource
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val requestPath = chain.request().url.encodedPath
+        val accessToken = runBlocking {
+            sessionLocalDataSource.getAccessToken() ?: ""
+        }
+        Log.v(TAG, "accesssToken: $accessToken")
+
         val requestBuilder = chain.request().newBuilder()
             .addHeader("Content-Type", "application/json")
-
-        if (!requestPath.startsWith("/auth")) {
-            val accessToken = runBlocking {
-                sessionLocalDataSource.getAccessToken() ?: ""
-            }
-            requestBuilder.addHeader(AUTH_KEY, "Bearer $accessToken")
-        }
-        Log.d("HeaderInterceptor:","${requestBuilder.build()}")
+            .addHeader(AUTH_KEY, "Bearer $accessToken")
 
         return chain.proceed(requestBuilder.build())
     }
 
     companion object {
         const val AUTH_KEY = "Authorization"
+        const val TAG = "HeeaderInterceptor"
     }
 }

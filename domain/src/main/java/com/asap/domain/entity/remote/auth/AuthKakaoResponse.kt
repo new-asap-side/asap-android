@@ -7,10 +7,16 @@ import com.squareup.moshi.JsonClass
 data class AuthKakaoResponse(
     @Json(name = "accessToken")
     override val accessToken: String,
+
     @Json(name = "refreshToken")
     override val refreshToken: String,
+
     @Json(name = "user_id")
     override val userId: String,
+
     @Json(name = "kakao_id")
-    override val socialLoginId: String
+    override val socialLoginId: String,
+
+    @Json(name = "isJoinedUser")
+    override val isJoinedUser: Boolean
 ): AuthResponse

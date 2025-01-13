@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.navigation
 
+import android.net.Uri
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
+import com.asap.aljyo.ui.composable.report.ReportScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
 import com.asap.domain.entity.remote.alarm.AlarmPayload
@@ -157,6 +159,7 @@ internal fun AppNavHost() {
 
         composable(route = ScreenRoute.UserSetting.route) {
             UserSettingScreen(
+                isEditMode = false,
                 navigateToMain = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(0) { inclusive = true }
@@ -192,7 +195,7 @@ internal fun AppNavHost() {
                 onBackIconPressed = { navController.popBackStack() },
                 navigateToComplete = {
                     navController.navigate(ScreenRoute.WithdrawalComplete.route) {
-                        popUpTo(0)
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )
@@ -204,7 +207,9 @@ internal fun AppNavHost() {
         ) {
             WithdrawalCompleteScreen(
                 navigateToOnboarding = {
-
+                    navController.navigate(ScreenRoute.Onboarding.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }
@@ -221,6 +226,33 @@ internal fun AppNavHost() {
         groupCreateNavGraph(navController)
 
         editNavGraph(navController)
+
+        // 개인 프로필 수정 경로
+        composable(
+            route = "${ScreenRoute.UserSetting.route}/{nickName}/{profileImage}",
+            arguments = listOf(
+                navArgument("nickName") { type = NavType.StringType },
+                navArgument("profileImage") { type = NavType.StringType }
+            )
+        ) {
+            UserSettingScreen(
+                isEditMode = true,
+                onBackClick = { navController.popBackStack() },
+                navigateToMain = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = "${ScreenRoute.Report.route}/{groupId}",
+            arguments = listOf(
+                navArgument("groupId") { type = NavType.IntType }
+            )
+        ) {
+            ReportScreen(
+                onBackClick = { navController.popBackStack() },
+                navigateToComplete = { navController.popBackStack()  }
+            )
+        }
     }
 }
 
@@ -275,6 +307,9 @@ fun MainNavHost(
                     screenNavController.navigate(ScreenRoute.Onboarding.route) {
                         popUpTo(0)
                     }
+                },
+                navigateToProfileSetting = { nickName, profileImage ->
+                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
                 }
             )
         }

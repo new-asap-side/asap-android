@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -128,20 +127,42 @@ internal fun RankingScreen(
                     }
                 }
             ) {
-                Text(
-                    text = stringResource(R.string.rank_score_descript),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.fsp,
-                        color = Black02
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = stringResource(R.string.mask),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02,
+                        )
                     )
-                )
-                Text(
-                    text = stringResource(R.string.no_points_score),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.fsp,
-                        color = Black02
+                    Text(
+                        text = stringResource(R.string.rank_score_descript),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02,
+                        )
                     )
-                )
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = stringResource(R.string.mask),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02,
+                        )
+                    )
+                    Text(
+                        text = stringResource(R.string.no_points_score),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02
+                        )
+                    )
+                }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -182,7 +203,7 @@ internal fun RankingScreen(
                             onClick = onBackPressed
                         ) {
                             Icon(
-                                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                painter = painterResource(R.drawable.ic_top_back),
                                 tint = Black01,
                                 contentDescription = "Top app bar navigation icon"
                             )
@@ -269,6 +290,7 @@ internal fun RankingScreen(
                                 .padding(28.dp)
                                 .weight(1f),
                             unRakings = viewModel.getUnRankList(),
+                            mIndex = mIndex
                         )
                     }
                 }

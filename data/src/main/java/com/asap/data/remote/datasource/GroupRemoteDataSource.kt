@@ -3,6 +3,7 @@ package com.asap.data.remote.datasource
 import com.asap.data.remote.request.PostGroupCreateRequest
 import com.asap.data.remote.request.PostGroupEditRequest
 import com.asap.data.remote.request.PostPersonalEditRequest
+import com.asap.data.remote.request.PostReportGroupRequest
 import com.asap.data.remote.response.PostGroupCreateResponse
 import com.asap.data.remote.service.GroupService
 import com.asap.domain.entity.remote.AlarmGroup
@@ -96,7 +97,7 @@ class GroupRemoteDataSource @Inject constructor(
         alarmTime: String,
         alarmType: String,
         alarmUnlockContents: String,
-        alarmVolume: Int?,
+        alarmVolume: Float?,
         description: String,
         deviceToken: String,
         deviceType: String,
@@ -166,5 +167,19 @@ class GroupRemoteDataSource @Inject constructor(
             alarmVolume = alarmVolume,
             musicTitle = musicTitle
         ).let { groupService.postPersonalEdit(it) }
+    }
+
+    suspend fun postReportGroup(
+        userId: Int,
+        groupId: Int,
+        survey: String
+    ) {
+        PostReportGroupRequest(
+            groupId = groupId,
+            userId = userId,
+            survey = survey
+        ).let {
+            groupService.postReportGroup(it)
+        }
     }
 }

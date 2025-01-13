@@ -19,14 +19,15 @@
     <string name="password">비밀번호</string>
     <string name="exit">나가기</string>
     <string name="join">참여하기</string>
+    <string name="mask">\u2022</string>
     <string name="alarm_unlock_contents_slide">밀어서 알람 해제</string>
     <string name="alarm_unlock_contents_card">카드를 터치하여 알람 해제</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
-    <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
-    <string name="funny">재미있게</string>
-    <string name="release_alarm_with_contents">다양한 알람 해제 콘텐츠\n알람을 해제해요</string>
-    <string name="with_aljyo">알죠와 함께</string>
+    <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표를\n다른사람들과 함께해요</string>
+    <string name="funny">재미있게,</string>
+    <string name="release_alarm_with_contents">다양한 알람 해제 콘텐츠로\n알람을 해제해요</string>
+    <string name="with_aljyo">알죠와 함께,</string>
     <string name="good_today">오늘 하루를\n의미있게 보내봐요!</string>
     <string name="start_with_kakao">카카오로 시작하기</string>
     <!-- Bottom navigation -->
@@ -76,6 +77,7 @@
     <string name="modifiy">수정</string>
     <string name="ranking">랭킹</string>
     <string name="participate">참여하기</string>
+    <string name="participate_max">멤버가 모두 찼어요</string>
     <string name="confirm_rank">현재 순위를 확인해보세요!</string>
     <string name="edit_alarm">알람 수정</string>
     <string name="edit_group">그룹 수정</string>
@@ -83,12 +85,29 @@
     <string name="leave_group">그룹 탈퇴하기</string>
     <string name="ask_leave_group">정말로 그룹을 탈퇴하시겠어요?</string>
     <string name="ranking_initialized">탈퇴시 랭킹이 초기화되어요</string>
+    <string name="report_group">신고하기</string>
+    <string name="complete_report_group">신고가 완료되었어요</string>
+    <string name="complete_report_group_detail">내부 검토 후 삭제될 예정이에요</string>
+    <string name="report_survey">이 그룹의 신고사유를 선택해 주세요</string>
+    <string-array name="report_survey_list">
+        <item>선정/폭력성/혐오</item>
+        <item>스팸/광고/도배글</item>
+        <item>홍보/영리목적</item>
+        <item>개인정보 노출/거래</item>
+        <item>기타</item>
+    </string-array>
+    <string name="report_information_title">신고하기 전 꼭 확인해 주세요!</string>
+    <string-array name="report_informations">
+        <item>신고 접수를 하시면 내부 검토 후 삭제 또는 숨김처리됩니다.</item>
+        <item>부적합 정보, 이용 제한 및 징계에 관한 기록은 일정 기간 보관합니다.</item>
+        <item>궁금하신 사항은 new.asap.side@gmail.com로 문의 바랍니다.</item>
+    </string-array>
     <!-- Ranking Screen -->
     <string name="group_ranking">그룹 랭킹</string>
     <string name="score">%s점</string>
     <string name="select_time">시간 선택</string>
-    <string name="rank_score_descript">\u2022 알람 해제 성공 시 1등-1000점/ 2등-950점 / 3등-900점 / 4등-850점 / 5등-800점 / 6등-750점 / 7등-700점 / 8등-650점이 부여됩니다.</string>
-    <string name="no_points_score">\u2022 알람을 해제하지 못하였을 시 점수는 부여되지 않습니다.</string>
+    <string name="rank_score_descript">알람 해제 성공 시 1등-1000점/ 2등-950점 / 3등-900점 / 4등-850점 / 5등-800점 / 6등-750점 / 7등-700점 / 8등-650점이 부여됩니다.</string>
+    <string name="no_points_score">알람을 해제하지 못하였을 시 점수는 부여되지 않습니다.</string>
     <!-- Release alarm -->
     <string name="drag_description">원을 옆으로 밀고\n오늘의 운세를 확인하세요!</string>
     <string name="drag_to_release_alarm">옆으로 밀어서 알람 해제</string>

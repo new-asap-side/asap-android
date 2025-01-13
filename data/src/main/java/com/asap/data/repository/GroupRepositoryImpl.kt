@@ -64,7 +64,7 @@ class GroupRepositoryImpl @Inject constructor(
         alarmTime: String,
         alarmType: String,
         alarmUnlockContents: String,
-        alarmVolume: Int?,
+        alarmVolume: Float?,
         description: String,
         deviceToken: String,
         deviceType: String,
@@ -133,5 +133,9 @@ class GroupRepositoryImpl @Inject constructor(
             alarmVolume = alarmVolume,
             musicTitle = musicTitle
         )
+    }
+
+    override suspend fun postReportGroup(userId: Int, groupId: Int, survey: String) {
+        remoteDataSource.postReportGroup(userId, groupId, survey)
     }
 }

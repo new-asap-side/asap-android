@@ -40,7 +40,7 @@ interface GroupRepository {
         alarmTime: String,
         alarmType: String,
         alarmUnlockContents: String,
-        alarmVolume: Int?,
+        alarmVolume: Float?,
         description: String,
         deviceToken: String,
         deviceType: String,
@@ -71,4 +71,6 @@ interface GroupRepository {
         alarmVolume: Int?,
         musicTitle: String?
     )
+
+    suspend fun postReportGroup(userId: Int, groupId: Int, survey: String)
 }

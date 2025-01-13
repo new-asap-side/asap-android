@@ -1,21 +1,23 @@
-package com.asap.aljyo.ui.composable.withdrawal
+package com.asap.aljyo.ui.composable.report
 
-import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -35,9 +37,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -49,36 +53,41 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
+import com.asap.aljyo.core.components.report.ReportViewModel
 import com.asap.aljyo.core.fsp
-import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.custom.AljyoToggleButton
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
+import com.asap.aljyo.ui.composable.withdrawal.PrecautionsButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.White
 
+private const val maxLength = 50
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun WithdrawalScreen(
-    onBackIconPressed: () -> Unit,
+fun ReportScreen(
+    onBackClick: () -> Unit,
     navigateToComplete: () -> Unit,
-    viewModel: WithdrawalViewModel = hiltViewModel(),
-    preview: Boolean = false
+    viewModel: ReportViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    if (!preview) {
-        SideEffect {
-            val window = (context as ComponentActivity).window
-            WindowCompat.setDecorFitsSystemWindows(window, true)
+    val survey by viewModel.survey.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    var selectedIdx by remember { mutableIntStateOf(-1) }
+    var showReportDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            showReportDialog = true
         }
     }
 
@@ -92,7 +101,7 @@ internal fun WithdrawalScreen(
                     ),
                     title = {
                         Text(
-                            text = stringResource(R.string.membership_withdrawal),
+                            text = stringResource(R.string.report_group),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
                                 fontSize = 16.fsp
@@ -101,7 +110,7 @@ internal fun WithdrawalScreen(
                     },
                     navigationIcon = {
                         IconButton(
-                            onClick = { onBackIconPressed() }
+                            onClick = { onBackClick() }
                         ) {
                             Icon(
                                 Icons.Default.Close,
@@ -112,54 +121,27 @@ internal fun WithdrawalScreen(
                 )
             },
             bottomBar = {
-                var showWithdrawalDialog by remember { mutableStateOf(false) }
-                var showLoadingDialog by remember { mutableStateOf(false) }
-                val withdrawalState by viewModel.withdrawalState.collectAsState()
-
-                LaunchedEffect(withdrawalState) {
-                    when (withdrawalState) {
-                        RequestState.Initial -> Unit
-                        RequestState.Loading -> showLoadingDialog = true
-
-                        is RequestState.Success -> {
-                            val success = (withdrawalState as RequestState.Success).data
-                            if (!success) {
-                                Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
-                                return@LaunchedEffect
-                            }
-
-                            showLoadingDialog = false
-                            navigateToComplete()
-                        }
-
-                        is RequestState.Error -> {
-                            Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
-                            showLoadingDialog = false
-                        }
-
-                    }
-                }
-
-                if (showWithdrawalDialog) {
+                if (showReportDialog) {
                     PrecautionsDialog(
-                        title = stringResource(R.string.ask_withdrawal),
-                        description = stringResource(R.string.no_turning_back),
-                        onDismissRequest = { showWithdrawalDialog = false },
+                        title = stringResource(R.string.complete_report_group),
+                        description = stringResource(R.string.complete_report_group_detail),
+                        onDismissRequest = { showReportDialog = false },
                         onConfirm = {
-                            showWithdrawalDialog = false
-                            viewModel.deleteUser()
+                            showReportDialog = false
+                            navigateToComplete()
                         }
                     )
                 }
 
-                if (showLoadingDialog) {
+                if (isLoading) {
                     LoadingDialog()
                 }
 
                 Row(
                     modifier = Modifier
+                        .navigationBarsPadding()
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 6.dp),
+                        .padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
@@ -171,7 +153,7 @@ internal fun WithdrawalScreen(
                             width = 1.dp,
                             color = MaterialTheme.colorScheme.primary
                         ),
-                        onClick = { onBackIconPressed() },
+                        onClick = { onBackClick() },
                     ) {
                         Text(
                             text = stringResource(R.string.cancel),
@@ -185,17 +167,20 @@ internal fun WithdrawalScreen(
                         modifier = Modifier
                             .weight(1f)
                             .height(52.dp),
-                        enabled = viewModel.enable,
+                        enabled = selectedIdx != -1 && (selectedIdx != 4 || survey.isNotEmpty()),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.textButtonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = White,
                             disabledContainerColor = Grey02,
                         ),
-                        onClick = { showWithdrawalDialog = true },
+                        onClick = {
+                            if (selectedIdx == 4) viewModel.updateSurvey("")
+                            viewModel.reportGroup(survey)
+                        },
                     ) {
                         Text(
-                            text = stringResource(R.string.withdrawal),
+                            text = stringResource(R.string.report_group),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontSize = 16.fsp
                             )
@@ -204,42 +189,16 @@ internal fun WithdrawalScreen(
                 }
             }
         ) { paddingValues ->
-            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
-                    .verticalScroll(state = scrollState)
                     .padding(
                         horizontal = 20.dp,
                         vertical = 32.dp
                     )
             ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = buildAnnotatedString {
-                        append("${stringResource(R.string.really)} ")
-                        withStyle(
-                            style = SpanStyle(
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            append(stringResource(R.string.app_name))
-                        }
-                        append("${stringResource(R.string.from)}\n")
-                        append(stringResource(R.string.are_you_leave))
-                    },
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        color = Black01,
-                        fontSize = 20.fsp,
-                        lineHeight = 28.fsp
-                    ),
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Survey(
+                ReportSurvey(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
@@ -247,7 +206,13 @@ internal fun WithdrawalScreen(
                         .padding(
                             horizontal = 20.dp,
                             vertical = 24.dp
-                        )
+                        ),
+                    selectedIdx = selectedIdx,
+                    onChangeIdx = {
+                        selectedIdx = it
+                    },
+                    survey = survey,
+                    onChangeSurvey = viewModel::updateSurvey
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -304,32 +269,169 @@ internal fun WithdrawalScreen(
                                     fontSize = 12.fsp,
                                 )
                             )
-
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(36.dp))
-
-                PrecautionsButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(68.dp)
-                )
-
             }
         }
     }
 }
 
-@Preview
 @Composable
-private fun Preview() {
-    AljyoTheme {
-        WithdrawalScreen(
-            onBackIconPressed = {},
-            navigateToComplete = {},
-            preview = true
+internal fun ReportSurvey(
+    modifier: Modifier = Modifier,
+    selectedIdx: Int,
+    onChangeIdx: (Int) -> Unit,
+    survey: String,
+    onChangeSurvey: (String) -> Unit
+) {
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.report_survey),
+            style = MaterialTheme.typography.labelMedium.copy(
+                color = Black02,
+                fontSize = 14.fsp,
+                lineHeight = 22.fsp
+            ),
+            textAlign = TextAlign.Center
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        ReportSurveyList(
+            modifier = Modifier.fillMaxWidth(),
+            selectedIdx = selectedIdx,
+            onChangeIdx = onChangeIdx,
+            value = survey,
+            onChangeValue = onChangeSurvey
+        )
+    }
+}
+
+@Composable
+internal fun ReportSurveyList(
+    modifier: Modifier = Modifier,
+    selectedIdx: Int,
+    onChangeIdx: (Int) -> Unit,
+    value: String,
+    onChangeValue: (String) -> Unit
+) {
+    val surveyContents = stringArrayResource(R.array.report_survey_list)
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        surveyContents.forEachIndexed { index, survey ->
+            ReportSurveyItem(
+                modifier = Modifier.fillMaxWidth(),
+                survey = survey,
+                selected = selectedIdx == index,
+                onSelect = { onChangeIdx(index) }
+            ) {
+                if (index == surveyContents.lastIndex && index == selectedIdx) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    BasicTextField(
+                        value = value,
+                        onValueChange = { value ->
+                            if (value.contains("\n")) {
+                                return@BasicTextField
+                            }
+
+                            if (value.length <= maxLength) {
+                                onChangeValue(value)
+                            }
+                        },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            color = Black01,
+                            fontSize = 15.fsp,
+                            lineHeight = 24.fsp
+                        ),
+                    ) { innerTextField ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(128.dp)
+                                .border(
+                                    width = 1.dp,
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = Grey02
+                                )
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(White)
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                        ) {
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.etc_hint),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = Black04,
+                                        fontSize = 15.fsp,
+                                        lineHeight = 24.fsp
+                                    )
+                                )
+                            }
+                            innerTextField()
+
+                            Text(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                text = buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color = Black02
+                                        )
+                                    ) {
+                                        append("${value.length}")
+                                    }
+
+                                    append(" / $maxLength")
+                                },
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = Black04,
+                                    fontSize = 11.fsp
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun ReportSurveyItem(
+    modifier: Modifier = Modifier,
+    survey: String,
+    selected: Boolean,
+    onSelect: (Boolean) -> Unit,
+    inputField: (@Composable () -> Unit)? = null
+) {
+    Column {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AljyoToggleButton(
+                selected = selected,
+                onSelect = onSelect
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(
+                text = survey,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Black01,
+                    fontSize = 15.fsp
+                )
+            )
+        }
+
+        if (inputField != null) {
+            inputField()
+        }
     }
 }

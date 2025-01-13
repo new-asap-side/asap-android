@@ -2,26 +2,24 @@ package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
 import android.graphics.Color
-import android.net.Uri
-import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -55,7 +53,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
@@ -71,7 +68,6 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
-import com.google.gson.Gson
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
@@ -117,7 +113,7 @@ fun GroupDetailsScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.groupEdit.collect{
+        viewModel.groupEdit.collect {
             navController.navigate(
                 "${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}"
             )
@@ -127,7 +123,11 @@ fun GroupDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.personalEdit.collect {
             navController.navigate(
-                "${ScreenRoute.PersonalEdit.route}/$groupId/${CustomNavType.PersonalEditType.serializeAsValue(it)}"
+                "${ScreenRoute.PersonalEdit.route}/$groupId/${
+                    CustomNavType.PersonalEditType.serializeAsValue(
+                        it
+                    )
+                }"
             )
         }
     }
@@ -136,6 +136,7 @@ fun GroupDetailsScreen(
         val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
         var showLeaveGroupDialog by remember { mutableStateOf(false) }
+        var showReportGroupDialog by remember { mutableStateOf(false) }
 
         val hideBottomSheet = {
             coroutineScope.launch {
@@ -174,28 +175,58 @@ fun GroupDetailsScreen(
                     }
                 }
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            // show leave group dialog
-                            showLeaveGroupDialog = true
-                            hideBottomSheet()
-                        }
-                        .padding(vertical = 10.dp),
+                Column(
+                    modifier = Modifier.padding(top = 10.dp),
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_leave_group),
-                        contentDescription = "Leave group icon"
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        text = stringResource(R.string.leave_group),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 16.fsp,
-                            color = Black02
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                showLeaveGroupDialog = true
+                                hideBottomSheet()
+                            }
+                            .padding(vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_leave_group),
+                            contentDescription = "Leave group icon"
                         )
-                    )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(R.string.leave_group),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.fsp,
+                                color = Black02
+                            )
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate("${ScreenRoute.Report.route}/$groupId")
+                                hideBottomSheet()
+                            }
+                            .padding(vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_report),
+                            contentDescription = "Leave group icon"
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(R.string.report_group),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 16.fsp,
+                                color = Black02
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -256,7 +287,7 @@ fun GroupDetailsScreen(
                             onClick = { navController.popBackStack() }
                         ) {
                             Icon(
-                                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                painter = painterResource(R.drawable.ic_top_back),
                                 tint = White,
                                 contentDescription = "Top app bar navigation icon"
                             )
@@ -272,6 +303,7 @@ fun GroupDetailsScreen(
                         .background(White)
                         .padding(20.dp),
                     userGroupType = userGroupType,
+                    enabled = viewModel.checkJoinGroup(),
                     onRankingClick = {
                         navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
                     },

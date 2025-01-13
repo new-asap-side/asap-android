@@ -1,7 +1,7 @@
 package com.asap.domain.usecase.alarm
 
 import android.util.Log
-import com.asap.domain.entity.local.DeactivatedAlarm
+import com.asap.domain.entity.local.AlarmEntity
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.alarm.AlarmOffRate
@@ -11,13 +11,13 @@ import javax.inject.Inject
 
 // 비활성화 알람 리스트 조회
 interface GetDeactivatedAlarmListUseCase {
-    suspend operator fun invoke(): List<DeactivatedAlarm>
+    suspend operator fun invoke(): List<AlarmEntity>
 }
 
 class GetDeactivatedAlarmlistUseCaseImpl @Inject constructor(
     private val alarmRepository: AlarmRepository
 ): GetDeactivatedAlarmListUseCase {
-    override suspend fun invoke(): List<DeactivatedAlarm> {
+    override suspend fun invoke(): List<AlarmEntity> {
         return alarmRepository.getDeactivatedAlarmList()
     }
 }

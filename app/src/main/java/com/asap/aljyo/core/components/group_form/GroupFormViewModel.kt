@@ -127,6 +127,13 @@ class GroupFormViewModel @Inject constructor(
 
     fun onCompleteClicked() {
         viewModelScope.launch {
+            val volume = if (_alarmScreenState.value.alarmType == "VIBRATION") {
+                null
+            } else {
+                _alarmScreenState.value.alarmVolume
+            }
+            Log.d("VM", "volume: $volume")
+
             createGroupUseCase(
                 groupImage = PictureUtil.encodeType(_groupScreenState.value.groupImage)
                     ?: throw IllegalArgumentException("image encoded fail"),
@@ -135,7 +142,7 @@ class GroupFormViewModel @Inject constructor(
                 alarmTime = _groupScreenState.value.alarmTime,
                 alarmType = _alarmScreenState.value.alarmType,
                 alarmUnlockContents = _alarmScreenState.value.alarmUnlockContents,
-                alarmVolume = if (_alarmScreenState.value.alarmType == "VIBRATION") null else _alarmScreenState.value.alarmVolume?.toInt(),
+                alarmVolume = volume,
                 description = _groupScreenState.value.description,
                 deviceType = "ANDROID",
                 groupPassword = _groupScreenState.value.groupPassword,

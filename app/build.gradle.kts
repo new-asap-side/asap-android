@@ -23,7 +23,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -43,6 +43,13 @@ android {
             storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
             storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE"))
         }
+
+        create("release") {
+            keyAlias = localProperties.getProperty("SIGNED_KEY_ALIAS_RELEASE")
+            keyPassword = localProperties.getProperty("SIGNED_KEY_PASSWORD")
+            storePassword = localProperties.getProperty("SIGNED_STORE_PASSWORD")
+            storeFile = File(localProperties.getProperty("SIGNED_STORE_FILE_RELEASE"))
+        }
     }
 
     buildTypes {
@@ -52,6 +59,7 @@ android {
         }
 
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

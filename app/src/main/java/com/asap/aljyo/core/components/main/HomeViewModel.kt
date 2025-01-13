@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.main.home.PrivateGroupState
 import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.alarm.AlarmOffRate
 import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
+import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
@@ -29,6 +32,7 @@ class HomeViewModel @Inject constructor(
     private val fetchALarmOffRateUseCase: FetchAlarmOffRateUseCase,
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
+    private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
@@ -47,8 +51,9 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<RequestState<GroupJoinResponse?>>(RequestState.Initial)
     val joinResponseState get() = _joinResponseState.asStateFlow()
 
-    private val _nickname = mutableStateOf("-")
-    val nickname get() = _nickname.value
+    val nickname get() = userInfo.value?.nickname ?: ""
+
+    private val userInfo = mutableStateOf<User?>(null)
 
     private val _scrollPositionMap = mutableMapOf(
         MAIN_TAB_SCROLL_KEY to Pair(0, 0),
@@ -60,11 +65,12 @@ class HomeViewModel @Inject constructor(
     private val _error = mutableStateOf(false)
     val error get() = _error.value
 
-    init {
-        fetchHomeData()
+    private val _privateGroupState = mutableStateOf(PrivateGroupState())
+    val privateGroupState get() = _privateGroupState.value
 
+    init {
         viewModelScope.launch {
-            _nickname.value = getUserInfoUseCase()?.nickname ?: "-"
+            userInfo.value = getUserInfoUseCase()
         }
     }
 
@@ -93,6 +99,22 @@ class HomeViewModel @Inject constructor(
         _scrollPositionMap[key] = Pair(index, offset)
     }
 
+    fun checkJoinedGroup(groupId: Int) = viewModelScope.launch {
+        fetchGroupDetailsUseCase(groupId = groupId).catch { e ->
+            Log.e(TAG, "$e")
+            handleThrowable(e)
+        }.collect { details ->
+            val joined = details?.users?.find {
+                it.userId.toString() == userInfo.value?.userId
+            } != null
+
+            _privateGroupState.value = _privateGroupState.value.copy(
+                showPasswordSheet = !joined,
+                isJoinedGroup = joined,
+            )
+        }
+    }
+
     fun joinGroup(password: String, alarmType: String) = viewModelScope.launch {
         val userInfo = getUserInfoUseCase()
         _joinResponseState.value = RequestState.Loading
@@ -105,7 +127,7 @@ class HomeViewModel @Inject constructor(
                 alarmType = alarmType,
             )
         ).catch { e ->
-            Log.e("VM", "$e")
+            Log.e(TAG, "$e")
             val errorCode = when (e) {
                 is HttpException -> e.code()
                 else -> -1
@@ -113,13 +135,16 @@ class HomeViewModel @Inject constructor(
 
             _joinResponseState.value = RequestState.Error(errorCode)
         }.collect { result ->
-            Log.d("VM", "$result")
             _joinResponseState.value = RequestState.Success(result)
         }
     }
 
     fun joinStateClear() {
         _joinResponseState.value = RequestState.Initial
+    }
+
+    fun clearPrivateGroupState() {
+        _privateGroupState.value = PrivateGroupState()
     }
 
     private fun handleThrowable(e: Throwable): UiState.Error {
@@ -131,6 +156,8 @@ class HomeViewModel @Inject constructor(
     }
 
     companion object {
+        const val TAG = "HomeViewModel"
+
         const val MAIN_TAB_SCROLL_KEY = "main"
         const val POPULAR_TAB_SCROLL_KEY = "popular"
         const val LATEST_TAB_SCROLL_KEY = "latest"

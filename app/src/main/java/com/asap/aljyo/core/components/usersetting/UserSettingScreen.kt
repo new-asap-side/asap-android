@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,18 +44,20 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
 
-const val NEW = 1
-const val CHANGE = 2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserSettingScreen(
     modifier: Modifier = Modifier,
-    type: Int,
+    isEditMode: Boolean,
     navigateToMain: () -> Unit,
     userSettingViewModel: UserSettingViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        userSettingViewModel.setEditMode(isEditMode)
+    }
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri: Uri? ->
@@ -62,16 +65,14 @@ fun UserSettingScreen(
         }
     )
     val userSettingState by userSettingViewModel.userSettingState.collectAsStateWithLifecycle()
-    val buttonState = userSettingState.run {
-        msg == UserSettingMsgType.Success && selectedProfileImage != null
-    }
+    val isButtonEnabled by userSettingViewModel.isButtonEnabled.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = White,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    if (type == NEW) {
+                    if (isEditMode.not()) {
                         Text(text = "")
                     } else {
                         Text(
@@ -108,7 +109,7 @@ fun UserSettingScreen(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = if (type == NEW) "어떤 프로필로 시작할까요?" else "프로필을 수정하시겠어요?",
+                text = if (isEditMode.not()) "어떤 프로필로 시작할까요?" else "프로필을 수정하시겠어요?",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = Color.Black,
                     fontSize = 22.fsp,
@@ -148,7 +149,7 @@ fun UserSettingScreen(
                     userSettingViewModel.saveUserProfile()
                     navigateToMain()
                 },
-                enable = buttonState
+                enable = isButtonEnabled
             )
         }
     }
@@ -160,7 +161,7 @@ fun HomeScreenPreview() {
     val navController = rememberNavController()
     AljyoTheme {
         UserSettingScreen(
-            type = NEW,
+            isEditMode = true,
             navigateToMain = { navController.navigate(ScreenRoute.Main.route) },
             onBackClick = {}
         )

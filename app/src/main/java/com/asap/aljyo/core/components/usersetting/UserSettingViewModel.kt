@@ -5,12 +5,17 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.user.CheckNicknameUseCase
 import com.asap.domain.usecase.user.SaveUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,11 +25,28 @@ class UserSettingViewModel @Inject constructor(
     private val saveUserProfileUseCase: SaveUserProfileUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val _isEditMode = MutableStateFlow(false)
+
     private val _userSettingState = MutableStateFlow(UserSettingState())
     val userSettingState: StateFlow<UserSettingState> = _userSettingState
 
+    private var _previousProfileImage: Uri? = null
+
+    val isButtonEnabled: StateFlow<Boolean> = combine(
+        _isEditMode, _userSettingState
+    ) { isEditMode, userSettingState ->
+        if (isEditMode) {
+            val isProfileChange = userSettingState.selectedProfileImage != _previousProfileImage
+            val isNicknameValid = userSettingState.msg == UserSettingMsgType.None || userSettingState.msg == UserSettingMsgType.Success
+
+            if (isProfileChange) isNicknameValid else userSettingState.msg == UserSettingMsgType.Success
+        } else {
+            userSettingState.selectedProfileImage != null && userSettingState.msg == UserSettingMsgType.Success
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
     init {
-        savedStateHandle.get<String>("nickName").let {
+        savedStateHandle.get<String>("nickName")?.let {
             _userSettingState.value = _userSettingState.value.copy(
                 nickname = Uri.decode(it)
             )
@@ -34,6 +56,12 @@ class UserSettingViewModel @Inject constructor(
                 selectedProfileImage = it?.toUri()
             )
         }
+
+        _previousProfileImage = userSettingState.value.selectedProfileImage
+    }
+
+    fun setEditMode(isEdit: Boolean) {
+        _isEditMode.value = isEdit
     }
 
     fun setProfileImage(uri: Uri?) {

@@ -290,6 +290,7 @@ internal fun RankingScreen(
                                 .padding(28.dp)
                                 .weight(1f),
                             unRakings = viewModel.getUnRankList(),
+                            mIndex = mIndex
                         )
                     }
                 }

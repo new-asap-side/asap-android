@@ -71,4 +71,6 @@ interface GroupRepository {
         alarmVolume: Int?,
         musicTitle: String?
     )
+
+    suspend fun postReportGroup(userId: Int, groupId: Int, survey: String)
 }

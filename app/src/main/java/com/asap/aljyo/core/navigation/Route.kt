@@ -39,6 +39,8 @@ sealed class ScreenRoute(val route: String) {
     data object GroupEdit: ScreenRoute(route = "group_edit")
 
     data object PersonalEdit: ScreenRoute(route = "personal_edit")
+
+    data object Report: ScreenRoute(route = "report")
 }
 
 // Main screen route

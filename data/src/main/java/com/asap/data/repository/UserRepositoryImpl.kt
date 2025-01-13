@@ -10,6 +10,8 @@ import com.asap.domain.entity.remote.user.SaveProfileResponse
 import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,17 +43,16 @@ class UserRepositoryImpl @Inject constructor(
         userId: Int,
         nickname: String,
         profileImg: String
-    ): SaveProfileResponse? {
-        return remoteDataSource.saveProfile(userId, nickname, profileImg)
-            .also { response ->
-                Log.d("SaveProfile", "$response")
-                if (response?.result == true) {
-                    userDao.run {
-                        updateProfileImg(response.profileImageUrl, userId)
-                        updateNickname(nickname, userId)
-                    }
-                }
+    ): Boolean {
+        return remoteDataSource.saveProfile(userId, nickname, profileImg).let { response ->
+            if (response?.result == true) {
+                Log.d("UserRepository", "Room DB update [${response.profileImageUrl}, $nickname]")
+                userDao.updateProfileImg(response.profileImageUrl ?: "", userId = userId)
+                userDao.updateNickname(nickname = nickname, userId = userId)
             }
+
+            response?.result ?: false
+        }
     }
 
     override suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?> {

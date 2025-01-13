@@ -19,7 +19,7 @@ interface UserRepository {
         userId: Int,
         nickname: String,
         profileImg: String
-    ): SaveProfileResponse?
+    ): Boolean
 
     suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?>
 

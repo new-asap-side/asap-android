@@ -181,7 +181,8 @@ fun GroupDetailsScreen(
                             .clickable {
                                 showLeaveGroupDialog = true
                                 hideBottomSheet()
-                            }
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_leave_group),
@@ -205,10 +206,11 @@ fun GroupDetailsScreen(
                             .clickable {
                                 navController.navigate("${ScreenRoute.Report.route}/$groupId")
                                 hideBottomSheet()
-                            }
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_leave_group),
+                            painter = painterResource(R.drawable.ic_report),
                             contentDescription = "Leave group icon"
                         )
                         Spacer(modifier = Modifier.width(10.dp))

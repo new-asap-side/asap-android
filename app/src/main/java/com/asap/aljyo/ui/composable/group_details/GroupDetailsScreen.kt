@@ -2,9 +2,6 @@ package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
 import android.graphics.Color
-import android.net.Uri
-import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -23,7 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -57,7 +53,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
@@ -73,7 +68,6 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
-import com.google.gson.Gson
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
@@ -119,7 +113,7 @@ fun GroupDetailsScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.groupEdit.collect{
+        viewModel.groupEdit.collect {
             navController.navigate(
                 "${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}"
             )
@@ -129,7 +123,11 @@ fun GroupDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.personalEdit.collect {
             navController.navigate(
-                "${ScreenRoute.PersonalEdit.route}/$groupId/${CustomNavType.PersonalEditType.serializeAsValue(it)}"
+                "${ScreenRoute.PersonalEdit.route}/$groupId/${
+                    CustomNavType.PersonalEditType.serializeAsValue(
+                        it
+                    )
+                }"
             )
         }
     }
@@ -178,8 +176,7 @@ fun GroupDetailsScreen(
                 }
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                 ) {
                     Row(
                         modifier = Modifier
@@ -188,6 +185,8 @@ fun GroupDetailsScreen(
                                 showLeaveGroupDialog = true
                                 hideBottomSheet()
                             }
+                            .padding(vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_leave_group),
@@ -212,9 +211,11 @@ fun GroupDetailsScreen(
                                 navController.navigate("${ScreenRoute.Report.route}/$groupId")
                                 hideBottomSheet()
                             }
+                            .padding(vertical = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_leave_group),
+                            painter = painterResource(R.drawable.ic_report),
                             contentDescription = "Leave group icon"
                         )
                         Spacer(modifier = Modifier.width(10.dp))
@@ -286,7 +287,7 @@ fun GroupDetailsScreen(
                             onClick = { navController.popBackStack() }
                         ) {
                             Icon(
-                                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                painter = painterResource(R.drawable.ic_top_back),
                                 tint = White,
                                 contentDescription = "Top app bar navigation icon"
                             )

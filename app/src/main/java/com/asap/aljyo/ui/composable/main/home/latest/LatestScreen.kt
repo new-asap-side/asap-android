@@ -55,13 +55,16 @@ fun LatestScreen(
 
     LazyVerticalGrid(
         state = scrollState,
-        modifier = Modifier.padding(horizontal = 20.dp),
+        modifier = Modifier.padding(
+            top = 32.dp,
+            start = 20.dp,
+            end = 20.dp
+        ),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         when (latestGroupState) {
-
             UiState.Loading -> {
                 repeat(6) {
                     item {

@@ -1,12 +1,17 @@
 package com.asap.aljyo.ui.composable.group_ranking
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,12 +31,14 @@ import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.GroupRanking
 
 @Composable
 internal fun UnRankingArea(
     modifier: Modifier = Modifier,
     unRakings: List<GroupRanking>,
+    mIndex: Int,
 ) {
     val scrollState = rememberScrollState(initial = 0)
     Column(
@@ -61,14 +68,35 @@ internal fun UnRankingArea(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(CircleShape),
-                            model = rank.thumbnail,
-                            contentDescription = "Group particular thumbnail",
-                            error = painterResource(R.drawable.ic_empty_profile)
-                        )
+                        Box(modifier = Modifier.size(36.dp)) {
+                            AsyncImage(
+                                modifier = Modifier.clip(CircleShape),
+                                model = rank.thumbnail,
+                                contentDescription = "Group particular thumbnail",
+                                error = painterResource(R.drawable.ic_empty_profile)
+                            )
+                            if (mIndex - 3 == index) {
+                                MeBadge(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .clip(RoundedCornerShape(100))
+                                        .border(
+                                            width = 1.dp,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            shape = RoundedCornerShape(100)
+                                        )
+                                        .background(White)
+                                        .padding(
+                                            horizontal = 6.5.dp,
+                                            vertical = 1.5.dp
+                                        ),
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontSize = 11.fsp
+                                    )
+                                )
+                            }
+                        }
                         Text(
                             text = rank.nickName,
                             style = MaterialTheme.typography.bodyMedium.copy(
@@ -161,7 +189,8 @@ private fun Preview() {
                     rankScore = 10,
                     rankNumber = 6,
                 )
-            )
+            ),
+            mIndex = 3
         )
     }
 }

@@ -52,19 +52,27 @@ internal fun MyPageScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Grey01)
+                    .padding(bottom = 52.dp)
             ) {
-                Text(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(44.dp)
                         .background(White)
-                        .padding(vertical = 10.dp),
-                    text = stringResource(R.string.my_page),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = Black01,
-                        fontSize = 16.fsp
-                    ),
-                    textAlign = TextAlign.Center
-                )
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .fillMaxWidth()
+                            .background(White),
+                        text = stringResource(R.string.my_page),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = Black01,
+                            fontSize = 16.fsp
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(42.dp))
 
@@ -104,8 +112,6 @@ internal fun MyPageScreen(
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(30.dp))
             }
         }
     }

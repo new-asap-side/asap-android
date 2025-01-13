@@ -1,13 +1,18 @@
 package com.asap.data.repository
 
+import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.UserRemoteDataSource
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.user.SaveProfileResponse
 import com.asap.domain.entity.remote.user.UserProfile
 import com.asap.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,8 +32,20 @@ class UserRepositoryImpl @Inject constructor(
         return userDao.selectAll().firstOrNull()
     }
 
-    override suspend fun fetchUserProfile(): Flow<UserProfile?> {
-        return remoteDataSource.fetchUserProfile(userId = getUserId().toString())
+    override suspend fun fetchUserProfile(): UserProfile? {
+        try {
+            val userId = getUserId()
+
+            val response = remoteDataSource.fetchUserProfile(userId = getUserId().toString())
+            if (response != null) {
+                userDao.updateNickname(userId = userId, nickname = response.nickName)
+                userDao.updateProfileImg(userId = userId, profileImg = response.profileImageUrl)
+            }
+
+            return response
+        } catch (e: HttpException) {
+            return null
+        }
     }
 
     override suspend fun checkNickname(nickname: String): Boolean? {
@@ -39,15 +56,17 @@ class UserRepositoryImpl @Inject constructor(
         userId: Int,
         nickname: String,
         profileImg: String
-    ) {
-        // profileImg를 DB에 저장시키면
-        remoteDataSource.saveProfile(userId, nickname, profileImg)
-            .also {
-                userDao.run {
-                    updateProfileImg(it?.profileImageUrl, userId)
-                    updateNickname(nickname, userId)
-                }
+    ): Boolean {
+        return remoteDataSource.saveProfile(userId, nickname, profileImg).let { response ->
+            Log.d(TAG, "$response")
+            if (response?.result == true) {
+                Log.d("UserRepository", "Room DB update [${response.profileImageUrl}, $nickname]")
+                userDao.updateProfileImg(response.profileImageUrl ?: "", userId = userId)
+                userDao.updateNickname(nickname = nickname, userId = userId)
             }
+
+            response?.result ?: false
+        }
     }
 
     override suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?> {

@@ -117,7 +117,6 @@ fun HomeTabScreen(
                 .height(1.dp)
                 .background(Grey01)
         )
-        Spacer(modifier = Modifier.height(32.dp))
         when (tabIndex) {
             0 -> MainScreen(
                 tabChange = { tabIndex = it },

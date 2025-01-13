@@ -195,7 +195,7 @@ internal fun AppNavHost() {
                 onBackIconPressed = { navController.popBackStack() },
                 navigateToComplete = {
                     navController.navigate(ScreenRoute.WithdrawalComplete.route) {
-                        popUpTo(0)
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )
@@ -207,7 +207,9 @@ internal fun AppNavHost() {
         ) {
             WithdrawalCompleteScreen(
                 navigateToOnboarding = {
-
+                    navController.navigate(ScreenRoute.Onboarding.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }

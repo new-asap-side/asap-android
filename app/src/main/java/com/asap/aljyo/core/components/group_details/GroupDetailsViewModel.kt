@@ -5,19 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.edit.PersonalEditState
-import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.utility.DateTimeManager
-import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupMember
 import com.asap.domain.entity.remote.UserGroupType
-import com.asap.domain.usecase.group.CreateGroupUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.WithdrawGroupUseCase
@@ -25,7 +21,6 @@ import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -19,14 +19,15 @@
     <string name="password">비밀번호</string>
     <string name="exit">나가기</string>
     <string name="join">참여하기</string>
+    <string name="mask">\u2022</string>
     <string name="alarm_unlock_contents_slide">밀어서 알람 해제</string>
     <string name="alarm_unlock_contents_card">카드를 터치하여 알람 해제</string>
     <!-- Onboarding -->
     <string name="hard_objective_title">갓생을 살고 싶어</string>
-    <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표룰\n다른사람들과 함께해요</string>
-    <string name="funny">재미있게</string>
-    <string name="release_alarm_with_contents">다양한 알람 해제 콘텐츠\n알람을 해제해요</string>
-    <string name="with_aljyo">알죠와 함께</string>
+    <string name="hard_objective_sub_title">혼자서는 해내기 어려운 목표를\n다른사람들과 함께해요</string>
+    <string name="funny">재미있게,</string>
+    <string name="release_alarm_with_contents">다양한 알람 해제 콘텐츠로\n알람을 해제해요</string>
+    <string name="with_aljyo">알죠와 함께,</string>
     <string name="good_today">오늘 하루를\n의미있게 보내봐요!</string>
     <string name="start_with_kakao">카카오로 시작하기</string>
     <!-- Bottom navigation -->
@@ -105,8 +106,8 @@
     <string name="group_ranking">그룹 랭킹</string>
     <string name="score">%s점</string>
     <string name="select_time">시간 선택</string>
-    <string name="rank_score_descript">\u2022 알람 해제 성공 시 1등-1000점/ 2등-950점 / 3등-900점 / 4등-850점 / 5등-800점 / 6등-750점 / 7등-700점 / 8등-650점이 부여됩니다.</string>
-    <string name="no_points_score">\u2022 알람을 해제하지 못하였을 시 점수는 부여되지 않습니다.</string>
+    <string name="rank_score_descript">알람 해제 성공 시 1등-1000점/ 2등-950점 / 3등-900점 / 4등-850점 / 5등-800점 / 6등-750점 / 7등-700점 / 8등-650점이 부여됩니다.</string>
+    <string name="no_points_score">알람을 해제하지 못하였을 시 점수는 부여되지 않습니다.</string>
     <!-- Release alarm -->
     <string name="drag_description">원을 옆으로 밀고\n오늘의 운세를 확인하세요!</string>
     <string name="drag_to_release_alarm">옆으로 밀어서 알람 해제</string>

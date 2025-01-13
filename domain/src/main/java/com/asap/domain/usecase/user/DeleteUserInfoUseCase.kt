@@ -3,8 +3,6 @@ package com.asap.domain.usecase.user
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onCompletion
 import javax.inject.Inject
 
 interface DeleteUserInfoUseCase {
@@ -15,11 +13,7 @@ class DeleteUserInfoUseCaseImpl @Inject constructor(
     private val userRepository: UserRepository
 ) : DeleteUserInfoUseCase {
     override suspend fun invoke(survey: String): Flow<WhetherResponse?> =
-        userRepository
-            .deleteRemoteUserInfo(survey)
-            .catch { throw it }
-            .onCompletion { userRepository.deleteLocalUserInfo() }
-
+        userRepository.deleteRemoteUserInfo(survey)
 }
 
 interface DeleteLocalUserInfoUseCase {

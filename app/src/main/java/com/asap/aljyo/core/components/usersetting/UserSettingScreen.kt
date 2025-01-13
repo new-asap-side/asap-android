@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.ScreenRoute
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.NicknameTextField
 import com.asap.aljyo.ui.composable.common.ProfileImagePicker
@@ -66,6 +66,16 @@ fun UserSettingScreen(
     )
     val userSettingState by userSettingViewModel.userSettingState.collectAsStateWithLifecycle()
     val isButtonEnabled by userSettingViewModel.isButtonEnabled.collectAsStateWithLifecycle()
+
+    val requestState = userSettingViewModel.requestState
+
+    LaunchedEffect(requestState) {
+        if(requestState is RequestState.Success) {
+            if(requestState.data) {
+                navigateToMain()
+            }
+        }
+    }
 
     Scaffold(
         containerColor = White,
@@ -147,7 +157,6 @@ fun UserSettingScreen(
                 text = "확인",
                 onClick = {
                     userSettingViewModel.saveUserProfile()
-                    navigateToMain()
                 },
                 enable = isButtonEnabled
             )

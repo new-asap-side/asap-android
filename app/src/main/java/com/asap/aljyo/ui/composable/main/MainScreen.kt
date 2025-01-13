@@ -57,7 +57,7 @@ internal fun MainScreen(
             Box(
                 Modifier.padding(
                     top = padding.calculateTopPadding(),
-                    bottom = padding.calculateBottomPadding() - 40.dp
+                    bottom = 52.dp
                 )
             ) {
                 MainNavHost(

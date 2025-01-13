@@ -51,7 +51,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
@@ -134,8 +133,8 @@ internal fun WithdrawalScreen(
                         }
 
                         is RequestState.Error -> {
-                            showLoadingDialog = false
                             Toast.makeText(context, "잠시 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show()
+                            showLoadingDialog = false
                         }
 
                     }

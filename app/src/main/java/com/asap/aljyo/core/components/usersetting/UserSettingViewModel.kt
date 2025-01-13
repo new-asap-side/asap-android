@@ -1,11 +1,12 @@
 package com.asap.aljyo.core.components.usersetting
 
 import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.user.CheckNicknameUseCase
 import com.asap.domain.usecase.user.SaveUserProfileUseCase
@@ -13,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -28,7 +28,10 @@ class UserSettingViewModel @Inject constructor(
     private val _isEditMode = MutableStateFlow(false)
 
     private val _userSettingState = MutableStateFlow(UserSettingState())
-    val userSettingState: StateFlow<UserSettingState> = _userSettingState
+    val userSettingState: StateFlow<UserSettingState> get() = _userSettingState
+
+    private val _requestState = mutableStateOf<RequestState<Boolean>>(RequestState.Initial)
+    val requestState get() = _requestState.value
 
     private var _previousProfileImage: Uri? = null
 
@@ -103,7 +106,8 @@ class UserSettingViewModel @Inject constructor(
             val profileImage = _userSettingState.value.selectedProfileImage
 
             profileImage?.let {
-                saveUserProfileUseCase(nickname, PictureUtil.encodeType(it))
+                val result = saveUserProfileUseCase(nickname, PictureUtil.encodeType(it))
+                _requestState.value = RequestState.Success(result)
             }
         }
     }

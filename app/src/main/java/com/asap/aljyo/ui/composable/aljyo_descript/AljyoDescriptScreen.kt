@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,7 +14,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.asap.aljyo.R
 import com.asap.aljyo.ui.composable.common.pager.AljyoPager
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -38,11 +38,9 @@ internal fun AljyoDescriptScreen(
                     ),
                     title = {},
                     navigationIcon = {
-                        IconButton(
-                            onClick = { onBackPress() }
-                        ) {
+                        IconButton(onClick = { onBackPress() }) {
                             Icon(
-                                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                painter = painterResource(R.drawable.ic_top_back),
                                 modifier = Modifier.size(20.dp),
                                 tint = Black01,
                                 contentDescription = "Top app bar navigation icon"

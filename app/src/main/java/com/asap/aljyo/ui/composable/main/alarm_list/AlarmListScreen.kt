@@ -83,10 +83,10 @@ internal fun AlarmListScreen(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = stringResource(R.string.alarm_list),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 16.fsp,
-                    color = Black01
-                )
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = Black01,
+                    fontSize = 16.fsp
+                ),
             )
         }
 

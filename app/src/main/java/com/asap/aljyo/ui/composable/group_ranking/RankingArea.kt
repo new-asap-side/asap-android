@@ -188,19 +188,6 @@ private fun RankingProfile(
 
 }
 
-@Composable
-private fun MeBadge(
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        modifier = modifier,
-        text = "ME!",
-        style = MaterialTheme.typography.labelMedium.copy(
-            color = MaterialTheme.colorScheme.primary
-        )
-    )
-}
-
 @Preview(showBackground = true, backgroundColor = 0xFFFFEEF3)
 @Composable
 private fun Preview() {

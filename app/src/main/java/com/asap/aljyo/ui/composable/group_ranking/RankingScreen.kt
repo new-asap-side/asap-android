@@ -127,20 +127,42 @@ internal fun RankingScreen(
                     }
                 }
             ) {
-                Text(
-                    text = stringResource(R.string.rank_score_descript),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.fsp,
-                        color = Black02
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = stringResource(R.string.mask),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02,
+                        )
                     )
-                )
-                Text(
-                    text = stringResource(R.string.no_points_score),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 16.fsp,
-                        color = Black02
+                    Text(
+                        text = stringResource(R.string.rank_score_descript),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02,
+                        )
                     )
-                )
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = stringResource(R.string.mask),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02,
+                        )
+                    )
+                    Text(
+                        text = stringResource(R.string.no_points_score),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 16.fsp,
+                            lineHeight = 24.fsp,
+                            color = Black02
+                        )
+                    )
+                }
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()

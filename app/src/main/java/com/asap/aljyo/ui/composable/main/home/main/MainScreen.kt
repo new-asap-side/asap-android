@@ -113,5 +113,9 @@ internal fun MainScreen(
                 onGroupItemClick = onGroupItemClick
             )
         }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }

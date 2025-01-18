@@ -120,10 +120,12 @@ internal fun AppNavHost() {
                 arguments?.getParcelable(AlarmNavType.name)
             } ?: throw IllegalArgumentException("Argument is null!")
 
+
             ReleaseAlarmScreen(
                 alarm = alarm,
                 navigateToResult = { index ->
-                    val route = "${ScreenRoute.AlarmResult.route}/${alarm.groupId}/$index"
+                    val query = "/groupId=${alarm.groupId}?title=${alarm.groupTitle}/$index"
+                    val route = "${ScreenRoute.AlarmResult.route}$query"
                     navController.navigate(route) {
                         popUpTo("${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}") {
                             inclusive = true
@@ -134,17 +136,21 @@ internal fun AppNavHost() {
         }
 
         composable(
-            route = "${ScreenRoute.AlarmResult.route}/{groupId}/{illustIndex}",
+            route = "${ScreenRoute.AlarmResult.route}/groupId={groupId}?title={title}/{index}",
             arguments = listOf(
                 navArgument("groupId") { type = NavType.IntType },
-                navArgument("illustIndex") { type = NavType.IntType },
+                navArgument("title") { type = NavType.StringType },
+                // 알람 해제 완료 일러스트 인덱스
+                navArgument("index") { type = NavType.IntType },
             )
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
-            val index = backStackEntry.arguments?.getInt("illustIndex") ?: 0
+            val title = backStackEntry.arguments?.getString("title") ?: "Unknown"
+            val index = backStackEntry.arguments?.getInt("index") ?: 0
             AlarmResultScreen(
                 groupId = groupId,
-                illustIndex = index,
+                title = title,
+                index = index,
                 navigateToHome = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(0) {
@@ -251,7 +257,7 @@ internal fun AppNavHost() {
         ) {
             ReportScreen(
                 onBackClick = { navController.popBackStack() },
-                navigateToComplete = { navController.popBackStack()  }
+                navigateToComplete = { navController.popBackStack() }
             )
         }
 
@@ -316,6 +322,13 @@ fun MainNavHost(
                     }
                 },
                 navigateToProfileSetting = { nickName, profileImage ->
+                    screenNavController.navigate(
+                        "${ScreenRoute.UserSetting.route}/$nickName/${
+                            Uri.encode(
+                                profileImage
+                            )
+                        }"
+                    )
                     screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
                 },
                 navigateToPrivacyPolicy = {

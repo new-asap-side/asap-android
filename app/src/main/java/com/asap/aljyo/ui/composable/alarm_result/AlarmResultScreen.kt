@@ -52,7 +52,8 @@ private val colors = listOf(
 @Composable
 internal fun AlarmResultScreen(
     groupId: Int,
-    illustIndex: Int,
+    title: String,
+    index: Int,
     navigateToHome: () -> Unit,
     navigateToRanking: () -> Unit,
     viewModel: AlarmResultViewModel = hiltViewModel()
@@ -153,7 +154,7 @@ internal fun AlarmResultScreen(
 
                 FortuneCard(
                     modifier = Modifier.fillMaxWidth(),
-                    index = illustIndex,
+                    index = index,
                     rank = rankNumber
                 )
 
@@ -166,7 +167,7 @@ internal fun AlarmResultScreen(
                         .clip(RoundedCornerShape(16))
                         .background(Color(0xFFDB7797).copy(alpha = 0.5f))
                         .padding(horizontal = 20.dp, vertical = 16.dp),
-                    title = "Title"
+                    title = title
                 )
             }
         }

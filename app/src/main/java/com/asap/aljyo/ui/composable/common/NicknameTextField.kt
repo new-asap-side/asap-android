@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.common
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -64,6 +65,7 @@ fun NicknameTextField(
         BasicTextField(
             value = nickname,
             onValueChange = { newText ->
+                Log.d("Profile", newText)
                 if(isNicknameValid(newText)) {
                     onNicknameChange(newText)
                 }
@@ -157,7 +159,7 @@ fun NicknameTextField(
 }
 
 private fun isNicknameValid(nickname: String): Boolean {
-    val nicknameRegex =  "^[가-힣ㄱ-ㅎㅏ-ㅣ]{0,8}$".toRegex()
+    val nicknameRegex =  "^[가-힣ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025\\u00B7\\uFE55]{0,8}$".toRegex()
     return !nickname.contains("\\s".toRegex()) // 공백을 포함하지 않도록
             && nicknameRegex.matches(nickname)
 }

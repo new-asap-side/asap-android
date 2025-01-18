@@ -33,6 +33,7 @@ import com.asap.aljyo.ui.composable.main.MainScreen
 import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
 import com.asap.aljyo.ui.composable.main.home.HomeScreen
 import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
+import com.asap.aljyo.ui.composable.main.my_page.PrivacyPolicyScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
@@ -259,6 +260,12 @@ internal fun AppNavHost() {
                 navigateToComplete = { navController.popBackStack() }
             )
         }
+
+        composable(route = ScreenRoute.PrivacyPolicy.route){
+            PrivacyPolicyScreen(
+                onCloseClick = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -322,6 +329,10 @@ fun MainNavHost(
                             )
                         }"
                     )
+                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
+                },
+                navigateToPrivacyPolicy = {
+                    screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)
                 }
             )
         }

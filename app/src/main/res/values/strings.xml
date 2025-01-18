@@ -168,4 +168,7 @@
     <string name="complete_withdrawal">탈퇴가 완료되었어요</string>
     <string name="see_you">다음에 또 만날 수 있길 바래요</string>
     <string name="bye">안녕</string>
+    <string-array name="privacy_policy">
+        <item></item>
+    </string-array>
 </resources>

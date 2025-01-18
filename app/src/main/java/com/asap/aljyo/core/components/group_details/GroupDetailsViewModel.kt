@@ -77,9 +77,12 @@ class GroupDetailsViewModel @AssistedInject constructor(
         fetchGroupDetails()
     }
 
-    fun fetchGroupDetails() {
+    fun fetchGroupDetails(internal: Boolean = false) {
         viewModelScope.launch {
-            _groupDetailsState.value = UiState.Loading
+            if (!internal) {
+                _groupDetailsState.value = UiState.Loading
+            }
+
             delay(500)
             fetchGroupDetailsUseCase.invoke(groupId = groupId).catch { e ->
                 Log.e(TAG, "error: $e")
@@ -216,6 +219,8 @@ class GroupDetailsViewModel @AssistedInject constructor(
             ).firstOrNull().let { response ->
                 if (response != null) _userGroupType.value = UserGroupType.Participant
             }
+
+            fetchGroupDetails(true)
             _isLoading.value = false
         }
     }

@@ -27,7 +27,9 @@ class AuthRemoteDataSource @Inject constructor(
     }
 
     suspend fun refreshToken(token: String): RefreshTokenResponse? {
-        val response = authService.refreshToken(refreshToken = token)
+        val header = "Bearer $token"
+
+        val response = authService.refreshToken(refreshToken = header)
         if (!response.isSuccessful) {
             throw HttpException(response)
         }

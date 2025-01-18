@@ -60,7 +60,9 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshToken(): Boolean {
         try {
             val refreshToken = sessionLocalDataSource.getRefreshToken() ?: ""
-            val response = remoteDataSource.refreshToken("Bearer $refreshToken")
+            Log.v(TAG, "refresh token by sessionLocalDataSource: $refreshToken")
+
+            val response = remoteDataSource.refreshToken(refreshToken)
             updateToken(
                 response?.accessToken ?: "",
                 response?.refreshToken ?: ""

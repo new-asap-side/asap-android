@@ -58,7 +58,7 @@ class UserSettingViewModel @Inject constructor(
     }
 
     fun checkNickname(nickname: String) {
-        val nicknameRegex =  "[ㄱ-ㅎㅏ-ㅣ]".toRegex()
+        val nicknameRegex =  "[ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025\\u00B7\\uFE55]".toRegex()
 
         if (nicknameRegex.containsMatchIn(nickname)) {
             _userSettingState.value = _userSettingState.value.copy(

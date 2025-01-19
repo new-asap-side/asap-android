@@ -89,7 +89,7 @@ object DateTimeManager {
                 LocalTime.parse("12:30", timeFormatter)
             )
         } else {
-            LocalDateTime.now()
+            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
         }
 
         if (basedMinite) {
@@ -112,7 +112,7 @@ object DateTimeManager {
         )
         val minites = String.format(
             Locale.KOREAN,
-            "%02d", (duration % 60) + 1
+            "%02d", (duration % 60)
         )
 
         return if (days == 0L) {

@@ -82,6 +82,12 @@
             android:foregroundServiceType="mediaPlayback">
         </service>
 
+        <receiver
+            android:name=".core.components.receiver.AlarmWidgetReceiver"
+            android:exported="false">
+            <intent-filter android:name= "android.appwidget.action.APPWIDGET_UPDATE" />
+        </receiver>
+
     </application>
 
 </manifest>

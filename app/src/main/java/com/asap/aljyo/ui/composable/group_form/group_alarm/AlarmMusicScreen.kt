@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -105,6 +106,18 @@ fun AlarmMusicScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+        },
+        bottomBar = {
+            CustomButton(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp)
+                    .navigationBarsPadding(),
+                text = "완료",
+                enable = selectedMusic.isNullOrEmpty().not(),
+                onClick = {
+                    onCompleteClick(selectedMusic!!)
+                }
+            )
         }
     ) { innerPadding ->
 
@@ -134,15 +147,6 @@ fun AlarmMusicScreen(
                     )
                 }
             }
-
-            CustomButton(
-                modifier = Modifier.padding(bottom = 6.dp),
-                text = "완료",
-                enable = selectedMusic.isNullOrEmpty().not(),
-                onClick = {
-                    onCompleteClick(selectedMusic!!)
-                }
-            )
         }
     }
     DisposableEffect(Unit) {

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -73,6 +74,16 @@ fun AlarmTypeScreen(
                     containerColor = White
                 )
             )
+        },
+        bottomBar = {
+            CustomButton(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp)
+                    .navigationBarsPadding(),
+                text = "다음",
+                enable = alarmState.alarmUnlockContents.isNotEmpty(),
+                onClick = navigateToAlarmSetting
+            )
         }
     ) { innerPadding ->
         GroupProgressbar(
@@ -95,7 +106,7 @@ fun AlarmTypeScreen(
                     fontWeight = FontWeight.Bold,
                 )
             )
-            Spacer(modifier = Modifier.height(90.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Image(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -122,14 +133,6 @@ fun AlarmTypeScreen(
             )
 
             Spacer(modifier = Modifier.height(36.dp))
-
-            CustomButton(
-                text = "다음",
-                enable = alarmState.alarmUnlockContents.isNotEmpty(),
-                onClick = navigateToAlarmSetting
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
         }
     }
 }

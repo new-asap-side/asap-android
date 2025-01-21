@@ -82,6 +82,14 @@
             android:foregroundServiceType="mediaPlayback">
         </service>
 
+        <receiver
+            android:name=".core.components.receiver.AlarmCancelReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.asap.aljyo.STOP_ALARM" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

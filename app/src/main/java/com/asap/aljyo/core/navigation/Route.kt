@@ -41,6 +41,8 @@ sealed class ScreenRoute(val route: String) {
     data object PersonalEdit: ScreenRoute(route = "personal_edit")
 
     data object Report: ScreenRoute(route = "report")
+
+    data object PrivacyPolicy: ScreenRoute(route = "privacy_policy")
 }
 
 // Main screen route

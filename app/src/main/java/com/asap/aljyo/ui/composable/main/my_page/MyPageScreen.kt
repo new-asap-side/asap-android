@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
@@ -29,6 +31,7 @@ import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.Banner
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.White
 
@@ -38,6 +41,7 @@ internal fun MyPageScreen(
     navigateToPreferences: () -> Unit,
     navigateToOnboarding: () -> Unit,
     navigateToProfileSetting: (String?, String?) -> Unit,
+    navigateToPrivacyPolicy: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val myPageState by viewModel.state.collectAsStateWithLifecycle()
@@ -98,7 +102,7 @@ internal fun MyPageScreen(
                         navigateToPreferences = navigateToPreferences
                     )
 
-                    Box(
+                    Column(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(
@@ -109,6 +113,20 @@ internal fun MyPageScreen(
                         Banner(
                             modifier = Modifier.clip(RoundedCornerShape(10.dp)),
                             navigateToDescript = navigateToDescript
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .align(Alignment.CenterHorizontally)
+                                .clickable(
+                                    onClick = navigateToPrivacyPolicy
+                                ),
+                            text = "개인정보 처리방침",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontSize = 12.sp,
+                                color = Black02
+                            )
                         )
                     }
                 }
@@ -125,7 +143,8 @@ private fun Preview() {
             navigateToDescript = {},
             navigateToOnboarding = {},
             navigateToPreferences = {},
-            navigateToProfileSetting = {_,_ ->}
+            navigateToProfileSetting = {_,_ ->},
+            navigateToPrivacyPolicy = {}
         )
     }
 }

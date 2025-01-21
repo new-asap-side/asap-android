@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -79,6 +80,17 @@ fun SelectGroupTypeScreen(
                     containerColor = White
                 )
             )
+        },
+        bottomBar = {
+            CustomButton(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp)
+                    .navigationBarsPadding()
+                    .imePadding(),
+                text = "확인",
+                enable = groupState.typeButtonState,
+                onClick = navigateToCreateGroup
+            )
         }
     ) { innerPadding ->
         Column(
@@ -140,14 +152,6 @@ fun SelectGroupTypeScreen(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            CustomButton(
-                modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp)
-                    .imePadding(),
-                text = "확인",
-                enable = groupState.typeButtonState,
-                onClick = navigateToCreateGroup
-            )
         }
     }
 }

@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,6 +68,7 @@ import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
+import com.asap.data.utility.DateTimeManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +79,7 @@ fun AlarmSettingScreen(
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
+    val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
     var openAlertDialog by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
 
@@ -110,6 +115,19 @@ fun AlarmSettingScreen(
                     containerColor = White
                 )
             )
+        },
+        bottomBar = {
+            CustomButton(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp)
+                    .navigationBarsPadding(),
+                text = "완료",
+                enable = alarmState.buttonState,
+                onClick = {
+                    isLoading = true
+                    viewModel.onCompleteClicked()
+                }
+            )
         }
     ) { innerPadding ->
         GroupProgressbar(
@@ -123,6 +141,7 @@ fun AlarmSettingScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(start = 20.dp, end = 20.dp, top = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
@@ -196,7 +215,7 @@ fun AlarmSettingScreen(
                 }
 
                 AlarmSoundSlider(
-                    sliderPosition = alarmState.alarmVolume ?: 10f,
+                    sliderPosition = alarmState.alarmVolume,
                     onValueChange = { viewModel.onAlarmVolumeSelected(it) }
                 )
             }
@@ -253,23 +272,22 @@ fun AlarmSettingScreen(
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            CustomButton(
-                modifier = Modifier.padding(bottom = 6.dp),
-                text = "완료",
-                enable = alarmState.buttonState,
-                onClick = {
-                    isLoading = true
-                    viewModel.onCompleteClicked()
-                }
-            )
+
             if (isLoading) {
                 LoadingDialog()
             }
 
             if (openAlertDialog) {
+                val duration = with(groupState) {
+                    alarmDays.minOf { day ->
+                        DateTimeManager.diffFromNow("$day $alarmTime")
+                    }
+                }
+                val text = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"")
+
                 CustomAlertDialog(
                     title = "그룹 생성 완료!",
-                    content = "6시간 후부터 알람이 울려요",
+                    content = "$text 후부터 알람이 울려요",
                     onClick = {
                         openAlertDialog = false
                         viewModel.navigateToDetail()

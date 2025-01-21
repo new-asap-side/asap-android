@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -109,6 +110,21 @@ fun CreateGroupScreen(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = White
                 )
+            )
+        },
+        bottomBar = {
+            CustomButton(
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp, top = 44.dp)
+                    .navigationBarsPadding(),
+                text = "다음",
+                enable = groupState.buttonState,
+                onClick = {
+                    if (groupState.groupImage == null) {
+                        viewModel.onGroupImageSelected(PictureUtil.groupRandomImage[1])
+                    }
+                    onNextClick()
+                }
             )
         }
     ) { innerPadding ->
@@ -379,19 +395,6 @@ fun CreateGroupScreen(
                         }
                     },
                     onDateSelected = { viewModel.onAlarmEndDateSelected(it) },
-                )
-
-                CustomButton(
-                    modifier = Modifier
-                        .padding(bottom = 6.dp, top = 40.dp),
-                    text = "다음",
-                    enable = groupState.buttonState,
-                    onClick = {
-                        if (groupState.groupImage == null) {
-                            viewModel.onGroupImageSelected(PictureUtil.groupRandomImage[1])
-                        }
-                        onNextClick()
-                    }
                 )
             }
         }

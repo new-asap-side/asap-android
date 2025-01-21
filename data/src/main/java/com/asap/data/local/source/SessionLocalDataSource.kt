@@ -5,6 +5,10 @@ interface SessionLocalDataSource {
 
     suspend fun getRefreshToken(): String?
 
+    suspend fun getFCMToken(): String?
+
+    suspend fun registerFCMToken(token: String)
+
     suspend fun updateAccessToken(accessToken: String)
 
     suspend fun updateRefreshToken(refreshToken: String)

@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class SessionLocalDataSourceImpl @Inject constructor(
     private val sessionDataStore: DataStore<Preferences>
-): SessionLocalDataSource {
+) : SessionLocalDataSource {
 
     override suspend fun getAccessToken(): String? {
         return sessionDataStore.data.map { pref ->
@@ -22,6 +22,18 @@ class SessionLocalDataSourceImpl @Inject constructor(
         return sessionDataStore.data.map { pref ->
             pref[REFRESH_TOKEN]
         }.firstOrNull()
+    }
+
+    override suspend fun getFCMToken(): String? {
+        return sessionDataStore.data.map { pref ->
+            pref[FCM_TOKEN]
+        }.firstOrNull()
+    }
+
+    override suspend fun registerFCMToken(token: String) {
+        sessionDataStore.edit { store ->
+            store[FCM_TOKEN] = token
+        }
     }
 
     override suspend fun updateAccessToken(accessToken: String) {
@@ -38,13 +50,17 @@ class SessionLocalDataSourceImpl @Inject constructor(
 
     override suspend fun clear() {
         sessionDataStore.edit {
-            it.remove(ACCESS_TOKEN)
-            it.remove(REFRESH_TOKEN)
+            with (it) {
+                remove(ACCESS_TOKEN)
+                remove(REFRESH_TOKEN)
+                remove(FCM_TOKEN)
+            }
         }
     }
 
     companion object {
         val ACCESS_TOKEN = stringPreferencesKey("accessToken")
         val REFRESH_TOKEN = stringPreferencesKey("refreshToken")
+        val FCM_TOKEN = stringPreferencesKey("fcmToken")
     }
 }

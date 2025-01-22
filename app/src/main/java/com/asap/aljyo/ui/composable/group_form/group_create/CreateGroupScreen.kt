@@ -353,6 +353,7 @@ fun CreateGroupScreen(
                                 var tempMinutes = ""
 
                                 AlarmTimePicker(
+                                    selectedTime = groupState.alarmTime,
                                     onHourSelected = { tempHour = it },
                                     onMinutesSelected = { tempMinutes = it }
                                 )

@@ -14,6 +14,7 @@ object DateTimeManager {
     private const val BASED_SECOND = 7 * 24 * 60 * 60
 
     private const val DAY_BY_SECOND = 86400
+    const val ONE_WEEKS_MINUTES = 7 * 24 * 60L
 
     // ex) 2024.12.31
     private val yearFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")

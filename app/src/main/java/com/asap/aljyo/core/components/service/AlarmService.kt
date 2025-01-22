@@ -20,6 +20,8 @@ import androidx.core.app.TaskStackBuilder
 import androidx.core.net.toUri
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.MainActivity
+import com.asap.aljyo.core.components.receiver.AlarmCancelReceiver
+import com.asap.aljyo.core.components.receiver.STOP_ALJYO_ALARM
 import com.asap.aljyo.core.manager.VibratorManager
 import com.asap.aljyo.core.notification.AlarmMessageHandler
 import com.asap.domain.entity.remote.alarm.AlarmPayload
@@ -59,12 +61,15 @@ class AlarmService : Service() {
                 initPlayer(resource, volume)
                 vibrate()
             }
+
             "SOUND" -> {
                 initPlayer(resource, volume)
             }
+
             "VIBRATION" -> {
                 vibrate()
             }
+
             else -> return START_NOT_STICKY
         }
 
@@ -100,6 +105,21 @@ class AlarmService : Service() {
                 addNextIntentWithParentStack(deeplinkIntent)
                 getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
             }
+
+            val deleteCallbackIntent = Intent(
+                this, AlarmCancelReceiver::class.java
+            ).apply {
+                action = STOP_ALJYO_ALARM
+            }.run {
+                Log.d(TAG, "send broadcast with ${this@AlarmService}")
+                PendingIntent.getBroadcast(
+                    this@AlarmService,
+                    0,
+                    this,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            }
+
             val notificationBuilder = NotificationCompat.Builder(
                 this, getString(R.string.default_notification_channel_id)
             )
@@ -109,6 +129,7 @@ class AlarmService : Service() {
                 .setContentText(getString(R.string.notification_alarm_description))
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setContentIntent(pendingIntent)
+                .setDeleteIntent(deleteCallbackIntent)
                 .setAutoCancel(false)
                 .setOngoing(true)
 
@@ -136,7 +157,6 @@ class AlarmService : Service() {
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "onDestroy")
         if (this::player.isInitialized) {
             player.stop()
             player.release()

@@ -10,7 +10,10 @@ import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.repository.AuthRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -27,16 +30,27 @@ class AuthRepositoryImpl @Inject constructor(
 
     /// FCM Token
     override suspend fun registerToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(
-            OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    return@OnCompleteListener
-                }
+        val token = sessionLocalDataSource.getFCMToken()
 
-                FCMTokenManager.token = task.result
-                Log.d(TAG, FCMTokenManager.token)
-            }
-        )
+        if (token == null) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(
+                OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+
+                    // memory cache
+                    FCMTokenManager.token = task.result
+                    CoroutineScope(Dispatchers.IO).launch {
+                        // local cache
+                        sessionLocalDataSource.registerFCMToken(task.result)
+                    }
+                }
+            )
+        } else {
+            FCMTokenManager.token = token
+        }
+        Log.d(TAG, FCMTokenManager.token)
     }
 
     override suspend fun cacheKakaoAuth(response: AuthResponse) {

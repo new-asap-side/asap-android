@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_form.group_create
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -87,21 +88,69 @@ fun TimePicker(
     }
 }
 
+// TODO: viewModel에서 시간.분(alarmTime)을 AlarmTimePicker의 파라미터로 넘겨줘서 사용자가 설정한 시간으로 셋팅  
+@Composable
+fun AlarmTimePicker(
+    selectedTime: String,
+    onHourSelected: (String) -> Unit,
+    onMinutesSelected: (String) -> Unit
+) {
+    val hoursList = listOf("", "") + (0..23).map { it.toString().padStart(2, '0') } + listOf("", "")
+    val minutesList =
+        listOf("", "") + (0..59).map { it.toString().padStart(2, '0') } + listOf("", "")
+    val (selectedHour, selectedMinutes) = selectedTime.split(":")
+
+    Box {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .height(42.dp)
+                .background(
+                    color = Grey01,
+                    shape = RoundedCornerShape(6.dp)
+                )
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TimeWheelPicker(
+                modifier = Modifier.weight(1f),
+                itemsList = hoursList,
+                horizontalAlignment = Alignment.End,
+                onItemSelected = onHourSelected,
+                selectedTime = selectedHour
+            )
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            TimeWheelPicker(
+                modifier = Modifier.weight(1f),
+                itemsList = minutesList,
+                horizontalAlignment = Alignment.Start,
+                onItemSelected = onMinutesSelected,
+                selectedTime = selectedMinutes
+            )
+        }
+    }
+}
+
 @Composable
 fun TimeWheelPicker(
     modifier: Modifier,
     itemsList: List<String>,
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    selectedTime: String,
     onItemSelected: (String) -> Unit
 ) {
-    val listState = rememberLazyListState()
+    val initialIdx = itemsList.indexOf(selectedTime)
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIdx - 2)
     val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-
     val currentFirstItemIdx by remember { derivedStateOf { listState.firstVisibleItemIndex } }
 
     LaunchedEffect(listState.isScrollInProgress) {
         if (!listState.isScrollInProgress) {
-            onItemSelected(itemsList[listState.firstVisibleItemIndex + 2])
+            onItemSelected(itemsList[currentFirstItemIdx + 2])
         }
     }
 
@@ -126,47 +175,6 @@ fun TimeWheelPicker(
                     color = if (idx == currentFirstItemIdx + 2) Black01 else Black04
                 ),
                 textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-fun AlarmTimePicker(
-    onHourSelected: (String) -> Unit,
-    onMinutesSelected: (String) -> Unit
-) {
-    val hoursList = listOf("", "") + (0..23).map { it.toString().padStart(2, '0') } + listOf("", "")
-    val minutesList =
-        listOf("", "") + (0..59).map { it.toString().padStart(2, '0') } + listOf("", "")
-
-    Box {
-        Box(
-            modifier = Modifier.fillMaxWidth()
-                .align(Alignment.Center)
-                .height(42.dp)
-                .background(
-                    color = Grey01,
-                    shape = RoundedCornerShape(6.dp)
-                )
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            TimeWheelPicker(
-                modifier = Modifier.weight(1f),
-                itemsList = hoursList,
-                horizontalAlignment = Alignment.End,
-                onItemSelected = onHourSelected
-            )
-
-            Spacer(modifier = Modifier.width(24.dp))
-
-            TimeWheelPicker(
-                modifier = Modifier.weight(1f),
-                itemsList = minutesList,
-                horizontalAlignment = Alignment.Start,
-                onItemSelected = onMinutesSelected
             )
         }
     }

@@ -63,10 +63,12 @@ import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
+import com.asap.aljyo.ui.composable.group_form.group_alarm.CustomAlertDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
+import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
@@ -75,6 +77,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun GroupDetailsScreen(
     navController: NavHostController,
+    isNew: Boolean = false,
     groupId: Int,
 ) {
     val context = LocalContext.current
@@ -111,6 +114,7 @@ fun GroupDetailsScreen(
     val userGroupType = viewModel.userGroupType
     val groupDetails by viewModel.groupDetails.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    var showDialog by remember { mutableStateOf(isNew) }
 
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect {
@@ -128,6 +132,24 @@ fun GroupDetailsScreen(
                         it
                     )
                 }"
+            )
+        }
+    }
+
+    if (showDialog) {
+        (groupDetails as? UiState.Success)?.data?.let {groupDetail ->
+            val duration = with(groupDetail) {
+                val diffTimes = alarmDays.map { DateTimeManager.diffFromNow("$it $alarmTime") }
+
+                if (diffTimes.all { it == 0L }) DateTimeManager.ONE_WEEKS_MINUTES else diffTimes.filter { it != 0L }.min()
+            }
+            val nextAlarmTime = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"").trim()
+
+            CustomAlertDialog(
+                title = "그룹 생성 완료!",
+                content = "$nextAlarmTime 후부터 알람이 울려요",
+                onClick = { showDialog = false },
+                dialogImg = R.drawable.group_dialog_img
             )
         }
     }

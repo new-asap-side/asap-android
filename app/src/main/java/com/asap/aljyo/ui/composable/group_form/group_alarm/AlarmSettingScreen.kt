@@ -79,18 +79,9 @@ fun AlarmSettingScreen(
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
-    val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
-    var openAlertDialog by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.showDialog.collect{
-            isLoading = false
-            openAlertDialog = true
-        }
-    }
-
-    LaunchedEffect(openAlertDialog) {
         viewModel.complete.collect { groupId ->
             groupId?.let {
                 onCompleteClick(it)
@@ -123,10 +114,7 @@ fun AlarmSettingScreen(
                     .navigationBarsPadding(),
                 text = "완료",
                 enable = alarmState.buttonState,
-                onClick = {
-                    isLoading = true
-                    viewModel.onCompleteClicked()
-                }
+                onClick = { viewModel.onCompleteClicked() }
             )
         }
     ) { innerPadding ->
@@ -273,28 +261,7 @@ fun AlarmSettingScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
 
-            if (isLoading) {
-                LoadingDialog()
-            }
-
-            if (openAlertDialog) {
-                val duration = with(groupState) {
-                    val diffTimes = alarmDays.map { DateTimeManager.diffFromNow("$it $alarmTime") }
-
-                    if (diffTimes.all { it == 0L }) DateTimeManager.ONE_WEEKS_MINUTES else diffTimes.filter { it != 0L }.min()
-                }
-                val nextAlarmTime = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"").trim()
-
-                CustomAlertDialog(
-                    title = "그룹 생성 완료!",
-                    content = "$nextAlarmTime 후부터 알람이 울려요",
-                    onClick = {
-                        openAlertDialog = false
-                        viewModel.navigateToDetail()
-                    },
-                    dialogImg = R.drawable.group_dialog_img
-                )
-            }
+            if (isLoading) { LoadingDialog() }
         }
     }
 }

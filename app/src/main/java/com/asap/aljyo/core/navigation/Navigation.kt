@@ -72,15 +72,23 @@ internal fun AppNavHost() {
         }
 
         composable(
-            route = "${ScreenRoute.GroupDetails.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+            route = "${ScreenRoute.GroupDetails.route}/{groupId}?isNew={isNew}",
+            arguments = listOf(
+                navArgument("groupId") { type = NavType.IntType },
+                navArgument("isNew") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                }
+            ),
             enterTransition = { defaultEnterTransition() },
             exitTransition = { defaultExitTransition() },
             popEnterTransition = null,
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
+            val isNew = backStackEntry.arguments?.getBoolean("isNew") ?: false
             GroupDetailsScreen(
                 navController = navController,
+                isNew = isNew,
                 groupId = groupId
             )
         }
@@ -389,8 +397,8 @@ fun NavGraphBuilder.groupCreateNavGraph(
             viewModel = hiltViewModel(parentEntry),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}/create?musicTitle=$it") },
-            onCompleteClick = { groupId ->
-                navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId") {
+            onCompleteClick = { groupId->
+                navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId?isNew=true") {
                     popUpTo(ScreenRoute.GroupType.route) { inclusive = true }
                 }
             }

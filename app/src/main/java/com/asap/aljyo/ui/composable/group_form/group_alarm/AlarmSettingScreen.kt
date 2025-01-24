@@ -68,7 +68,6 @@ import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
-import com.asap.data.utility.DateTimeManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -237,7 +236,7 @@ fun AlarmSettingScreen(
             }
 
             listOf(
-                "기기에서 무음으로 설정하면 알람 방식이 소리 또는 진동이어도 무음으로 울릴 수 있습니다.",
+                "기기에서 무음으로 설정하여도 설정한 방식으로 알람이 울려요.",
                 "원활한 알람을 위하여 알람 관련 권한을 허용해 주세요."
             ).forEach {
                 Row(
@@ -330,7 +329,8 @@ fun SelectBox(
                 shape = RoundedCornerShape(6.dp)
             )
             .background(
-                color = if (isSelected) Red02 else White
+                color = if (isSelected) Red02 else White,
+                shape = RoundedCornerShape(6.dp)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },

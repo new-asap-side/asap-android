@@ -153,7 +153,8 @@ fun BoxWithIcon(
                 shape = RoundedCornerShape(10.dp)
             )
             .background(
-                color = if (isSelected) Red02 else White
+                color = if (isSelected) Red02 else White,
+                shape = RoundedCornerShape(10.dp)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -183,7 +184,7 @@ fun BoxWithIcon(
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = if (isSelected) Red01 else Black01,
                     fontSize = 16.fsp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = if(isSelected) FontWeight.Bold else FontWeight.Medium,
                 )
             )
         }

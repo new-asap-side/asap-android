@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -171,12 +172,13 @@ fun BoxWithCheckButton(
                 end = 20.dp
             )
             .border(
-                width = 2.dp,
+                width = if (isSelected) 1.5.dp else 1.dp,
                 color = if (isSelected) Red01 else Grey02,
                 shape = RoundedCornerShape(10.dp)
             )
             .background(
-                color = if (isSelected) Red02 else White
+                color = if (isSelected) Red02 else White,
+                shape = RoundedCornerShape(10.dp)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },

@@ -66,7 +66,7 @@ fun CustomAlertDialog(
                 )
 
                 Text(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                     text = content,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Black02,

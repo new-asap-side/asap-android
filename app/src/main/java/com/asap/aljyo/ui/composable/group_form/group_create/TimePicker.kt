@@ -88,7 +88,6 @@ fun TimePicker(
     }
 }
 
-// TODO: viewModel에서 시간.분(alarmTime)을 AlarmTimePicker의 파라미터로 넘겨줘서 사용자가 설정한 시간으로 셋팅  
 @Composable
 fun AlarmTimePicker(
     selectedTime: String,
@@ -169,7 +168,7 @@ fun TimeWheelPicker(
                     .height(25.dp)
                     .width(80.dp),
                 text = hour,
-                style = MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.headlineMedium.copy(
                     fontSize = if (idx == currentFirstItemIdx + 2) 18.fsp else 16.fsp,
                     fontWeight = FontWeight.Bold,
                     color = if (idx == currentFirstItemIdx + 2) Black01 else Black04

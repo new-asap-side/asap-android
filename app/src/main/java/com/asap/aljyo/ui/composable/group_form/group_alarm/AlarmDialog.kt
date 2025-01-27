@@ -58,7 +58,7 @@ fun CustomAlertDialog(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.headlineMedium.copy(
                         color = Black01,
                         fontSize = 18.fsp,
                         fontWeight = FontWeight.Bold
@@ -68,7 +68,7 @@ fun CustomAlertDialog(
                 Text(
                     modifier = Modifier.padding(top = 10.dp),
                     text = content,
-                    style = MaterialTheme.typography.bodyMedium.copy(
+                    style = MaterialTheme.typography.labelMedium.copy(
                         color = Black02,
                         fontSize = 14.fsp,
                     )

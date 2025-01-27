@@ -47,6 +47,7 @@ import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
@@ -64,95 +65,97 @@ fun SelectGroupTypeScreen(
 ) {
     val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        containerColor = White,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "BACK"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White
+    AljyoTheme {
+        Scaffold(
+            containerColor = White,
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "") },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_top_back),
+                                contentDescription = "BACK"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = White
+                    )
                 )
-            )
-        },
-        bottomBar = {
-            CustomButton(
-                modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp)
-                    .navigationBarsPadding()
-                    .imePadding(),
-                text = "확인",
-                enable = groupState.typeButtonState,
-                onClick = navigateToCreateGroup
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            GroupProgressbar(
-                startProgress = 0.0f,
-                endProgress = 0.25f
-            )
-            Text(
-                modifier = Modifier.padding(start = 20.dp, top = 16.dp),
-                text = "어떤 알람을 만드시겠어요?",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = Black,
-                    fontSize = 22.fsp,
-                    fontWeight = FontWeight.Bold,
-                )
-            )
-            Text(
-                modifier = Modifier.padding(
-                    top = 4.dp,
-                    start = 20.dp
-                ),
-                text = "그룹 생성 후에도 변경이 가능해요!",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Color.Gray,
-                    fontSize = 15.fsp,
-                )
-            )
-            Spacer(modifier = Modifier.padding(top = 20.dp))
-            BoxWithCheckButton(
-                R.drawable.ic_public,
-                "공개",
-                isSelected = groupState.isPublic ?: false,
-                onCheckedChange = { viewModel.onGroupTypeSelected(true) }
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            BoxWithCheckButton(
-                R.drawable.ic_private,
-                "비공개",
-                isSelected = groupState.isPublic?.not() ?: false,
-                onCheckedChange = { viewModel.onGroupTypeSelected(false) }
-            )
-            Spacer(modifier = Modifier.height(30.dp))
-            if (groupState.isPublic?.not() == true) {
-                Text(
-                    modifier = Modifier.padding(start = 20.dp),
-                    text = "비밀번호",
-                    fontSize = 12.fsp,
-                    color = Black03
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                UnderlineTextField(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    value = groupState.groupPassword ?: "",
-                    onValueChange = { viewModel.onGroupPasswordChanged(it) }
+            },
+            bottomBar = {
+                CustomButton(
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp)
+                        .navigationBarsPadding()
+                        .imePadding(),
+                    text = "확인",
+                    enable = groupState.typeButtonState,
+                    onClick = navigateToCreateGroup
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                GroupProgressbar(
+                    startProgress = 0.0f,
+                    endProgress = 0.25f
+                )
+                Text(
+                    modifier = Modifier.padding(start = 20.dp, top = 16.dp),
+                    text = "어떤 알람을 만드시겠어요?",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        color = Black,
+                        fontSize = 22.fsp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+                Text(
+                    modifier = Modifier.padding(
+                        top = 4.dp,
+                        start = 20.dp
+                    ),
+                    text = "그룹 생성 후에도 변경이 가능해요!",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        color = Color.Gray,
+                        fontSize = 15.fsp,
+                    )
+                )
+                Spacer(modifier = Modifier.padding(top = 20.dp))
+                BoxWithCheckButton(
+                    R.drawable.ic_public,
+                    "공개",
+                    isSelected = groupState.isPublic ?: false,
+                    onCheckedChange = { viewModel.onGroupTypeSelected(true) }
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                BoxWithCheckButton(
+                    R.drawable.ic_private,
+                    "비공개",
+                    isSelected = groupState.isPublic?.not() ?: false,
+                    onCheckedChange = { viewModel.onGroupTypeSelected(false) }
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                if (groupState.isPublic?.not() == true) {
+//                    Text(
+//                        modifier = Modifier.padding(start = 20.dp),
+//                        text = "비밀번호",
+//                        fontSize = 12.fsp,
+//                        color = Black03
+//                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    UnderlineTextField(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        value = groupState.groupPassword ?: "",
+                        onValueChange = { viewModel.onGroupPasswordChanged(it) }
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
     }
 }
@@ -203,7 +206,7 @@ fun BoxWithCheckButton(
                 modifier = Modifier
                     .padding(start = 10.dp),
                 text = text,
-                style = MaterialTheme.typography.headlineLarge.copy(
+                style = MaterialTheme.typography.headlineMedium.copy(
                     color = if (isSelected) Red01 else Black01,
                     fontSize = 16.fsp,
                     fontWeight = FontWeight.Bold,

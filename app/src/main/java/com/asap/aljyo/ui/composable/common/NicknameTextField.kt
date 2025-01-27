@@ -117,7 +117,7 @@ fun NicknameTextField(
                     ) {
                         Text(
                             text = "${nickname.length}/8",
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            style = MaterialTheme.typography.labelMedium.copy(
                                 color = Black04,
                                 fontSize = 15.fsp
                             ),
@@ -154,7 +154,7 @@ fun NicknameTextField(
                 modifier = Modifier
                     .padding(top = 8.dp),
                 text = msg.msg,
-                style = TextStyle(
+                style = MaterialTheme.typography.labelMedium.copy(
                     color = if (msg == UserSettingMsgType.Success) Grey01 else Error,
                     fontSize = 12.fsp
                 )

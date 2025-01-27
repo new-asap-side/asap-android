@@ -43,6 +43,7 @@ import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
+import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
@@ -57,82 +58,84 @@ fun AlarmTypeScreen(
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        containerColor = White,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "BACK"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White
+    AljyoTheme {
+        Scaffold(
+            containerColor = White,
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "") },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_top_back),
+                                contentDescription = "BACK"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = White
+                    )
                 )
+            },
+            bottomBar = {
+                CustomButton(
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp)
+                        .navigationBarsPadding(),
+                    text = "다음",
+                    enable = alarmState.alarmUnlockContents.isNotEmpty(),
+                    onClick = navigateToAlarmSetting
+                )
+            }
+        ) { innerPadding ->
+            GroupProgressbar(
+                modifier = Modifier.padding(innerPadding),
+                startProgress = 0.5f,
+                endProgress = 0.75f
             )
-        },
-        bottomBar = {
-            CustomButton(
+
+            Column(
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp)
-                    .navigationBarsPadding(),
-                text = "다음",
-                enable = alarmState.alarmUnlockContents.isNotEmpty(),
-                onClick = navigateToAlarmSetting
-            )
-        }
-    ) { innerPadding ->
-        GroupProgressbar(
-            modifier = Modifier.padding(innerPadding),
-            startProgress = 0.5f,
-            endProgress = 0.75f
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(start = 20.dp, end = 20.dp, top = 16.dp)
-        ) {
-            Text(
-                text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = Black,
-                    fontSize = 22.fsp,
-                    fontWeight = FontWeight.Bold,
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(start = 20.dp, end = 20.dp, top = 16.dp)
+            ) {
+                Text(
+                    text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        color = Black,
+                        fontSize = 22.fsp,
+                        fontWeight = FontWeight.Bold,
+                    )
                 )
-            )
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
 
-            Image(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                painter = painterResource(R.drawable.alarm_bell),
-                contentDescription = "Alarm Bell Image"
-            )
+                Image(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    painter = painterResource(R.drawable.alarm_bell),
+                    contentDescription = "Alarm Bell Image"
+                )
 
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
 
-            BoxWithIcon(
-                icon = R.drawable.ic_slide,
-                text = "밀어서 알람 해제",
-                isSelected = alarmState.alarmUnlockContents == "SLIDE",
-                onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("SLIDE") }
-            )
+                BoxWithIcon(
+                    icon = R.drawable.ic_slide,
+                    text = "밀어서 알람 해제",
+                    isSelected = alarmState.alarmUnlockContents == "SLIDE",
+                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("SLIDE") }
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            BoxWithIcon(
-                icon = R.drawable.ic_card_touch,
-                text = "카드를 터치하여 알람 해제",
-                isSelected = alarmState.alarmUnlockContents == "CARD",
-                onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CARD") }
-            )
+                BoxWithIcon(
+                    icon = R.drawable.ic_card_touch,
+                    text = "카드를 터치하여 알람 해제",
+                    isSelected = alarmState.alarmUnlockContents == "CARD",
+                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CARD") }
+                )
 
-            Spacer(modifier = Modifier.height(36.dp))
+                Spacer(modifier = Modifier.height(36.dp))
+            }
         }
     }
 }
@@ -181,7 +184,7 @@ fun BoxWithIcon(
                     .fillMaxWidth()
                     .padding(start = 10.dp),
                 text = text,
-                style = MaterialTheme.typography.headlineLarge.copy(
+                style = MaterialTheme.typography.bodyMedium.copy(
                     color = if (isSelected) Red01 else Black01,
                     fontSize = 16.fsp,
                     fontWeight = if(isSelected) FontWeight.Bold else FontWeight.Medium,

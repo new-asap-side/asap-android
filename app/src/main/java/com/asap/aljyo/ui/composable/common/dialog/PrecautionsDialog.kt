@@ -92,7 +92,8 @@ internal fun PrecautionsDialog(
                         onClick = { onDismissRequest() }
                     ) {
                         Text(
-                            text = stringResource(R.string.no)
+                            text = stringResource(R.string.no),
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
@@ -104,7 +105,8 @@ internal fun PrecautionsDialog(
                         }
                     ) {
                         Text(
-                            text = stringResource(R.string.yes)
+                            text = stringResource(R.string.yes),
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 }

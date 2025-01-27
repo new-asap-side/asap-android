@@ -296,7 +296,7 @@ fun GroupEditScreen(
                 type = GROUP_TITLE,
                 placeHolder = {
                     Text(
-                        text = "그룹명을 입력해주세 (최대 30자 이내)",
+                        text = "그룹명을 입력해주세요 (최대 30자 이내)",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontSize = 15.sp,
                             color = Black04
@@ -334,7 +334,7 @@ fun GroupEditScreen(
 
             Text(
                 text = "현재 인원 이상으로만 변경 가능합니다",
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.labelMedium.copy(
                     color = Black03,
                     fontSize = 12.sp
                 )

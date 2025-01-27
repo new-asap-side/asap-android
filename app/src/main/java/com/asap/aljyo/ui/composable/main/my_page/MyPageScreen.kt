@@ -123,7 +123,7 @@ internal fun MyPageScreen(
                                     onClick = navigateToPrivacyPolicy
                                 ),
                             text = "개인정보 처리방침",
-                            style = MaterialTheme.typography.bodySmall.copy(
+                            style = MaterialTheme.typography.labelMedium.copy(
                                 fontSize = 12.sp,
                                 color = Black02
                             )

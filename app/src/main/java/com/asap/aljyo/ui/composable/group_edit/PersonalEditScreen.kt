@@ -159,7 +159,7 @@ fun PersonalEditScreen(
                                 .padding(start = 96.dp, end = 4.dp)
                                 .weight(1f),
                             text = state.musicTitle ?: "노래를 선택해주세요!",
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            style = MaterialTheme.typography.labelMedium.copy(
                                 color = Black03,
                                 fontSize = 15.sp,
                             ),
@@ -187,7 +187,7 @@ fun PersonalEditScreen(
             ) {
                 Text(
                     text = "잠깐",
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.headlineMedium.copy(
                         color = Red01,
                         fontSize = 16.sp,
                         fontWeight = Bold
@@ -201,7 +201,7 @@ fun PersonalEditScreen(
                 )
                 Text(
                     text = "알람을 설정하기 전 꼭 확인해 주세요!",
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.headlineMedium.copy(
                         color = Black01,
                         fontSize = 16.sp,
                         fontWeight = Bold
@@ -225,7 +225,7 @@ fun PersonalEditScreen(
                     )
                     Text(
                         text = it,
-                        style = MaterialTheme.typography.bodyMedium.copy(
+                        style = MaterialTheme.typography.labelMedium.copy(
                             color = Black02,
                             fontSize = 12.sp
                         )

@@ -330,13 +330,6 @@ fun MainNavHost(
                     }
                 },
                 navigateToProfileSetting = { nickName, profileImage ->
-                    screenNavController.navigate(
-                        "${ScreenRoute.UserSetting.route}/$nickName/${
-                            Uri.encode(
-                                profileImage
-                            )
-                        }"
-                    )
                     screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
                 },
                 navigateToPrivacyPolicy = {

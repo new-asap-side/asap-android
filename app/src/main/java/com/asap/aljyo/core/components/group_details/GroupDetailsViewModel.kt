@@ -73,14 +73,16 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    init {
-        fetchGroupDetails()
-    }
+//    init {
+//        fetchGroupDetails()
+//    }
 
     fun fetchGroupDetails(internal: Boolean = false) {
         viewModelScope.launch {
             if (!internal) {
                 _groupDetailsState.value = UiState.Loading
+            } else {
+                _isLoading.value = true
             }
 
             delay(500)
@@ -123,6 +125,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
                 observingRemainTime()
                 _groupDetailsState.value = UiState.Success(result)
+                _isLoading.value = false
             }
         }
     }
@@ -204,27 +207,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    fun joinGroup() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val userInfo = getUserInfoUseCase()
-
-            joinGroupUseCase(
-                GroupJoinRequest(
-                    userId = userInfo?.userId?.toInt() ?: -1,
-                    groupId = groupId,
-                    deviceToken = FCMTokenManager.token,
-                    groupPassword = null,
-                )
-            ).firstOrNull().let { response ->
-                if (response != null) _userGroupType.value = UserGroupType.Participant
-            }
-
-            fetchGroupDetails(true)
-            _isLoading.value = false
-        }
-    }
-
     fun withdrawGroup() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -237,6 +219,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }.invokeOnCompletion {
             _isLoading.value = false
             _userGroupType.value = UserGroupType.NonParticipant
+            fetchGroupDetails(true)
         }
     }
 

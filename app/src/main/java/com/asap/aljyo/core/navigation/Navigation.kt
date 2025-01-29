@@ -439,10 +439,13 @@ fun NavGraphBuilder.editNavGraph(
     }
 
     composable(
-        route = "${ScreenRoute.PersonalEdit.route}/{groupId}/{setting}",
+        route = "${ScreenRoute.PersonalEdit.route}/{groupId}?setting={setting}",
         arguments = listOf(
             navArgument("groupId") { type = NavType.IntType },
-            navArgument("setting") { type = CustomNavType.PersonalEditType }
+            navArgument("setting") {
+                type = CustomNavType.PersonalEditType
+                nullable = true
+            }
         )
     ) {
         PersonalEditScreen(

@@ -2,6 +2,7 @@ package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
 import android.graphics.Color
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -40,16 +42,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
@@ -115,6 +123,7 @@ fun GroupDetailsScreen(
     val groupDetails by viewModel.groupDetails.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     var showDialog by remember { mutableStateOf(isNew) }
+    var initialized by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect {
@@ -127,13 +136,18 @@ fun GroupDetailsScreen(
     LaunchedEffect(Unit) {
         viewModel.personalEdit.collect {
             navController.navigate(
-                "${ScreenRoute.PersonalEdit.route}/$groupId/${
+                "${ScreenRoute.PersonalEdit.route}/$groupId?setting=${
                     CustomNavType.PersonalEditType.serializeAsValue(
                         it
                     )
                 }"
             )
         }
+    }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_START) {
+        viewModel.fetchGroupDetails(initialized)
+        initialized = true
     }
 
     if (showDialog) {
@@ -158,7 +172,7 @@ fun GroupDetailsScreen(
         val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
         var showLeaveGroupDialog by remember { mutableStateOf(false) }
-        var showReportGroupDialog by remember { mutableStateOf(false) }
+//        var showReportGroupDialog by remember { mutableStateOf(false) }
 
         val hideBottomSheet = {
             coroutineScope.launch {
@@ -336,7 +350,7 @@ fun GroupDetailsScreen(
                         viewModel.navigateToPersonalEdit()
                     },
                     onJoinClick = {
-                        viewModel.joinGroup()
+                        navController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
                     }
                 )
             }

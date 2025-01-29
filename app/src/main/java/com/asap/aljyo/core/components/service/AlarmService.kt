@@ -2,7 +2,6 @@ package com.asap.aljyo.core.components.service
 
 import android.annotation.SuppressLint
 import android.app.ForegroundServiceStartNotAllowedException
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -127,8 +126,9 @@ class AlarmService : Service() {
                 .setColor(getColor(R.color.ic_launcher_background))
                 .setContentTitle(getString(R.string.notification_alarm_title))
                 .setContentText(getString(R.string.notification_alarm_description))
-                .setPriority(NotificationManager.IMPORTANCE_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
+                .setFullScreenIntent(pendingIntent, true)
                 .setDeleteIntent(deleteCallbackIntent)
                 .setAutoCancel(false)
                 .setOngoing(true)

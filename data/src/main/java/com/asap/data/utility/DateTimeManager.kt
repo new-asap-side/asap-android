@@ -46,7 +46,11 @@ object DateTimeManager {
         val minites = splitedTime[1]
 
         val prefix = if ((hour / 12) > 0) "오후" else "오전"
-        return "$prefix ${hour % 12}:$minites"
+        val timezoneHour = String.format(
+            Locale.KOREAN,
+            "%02d", if (hour == 12) 12 else hour % 12
+        )
+        return "$prefix $timezoneHour:$minites"
     }
 
     // 현재 요일을 기준으로
@@ -67,7 +71,7 @@ object DateTimeManager {
     }
 
     // 현재 시간을 기준으로
-    // input 시간까지 남은 시간을 분 단위로 반환
+    // input 시간까지 남은 시간을 초/분 단위로 반환
     fun diffFromNow(input: String, isTest: Boolean = false, basedMinite: Boolean = true): Long {
         val today = if (isTest) {
             parseToDayOfWeek("월요일")
@@ -89,12 +93,12 @@ object DateTimeManager {
                 LocalTime.parse("12:30", timeFormatter)
             )
         } else {
-            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
+            LocalDateTime.now()
         }
 
         if (basedMinite) {
             // '분' 기준
-            val duration = ChronoUnit.MINUTES.between(now, targetDateTime)
+            val duration = ChronoUnit.MINUTES.between(now, targetDateTime) + 1
             return if (duration < 0L) BASED_MINITE + duration else duration
         } else {
             // '초' 기준

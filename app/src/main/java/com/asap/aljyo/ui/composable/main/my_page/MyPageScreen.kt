@@ -23,6 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.MyPageViewModel
@@ -44,6 +46,11 @@ internal fun MyPageScreen(
     navigateToPrivacyPolicy: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
+
+    LifecycleEventEffect(Lifecycle.Event.ON_START) {
+        viewModel.fetchScreen()
+    }
+
     val myPageState by viewModel.state.collectAsStateWithLifecycle()
 
     when(myPageState) {
@@ -86,7 +93,10 @@ internal fun MyPageScreen(
                         .padding(horizontal = 20.dp),
                     nickname = state.nickName,
                     profileImage = state.profileImage,
-                    navigateToSetting = navigateToProfileSetting
+                    navigateToSetting = { nickname, profileImage ->
+                        navigateToProfileSetting(nickname, profileImage)
+                        viewModel.fetchScreenFlag()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))

@@ -10,6 +10,7 @@ import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.utility.DateTimeManager
+import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupMember
@@ -164,7 +165,8 @@ class GroupDetailsViewModel @AssistedInject constructor(
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
 
     fun parseAlarmDays(groupDetails: GroupDetails?): String {
-        return (groupDetails?.alarmDays ?: emptyList()).joinToString( separator = " ")
+        val raw = groupDetails?.alarmDays ?: emptyList()
+        return raw.sortByDay().joinToString( separator = " ")
     }
 
     fun navigateToGroupEdit() {

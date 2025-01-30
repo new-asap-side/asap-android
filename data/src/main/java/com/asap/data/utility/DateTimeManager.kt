@@ -70,6 +70,12 @@ object DateTimeManager {
         )
     }
 
+    // 요일 순 정렬
+    // 일 목 금 월 화 -> 월 화 목 금 일
+    fun List<String>.sortByDay(): List<String> {
+        return this.sortedBy { parseToDayOfWeek(it) }
+    }
+
     // 현재 시간을 기준으로
     // input 시간까지 남은 시간을 초/분 단위로 반환
     fun diffFromNow(input: String, isTest: Boolean = false, basedMinite: Boolean = true): Long {

@@ -48,6 +48,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -58,6 +59,8 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,6 +114,7 @@ fun HomeScreen(
                 var isError by remember { mutableStateOf(false) }
                 val sheetState = rememberModalBottomSheetState()
                 val requestJoinState by viewModel.joinResponseState.collectAsState()
+                var showDialog by remember { mutableStateOf(false) }
 
                 val hideSheet = {
                     coroutineScope.launch {
@@ -150,6 +154,12 @@ fun HomeScreen(
                     if (privateGroupState.isJoinedGroup == true) {
                         navigateToGroupDetails(viewModel.selectedGroupId.value ?: 0)
                         viewModel.clearPrivateGroupState()
+                    }
+                }
+
+                LaunchedEffect(Unit) {
+                    viewModel.showDialog.collect {
+                        showDialog = it
                     }
                 }
 
@@ -310,6 +320,7 @@ fun HomeScreen(
                                     contentColor = White
                                 ),
                                 shape = RoundedCornerShape(10.dp),
+                                // TODO: 비공개 참여하기 버튼 
                                 onClick = {
                                     viewModel.joinGroup(password = password, alarmType = "VIBRATION")
                                 }
@@ -323,6 +334,15 @@ fun HomeScreen(
                             }
                         }
                     }
+                }
+
+                if (showDialog) {
+                    PrecautionsDialog(
+                        title = "그룹 인원이 모두 찼어요",
+                        description = "다른 그룹을 찾아볼까요?",
+                        onDismissRequest = { showDialog = false },
+                        onConfirm =  { showDialog = false }
+                    )
                 }
 
                 HomeTabScreen(

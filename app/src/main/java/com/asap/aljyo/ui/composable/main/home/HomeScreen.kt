@@ -48,6 +48,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.dialog.DialogButtonType
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
@@ -338,6 +339,7 @@ fun HomeScreen(
 
                 if (showDialog) {
                     PrecautionsDialog(
+                        buttonType = DialogButtonType.SINGLE,
                         title = "그룹 인원이 모두 찼어요",
                         description = "다른 그룹을 찾아볼까요?",
                         onDismissRequest = { showDialog = false },

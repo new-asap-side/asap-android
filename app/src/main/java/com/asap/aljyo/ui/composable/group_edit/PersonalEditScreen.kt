@@ -73,7 +73,7 @@ fun PersonalEditScreen(
 
     LaunchedEffect(Unit) {
         viewModel.complete.collect { groupId ->
-            if (state.isEditMode) onBackClick() else navigateToGroupDetails(groupId)
+            navigateToGroupDetails(groupId)
         }
     }
 
@@ -206,7 +206,7 @@ fun PersonalEditScreen(
                     }
 
                     AlarmSoundSlider(
-                        sliderPosition = state.alarmVolume ?: 10f,
+                        sliderPosition = state.alarmVolume,
                         onValueChange = { viewModel.onAlarmVolumeSelected(it) }
                     )
                 }

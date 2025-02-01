@@ -322,7 +322,6 @@ fun HomeScreen(
                                     contentColor = White
                                 ),
                                 shape = RoundedCornerShape(10.dp),
-                                // TODO: 비공개 참여하기 버튼 
                                 onClick = {
                                     viewModel.joinGroup(password = password)
                                 }

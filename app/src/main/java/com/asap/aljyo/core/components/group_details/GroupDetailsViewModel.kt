@@ -70,6 +70,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _personalEdit = MutableSharedFlow<PersonalEditState>()
     val personalEdit = _personalEdit.asSharedFlow()
 
+    private val _complete = MutableSharedFlow<Unit>()
+    val complete = _complete.asSharedFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -203,6 +206,27 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 ).also { personalEditState ->
                     _personalEdit.emit(personalEditState)
                 }
+            }
+        }
+    }
+
+    fun joinGroup() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val userInfo = getUserInfoUseCase()
+
+            joinGroupUseCase(
+                GroupJoinRequest(
+                    userId = userInfo?.userId?.toInt() ?: -1,
+                    groupId = groupId,
+                    deviceToken = FCMTokenManager.token,
+                    groupPassword = null,
+                )
+            ).catch { e ->
+                Log.d("GroupDetailsViewModel","joinGroup: $e")
+            }.collect {
+                _isLoading.value = false
+                _complete.emit(Unit)
             }
         }
     }

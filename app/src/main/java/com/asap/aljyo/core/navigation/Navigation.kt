@@ -456,6 +456,7 @@ fun NavGraphBuilder.editNavGraph(
             navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") },
             navigateToGroupDetails = {
                 navController.navigate("${ScreenRoute.GroupDetails.route}/$it"){
+                    launchSingleTop = true
                     popUpTo("${ScreenRoute.PersonalEdit.route}/{groupId}?setting={setting}") { inclusive = true }
                 }
             }

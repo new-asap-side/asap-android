@@ -125,29 +125,27 @@ fun GroupDetailsScreen(
     var showDialog by remember { mutableStateOf(isNew) }
     var initialized by rememberSaveable { mutableStateOf(false) }
 
+    LifecycleEventEffect(Lifecycle.Event.ON_START) {
+        viewModel.fetchGroupDetails(initialized)
+        initialized = true
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            navController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect {
-            navController.navigate(
-                "${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}"
-            )
+            navController.navigate("${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}")
         }
     }
 
     LaunchedEffect(Unit) {
         viewModel.personalEdit.collect {
-            navController.navigate(
-                "${ScreenRoute.PersonalEdit.route}/$groupId?setting=${
-                    CustomNavType.PersonalEditType.serializeAsValue(
-                        it
-                    )
-                }"
-            )
+            navController.navigate("${ScreenRoute.PersonalEdit.route}/$groupId?setting=${CustomNavType.PersonalEditType.serializeAsValue(it)}")
         }
-    }
-
-    LifecycleEventEffect(Lifecycle.Event.ON_START) {
-        viewModel.fetchGroupDetails(initialized)
-        initialized = true
     }
 
     if (showDialog) {
@@ -350,7 +348,7 @@ fun GroupDetailsScreen(
                         viewModel.navigateToPersonalEdit()
                     },
                     onJoinClick = {
-                        navController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
+                        viewModel.joinGroup()
                     }
                 )
             }

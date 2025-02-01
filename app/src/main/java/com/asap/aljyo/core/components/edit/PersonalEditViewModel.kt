@@ -25,7 +25,6 @@ import javax.inject.Inject
 class PersonalEditViewModel @Inject constructor(
     val saveStateHandle: SavedStateHandle,
     private val editPersonalUseCase: EditPersonalUseCase,
-    private val joinGroupUseCase: JoinGroupUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(PersonalEditState())
@@ -85,28 +84,4 @@ class PersonalEditViewModel @Inject constructor(
             }
         }
     }
-
-//    fun joinGroup() {
-//        viewModelScope.launch {
-//            _isLoading.value = true
-//            val userInfo = getUserInfoUseCase()
-//
-//            joinGroupUseCase(
-//                GroupJoinRequest(
-//                    userId = userInfo?.userId?.toInt() ?: -1,
-//                    groupId = groupId,
-//                    alarmType = _state.value.alarmType,
-//                    deviceToken = FCMTokenManager.token,
-//                    groupPassword = null,
-//                )
-//            ).firstOrNull()
-//        }.invokeOnCompletion {
-//            if (it == null) {
-//                viewModelScope.launch {
-//                    _isLoading.value = false
-//                    _complete.emit(Unit)
-//                }
-//            }
-//        }
-//    }
 }

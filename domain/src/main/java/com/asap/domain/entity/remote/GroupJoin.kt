@@ -14,7 +14,7 @@ data class GroupJoinRequest(
     @Json(name = "group_password")
     val groupPassword: String?,
     @Json(name = "alarm_type")
-    val alarmType: String,
+    val alarmType: String = "VIBRATION",
     @Json(name = "device_type")
     val deviceType: String = "ANDROID"
 )

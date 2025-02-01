@@ -43,6 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.edit.PersonalEditViewModel
@@ -64,13 +66,14 @@ import kotlinx.coroutines.flow.collect
 fun PersonalEditScreen(
     viewModel: PersonalEditViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
-    navigateToAlarmMusicScreen: (String?) -> Unit
+    navigateToAlarmMusicScreen: (String?) -> Unit,
+    navigateToGroupDetails: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.complete.collect {
-            onBackClick()
+        viewModel.complete.collect { groupId ->
+            if (state.isEditMode) onBackClick() else navigateToGroupDetails(groupId)
         }
     }
 
@@ -108,7 +111,7 @@ fun PersonalEditScreen(
                         .padding(bottom = 6.dp),
                     text = "완료",
                     enable = state.buttonState,
-                    onClick = if (state.isEditMode) viewModel::onCompleteClick else viewModel::joinGroup
+                    onClick = viewModel::onCompleteClick
                 )
             }
         ) {innerPadding ->
@@ -269,6 +272,7 @@ fun PersonalEditScreen(
 fun PreviewPersonalEditScreen() {
     PersonalEditScreen(
         onBackClick = {},
-        navigateToAlarmMusicScreen = {}
+        navigateToAlarmMusicScreen = {},
+        navigateToGroupDetails = {}
     )
 }

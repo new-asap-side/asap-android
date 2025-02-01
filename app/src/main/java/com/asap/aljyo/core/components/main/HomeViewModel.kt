@@ -129,7 +129,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun joinGroup(password: String, alarmType: String) = viewModelScope.launch {
+    fun joinGroup(password: String) = viewModelScope.launch {
         val userInfo = getUserInfoUseCase()
         _joinResponseState.value = RequestState.Loading
         joinGroupUseCase(
@@ -138,7 +138,6 @@ class HomeViewModel @Inject constructor(
                 groupId = (selectedGroupId.value ?: -1),
                 deviceToken = FCMTokenManager.token,
                 groupPassword = password,
-                alarmType = alarmType,
             )
         ).catch { e ->
             Log.e(TAG, "$e")

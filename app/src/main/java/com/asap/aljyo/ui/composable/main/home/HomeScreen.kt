@@ -69,6 +69,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navigateToDescript: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
+    navigateToPersonalSetting: (Int) -> Unit,
     onCreateButtonClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -140,7 +141,7 @@ fun HomeScreen(
                                 hideSheet()
                             }.invokeOnCompletion {
                                 viewModel.joinStateClear()
-                                navigateToGroupDetails(groupId)
+                                navigateToPersonalSetting(groupId)
                             }
                         }
 
@@ -323,7 +324,7 @@ fun HomeScreen(
                                 shape = RoundedCornerShape(10.dp),
                                 // TODO: 비공개 참여하기 버튼 
                                 onClick = {
-                                    viewModel.joinGroup(password = password, alarmType = "VIBRATION")
+                                    viewModel.joinGroup(password = password)
                                 }
                             ) {
                                 Text(

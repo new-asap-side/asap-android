@@ -298,6 +298,9 @@ fun MainNavHost(
                 },
                 navigateToGroupDetails = navigateToGroupDetails,
                 onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
+                navigateToPersonalSetting = { groupId ->
+                    screenNavController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
+                }
             )
         }
 
@@ -450,7 +453,12 @@ fun NavGraphBuilder.editNavGraph(
     ) {
         PersonalEditScreen(
             onBackClick = { navController.popBackStack() },
-            navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") }
+            navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") },
+            navigateToGroupDetails = {
+                navController.navigate("${ScreenRoute.GroupDetails.route}/$it"){
+                    popUpTo("${ScreenRoute.PersonalEdit.route}/{groupId}?setting={setting}") { inclusive = true }
+                }
+            }
         )
     }
 

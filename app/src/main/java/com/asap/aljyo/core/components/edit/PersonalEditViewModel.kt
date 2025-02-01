@@ -34,16 +34,14 @@ class PersonalEditViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _complete = MutableSharedFlow<Unit>()
+    private val _complete = MutableSharedFlow<Int>()
     val complete = _complete.asSharedFlow()
-
-    private var groupId: Int =
-        saveStateHandle.get<Int>("groupId") ?: throw IllegalArgumentException("groupId is required")
 
     init {
         saveStateHandle.get<PersonalEditState>("setting")?.let {
             _state.value = it.copy(isEditMode = true)
         }
+
         viewModelScope.launch {
             if (!_state.value.isEditMode) {
                 _state.value = _state.value.copy(
@@ -70,6 +68,8 @@ class PersonalEditViewModel @Inject constructor(
     }
 
     fun onCompleteClick() {
+        val groupId = saveStateHandle.get<Int>("groupId") ?: throw IllegalArgumentException("groupId is required")
+
         viewModelScope.launch {
             editPersonalUseCase(
                 groupId = groupId,
@@ -80,33 +80,33 @@ class PersonalEditViewModel @Inject constructor(
         }.invokeOnCompletion {
             if (it == null) {
                 viewModelScope.launch {
-                    _complete.emit(Unit)
+                    _complete.emit(groupId)
                 }
             }
         }
     }
 
-    fun joinGroup() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val userInfo = getUserInfoUseCase()
-
-            joinGroupUseCase(
-                GroupJoinRequest(
-                    userId = userInfo?.userId?.toInt() ?: -1,
-                    groupId = groupId,
-                    alarmType = _state.value.alarmType,
-                    deviceToken = FCMTokenManager.token,
-                    groupPassword = null,
-                )
-            ).firstOrNull()
-        }.invokeOnCompletion {
-            if (it == null) {
-                viewModelScope.launch {
-                    _isLoading.value = false
-                    _complete.emit(Unit)
-                }
-            }
-        }
-    }
+//    fun joinGroup() {
+//        viewModelScope.launch {
+//            _isLoading.value = true
+//            val userInfo = getUserInfoUseCase()
+//
+//            joinGroupUseCase(
+//                GroupJoinRequest(
+//                    userId = userInfo?.userId?.toInt() ?: -1,
+//                    groupId = groupId,
+//                    alarmType = _state.value.alarmType,
+//                    deviceToken = FCMTokenManager.token,
+//                    groupPassword = null,
+//                )
+//            ).firstOrNull()
+//        }.invokeOnCompletion {
+//            if (it == null) {
+//                viewModelScope.launch {
+//                    _isLoading.value = false
+//                    _complete.emit(Unit)
+//                }
+//            }
+//        }
+//    }
 }

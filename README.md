@@ -50,6 +50,7 @@
 <img src="https://img.shields.io/badge/Flow-2496ED?style=flat-square&logo=logoColor=white"/>
 </div>
 
+- - -
 ### 🏛️ Architecture
 `Clean architecture pattern`을 적용하여 `Presentation, Domain, Data layer`로 모듈화하여 프로젝트를 설계하였습니다.
 - `Presentation module` 내부에 `ViewModel`에서 usecase를 통해 `Doamin layer`의 `Entity class`에 접근하여 UI 구성에 필요한 데이터를 요청할 수 있습니다.
@@ -60,6 +61,7 @@
   <img width="639" alt="clean architecture" src="https://github.com/user-attachments/assets/2a5d4bb5-39be-4d9b-a7c0-a2e70c4317da" />
 </p>
 
+- - -
 ### 🖋️ Alarm flow
 
 알람 해제 컨텐츠, 알람 그룹 랭킹 등의 정보를 서버와 동기화 시켜줄 필요가 있었기 때문에  `Firebase Cloud Messaging Server`와 자체 서버를 연동해 사용자 이벤트에 의해 알람을 등록하도록 구현하였습니다.
@@ -80,5 +82,11 @@ FCM은 1개월 내 사용하지 않는 유저에 대해 기존에 발급 했던 
 
 따라서 새로운 token 값을 받을 때, 서버와 동기화 작업을 진행 해야 기존 알람도 정상적으로 울리게 됩니다.
 
+- - -
+
+### 🚗 Continuous Delivery
+프로젝트를 진행하면서 기능을 구현하고 개발 단계에서 테스트를 자체적으로 진행하지만 기능적인 부분외에 다양한 케이스에서 테스트를 진행하기 위해서 다른 팀원의 테스트를 병행하는 것이 좋습니다. 하지만 로컬에서 빌드 후 테스터에게 전달하는 것은 비효율적인 방법이라고 생각했습니다.
+
+`github action`을 활용하여 main branch에 merge가 되면 `firebase app distribution`에 자동 빌드 및 배포 작업이 진행되도록 연동하여 개발 단계에서 테스트 프로세스를 간소화 하여 문제를 해결할 수 있었습니다.
 
 

@@ -1,6 +1,9 @@
 
-![image](https://github.com/user-attachments/assets/7c5ccc88-c5fe-47fd-a696-d71fa24d8b4a)
+<img width="100" height="100" src="https://github.com/user-attachments/assets/3ebb960d-5ace-4f6c-8fd3-5cc2a19d855d"/>
 
+## 알죠 - 그룹 알람 서비스
+
+![image](https://github.com/user-attachments/assets/7c5ccc88-c5fe-47fd-a696-d71fa24d8b4a)
 
 ### 🤔  Why 알죠?
 
@@ -53,7 +56,8 @@
 - - -
 ### 🏛️ Architecture
 `Clean architecture pattern`을 적용하여 `Presentation, Domain, Data layer`로 모듈화하여 프로젝트를 설계하였습니다.
-- `Presentation module` 내부에 `ViewModel`에서 usecase를 통해 `Doamin layer`의 `Entity class`에 접근하여 UI 구성에 필요한 데이터를 요청할 수 있습니다.
+- `Domain module` 내에서 `repository interface`를 선언하고 `usecase`를 통해 `repository`의 함수를 실행합니다. 그 결과 값으로 `entity class`를 반환합니다.
+- `Presentation module` 내부에서 정의한 `ViewModel`은 `Domain module`의 `usecase`에 대한 의존성을 가지고 `entity class`에 접근하여 UI를 구성합니다.
 - `Data module` 내에서 `Domain module`에서 선언한 `Repository`에 대한 구현체를 생성하여 `local/remote datasource`에 접근 하여 필요한 요청(비동기 네트워크, 로컬 데이터베이스 접근 등)과 관련한 비즈니스 로직을 구현하였습니다.
 
 <br>
@@ -64,7 +68,7 @@
 - - -
 ### 🖋️ Alarm flow
 
-알람 해제 컨텐츠, 알람 그룹 랭킹 등의 정보를 서버와 동기화 시켜줄 필요가 있었기 때문에  `Firebase Cloud Messaging Server`와 자체 서버를 연동해 사용자 이벤트에 의해 알람을 등록하도록 구현하였습니다.
+알죠 앱은 그룹 형태의 알람을 생성하여 같은 그룹원들에게 같은 시간에 알람을 울리는 서비스를 제공합니다. 그 과정에서 그룹원들의 알람 설정이 모두 상이할 수 있습니다. 때문에 알람 관련 정보를 서버에서 관리하도록 하고 `Firebase Cloud Messaging Server`와 서버를 연동해 사용자 이벤트에 의해 알람을 등록하도록 구현하였습니다.  
 
 1. `Application` 시작 시 FCM token을 발급 받아 메모리 및 내부 DB에 저장합니다.
 2. 알람 스케쥴링 위해 `Application`에서 발급 받은 `FCM token`과 그룹에 필요한 데이터들과 함께 그룹 생성 요청을 하게 됩니다.
@@ -72,20 +76,17 @@
 4. 예약한 시간에 맞춰 `FCM Server`에서 `Application`으로 메세지를 보냅니다.
 5. `Application`에서 Payload 내 정보에 맞는 알람음, 알람 해제 컨텐츠에 따라 사용자에게 알람을 표시합니다.
 6. 사용자가 UI 상호작용을 통해 알람을 해제 합니다.
-7. 서버에서 알람을 해제한 순서에 따라 점수를 부여해 그룹 내 랭킹 점수를 갱신합니다.
+7. 서버에서 알람을 해제한 순서에 따라 점수를 부여해 그룹 내 랭킹 점수를 갱신합니다.  
 
 <p align="center">
   <img width="826" alt="alarm-flow" src="https://github.com/user-attachments/assets/e7d8f3dd-bdc0-4d7e-b73f-a60c5553a367" />
 </p>
 
-FCM은 1개월 내 사용하지 않는 유저에 대해 기존에 발급 했던 token을 만료 시킵니다.
-
-따라서 새로운 token 값을 받을 때, 서버와 동기화 작업을 진행 해야 기존 알람도 정상적으로 울리게 됩니다.
+> FCM은 1개월 내 사용하지 않는 유저에 대해 기존에 발급 했던 token을 만료 시킵니다. 따라서 새로운 token 값을 받을 때, 서버와 동기화 작업을 진행 해야 기존 알람도 정상적으로 울리게 됩니다.
 
 - - -
-
 ### 🚗 Continuous Delivery
-프로젝트를 진행하면서 기능을 구현하고 개발 단계에서 테스트를 자체적으로 진행하지만 기능적인 부분외에 다양한 케이스에서 테스트를 진행하기 위해서 다른 팀원의 테스트를 병행하는 것이 좋습니다. 하지만 로컬에서 빌드 후 테스터에게 전달하는 것은 비효율적인 방법이라고 생각했습니다.
+프로젝트를 진행하면서 기능을 구현하고 개발 단계에서 테스트를 자체적으로 진행하지만 기능적인 부분외에 다양한 케이스에서 테스트를 진행하기 위해서 다른 팀원의 테스트를 병행하는 것이 좋습니다. 하지만 로컬에서 빌드 후 테스터에게 전달하는 것은 비효율적인 방법이라고 생각했습니다. 
 
 `github action`을 활용하여 main branch에 merge가 되면 `firebase app distribution`에 자동 빌드 및 배포 작업이 진행되도록 연동하여 개발 단계에서 테스트 프로세스를 간소화 하여 문제를 해결할 수 있었습니다.
 

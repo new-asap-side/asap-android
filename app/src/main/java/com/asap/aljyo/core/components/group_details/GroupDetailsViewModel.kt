@@ -71,6 +71,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _personalEdit = MutableSharedFlow<PersonalEditState>()
     val personalEdit = _personalEdit.asSharedFlow()
 
+    private val _withdrawState = MutableStateFlow(false)
+    val withdrawState get() = _withdrawState.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -166,7 +169,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     fun parseAlarmDays(groupDetails: GroupDetails?): String {
         val raw = groupDetails?.alarmDays ?: emptyList()
-        return raw.sortByDay().joinToString( separator = " ")
+        return raw.sortByDay().joinToString(separator = " ")
     }
 
     fun navigateToGroupEdit() {
@@ -227,23 +230,23 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    fun withdrawGroup() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val userInfo = getUserInfoUseCase()
+    fun withdrawGroup() = viewModelScope.launch {
+        _isLoading.value = true
+        val userInfo = getUserInfoUseCase()
 
-            withdrawGroupUseCase(
-                userId = userInfo?.userId?.toInt() ?: -1,
-                groupId = groupId
-            )
-        }.invokeOnCompletion {
+        withdrawGroupUseCase(
+            userId = userInfo?.userId?.toInt() ?: -1,
+            groupId = groupId
+        ).catch {
             _isLoading.value = false
-            _userGroupType.value = UserGroupType.NonParticipant
+        }.collect { response ->
+            _withdrawState.value = response?.result ?: false
+            _isLoading.value = false
         }
     }
 
     fun checkJoinGroup(): Boolean {
-        val groupState =  (_groupDetailsState.value as? UiState.Success)?.data
+        val groupState = (_groupDetailsState.value as? UiState.Success)?.data
 
         return if (groupState != null) {
             groupState.maxPerson > groupState.currentPerson

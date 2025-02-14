@@ -69,7 +69,7 @@ class GroupRemoteDataSource @Inject constructor(
 
     suspend fun withdrawGroup(userId: Int, groupId: Int): Flow<WhetherResponse?> = flow {
         groupService.withdrawGroup(mapOf("user_id" to userId, "group_id" to groupId)).also {
-            if (it.isSuccessful) {
+            if (!it.isSuccessful) {
                 throw HttpException(it)
             }
             emit(it.body())

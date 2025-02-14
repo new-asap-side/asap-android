@@ -12,6 +12,7 @@ import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
+import com.asap.domain.entity.remote.WhetherResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -60,7 +61,7 @@ interface GroupService {
 
     // 그룹 탈퇴
     @HTTP(method = "DELETE", path = "/group/remove", hasBody = true)
-    suspend fun withdrawGroup(@Body body: Map<String , Int>): Response<Unit>
+    suspend fun withdrawGroup(@Body body: Map<String , Int>): Response<WhetherResponse>
 
     @POST("/group/edit")
     suspend fun postGroupEdit(@Body body: PostGroupEditRequest): Response<Unit>

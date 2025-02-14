@@ -7,6 +7,7 @@ import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
+import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
 
 interface GroupRepository {
@@ -25,7 +26,8 @@ interface GroupRepository {
     // 그룹 참여
     suspend fun postJoinGroup(body: GroupJoinRequest): Flow<GroupJoinResponse?>
 
-    suspend fun withdrawGroup(userId: Int, groupId: Int)
+    // 그룹 탈퇴
+    suspend fun withdrawGroup(userId: Int, groupId: Int): Flow<WhetherResponse?>
 
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>

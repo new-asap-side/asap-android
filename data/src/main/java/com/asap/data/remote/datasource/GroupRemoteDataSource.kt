@@ -13,6 +13,7 @@ import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
+import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -66,10 +67,13 @@ class GroupRemoteDataSource @Inject constructor(
         emit(response.body())
     }
 
-    suspend fun withdrawGroup(userId: Int, groupId: Int) {
-        val request = mapOf("user_id" to userId, "group_id" to groupId)
-
-        groupService.withdrawGroup(request)
+    suspend fun withdrawGroup(userId: Int, groupId: Int): Flow<WhetherResponse?> = flow {
+        groupService.withdrawGroup(mapOf("user_id" to userId, "group_id" to groupId)).also {
+            if (it.isSuccessful) {
+                throw HttpException(it)
+            }
+            emit(it.body())
+        }
     }
 
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> = flow {

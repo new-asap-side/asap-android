@@ -25,6 +25,11 @@ import com.asap.aljyo.core.manager.VibratorManager
 import com.asap.aljyo.core.notification.AlarmMessageHandler
 import com.asap.domain.entity.remote.alarm.AlarmPayload
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -35,6 +40,17 @@ class AlarmService : Service() {
     // vibrate array
     private val timings = longArrayOf(200, 100, 200, 100, 200, 350)
     private val amps = intArrayOf(100, 0, 100, 0, 100, 0)
+
+    // 사용자가 5분 동안 알람을 해제 하지 않으면
+    // 자동응로 알람이 종료되도록 하는 타이머 설정
+    private val alarmTimer =
+        CoroutineScope(Dispatchers.Default).launch(start = CoroutineStart.LAZY) {
+            var second = ALARM_TIME_OUT
+            while (second-- > 0) {
+                delay(1000)
+            }
+            stopSelf()
+        }
 
     @SuppressLint("DiscouragedApi")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -72,6 +88,7 @@ class AlarmService : Service() {
             else -> return START_NOT_STICKY
         }
 
+        alarmTimer.start()
         startForeground(uri = uri)
         return START_NOT_STICKY
     }
@@ -174,6 +191,7 @@ class AlarmService : Service() {
         const val TAG = "AlarmService::Component"
         const val ALARM_PAYLOAD = "ALARM_PAYLOAD"
         const val DEEP_LINK_URI = "DEEP_LINK_URI"
+        const val ALARM_TIME_OUT = 300 // second
 
         fun stopAlarmService(context: Context) {
             context.stopService(Intent(context, AlarmService::class.java))

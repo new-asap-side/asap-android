@@ -2,6 +2,7 @@ package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
 import android.graphics.Color
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -69,6 +70,8 @@ import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,6 +113,7 @@ fun GroupDetailsScreen(
 
     val userGroupType = viewModel.userGroupType
     val groupDetails by viewModel.groupDetails.collectAsState()
+    val withdrawState by viewModel.withdrawState.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -129,6 +133,15 @@ fun GroupDetailsScreen(
                     )
                 }"
             )
+        }
+    }
+
+    LaunchedEffect(withdrawState) {
+        if (withdrawState) {
+            coroutineScope.launch {
+                delay(500)
+                navController.popBackStack()
+            }
         }
     }
 

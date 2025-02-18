@@ -40,6 +40,7 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Grey01
+import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.AlarmGroup
 
 private const val everyDay = 7
@@ -70,9 +71,10 @@ internal fun GroupItem(
         ) {
             val dates = if (alarmGroup.alarmDays.size == everyDay)
                 stringResource(R.string.everyday)
-            else alarmGroup.alarmDays.joinToString(
-                separator = " "
-            )
+            else {
+                val alarmDays = alarmGroup.alarmDays.sortByDay()
+                alarmDays.joinToString(separator = " ")
+            }
             GreyBackgroundText(dates)
             GreyBackgroundText(alarmGroup.alarmTime)
         }

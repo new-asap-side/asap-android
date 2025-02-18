@@ -10,6 +10,7 @@ import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
 import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.data.utility.DateTimeManager
+import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupMember
@@ -69,6 +70,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _personalEdit = MutableSharedFlow<PersonalEditState>()
     val personalEdit = _personalEdit.asSharedFlow()
+
+    private val _withdrawState = MutableStateFlow(false)
+    val withdrawState get() = _withdrawState.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -164,7 +168,8 @@ class GroupDetailsViewModel @AssistedInject constructor(
     fun parseToAmPm(time: String): String = DateTimeManager.parseToAmPm(time)
 
     fun parseAlarmDays(groupDetails: GroupDetails?): String {
-        return (groupDetails?.alarmDays ?: emptyList()).joinToString( separator = " ")
+        val raw = groupDetails?.alarmDays ?: emptyList()
+        return raw.sortByDay().joinToString(separator = " ")
     }
 
     fun navigateToGroupEdit() {
@@ -225,23 +230,23 @@ class GroupDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    fun withdrawGroup() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val userInfo = getUserInfoUseCase()
+    fun withdrawGroup() = viewModelScope.launch {
+        _isLoading.value = true
+        val userInfo = getUserInfoUseCase()
 
-            withdrawGroupUseCase(
-                userId = userInfo?.userId?.toInt() ?: -1,
-                groupId = groupId
-            )
-        }.invokeOnCompletion {
+        withdrawGroupUseCase(
+            userId = userInfo?.userId?.toInt() ?: -1,
+            groupId = groupId
+        ).catch {
             _isLoading.value = false
-            _userGroupType.value = UserGroupType.NonParticipant
+        }.collect { response ->
+            _withdrawState.value = response?.result ?: false
+            _isLoading.value = false
         }
     }
 
     fun checkJoinGroup(): Boolean {
-        val groupState =  (_groupDetailsState.value as? UiState.Success)?.data
+        val groupState = (_groupDetailsState.value as? UiState.Success)?.data
 
         return if (groupState != null) {
             groupState.maxPerson > groupState.currentPerson

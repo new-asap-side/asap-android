@@ -38,6 +38,7 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.White
 import com.asap.data.utility.DateTimeManager
+import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.AlarmInfomation
 import com.asap.domain.entity.remote.AlarmSummary
 
@@ -128,13 +129,14 @@ internal fun AlarmCard(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val alarmDays = alarm.group.alarmDays.sortByDay()
                 Icon(
                     modifier = Modifier.size(16.dp),
                     painter = painterResource(R.drawable.ic_clock),
                     contentDescription = "Clock icon"
                 )
                 Text(
-                    alarm.group.alarmDays.joinToString(separator = " "),
+                    alarmDays.joinToString(separator = " "),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.fsp
                     )

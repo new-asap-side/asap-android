@@ -279,15 +279,15 @@ fun AlarmSettingScreen(
 
             if (openAlertDialog) {
                 val duration = with(groupState) {
-                    alarmDays.minOf { day ->
-                        DateTimeManager.diffFromNow("$day $alarmTime")
-                    }
+                    val diffTimes = alarmDays.map { DateTimeManager.diffFromNow("$it $alarmTime") }
+
+                    if (diffTimes.all { it == 0L }) DateTimeManager.ONE_WEEKS_MINUTES else diffTimes.filter { it != 0L }.min()
                 }
-                val text = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"")
+                val nextAlarmTime = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"").trim()
 
                 CustomAlertDialog(
                     title = "그룹 생성 완료!",
-                    content = "$text 후부터 알람이 울려요",
+                    content = "$nextAlarmTime 후부터 알람이 울려요",
                     onClick = {
                         openAlertDialog = false
                         viewModel.navigateToDetail()

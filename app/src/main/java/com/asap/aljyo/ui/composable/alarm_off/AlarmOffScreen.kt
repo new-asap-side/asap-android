@@ -182,7 +182,8 @@ fun AlarmOffScreen(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontSize = 24.fsp,
                         color = White
-                    )
+                    ),
+                    textAlign = TextAlign.Center
                 )
 
                 alarmContent.Content(viewModel)

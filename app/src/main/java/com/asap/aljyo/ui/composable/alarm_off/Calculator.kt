@@ -110,6 +110,7 @@ data class Calculator(
             text = description,
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 24.fsp,
+                lineHeight = 32.fsp,
                 color = White
             ),
             textAlign = TextAlign.Center

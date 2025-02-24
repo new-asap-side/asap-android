@@ -53,7 +53,6 @@ private val colors = listOf(
 internal fun AlarmResultScreen(
     groupId: Int,
     title: String,
-    index: Int,
     navigateToHome: () -> Unit,
     navigateToRanking: () -> Unit,
     viewModel: AlarmResultViewModel = hiltViewModel()
@@ -154,7 +153,7 @@ internal fun AlarmResultScreen(
 
                 FortuneCard(
                     modifier = Modifier.fillMaxWidth(),
-                    index = index,
+                    index = 0,
                     rank = rankNumber
                 )
 

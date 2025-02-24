@@ -17,7 +17,7 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
-class AlarmOffViewModel @Inject constructor(
+open class AlarmOffViewModel @Inject constructor(
     private val alarmOffUseCase: AlarmOffUseCase
 ) : ViewModel(){
     private var active = true

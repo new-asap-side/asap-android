@@ -1,4 +1,4 @@
-package com.asap.aljyo.core.components.release_alarm
+package com.asap.aljyo.core.components.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -17,13 +17,13 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
-class ReleaseAlarmViewModel @Inject constructor(
+class AlarmOffViewModel @Inject constructor(
     private val alarmOffUseCase: AlarmOffUseCase
 ) : ViewModel(){
     private var active = true
 
-    private val _rState = MutableStateFlow<RequestState<Boolean>>(RequestState.Initial)
-    val rState get() = _rState.asStateFlow()
+    private val _state = MutableStateFlow<RequestState<Boolean>>(RequestState.Initial)
+    val state get() = _state.asStateFlow()
 
     private val _currentTime = mutableStateOf("")
     val currentTime get() = _currentTime.value
@@ -45,17 +45,17 @@ class ReleaseAlarmViewModel @Inject constructor(
     }
 
     fun alarmOff(groupId: Int) = viewModelScope.launch {
-        _rState.value = RequestState.Loading
+        _state.value = RequestState.Loading
         alarmOffUseCase(groupId = groupId).catch { e ->
             val errorCode = when(e) {
                 is HttpException -> e.code()
                 else -> -1
             }
 
-            _rState.value = RequestState.Error(errorCode)
+            _state.value = RequestState.Error(errorCode)
         }.collect { response ->
             val result = response?.result ?: false
-            _rState.value = RequestState.Success(result)
+            _state.value = RequestState.Success(result)
         }
     }
 }

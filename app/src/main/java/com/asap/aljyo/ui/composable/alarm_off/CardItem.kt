@@ -1,9 +1,8 @@
-package com.asap.aljyo.ui.composable.release_alarm
+package com.asap.aljyo.ui.composable.alarm_off
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key

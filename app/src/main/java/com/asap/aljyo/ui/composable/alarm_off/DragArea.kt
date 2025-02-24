@@ -1,4 +1,4 @@
-package com.asap.aljyo.ui.composable.release_alarm
+package com.asap.aljyo.ui.composable.alarm_off
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Canvas

@@ -130,11 +130,13 @@ fun AlarmOffScreen(
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val (groupId, groupTitle) = alarm
                 val time = viewModel.currentTime
                 val alarmContent: AlarmContent = when (alarm.content) {
-                    AlarmUnlockContent.Slide -> Slide(alarm.groupTitle)
-                    AlarmUnlockContent.Card -> Card(alarm.groupTitle)
+                    AlarmUnlockContent.Slide -> Slide(groupId, groupTitle)
+                    AlarmUnlockContent.Card -> Card(groupId, groupTitle)
                 }
+
                 Spacer(modifier = Modifier.height(40.dp))
 
                 Text(
@@ -183,9 +185,7 @@ fun AlarmOffScreen(
                     )
                 )
 
-                alarmContent.Content(
-                    modifier = Modifier.fillMaxSize()
-                )
+                alarmContent.Content(viewModel)
             }
         }
     }

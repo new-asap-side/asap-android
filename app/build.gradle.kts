@@ -152,5 +152,6 @@ dependencies {
 
     // module
     implementation(project(":domain"))
+    implementation(project(":utility"))
     implementation(project(":data"))
 }

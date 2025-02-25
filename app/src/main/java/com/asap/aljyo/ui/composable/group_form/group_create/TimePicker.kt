@@ -1,13 +1,18 @@
 package com.asap.aljyo.ui.composable.group_form.group_create
 
 import android.util.Log
+import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,8 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
@@ -118,17 +123,17 @@ fun AlarmTimePicker(
                 itemsList = hoursList,
                 horizontalAlignment = Alignment.End,
                 onItemSelected = onHourSelected,
-                selectedTime = selectedHour
+                selectedTime = selectedHour,
+                endPaddingValues = 12.dp
             )
-
-            Spacer(modifier = Modifier.width(24.dp))
 
             TimeWheelPicker(
                 modifier = Modifier.weight(1f),
                 itemsList = minutesList,
                 horizontalAlignment = Alignment.Start,
                 onItemSelected = onMinutesSelected,
-                selectedTime = selectedMinutes
+                selectedTime = selectedMinutes,
+                startPaddingValues = 12.dp
             )
         }
     }
@@ -138,9 +143,11 @@ fun AlarmTimePicker(
 fun TimeWheelPicker(
     modifier: Modifier,
     itemsList: List<String>,
-    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    horizontalAlignment: Alignment.Horizontal,
     selectedTime: String,
-    onItemSelected: (String) -> Unit
+    onItemSelected: (String) -> Unit,
+    startPaddingValues: Dp = 0.dp,
+    endPaddingValues: Dp = 0.dp
 ) {
     val initialIdx = itemsList.indexOf(selectedTime)
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIdx - 2)
@@ -153,12 +160,19 @@ fun TimeWheelPicker(
         }
     }
 
+    LaunchedEffect(listState.canScrollBackward) {
+        if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0) {
+            listState.stopScroll(MutatePriority.PreventUserInput)
+        }
+    }
+
     LazyColumn(
         state = listState,
         flingBehavior = snapFlingBehavior,
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp),
+        contentPadding = PaddingValues(start = startPaddingValues, end = endPaddingValues),
         horizontalAlignment = horizontalAlignment,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {

@@ -13,7 +13,9 @@ internal abstract class ExpressionGenerator {
 interface ArithmeticOperation {
     val expression: BinaryExpression
 
-    fun provide(): List<Int>
+    val choice: List<Int>
+
+    fun isAnswer(input: Int): Boolean
 
     companion object {
         const val GAME_COUNT = 3

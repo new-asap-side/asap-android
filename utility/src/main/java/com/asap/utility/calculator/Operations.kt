@@ -6,17 +6,17 @@ import kotlin.random.Random
 internal class Addition : ExpressionGenerator(), ArithmeticOperation {
     override val expression: BinaryExpression = generate()
 
-    override fun provide(): List<Int> {
-        return mutableListOf<Int>().apply {
-            val random1 = Random.nextInt(4, 16)
-            val random2 = Random.nextInt(4, 16)
-            val answer = expression.left + expression.right
+    override val choice: List<Int> = mutableListOf<Int>().apply {
+        val random1 = Random.nextInt(4, 16)
+        val random2 = Random.nextInt(4, 16)
+        val answer = expression.left + expression.right
 
-            add(answer)
-            add(answer - random1)
-            add(answer + random2)
-        }.shuffled()
-    }
+        add(answer)
+        add(answer + random1)
+        add(answer + random2)
+    }.shuffled()
+
+    override fun isAnswer(input: Int): Boolean = input == expression.left + expression.right
 
     override fun generate(): BinaryExpression {
         return BinaryExpression(
@@ -29,17 +29,17 @@ internal class Addition : ExpressionGenerator(), ArithmeticOperation {
 internal class Subtraction : ExpressionGenerator(), ArithmeticOperation {
     override val expression: BinaryExpression = generate()
 
-    override fun provide(): List<Int> {
-        return mutableListOf<Int>().apply {
-            val random1 = Random.nextInt(4, 16)
-            val random2 = Random.nextInt(4, 16)
-            val answer = expression.left - expression.right
+    override val choice: List<Int> = mutableListOf<Int>().apply {
+        val random1 = Random.nextInt(4, 16)
+        val random2 = Random.nextInt(4, 16)
+        val answer = expression.left - expression.right
 
-            add(answer)
-            add(answer - random1)
-            add(answer + random2)
-        }.shuffled()
-    }
+        add(answer)
+        add(answer - random1)
+        add(answer + random2)
+    }.shuffled()
+
+    override fun isAnswer(input: Int): Boolean = input == expression.left - expression.right
 
     override fun generate(): BinaryExpression {
         return BinaryExpression(
@@ -50,29 +50,28 @@ internal class Subtraction : ExpressionGenerator(), ArithmeticOperation {
 
 // 곱셈
 internal class Multiplication : ExpressionGenerator(), ArithmeticOperation {
-    override val expression: BinaryExpression
-        get() = generate()
+    override val expression: BinaryExpression = generate()
 
-    override fun provide(): List<Int> {
-        return mutableListOf<Int>().apply {
-            val random1 = Random.nextInt(4, 32)
-            val random2 = Random.nextInt(4, 16)
-            val answer = expression.left * expression.right
+    override val choice: List<Int> = mutableListOf<Int>().apply {
+        val random1 = Random.nextInt(4, 32)
+        val random2 = Random.nextInt(4, 16)
+        val answer = expression.left * expression.right
 
-            add(answer)
-            add(answer - random1)
-            add(answer + random2)
-        }.shuffled()
-    }
+        add(answer)
+        add(answer - random1)
+        add(answer + random2)
+    }.shuffled()
+
+    override fun isAnswer(input: Int): Boolean = input == expression.left * expression.right
 
     override fun generate(): BinaryExpression {
         return BinaryExpression(
-            Random.nextInt(10, 100), Random.nextInt(2, 10), "*"
+            Random.nextInt(10, 100), Random.nextInt(2, 10), "x"
         )
     }
 }
 
-private val operations: Array<ArithmeticOperation> =
-    arrayOf(Addition(), Subtraction(), Multiplication())
-
-fun selectOperation(): ArithmeticOperation = operations[Random.nextInt(0, 3)]
+fun randomOperation(): ArithmeticOperation {
+    val operations = arrayOf(Addition(), Subtraction(), Multiplication())
+    return operations[Random.nextInt(0, 3)]
+}

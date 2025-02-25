@@ -79,6 +79,8 @@ import com.asap.aljyo.ui.theme.White
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,6 +123,7 @@ fun GroupDetailsScreen(
 
     val userGroupType = viewModel.userGroupType
     val groupDetails by viewModel.groupDetails.collectAsState()
+    val withdrawState by viewModel.withdrawState.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     var showDialog by remember { mutableStateOf(isNew) }
     var initialized by rememberSaveable { mutableStateOf(false) }
@@ -163,6 +166,15 @@ fun GroupDetailsScreen(
                 onClick = { showDialog = false },
                 dialogImg = R.drawable.group_dialog_img
             )
+        }
+    }
+
+    LaunchedEffect(withdrawState) {
+        if (withdrawState) {
+            coroutineScope.launch {
+                delay(500)
+                navController.popBackStack()
+            }
         }
     }
 

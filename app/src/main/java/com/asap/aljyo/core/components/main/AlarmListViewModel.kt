@@ -70,8 +70,6 @@ class AlarmListViewModel @Inject constructor(
     }
 
     fun fetchAlarmList() = viewModelScope.launch {
-        _alarmList.value = UiState.Loading
-
         val userInfo = getUserInfoUseCase()
         _nickname.value = userInfo?.nickname ?: ""
 
@@ -148,6 +146,8 @@ class AlarmListViewModel @Inject constructor(
             active = true
             observeNextAlarmTime()
         }
+
+        fetchAlarmList()
     }
 
     fun pause() {

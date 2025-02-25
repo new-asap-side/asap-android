@@ -1,0 +1,60 @@
+name: aljyo-firebase-app-distribution
+
+on: # Controls when the workflow will run
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs: # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  build: # This workflow contains a single job called "build"
+    runs-on: ubuntu-latest # The type of runner that the job will run on
+
+    # ENV
+    env:
+      ALJO: ${{ secrets.ALJO }} # ALJO -> 외부 SDK 키 값
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }} # repository secrets 값 설정
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # JDK 설정
+    - name: set up JDK 17
+      uses: actions/setup-java@v1
+      with:
+        java-version: 17
+
+    # gradle permission
+    - name: Grant permission for gradlew
+      run: chmod +x ./gradlew
+      shell: bash
+
+    # decode keystore
+    - name: Decode And Save Keystore Base64
+      run: |
+        echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > app/debug_keystore.jks
+
+    # create google-services.json
+    - name: Create google-services.json
+      run: echo $GOOGLE_SERVICES_JSON > ./app/google-services.json
+
+    # create local.properties
+    - name: Create local.properties
+      run: |
+        echo "$ALJO" > local.properties
+        echo "SIGNED_STORE_FILE=/home/runner/work/asap-android/asap-android/app/debug_keystore.jks" >> local.properties
+        cat ./local.properties
+
+    # debug build
+    - name: Build debug
+      run: ./gradlew assembleDebug
+
+    # Distribute to firebase
+    - name: Upload to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
+      with:
+        appId: ${{secrets.FIREBASE_APP_ID}}
+        serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+        groups: Tester
+        file: app/build/outputs/apk/debug/app-debug.apk

@@ -20,28 +20,32 @@ class CalculatorViewModel @Inject constructor(
     private val _operation = MutableStateFlow(randomOperation())
     val operation get() = _operation.asStateFlow()
 
+    // 선택지 enable state
     private val _enable = MutableStateFlow(true)
     val enable get() = _enable.asStateFlow()
 
+    // 선택한 오답 index state
     private val _selectedIndex = MutableStateFlow(-1)
     val selectedIndex get() = _selectedIndex.asStateFlow()
 
     fun emit(groupId: Int, index: Int, value: Int) {
         if(_operation.value.isAnswer(value)) {
-            solveCount ++
-
-//            if (solveCount == ArithmeticOperation.GAME_COUNT) {
-//                alarmOff(groupId)
-//                return
-//            }
-            viewModelScope.launch {
-                _operation.emit(randomOperation())
-            }
+            handleAnswer(groupId)
             return
         }
-
-        // 오답 처리
         handleWrongAnswer(index)
+    }
+
+    private fun handleAnswer(groupId: Int) {
+        solveCount ++
+
+        if (solveCount == ArithmeticOperation.GAME_COUNT) {
+            alarmOff(groupId)
+            return
+        }
+        viewModelScope.launch {
+            _operation.emit(randomOperation())
+        }
     }
 
     private fun handleWrongAnswer(index: Int) = viewModelScope.launch {

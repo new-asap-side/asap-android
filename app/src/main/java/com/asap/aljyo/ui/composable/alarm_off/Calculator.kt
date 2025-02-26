@@ -1,17 +1,26 @@
 package com.asap.aljyo.ui.composable.alarm_off
 
 import android.widget.Toast
+import androidx.compose.animation.core.EaseOutBounce
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,6 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,6 +39,9 @@ import com.asap.aljyo.core.components.service.AlarmService
 import com.asap.aljyo.core.components.viewmodel.CalculatorViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.extension.dropShadow
+import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
 
 data class Calculator(
@@ -120,7 +134,84 @@ data class Calculator(
 
     @Composable
     override fun Content() {
+        val viewModel = provide()
+        val enable by viewModel.enable.collectAsState()
+        val selectedIndex by viewModel.selectedIndex.collectAsState()
+        val operation by viewModel.operation.collectAsState()
 
+        Box(modifier = modifier) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = "${operation.expression}",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 38.fsp,
+                    color = White
+                )
+            )
+
+            Box(
+                modifier = Modifier
+                    .layout { measurable, constraint ->
+                        val placeable = measurable.measure(constraint)
+                        val y = constraint.maxHeight * 0.5482
+                        layout(constraint.maxWidth, placeable.height) {
+                            placeable.place(0, y.toInt())
+                        }
+                    }
+                    .fillMaxWidth(),
+            ) {
+                Row(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    operation.choice.forEachIndexed { index, number ->
+                        val iconSize by animateDpAsState(
+                            targetValue = if (index == selectedIndex) 66.dp else 0.dp,
+                            animationSpec = tween(200, easing = EaseOutBounce),
+                            label = "choice effect"
+                        )
+
+                        TextButton(
+                            modifier = Modifier
+                                .size(90.dp)
+                                .dropShadow(
+                                    shape = RoundedCornerShape(24.dp),
+                                    blur = 12.dp,
+                                    offsetX = 0.dp, offsetY = 0.dp,
+                                    color = Color(0xFFFFD3E4)
+                                ),
+                            shape = RoundedCornerShape(24.dp),
+                            onClick = { viewModel.emit(id, index, number) },
+                            enabled = enable,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = White,
+                                disabledContainerColor = White,
+                                contentColor = Black01,
+                                disabledContentColor = Black04
+                            )
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Icon(
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .size(iconSize),
+                                    painter = painterResource(R.drawable.ic_wrong),
+                                    tint = Color.Unspecified,
+                                    contentDescription = "effect"
+                                )
+
+                                Text(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    text = "$number",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontSize = 32.fsp
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
 }

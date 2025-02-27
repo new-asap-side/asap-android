@@ -38,6 +38,7 @@ private fun BottomNavigationBackgroundPreview() {
             .navigationBarsPadding()
             .fillMaxWidth()
             .height(64.dp),
+        onRouteChanged = {},
         navController = navController
     )
 }
@@ -45,6 +46,7 @@ private fun BottomNavigationBackgroundPreview() {
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
+    onRouteChanged: (String) -> Unit,
     navController: NavHostController,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,6 +66,8 @@ fun BottomNavigationBar(
             item.Item(selected = index == selectedIndex) {
                 viewModel.select(index)
                 if (currentRoute != item.route) {
+                    onRouteChanged(item.route)
+
                     navController.navigate(item.route) {
                         val previousRoute = currentRoute ?: MainScreenRoute.Home.route
                         popUpTo(previousRoute) {

@@ -23,17 +23,18 @@ fun AljyoTopAppBar(modifier: Modifier = Modifier) {
         title = {
             Image(
                 painter = painterResource(R.drawable.ic_aljo),
-                contentDescription = "Title bar icon",
+                contentDescription = "top bar icon",
                 contentScale = ContentScale.FillHeight
             )
         },
         actions = {
             IconButton(
+                // TODO search logic
                 onClick = {}
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_search),
-                    contentDescription = "title search action icon"
+                    contentDescription = "top bar action[search]"
                 )
             }
         },

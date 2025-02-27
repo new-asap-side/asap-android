@@ -18,6 +18,7 @@ import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.components.usersetting.UserSettingScreen
 import com.asap.aljyo.core.navigation.navtype.AlarmNavType
 import com.asap.aljyo.core.navigation.navtype.CustomNavType
+import com.asap.aljyo.ui.composable.alarm_off.AlarmOffScreen
 import com.asap.aljyo.ui.composable.alarm_result.AlarmResultScreen
 import com.asap.aljyo.ui.composable.aljyo_descript.AljyoDescriptScreen
 import com.asap.aljyo.ui.composable.group_details.GroupDetailsScreen
@@ -36,7 +37,6 @@ import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.main.my_page.PrivacyPolicyScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
-import com.asap.aljyo.ui.composable.release_alarm.ReleaseAlarmScreen
 import com.asap.aljyo.ui.composable.report.ReportScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
@@ -100,7 +100,7 @@ internal fun AppNavHost() {
         }
 
         composable(
-            route = "${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}",
+            route = "${ScreenRoute.AlarmOff.route}/{${AlarmNavType.name}}",
             arguments = listOf(
                 navArgument(name = AlarmNavType.name) {
                     type = AlarmNavType
@@ -108,7 +108,7 @@ internal fun AppNavHost() {
             ),
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "aljyo://${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}"
+                    uriPattern = "aljyo://${ScreenRoute.AlarmOff.route}/{${AlarmNavType.name}}"
                 }
             )
         ) { navBackstackEntry ->
@@ -121,13 +121,13 @@ internal fun AppNavHost() {
             } ?: throw IllegalArgumentException("Argument is null!")
 
 
-            ReleaseAlarmScreen(
+            AlarmOffScreen(
                 alarm = alarm,
-                navigateToResult = { index ->
-                    val query = "/groupId=${alarm.groupId}?title=${alarm.groupTitle}/$index"
+                navigateToResult = {
+                    val query = "/groupId=${alarm.groupId}?title=${alarm.groupTitle}"
                     val route = "${ScreenRoute.AlarmResult.route}$query"
                     navController.navigate(route) {
-                        popUpTo("${ScreenRoute.ReleaseAlarm.route}/{${AlarmNavType.name}}") {
+                        popUpTo("${ScreenRoute.AlarmResult.route}/{${AlarmNavType.name}}") {
                             inclusive = true
                         }
                     }
@@ -136,21 +136,17 @@ internal fun AppNavHost() {
         }
 
         composable(
-            route = "${ScreenRoute.AlarmResult.route}/groupId={groupId}?title={title}/{index}",
+            route = "${ScreenRoute.AlarmResult.route}/groupId={groupId}?title={title}",
             arguments = listOf(
                 navArgument("groupId") { type = NavType.IntType },
                 navArgument("title") { type = NavType.StringType },
-                // 알람 해제 완료 일러스트 인덱스
-                navArgument("index") { type = NavType.IntType },
             )
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
             val title = backStackEntry.arguments?.getString("title") ?: "Unknown"
-            val index = backStackEntry.arguments?.getInt("index") ?: 0
             AlarmResultScreen(
                 groupId = groupId,
                 title = title,
-                index = index,
                 navigateToHome = {
                     navController.navigate(ScreenRoute.Main.route) {
                         popUpTo(0) {
@@ -289,7 +285,6 @@ fun MainNavHost(
                     screenNavController.navigate(ScreenRoute.AljyoDescript.route)
                 },
                 navigateToGroupDetails = navigateToGroupDetails,
-                onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
             )
         }
 

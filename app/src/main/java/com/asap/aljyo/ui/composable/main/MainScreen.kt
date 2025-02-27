@@ -1,8 +1,5 @@
 package com.asap.aljyo.ui.composable.main
 
-import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,14 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.asap.aljyo.core.navigation.MainNavHost
+import com.asap.aljyo.core.navigation.MainScreenRoute
+import com.asap.aljyo.core.navigation.ScreenRoute
+import com.asap.aljyo.ui.composable.main.home.main.CreateGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
@@ -26,27 +27,26 @@ import com.asap.aljyo.ui.theme.White
 internal fun MainScreen(
     screenNavController: NavHostController
 ) {
-    val context = LocalContext.current
-    SideEffect {
-        val activity = (context as ComponentActivity)
-        activity.enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                White.toArgb(),
-                White.toArgb(),
-            ),
-            navigationBarStyle = SystemBarStyle.light(
-                White.toArgb(),
-                White.toArgb(),
-            )
-        )
-    }
-
     AljyoTheme {
-        val navController = rememberNavController()
+        val mainNavController = rememberNavController()
+        var homeScreen by remember { mutableStateOf(true) }
+
         Scaffold(
             containerColor = White,
             topBar = {
-                AljyoTopAppBar(modifier = Modifier)
+                if (homeScreen) {
+                    AljyoTopAppBar()
+                }
+            },
+            floatingActionButton = {
+                if (homeScreen) {
+                    CreateGroupButton(
+                        modifier = Modifier,
+                        onClick = {
+                            screenNavController.navigate(ScreenRoute.GroupType.route)
+                        }
+                    )
+                }
             },
             bottomBar = {
                 BottomNavigationBar(
@@ -54,9 +54,12 @@ internal fun MainScreen(
                         .navigationBarsPadding()
                         .fillMaxWidth()
                         .height(64.dp),
-                    navController = navController
+                    onRouteChanged = { route ->
+                        homeScreen = route == MainScreenRoute.Home.route
+                    },
+                    navController = mainNavController
                 )
-            },
+            }
         ) { padding ->
             Surface(
                 modifier = Modifier
@@ -66,7 +69,7 @@ internal fun MainScreen(
             ) {
                 MainNavHost(
                     screenNavController = screenNavController,
-                    navController = navController,
+                    navController = mainNavController,
                 )
             }
         }

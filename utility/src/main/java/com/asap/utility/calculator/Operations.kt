@@ -3,7 +3,7 @@ package com.asap.utility.calculator
 import kotlin.random.Random
 
 // 덧셈
-internal class Addition : ExpressionGenerator(), ArithmeticOperation {
+internal class Addition : ArithmeticOperation(), ExpressionGenerator {
     override val expression: BinaryExpression = generate()
 
     override val choice: List<Int> = mutableListOf<Int>().apply {
@@ -12,7 +12,7 @@ internal class Addition : ExpressionGenerator(), ArithmeticOperation {
         val answer = expression.left + expression.right
 
         add(answer)
-        add(answer + random1)
+        add(answer - random1)
         add(answer + random2)
     }.shuffled()
 
@@ -26,7 +26,7 @@ internal class Addition : ExpressionGenerator(), ArithmeticOperation {
 }
 
 // 뺄셈
-internal class Subtraction : ExpressionGenerator(), ArithmeticOperation {
+internal class Subtraction : ArithmeticOperation(), ExpressionGenerator {
     override val expression: BinaryExpression = generate()
 
     override val choice: List<Int> = mutableListOf<Int>().apply {
@@ -49,7 +49,7 @@ internal class Subtraction : ExpressionGenerator(), ArithmeticOperation {
 }
 
 // 곱셈
-internal class Multiplication : ExpressionGenerator(), ArithmeticOperation {
+internal class Multiplication : ArithmeticOperation(), ExpressionGenerator {
     override val expression: BinaryExpression = generate()
 
     override val choice: List<Int> = mutableListOf<Int>().apply {

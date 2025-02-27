@@ -49,17 +49,12 @@ internal fun MainScreen(
                     modifier = Modifier
                         .navigationBarsPadding()
                         .fillMaxWidth()
-                        .height(66.dp),
+                        .height(64.dp),
                     navController = navController
                 )
             },
         ) { padding ->
-            Box(
-                Modifier.padding(
-                    top = padding.calculateTopPadding(),
-                    bottom = 52.dp
-                )
-            ) {
+            Box(Modifier.padding(padding)) {
                 MainNavHost(
                     screenNavController = screenNavController,
                     navController = navController,

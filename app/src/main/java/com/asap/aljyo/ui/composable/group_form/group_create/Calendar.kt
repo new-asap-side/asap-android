@@ -249,7 +249,7 @@ fun CalendarDateItem(
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = date.dayOfMonth.toString(),
-            style = MaterialTheme.typography.headlineSmall.copy(
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = textColor,
                 fontSize = 15.fsp,
                 fontWeight = FontWeight.Bold

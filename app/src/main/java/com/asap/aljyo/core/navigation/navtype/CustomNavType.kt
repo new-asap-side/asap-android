@@ -42,7 +42,7 @@ object CustomNavType {
     }
 
     val PersonalEditType = object : NavType<PersonalEditState>(
-        isNullableAllowed = false
+        isNullableAllowed = true
     ) {
         val adapter = moshi.adapter(PersonalEditState::class.java)
 

@@ -21,18 +21,33 @@ class MyPageViewModel @Inject constructor(
     private val _state = MutableStateFlow<UiState<MyPageState>>(UiState.Loading)
     val state = _state.asStateFlow()
 
+    private val _fetchScreenFlag = MutableStateFlow(true)
+
     init {
-        viewModelScope.launch {
-            getUserInfoUseCase().let {
-                _state.value = UiState.Success(
-                    MyPageState(
-                        nickName = it?.nickname,
-                        profileImage = it?.profileImg
+        fetchScreen()
+    }
+
+    fun fetchScreen() {
+        Log.d("MypageViewModel:","fetchScreen 함수 실행")
+        if (_fetchScreenFlag.value) {
+            Log.d("MypageViewModel:","fetchScreen 실행")
+            viewModelScope.launch {
+                getUserInfoUseCase().let {
+                    _state.value = UiState.Success(
+                        MyPageState(
+                            nickName = it?.nickname,
+                            profileImage = it?.profileImg
+                        )
                     )
-                )
+                }
+                Log.d("MyPageViewModel:","State: ${_state.value}")
             }
-            Log.d("MyPageViewModel:","State: ${_state.value}")
         }
+        _fetchScreenFlag.value = false
+    }
+
+    fun fetchScreenFlag() {
+        _fetchScreenFlag.value = true
     }
 
     fun deleteLocalUserInfo() = viewModelScope.launch {

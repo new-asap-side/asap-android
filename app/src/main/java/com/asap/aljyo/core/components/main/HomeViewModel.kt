@@ -20,7 +20,9 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -68,6 +70,9 @@ class HomeViewModel @Inject constructor(
     private val _privateGroupState = mutableStateOf(PrivateGroupState())
     val privateGroupState get() = _privateGroupState.value
 
+    private val _showDialog = MutableSharedFlow<Boolean>()
+    val showDialog = _showDialog.asSharedFlow()
+
     init {
         viewModelScope.launch {
             userInfo.value = getUserInfoUseCase()
@@ -108,6 +113,15 @@ class HomeViewModel @Inject constructor(
                 it.userId.toString() == userInfo.value?.userId
             } != null
 
+            // join이 되어 있지 않은 상황이라면 인원수 체크를 해서 다이얼로그 노출
+            if (joined.not()) {
+               details?.takeIf { it.currentPerson == it.maxPerson }?.let {
+                   Log.d("HomeViewModel:","ShowDialog")
+                   _showDialog.emit(true)
+                   return@collect
+               }
+            }
+
             _privateGroupState.value = _privateGroupState.value.copy(
                 showPasswordSheet = !joined,
                 isJoinedGroup = joined,
@@ -115,7 +129,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun joinGroup(password: String, alarmType: String) = viewModelScope.launch {
+    fun joinGroup(password: String) = viewModelScope.launch {
         val userInfo = getUserInfoUseCase()
         _joinResponseState.value = RequestState.Loading
         joinGroupUseCase(
@@ -124,7 +138,6 @@ class HomeViewModel @Inject constructor(
                 groupId = (selectedGroupId.value ?: -1),
                 deviceToken = FCMTokenManager.token,
                 groupPassword = password,
-                alarmType = alarmType,
             )
         ).catch { e ->
             Log.e(TAG, "$e")

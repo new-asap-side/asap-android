@@ -5,9 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PersonalEditState (
+    val nickName: String = "",
+    val isEditMode: Boolean = false,
     val alarmType: String = "",
     val musicTitle: String? = null,
-    val alarmVolume: Float? = null
+    val alarmVolume: Float = 10f
 ): Parcelable {
     val buttonState: Boolean
         get() = when (alarmType) {

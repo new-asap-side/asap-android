@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,7 +48,7 @@ fun MemberPicker(
             text = "그룹 인원",
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black02,
-                fontSize = 14.fsp
+                fontSize = 15.fsp
             )
         )
         Box(
@@ -60,7 +62,7 @@ fun MemberPicker(
                 .padding(horizontal = 16.dp)
         ) {
             Row(
-                modifier = Modifier,
+                modifier = Modifier.padding(vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -82,6 +84,7 @@ fun MemberPicker(
                 Spacer(modifier = Modifier.weight(1f))
 
                 IconButton(
+                    modifier = Modifier.size(16.dp),
                     onClick = { onMinusClick(value - 1) },
                     enabled = value > currentPerson
                 ) {
@@ -102,6 +105,7 @@ fun MemberPicker(
                 )
 
                 IconButton(
+                    modifier = Modifier.size(16.dp),
                     onClick = { onPlusClick(value + 1) },
                     enabled = value < 8
                 ) {

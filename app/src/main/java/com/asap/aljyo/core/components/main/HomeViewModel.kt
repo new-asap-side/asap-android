@@ -12,8 +12,6 @@ import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
-import com.asap.domain.entity.remote.alarm.AlarmOffRate
-import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase
@@ -29,16 +27,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchALarmOffRateUseCase: FetchAlarmOffRateUseCase,
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
-    private val _cardState = MutableStateFlow<UiState<AlarmOffRate?>>(UiState.Loading)
-    val cardState get() = _cardState.asStateFlow()
-
     private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
     val popularGroupState get() = _popularGroupState.asStateFlow()
 
@@ -77,14 +71,9 @@ class HomeViewModel @Inject constructor(
     fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
         _error.value = false
         if (!internal) {
-            _cardState.value = UiState.Loading
             _popularGroupState.value = UiState.Loading
             _latestGroupState.value = UiState.Loading
         }
-
-        fetchALarmOffRateUseCase()
-            .catch { e -> _cardState.value = handleThrowable(e) }
-            .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
 
         fetchPopularGroupUseCase()
             .catch { e -> _popularGroupState.value = handleThrowable(e) }

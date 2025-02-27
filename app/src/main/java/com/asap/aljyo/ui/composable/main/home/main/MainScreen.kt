@@ -3,6 +3,7 @@ package com.asap.aljyo.ui.composable.main.home.main
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -74,13 +75,14 @@ internal fun MainScreen(
         verticalArrangement = Arrangement.spacedBy(40.dp)
     ) {
         item {
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-            ResultCard(
+            SuccessRateCard(
                 modifier = Modifier
                     .background(color = White)
                     .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
             )
         }
 

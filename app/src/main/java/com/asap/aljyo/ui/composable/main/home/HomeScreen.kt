@@ -56,9 +56,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Surface(
-        modifier = Modifier
-            .padding(PaddingValues(0.dp))
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         color = White
     ) {
         val coroutineScope = rememberCoroutineScope()
@@ -296,5 +294,4 @@ fun HomeScreen(
             }
         )
     }
-
 }

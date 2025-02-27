@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.asap.aljyo.core.components.main.MainViewModel
+import com.asap.aljyo.core.components.viewmodel.main.MainViewModel
 import com.asap.aljyo.core.navigation.MainScreenRoute
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.theme.White

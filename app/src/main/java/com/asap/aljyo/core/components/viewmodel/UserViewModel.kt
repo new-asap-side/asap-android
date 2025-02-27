@@ -4,17 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.domain.entity.local.User
-import com.asap.domain.usecase.user.DeleteUserInfoUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// Channel buffer 내 User 정보 공유
-val userChannel = Channel<User?>(Channel.CONFLATED)
 
 @HiltViewModel
 open class UserViewModel @Inject constructor(
@@ -25,11 +21,11 @@ open class UserViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            with(userChannel) {
-                receive() ?: send(userInfoUseCase()).let {
-                    Log.d("UserViewModel", "$it")
-                }
-            }
+            _user.emit(userInfoUseCase().also { Log.v(TAG, "$it") })
         }
+    }
+
+    companion object {
+        const val TAG = "UserViewModel"
     }
 }

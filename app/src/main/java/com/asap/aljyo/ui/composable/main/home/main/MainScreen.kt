@@ -44,7 +44,7 @@ internal fun MainScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val observer = LifecycleEventObserver { _, event ->
         when (event) {
-            Lifecycle.Event.ON_RESUME -> viewModel.fetchHomeData(internal = true)
+            Lifecycle.Event.ON_START -> viewModel.fetchHomeData(internal = true)
             else -> {}
         }
     }

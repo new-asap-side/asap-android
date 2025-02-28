@@ -1,37 +1,54 @@
 package com.asap.aljyo.ui.composable.main.home.main
 
+import android.util.Log
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.main.AlarmSuccessRateViewModel
 import com.asap.aljyo.core.fsp
@@ -83,14 +100,19 @@ fun SuccessRateCard(
                             )
                         )
                         .padding(vertical = 28.dp, horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
+                    val rate = successRate?.offRate ?: 0f
                     SuccessRate(
                         modifier = Modifier.fillMaxWidth(),
                         nickname = user?.nickname ?: "",
-                        rate = successRate?.offRate ?: 0f
+                        rate = rate
                     )
 
-                    SuccessRateProgress()
+                    SuccessRateProgress(
+                        modifier = Modifier.fillMaxSize(),
+                        rate = rate
+                    )
                 }
 
                 Row(
@@ -186,8 +208,67 @@ private fun SuccessRate(
 }
 
 @Composable
-private fun SuccessRateProgress() {
+private fun SuccessRateProgress(
+    modifier: Modifier = Modifier,
+    rate: Float
+) {
+    Log.d("Progress", "composed")
+    var progress by remember { mutableFloatStateOf(0f) }
+    val animateProgress by animateFloatAsState(
+        progress,
+        animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+        label = "animated progress value",
+        finishedListener = {
 
+        }
+    )
+    LaunchedEffect(LocalLifecycleOwner.current) {
+        progress = rate
+    }
+
+    Box(modifier = modifier) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(20.dp)
+                .clip(shape = CircleShape)
+                .background(White)
+        ) {
+            val progressWith = constraints.maxWidth * (animateProgress / 100f)
+            var progressDp: Dp
+            with(LocalDensity.current) {
+                progressDp = progressWith.toDp()
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(progressDp)
+                    .background(
+                        shape = CircleShape, brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFFFF639B), MaterialTheme.colorScheme.primary
+                            )
+                        )
+                    )
+            ) {
+
+            }
+        }
+//        LinearProgressIndicator(
+//            color = MaterialTheme.colorScheme.primary,
+//            trackColor = White,
+//            progress = { animateProgress / 100f },
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .fillMaxWidth()
+//                .height(20.dp)
+//                .clip(shape = CircleShape),
+//            strokeCap = StrokeCap.Round,
+//            gapSize = 0.dp,
+//            drawStopIndicator = {}
+//        )
+    }
 }
 
 // preview
@@ -227,7 +308,7 @@ private fun SuccessRateCardShimmer(modifier: Modifier) {
 
 @Preview
 @Composable
-private fun ResultCard_Shimmer_Preview() {
+private fun SuccessRateCard_Shimmer_Preview() {
     AljyoTheme {
         SuccessRateCardShimmer(modifier = Modifier.size(320.dp))
     }

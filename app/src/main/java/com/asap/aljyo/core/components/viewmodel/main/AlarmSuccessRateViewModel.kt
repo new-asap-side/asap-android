@@ -26,7 +26,9 @@ class AlarmSuccessRateViewModel @Inject constructor(
             fetchAlarmSuccessRateUseCase().catch {
                 _successRateState.emit(UiState.Success(null))
             }.collect { result ->
-                _successRateState.emit(UiState.Success(result))
+                result?.let {
+                    _successRateState.emit(UiState.Success(it))
+                }
             }
         }
     }

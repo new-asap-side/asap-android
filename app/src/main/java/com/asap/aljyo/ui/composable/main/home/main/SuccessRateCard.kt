@@ -36,7 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +60,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.main.AlarmSuccessRateViewModel
 import com.asap.aljyo.core.fsp
@@ -80,7 +79,9 @@ private val stops = arrayOf(
 
 @Composable
 fun SuccessRateCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    tabChange: (Int) -> Unit,
+    navigateToDescript: () -> Unit,
 ) {
     val viewModel: AlarmSuccessRateViewModel = hiltViewModel()
     val successRateState by viewModel.successRateState.collectAsState()
@@ -120,7 +121,8 @@ fun SuccessRateCard(
                     SuccessRate(
                         modifier = Modifier.fillMaxWidth(),
                         nickname = user?.nickname ?: "",
-                        rate = rate
+                        rate = rate,
+                        navigateToDescript = navigateToDescript
                     )
 
                     SuccessRateProgress(
@@ -158,7 +160,8 @@ fun SuccessRateCard(
 private fun SuccessRate(
     modifier: Modifier = Modifier,
     nickname: String,
-    rate: Float
+    rate: Float,
+    navigateToDescript: () ->Unit
 ) {
     Row(
         modifier = modifier,
@@ -204,7 +207,7 @@ private fun SuccessRate(
         }
 
         TextButton(
-            onClick = {},
+            onClick = { navigateToDescript() },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.textButtonColors(
                 containerColor = White,
@@ -226,8 +229,8 @@ private fun SuccessRateProgress(
     modifier: Modifier = Modifier,
     rate: Float
 ) {
-    var trigger by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
+    var trigger by rememberSaveable { mutableStateOf(false) }
+    var progress by rememberSaveable { mutableFloatStateOf(0f) }
 
     val animateProgress by animateFloatAsState(
         progress,
@@ -239,13 +242,14 @@ private fun SuccessRateProgress(
     val alpha by update.animateFloat(label = "alpha") {
         if (it) 1f else 0f
     }
-
     val tranistion by update.animateDp(label = "transition") {
         if (it) 0.dp else 20.dp
     }
 
-    LaunchedEffect(LocalLifecycleOwner.current) {
-        progress = max(10f, rate)
+    LaunchedEffect(trigger) {
+        if (!trigger) {
+            progress = max(10f, rate)
+        }
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -355,7 +359,6 @@ private fun SuccessRateProgress(
     }
 }
 
-// preview
 @Composable
 private fun SuccessRateCardShimmer(modifier: Modifier) {
     val shape = RoundedCornerShape(4.dp)
@@ -390,6 +393,7 @@ private fun SuccessRateCardShimmer(modifier: Modifier) {
     }
 }
 
+// preview
 @Preview
 @Composable
 private fun SuccessRateCard_Shimmer_Preview() {

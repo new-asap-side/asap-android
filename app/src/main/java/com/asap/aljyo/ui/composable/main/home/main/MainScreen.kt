@@ -83,6 +83,8 @@ internal fun MainScreen(
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .aspectRatio(1f),
+                tabChange = tabChange,
+                navigateToDescript = navigateToDescript
             )
         }
 

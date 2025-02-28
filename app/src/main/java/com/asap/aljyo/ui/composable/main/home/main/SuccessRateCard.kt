@@ -2,8 +2,11 @@ package com.asap.aljyo.ui.composable.main.home.main
 
 import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +24,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -37,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -48,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -58,6 +64,7 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.main.AlarmSuccessRateViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.custom.BubbleBox
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -218,19 +225,27 @@ private fun SuccessRateProgress(
     rate: Float
 ) {
     Log.d("Progress", "composed")
+    var trigger by remember { mutableStateOf(false) }
     var progress by remember { mutableFloatStateOf(0f) }
+
     val animateProgress by animateFloatAsState(
         progress,
         animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
         label = "animated progress value",
-        finishedListener = {
-
-        }
+        finishedListener = { trigger = true }
     )
-    var trigger by remember { mutableStateOf(false) }
+    val update = updateTransition(trigger, label = "observer")
+    val alpha by update.animateFloat(label = "alpha") {
+        if (it) 1f else 0f
+    }
+
+    val tranistion by update.animateDp(label = "transition") {
+        if (it) 0.dp else 20.dp
+    }
+
 
     LaunchedEffect(LocalLifecycleOwner.current) {
-        progress = rate
+        progress = if (rate == 0f) 20f else rate
     }
 
     Box(modifier = modifier) {
@@ -258,10 +273,9 @@ private fun SuccessRateProgress(
                             )
                         )
                     )
-            ) {
-
-            }
+            )
         }
+
         Image(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -271,6 +285,46 @@ private fun SuccessRateProgress(
             contentDescription = "park",
             contentScale = ContentScale.FillHeight
         )
+
+        Column(
+            modifier = Modifier
+                .wrapContentWidth()
+                .fillMaxHeight()
+                .offset(y = tranistion)
+                .alpha(alpha),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+        ) {
+            val tailHeight = LocalDensity.current.run {
+                10.dp.toPx()
+            }
+
+            BubbleBox(
+                modifier = Modifier.height(50.dp),
+                tailHeight = tailHeight,
+                containerColor = Color(0xFF330315)
+            ) { modifier ->
+                Box(modifier = modifier.fillMaxHeight()) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = stringResource(R.string.fighting),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = White
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            Image(
+                modifier = Modifier
+                    .width(60.dp)
+                    .weight(1f),
+                painter = painterResource(R.drawable.img_aljyo_mascot),
+                contentDescription = "aljyo illust",
+                contentScale = ContentScale.FillWidth
+            )
+        }
     }
 }
 

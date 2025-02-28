@@ -43,9 +43,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -256,6 +258,17 @@ private fun SuccessRateProgress(
                 .height(20.dp)
                 .clip(shape = CircleShape)
                 .background(White)
+                .drawBehind {
+                    drawLine(
+                        color = Color(0xFFEFB1C7),
+                        start = Offset(30f, size.height / 2),
+                        end = Offset(size.width - 30f, size.height / 2),
+                        strokeWidth = 5f,
+                        pathEffect = PathEffect.dashPathEffect(
+                            floatArrayOf(10f, 10f), 0f
+                        )
+                    )
+                }
         ) {
             val progressWith = constraints.maxWidth * (animateProgress / 100f)
             var progressDp: Dp

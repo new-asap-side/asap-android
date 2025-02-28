@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.main.home.main
 
-import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
@@ -72,6 +71,7 @@ import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
+import kotlin.math.max
 
 private val stops = arrayOf(
     0.28f to Color(0xFFFFEEF3),
@@ -226,7 +226,6 @@ private fun SuccessRateProgress(
     modifier: Modifier = Modifier,
     rate: Float
 ) {
-    Log.d("Progress", "composed")
     var trigger by remember { mutableStateOf(false) }
     var progress by remember { mutableFloatStateOf(0f) }
 
@@ -245,13 +244,15 @@ private fun SuccessRateProgress(
         if (it) 0.dp else 20.dp
     }
 
-
     LaunchedEffect(LocalLifecycleOwner.current) {
-        progress = if (rate == 0f) 20f else rate
+        progress = max(10f, rate)
     }
 
-    Box(modifier = modifier) {
-        BoxWithConstraints(
+    BoxWithConstraints(modifier = modifier) {
+        val progressWidth = constraints.maxWidth * (animateProgress / 100f)
+        val progressDp: Dp = LocalDensity.current.run { progressWidth.toDp() }
+
+        Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -269,15 +270,15 @@ private fun SuccessRateProgress(
                         )
                     )
                 }
+        )
+
+        Box(
+            modifier = Modifier.wrapContentWidth()
         ) {
-            val progressWith = constraints.maxWidth * (animateProgress / 100f)
-            var progressDp: Dp
-            with(LocalDensity.current) {
-                progressDp = progressWith.toDp()
-            }
             Box(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .align(Alignment.BottomStart)
+                    .height(20.dp)
                     .width(progressDp)
                     .background(
                         shape = CircleShape, brush = Brush.linearGradient(
@@ -287,7 +288,60 @@ private fun SuccessRateProgress(
                         )
                     )
             )
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .wrapContentWidth()
+                    .fillMaxHeight()
+                    .offset(y = tranistion)
+                    .alpha(alpha),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                val tailHeight = LocalDensity.current.run {
+                    10.dp.toPx()
+                }
+
+                val text = if (rate == 100f)
+                    stringResource(R.string.success)
+                else
+                    stringResource(R.string.fighting)
+
+                val mascotResource = if (rate == 100f)
+                    painterResource(R.drawable.img_happy_mascot)
+                else
+                    painterResource(R.drawable.img_aljyo_mascot)
+
+                BubbleBox(
+                    modifier = Modifier.height(50.dp),
+                    tailHeight = tailHeight,
+                    containerColor = Color(0xFF330315)
+                ) { modifier ->
+                    Box(modifier = modifier.fillMaxHeight()) {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = text,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = White
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Image(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .weight(1f),
+                    painter = mascotResource,
+                    contentDescription = "aljyo illust",
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+
         }
+
 
         Image(
             modifier = Modifier
@@ -298,46 +352,6 @@ private fun SuccessRateProgress(
             contentDescription = "park",
             contentScale = ContentScale.FillHeight
         )
-
-        Column(
-            modifier = Modifier
-                .wrapContentWidth()
-                .fillMaxHeight()
-                .offset(y = tranistion)
-                .alpha(alpha),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom,
-        ) {
-            val tailHeight = LocalDensity.current.run {
-                10.dp.toPx()
-            }
-
-            BubbleBox(
-                modifier = Modifier.height(50.dp),
-                tailHeight = tailHeight,
-                containerColor = Color(0xFF330315)
-            ) { modifier ->
-                Box(modifier = modifier.fillMaxHeight()) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = stringResource(R.string.fighting),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = White
-                        ),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            Image(
-                modifier = Modifier
-                    .width(60.dp)
-                    .weight(1f),
-                painter = painterResource(R.drawable.img_aljyo_mascot),
-                contentDescription = "aljyo illust",
-                contentScale = ContentScale.FillWidth
-            )
-        }
     }
 }
 

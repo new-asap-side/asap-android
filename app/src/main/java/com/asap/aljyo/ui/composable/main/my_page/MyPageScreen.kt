@@ -2,14 +2,20 @@ package com.asap.aljyo.ui.composable.main.my_page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +41,7 @@ import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Grey01
+import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 
 @Composable
@@ -53,7 +60,7 @@ internal fun MyPageScreen(
 
     val myPageState by viewModel.state.collectAsStateWithLifecycle()
 
-    when(myPageState) {
+    when (myPageState) {
         is UiState.Loading -> {}
         is UiState.Error -> {}
         is UiState.Success -> {
@@ -99,7 +106,51 @@ internal fun MyPageScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Box(
+                    modifier = Modifier
+                        .height(52.dp)
+                        .padding(horizontal = 20.dp)
+                        .background(color = White, shape = RoundedCornerShape(14.dp))
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(start = 30.dp),
+                            text = "내 프로필 꾸미기",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 14.fsp,
+                                color = Black02
+                            )
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .align(Alignment.Top)
+                                .background(color = Red01, shape = CircleShape)
+                                .padding(start = 4.5.dp, end = 4.5.dp, top = 1.5.dp, bottom = 2.5.dp),
+                            text = "2",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontSize = 10.fsp,
+                                color = White
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            modifier = Modifier.padding(end = 24.dp),
+                            contentDescription = "ArrowRight Icon"
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Box(modifier = Modifier.weight(1f)) {
                     MyPageMenu(
@@ -153,7 +204,7 @@ private fun Preview() {
             navigateToDescript = {},
             navigateToOnboarding = {},
             navigateToPreferences = {},
-            navigateToProfileSetting = {_,_ ->},
+            navigateToProfileSetting = { _, _ -> },
             navigateToPrivacyPolicy = {}
         )
     }

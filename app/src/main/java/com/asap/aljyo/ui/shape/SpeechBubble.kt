@@ -1,6 +1,8 @@
 package com.asap.aljyo.ui.shape
 
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
@@ -15,11 +17,11 @@ sealed interface TailArrangement {
         override fun arrange(width: Float): Float = width * 0.2f
     }
 
-    data object Center: TailArrangement {
+    data object Center : TailArrangement {
         override fun arrange(width: Float): Float = width * 0.5f
     }
 
-    data object End: TailArrangement {
+    data object End : TailArrangement {
         override fun arrange(width: Float): Float = width * 0.8f
     }
 }
@@ -39,7 +41,7 @@ class SpeechBubble(
             size = size,
             bodyRadius = bodyRadius,
             tailSize = tailSize,
-            tailStartPosition = arrangement.arrange(size.width)
+            tailCenter = arrangement.arrange(size.width)
         )
     )
 }
@@ -48,71 +50,20 @@ private fun drawSpeechBubble(
     size: Size,
     bodyRadius: Float,
     tailSize: Float,
-    tailStartPosition: Float,
+    tailCenter: Float,
 ): Path {
     return Path().apply {
         reset()
+        RoundRect(
+            Rect(0f, 0f, size.width, size.height - tailSize),
+            CornerRadius(bodyRadius)
+        ).run {
+            addRoundRect(this)
+        }
 
-        arcTo(
-            rect = Rect(
-                left = 0f,
-                top = 0f,
-                right = bodyRadius,
-                bottom = bodyRadius
-            ),
-            startAngleDegrees = -180f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-
-        lineTo(x = size.width - bodyRadius, y = 0f)
-
-        arcTo(
-            rect = Rect(
-                left = size.width - bodyRadius,
-                top = 0f,
-                right = size.width,
-                bottom = bodyRadius
-            ),
-            startAngleDegrees = -90f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-
-        lineTo(x = size.width, y = size.height - bodyRadius - tailSize)
-
-        arcTo(
-            rect = Rect(
-                left = size.width - bodyRadius,
-                top = size.height - bodyRadius - tailSize,
-                right = size.width,
-                bottom = size.height - tailSize
-            ),
-            startAngleDegrees = 0f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
-
-        // 말풍선 꼬리
-        lineTo(x = tailStartPosition + tailSize, y = size.height - tailSize)
-
-        lineTo(x = tailStartPosition + tailSize / 2f, y = size.height)
-
-        lineTo(x = tailStartPosition, y = size.height - tailSize)
-
-        lineTo(x = bodyRadius, y = size.height - tailSize)
-
-        arcTo(
-            rect = Rect(
-                left = 0f,
-                top = size.height - tailSize - bodyRadius,
-                right = bodyRadius,
-                bottom = size.height - tailSize
-            ),
-            startAngleDegrees = 90f,
-            sweepAngleDegrees = 90f,
-            forceMoveTo = false
-        )
+        moveTo(tailCenter - tailSize / 2, size.height - tailSize)
+        lineTo(tailCenter, size.height)
+        lineTo(tailCenter + tailSize / 2, size.height - tailSize)
 
         close()
     }

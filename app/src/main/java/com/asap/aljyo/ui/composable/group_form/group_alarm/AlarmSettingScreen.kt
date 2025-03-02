@@ -68,7 +68,6 @@ import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Grey03
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
-import com.asap.data.utility.DateTimeManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,18 +78,9 @@ fun AlarmSettingScreen(
     viewModel: GroupFormViewModel = hiltViewModel()
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
-    val groupState by viewModel.groupScreenState.collectAsStateWithLifecycle()
-    var openAlertDialog by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.showDialog.collect{
-            isLoading = false
-            openAlertDialog = true
-        }
-    }
-
-    LaunchedEffect(openAlertDialog) {
         viewModel.complete.collect { groupId ->
             groupId?.let {
                 onCompleteClick(it)
@@ -98,202 +88,180 @@ fun AlarmSettingScreen(
         }
     }
 
-    Scaffold(
-        containerColor = White,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "BACK"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White
-                )
-            )
-        },
-        bottomBar = {
-            CustomButton(
-                modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp)
-                    .navigationBarsPadding(),
-                text = "완료",
-                enable = alarmState.buttonState,
-                onClick = {
-                    isLoading = true
-                    viewModel.onCompleteClicked()
-                }
-            )
-        }
-    ) { innerPadding ->
-        GroupProgressbar(
-            modifier = Modifier.padding(innerPadding),
-            startProgress = 0.75f,
-            endProgress = 1.0f
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(start = 20.dp, end = 20.dp, top = 16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(
-                text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = Black,
-                    fontSize = 22.fsp,
-                    fontWeight = Bold,
-                )
-            )
-
-            AlarmTypeBox(
-                selectedAlarmType = alarmState.alarmType,
-                onSelected = { viewModel.onAlarmTypeSelected(it) }
-            )
-
-            if (alarmState.alarmType == "SOUND" || alarmState.alarmType == "ALL") {
-                Text(
-                    modifier = Modifier.padding(top = 28.dp, bottom = 8.dp),
-                    text = "알람음",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Black02,
-                        fontSize = 14.fsp
+    AljyoTheme {
+        Scaffold(
+            containerColor = White,
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "") },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_top_back),
+                                contentDescription = "BACK"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = White
                     )
                 )
-
-                Box(
+            },
+            bottomBar = {
+                CustomButton(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .border(
-                            width = 1.dp,
-                            color = Grey02,
-                            shape = RoundedCornerShape(6.dp)
-                        )
-                        .padding(vertical = 12.dp, horizontal = 16.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = { navigateToAlarmMusicScreen(alarmState.musicTitle) }
-                        )
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "노래 선택",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = Black01,
-                                fontSize = 15.fsp,
-                            )
-                        )
-
-                        Text(
-                            modifier = Modifier
-                                .padding(start = 96.dp, end = 4.dp)
-                                .weight(1f),
-                            text = alarmState.musicTitle ?: "노래를 선택해주세요",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = Black03,
-                                fontSize = 15.fsp,
-                            ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.End
-                        )
-
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrow_right),
-                            contentDescription = "Arrow Right Icon"
-                        )
-                    }
-                }
-
-                AlarmSoundSlider(
-                    sliderPosition = alarmState.alarmVolume,
-                    onValueChange = { viewModel.onAlarmVolumeSelected(it) }
+                        .padding(start = 20.dp, end = 20.dp)
+                        .navigationBarsPadding(),
+                    text = "완료",
+                    enable = alarmState.buttonState,
+                    onClick = { viewModel.onCompleteClicked() }
                 )
             }
+        ) { innerPadding ->
+            GroupProgressbar(
+                modifier = Modifier.padding(innerPadding),
+                startProgress = 0.75f,
+                endProgress = 1.0f
+            )
 
-            Row(
-                modifier = Modifier.padding(top = 28.dp, bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(start = 20.dp, end = 20.dp, top = 16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "잠깐",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = Red01,
-                        fontSize = 16.fsp,
-                        fontWeight = Bold
+                    text = "${alarmState.nickName}님만의 알람 방식을\n선택해주세요!",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        color = Black,
+                        fontSize = 22.fsp,
+                        fontWeight = Bold,
                     )
                 )
-                Icon(
-                    modifier = Modifier.padding(end = 4.dp),
-                    painter = painterResource(R.drawable.ic_wait),
-                    contentDescription = "Wait Icon",
-                    tint = Color.Unspecified
-                )
-                Text(
-                    text = "알람을 설정하기 전 꼭 확인해 주세요!",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = Black01,
-                        fontSize = 16.fsp,
-                        fontWeight = Bold
-                    )
-                )
-            }
 
-            listOf(
-                "기기에서 무음으로 설정하면 알람 방식이 소리 또는 진동이어도 무음으로 울릴 수 있습니다.",
-                "원활한 알람을 위하여 알람 관련 권한을 허용해 주세요."
-            ).forEach {
-                Row(
-                    modifier = Modifier.padding(bottom = 10.dp),
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 7.dp, end = 6.dp)
-                            .size(4.dp)
-                            .background(color = Black03, shape = CircleShape)
-                    )
+                AlarmTypeBox(
+                    selectedAlarmType = alarmState.alarmType,
+                    onSelected = { viewModel.onAlarmTypeSelected(it) }
+                )
+
+                if (alarmState.alarmType == "SOUND" || alarmState.alarmType == "ALL") {
                     Text(
-                        text = it,
+                        modifier = Modifier.padding(top = 28.dp, bottom = 8.dp),
+                        text = "알람음",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Black02,
-                            fontSize = 12.fsp
+                            fontSize = 14.fsp
+                        )
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 1.dp,
+                                color = Grey02,
+                                shape = RoundedCornerShape(6.dp)
+                            )
+                            .padding(vertical = 12.dp, horizontal = 16.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = { navigateToAlarmMusicScreen(alarmState.musicTitle) }
+                            )
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "노래 선택",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = Black01,
+                                    fontSize = 15.fsp,
+                                )
+                            )
+
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = 96.dp, end = 4.dp)
+                                    .weight(1f),
+                                text = alarmState.musicTitle ?: "노래를 선택해주세요",
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    color = Black03,
+                                    fontSize = 15.fsp,
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.End
+                            )
+
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_right),
+                                contentDescription = "Arrow Right Icon"
+                            )
+                        }
+                    }
+
+                    AlarmSoundSlider(
+                        sliderPosition = alarmState.alarmVolume,
+                        onValueChange = { viewModel.onAlarmVolumeSelected(it) }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.padding(top = 28.dp, bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "잠깐",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            color = Red01,
+                            fontSize = 16.fsp,
+                            fontWeight = Bold
+                        )
+                    )
+                    Icon(
+                        modifier = Modifier.padding(end = 4.dp),
+                        painter = painterResource(R.drawable.ic_wait),
+                        contentDescription = "Wait Icon",
+                        tint = Color.Unspecified
+                    )
+                    Text(
+                        text = "알람을 설정하기 전 꼭 확인해 주세요!",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            color = Black01,
+                            fontSize = 16.fsp,
+                            fontWeight = Bold
                         )
                     )
                 }
-            }
-            Spacer(modifier = Modifier.weight(1f))
 
-            if (isLoading) {
-                LoadingDialog()
-            }
-
-            if (openAlertDialog) {
-                val duration = with(groupState) {
-                    alarmDays.minOf { day ->
-                        DateTimeManager.diffFromNow("$day $alarmTime")
+                listOf(
+                    "기기에서 무음으로 설정하여도 설정한 방식으로 알람이 울려요.",
+                    "원활한 알람을 위하여 알람 관련 권한을 허용해 주세요."
+                ).forEach {
+                    Row(
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .padding(top = 7.dp, end = 6.dp)
+                                .size(4.dp)
+                                .background(color = Black03, shape = CircleShape)
+                        )
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                color = Black02,
+                                fontSize = 12.fsp
+                            )
+                        )
                     }
                 }
-                val text = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"")
+                Spacer(modifier = Modifier.weight(1f))
 
-                CustomAlertDialog(
-                    title = "그룹 생성 완료!",
-                    content = "$text 후부터 알람이 울려요",
-                    onClick = {
-                        openAlertDialog = false
-                        viewModel.navigateToDetail()
-                    },
-                    dialogImg = R.drawable.group_dialog_img
-                )
+                if (isLoading) { LoadingDialog() }
             }
         }
     }
@@ -363,7 +331,8 @@ fun SelectBox(
                 shape = RoundedCornerShape(6.dp)
             )
             .background(
-                color = if (isSelected) Red02 else White
+                color = if (isSelected) Red02 else White,
+                shape = RoundedCornerShape(6.dp)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -402,7 +371,7 @@ fun AlarmSoundSlider(
         )
         Text(
             text = "최저 음량 10 이상부터 설정이 가능합니다.",
-            style = MaterialTheme.typography.bodySmall.copy(
+            style = MaterialTheme.typography.labelMedium.copy(
                 color = Black03,
                 fontSize = 12.fsp
             )

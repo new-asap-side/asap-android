@@ -36,10 +36,15 @@ import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
 
+enum class DialogButtonType {
+    SINGLE, DOUBLE
+}
+
 @Composable
 internal fun PrecautionsDialog(
     title: String,
     description: String,
+    buttonType: DialogButtonType = DialogButtonType.DOUBLE,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
 ) {
@@ -79,33 +84,53 @@ internal fun PrecautionsDialog(
                     )
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        onClick = { onDismissRequest() }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.no)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(10.dp),
-                        onClick = {
-                            onConfirm()
+
+                when(buttonType) {
+                    DialogButtonType.SINGLE -> {
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            onClick = { onDismissRequest() }
+                        ) {
+                            Text(
+                                text = "확인",
+                                style = MaterialTheme.typography.titleMedium
+                            )
                         }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.yes)
-                        )
+                    }
+
+                    DialogButtonType.DOUBLE -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.primary,
+                                ),
+                                onClick = { onDismissRequest() }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.no),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                                onClick = {
+                                    onConfirm()
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.yes),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                        }
                     }
                 }
             }

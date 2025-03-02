@@ -48,6 +48,8 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.dialog.DialogButtonType
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.main.home.main.NewGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -58,6 +60,8 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +69,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navigateToDescript: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
+    navigateToPersonalSetting: (Int) -> Unit,
     onCreateButtonClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -111,6 +116,7 @@ fun HomeScreen(
                 var isError by remember { mutableStateOf(false) }
                 val sheetState = rememberModalBottomSheetState()
                 val requestJoinState by viewModel.joinResponseState.collectAsState()
+                var showDialog by remember { mutableStateOf(false) }
 
                 val hideSheet = {
                     coroutineScope.launch {
@@ -135,7 +141,7 @@ fun HomeScreen(
                                 hideSheet()
                             }.invokeOnCompletion {
                                 viewModel.joinStateClear()
-                                navigateToGroupDetails(groupId)
+                                navigateToPersonalSetting(groupId)
                             }
                         }
 
@@ -150,6 +156,12 @@ fun HomeScreen(
                     if (privateGroupState.isJoinedGroup == true) {
                         navigateToGroupDetails(viewModel.selectedGroupId.value ?: 0)
                         viewModel.clearPrivateGroupState()
+                    }
+                }
+
+                LaunchedEffect(Unit) {
+                    viewModel.showDialog.collect {
+                        showDialog = it
                     }
                 }
 
@@ -311,7 +323,7 @@ fun HomeScreen(
                                 ),
                                 shape = RoundedCornerShape(10.dp),
                                 onClick = {
-                                    viewModel.joinGroup(password = password, alarmType = "VIBRATION")
+                                    viewModel.joinGroup(password = password)
                                 }
                             ) {
                                 Text(
@@ -323,6 +335,16 @@ fun HomeScreen(
                             }
                         }
                     }
+                }
+
+                if (showDialog) {
+                    PrecautionsDialog(
+                        buttonType = DialogButtonType.SINGLE,
+                        title = "그룹 인원이 모두 찼어요",
+                        description = "다른 그룹을 찾아볼까요?",
+                        onDismissRequest = { showDialog = false },
+                        onConfirm =  { showDialog = false }
+                    )
                 }
 
                 HomeTabScreen(

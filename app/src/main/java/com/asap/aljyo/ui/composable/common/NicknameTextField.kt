@@ -25,18 +25,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.asap.aljyo.R
 import com.asap.aljyo.core.components.usersetting.UserSettingMsgType
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.Error
+import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Red01
 import kotlinx.coroutines.delay
 
@@ -113,7 +117,7 @@ fun NicknameTextField(
                     ) {
                         Text(
                             text = "${nickname.length}/8",
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            style = MaterialTheme.typography.labelMedium.copy(
                                 color = Black04,
                                 fontSize = 15.fsp
                             ),
@@ -122,7 +126,8 @@ fun NicknameTextField(
                         )
                         if (nickname.isNotEmpty()) {
                             Icon(
-                                imageVector = Icons.Default.Clear,
+                                painterResource(R.drawable.ic_delete),
+                                tint = Color.Unspecified,
                                 contentDescription = "Clear Text",
                                 modifier = modifier
                                     .size(20.dp)
@@ -141,7 +146,7 @@ fun NicknameTextField(
                 .fillMaxWidth()
                 .padding(top = 4.dp)
                 .height(2.dp)
-                .background(if (msg == UserSettingMsgType.None || msg == UserSettingMsgType.Success) Black02 else Error)
+                .background(if (msg == UserSettingMsgType.None || msg == UserSettingMsgType.Success) Grey01 else Error)
         )
 
         if (msg != UserSettingMsgType.None) {
@@ -149,8 +154,8 @@ fun NicknameTextField(
                 modifier = Modifier
                     .padding(top = 8.dp),
                 text = msg.msg,
-                style = TextStyle(
-                    color = if (msg == UserSettingMsgType.Success) Black02 else Error,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = if (msg == UserSettingMsgType.Success) Grey01 else Error,
                     fontSize = 12.fsp
                 )
             )
@@ -168,7 +173,7 @@ private fun isNicknameValid(nickname: String): Boolean {
 @Preview
 fun PreviewNickNameEditText() {
     NicknameTextField(
-        nickname = "",
+        nickname = "ㅇㅇ",
         onNicknameChange = {
 
         },

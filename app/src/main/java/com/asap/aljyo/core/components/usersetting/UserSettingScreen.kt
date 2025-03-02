@@ -77,89 +77,91 @@ fun UserSettingScreen(
         }
     }
 
-    Scaffold(
-        containerColor = White,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    if (isEditMode.not()) {
-                        Text(text = "")
-                    } else {
-                        Text(
-                            text = "내 정보 수정",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = Black01,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
+    AljyoTheme {
+        Scaffold(
+            containerColor = White,
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        if (isEditMode.not()) {
+                            Text(text = "")
+                        } else {
+                            Text(
+                                text = "내 정보 수정",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = Black01,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "BACK"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White
+                        }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_top_back),
+                                contentDescription = "BACK"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = White
+                    )
                 )
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 20.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Spacer(modifier = Modifier.height(2.dp))
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 20.dp),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Spacer(modifier = Modifier.height(2.dp))
 
-            Text(
-                text = if (isEditMode.not()) "어떤 프로필로 시작할까요?" else "프로필을 수정하시겠어요?",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    color = Color.Black,
-                    fontSize = 22.fsp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                Text(
+                    text = if (isEditMode.not()) "어떤 프로필로 시작할까요?" else "프로필을 수정하시겠어요?",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        color = Color.Black,
+                        fontSize = 22.fsp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
                 )
-            )
 
-            Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-            ProfileImagePicker(
-                profileImage = userSettingState.selectedProfileImage,
-                onClick = {
-                    launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+                ProfileImagePicker(
+                    profileImage = userSettingState.selectedProfileImage,
+                    onClick = {
+                        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            NicknameTextField(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                nickname = userSettingState.nickname,
-                onNicknameChange = { userSettingViewModel.updateNickname(it) },
-                onFocusChange = { userSettingViewModel.updateNickname(userSettingState.nickname) },
-                onNicknameCheck = { userSettingViewModel.checkNickname(it) },
-                msg = userSettingState.msg
-            )
+                NicknameTextField(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    nickname = userSettingState.nickname,
+                    onNicknameChange = { userSettingViewModel.updateNickname(it) },
+                    onFocusChange = { userSettingViewModel.updateNickname(userSettingState.nickname) },
+                    onNicknameCheck = { userSettingViewModel.checkNickname(it) },
+                    msg = userSettingState.msg
+                )
 
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
 
-            CustomButton(
-                modifier = Modifier
-                    .imePadding(),
-                text = "확인",
-                onClick = {
-                    userSettingViewModel.saveUserProfile()
-                },
-                enable = isButtonEnabled
-            )
+                CustomButton(
+                    modifier = Modifier
+                        .imePadding(),
+                    text = "확인",
+                    onClick = {
+                        userSettingViewModel.saveUserProfile()
+                    },
+                    enable = isButtonEnabled
+                )
+            }
         }
     }
 }

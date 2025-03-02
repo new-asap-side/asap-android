@@ -116,245 +116,247 @@ fun GroupEditScreen(
         }
     }
 
-    Scaffold(
-        containerColor = White,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "그룹 수정",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = Black01,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_top_back),
-                            contentDescription = "BACK"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = White)
-            )
-        },
-        bottomBar = {
-            CustomButton(
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 40.dp, bottom = 6.dp),
-                text = "완료",
-                enable = state.buttonState,
-                onClick = viewModel::onCompleteClick
-            )
-        }
-    ) { innerPadding ->
-        HorizontalDivider(
-            modifier = Modifier.padding(innerPadding),
-            thickness = 1.dp,
-            color = Grey01
-        )
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 20.dp)
-                .padding(top = 20.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            AlarmContentSelector(
-                alarmContent = state.alarmUnlockContents,
-                onContentClick = viewModel::onAlarmTypeSelected
-            )
-
-            Spacer(modifier = Modifier.height(28.dp))
-
-            Text(
-                text = "대표 이미지",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Black02,
-                    fontSize = 14.sp,
-                )
-            )
-
-            GroupImagePicker(
-                groupImage = state.groupImage?.toUri(),
-                onImagePickerClick = { isShowPhotoBottomSheet = true }
-            )
-
-            if (isShowPhotoBottomSheet) {
-                BottomSheet(
-                    modifier = Modifier.padding(
-                        horizontal = 20.dp,
-                        vertical = 24.dp
-                    ),
-                    sheetState = photoSheetState,
-                    onDismissRequest = { isShowPhotoBottomSheet = false },
+    AljyoTheme {
+        Scaffold(
+            containerColor = White,
+            topBar = {
+                CenterAlignedTopAppBar(
                     title = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 28.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "이미지 변경",
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontSize = 18.sp,
-                                    color = Black01
-                                )
-                            )
+                        Text(
+                            text = "그룹 수정",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = Black01,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
                             Icon(
-                                Icons.Default.Close,
-                                contentDescription = "close",
+                                painter = painterResource(R.drawable.ic_top_back),
+                                contentDescription = "BACK"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = White)
+                )
+            },
+            bottomBar = {
+                CustomButton(
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .padding(horizontal = 20.dp)
+                        .padding(top = 40.dp, bottom = 6.dp),
+                    text = "완료",
+                    enable = state.buttonState,
+                    onClick = viewModel::onCompleteClick
+                )
+            }
+        ) { innerPadding ->
+            HorizontalDivider(
+                modifier = Modifier.padding(innerPadding),
+                thickness = 1.dp,
+                color = Grey01
+            )
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 20.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                AlarmContentSelector(
+                    alarmContent = state.alarmUnlockContents,
+                    onContentClick = viewModel::onAlarmTypeSelected
+                )
+
+                Spacer(modifier = Modifier.height(28.dp))
+
+                Text(
+                    text = "대표 이미지",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Black02,
+                        fontSize = 14.sp,
+                    )
+                )
+
+                GroupImagePicker(
+                    groupImage = state.groupImage?.toUri(),
+                    onImagePickerClick = { isShowPhotoBottomSheet = true }
+                )
+
+                if (isShowPhotoBottomSheet) {
+                    BottomSheet(
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        ),
+                        sheetState = photoSheetState,
+                        onDismissRequest = { isShowPhotoBottomSheet = false },
+                        title = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 28.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "이미지 변경",
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 18.sp,
+                                        color = Black01
+                                    )
+                                )
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "close",
+                                    modifier = Modifier
+                                        .clickable {
+                                            coroutineScope.launch { photoSheetState.hide() }
+                                                .invokeOnCompletion {
+                                                    if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
+                                                        false
+                                                }
+                                        }
+                                )
+                            }
+                        },
+                        content = {
+                            Row(
                                 modifier = Modifier
                                     .clickable {
+                                        imagePickerLauncher.launch(
+                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                        )
+                                        coroutineScope
+                                            .launch { photoSheetState.hide() }.invokeOnCompletion {
+                                                if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
+                                                    false
+                                            }
+                                    }
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_album),
+                                    modifier = Modifier
+                                        .padding(end = 10.dp),
+                                    contentDescription = "Album Icon",
+                                    tint = Color.Unspecified
+                                )
+                                Text(
+                                    text = "앨범에서 선택하기",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 16.sp,
+                                        color = Black02
+                                    )
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(28.dp))
+
+                            Row(
+                                modifier = Modifier
+                                    .clickable {
+                                        PictureUtil.groupRandomImage.filterNot { it == state.groupImage?.toUri() }
+                                            .random()
+                                            .also { viewModel.onGroupImageSelected(it) }
                                         coroutineScope.launch { photoSheetState.hide() }
                                             .invokeOnCompletion {
                                                 if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
                                                     false
                                             }
                                     }
-                            )
-                        }
-                    },
-                    content = {
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    imagePickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_random),
+                                    modifier = Modifier
+                                        .padding(bottom = 26.dp, end = 10.dp),
+                                    contentDescription = "Random Icon",
+                                    tint = Color.Unspecified
+                                )
+                                Text(
+                                    text = "랜덤으로 바꾸기",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontSize = 16.sp,
+                                        color = Black02
                                     )
-                                    coroutineScope
-                                        .launch { photoSheetState.hide() }.invokeOnCompletion {
-                                            if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
-                                                false
-                                        }
-                                }
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_album),
-                                modifier = Modifier
-                                    .padding(end = 10.dp),
-                                contentDescription = "Album Icon",
-                                tint = Color.Unspecified
-                            )
-                            Text(
-                                text = "앨범에서 선택하기",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontSize = 16.sp,
-                                    color = Black02
                                 )
-                            )
+                            }
                         }
+                    )
+                }
 
-                        Spacer(modifier = Modifier.height(28.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    PictureUtil.groupRandomImage.filterNot { it == state.groupImage?.toUri() }
-                                        .random()
-                                        .also { viewModel.onGroupImageSelected(it) }
-                                    coroutineScope.launch { photoSheetState.hide() }
-                                        .invokeOnCompletion {
-                                            if (!photoSheetState.isVisible) isShowPhotoBottomSheet =
-                                                false
-                                        }
-                                }
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_random),
-                                modifier = Modifier
-                                    .padding(bottom = 26.dp, end = 10.dp),
-                                contentDescription = "Random Icon",
-                                tint = Color.Unspecified
+                GroupInputField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .heightIn(min = 50.dp, max = 80.dp),
+                    label = "그룹명",
+                    value = state.title,
+                    onValueChange = viewModel::onGroupTitleChanged,
+                    type = GROUP_TITLE,
+                    placeHolder = {
+                        Text(
+                            text = "그룹명을 입력해주세요 (최대 30자 이내)",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 15.sp,
+                                color = Black04
                             )
-                            Text(
-                                text = "랜덤으로 바꾸기",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontSize = 16.sp,
-                                    color = Black02
-                                )
-                            )
-                        }
+                        )
                     }
                 )
-            }
 
-            GroupInputField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .heightIn(min = 50.dp, max = 80.dp),
-                label = "그룹명",
-                value = state.title,
-                onValueChange = viewModel::onGroupTitleChanged,
-                type = GROUP_TITLE,
-                placeHolder = {
-                    Text(
-                        text = "그룹명을 입력해주세 (최대 30자 이내)",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 15.sp,
-                            color = Black04
-                        )
-                    )
-                }
-            )
-
-            GroupInputField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(128.dp),
-                label = "그룹 소개글",
-                value = state.description,
-                onValueChange = viewModel::onGroupDescriptionChanged,
-                type = GROUP_DESCRIPTION,
-                placeHolder = {
-                    Text(
-                        text = "내용을 입력해세요",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 15.sp,
-                            color = Black04
-                        )
-                    )
-                }
-            )
-
-            MemberPicker(
-                value = state.currentPerson,
-                onPlusClick = viewModel::onGroupPersonSelected,
-                onMinusClick = viewModel::onGroupPersonSelected
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "현재 인원 이상으로만 변경 가능합니다",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Black03,
-                    fontSize = 12.sp
-                )
-            )
-
-            Spacer(modifier = Modifier.height(28.dp))
-
-            PublicSelector(
-                isPublic = state.isPublic,
-                onTypeClick = viewModel::onGroupTypeSelected
-            )
-
-            if (state.isPublic.not()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                UnderlineTextField(
+                GroupInputField(
                     modifier = Modifier
-                        .focusRequester(focusPasswordField),
-                    value = state.groupPassword ?: "",
-                    onValueChange = viewModel::onGroupPasswordChanged
+                        .fillMaxWidth()
+                        .height(128.dp),
+                    label = "그룹 소개글",
+                    value = state.description,
+                    onValueChange = viewModel::onGroupDescriptionChanged,
+                    type = GROUP_DESCRIPTION,
+                    placeHolder = {
+                        Text(
+                            text = "내용을 입력해세요",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 15.sp,
+                                color = Black04
+                            )
+                        )
+                    }
                 )
+
+                MemberPicker(
+                    value = state.currentPerson,
+                    onPlusClick = viewModel::onGroupPersonSelected,
+                    onMinusClick = viewModel::onGroupPersonSelected
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "현재 인원 이상으로만 변경 가능합니다",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        color = Black03,
+                        fontSize = 12.sp
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(28.dp))
+
+                PublicSelector(
+                    isPublic = state.isPublic,
+                    onTypeClick = viewModel::onGroupTypeSelected
+                )
+
+                if (state.isPublic.not()) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    UnderlineTextField(
+                        modifier = Modifier
+                            .focusRequester(focusPasswordField),
+                        value = state.groupPassword ?: "",
+                        onValueChange = viewModel::onGroupPasswordChanged
+                    )
+                }
             }
         }
     }

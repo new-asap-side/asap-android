@@ -1,12 +1,18 @@
 package com.asap.aljyo.ui.composable.group_form.group_create
 
+import android.util.Log
+import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,8 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
@@ -88,61 +94,20 @@ fun TimePicker(
 }
 
 @Composable
-fun TimeWheelPicker(
-    modifier: Modifier,
-    itemsList: List<String>,
-    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
-    onItemSelected: (String) -> Unit
-) {
-    val listState = rememberLazyListState()
-    val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-
-    val currentFirstItemIdx by remember { derivedStateOf { listState.firstVisibleItemIndex } }
-
-    LaunchedEffect(listState.isScrollInProgress) {
-        if (!listState.isScrollInProgress) {
-            onItemSelected(itemsList[listState.firstVisibleItemIndex + 2])
-        }
-    }
-
-    LazyColumn(
-        state = listState,
-        flingBehavior = snapFlingBehavior,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(200.dp),
-        horizontalAlignment = horizontalAlignment,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        itemsIndexed(items = itemsList) { idx, hour ->
-            Text(
-                modifier = Modifier
-                    .height(25.dp)
-                    .width(80.dp),
-                text = hour,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = if (idx == currentFirstItemIdx + 2) 18.fsp else 16.fsp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (idx == currentFirstItemIdx + 2) Black01 else Black04
-                ),
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
 fun AlarmTimePicker(
+    selectedTime: String,
     onHourSelected: (String) -> Unit,
     onMinutesSelected: (String) -> Unit
 ) {
     val hoursList = listOf("", "") + (0..23).map { it.toString().padStart(2, '0') } + listOf("", "")
     val minutesList =
         listOf("", "") + (0..59).map { it.toString().padStart(2, '0') } + listOf("", "")
+    val (selectedHour, selectedMinutes) = selectedTime.split(":")
 
     Box {
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.Center)
                 .height(42.dp)
                 .background(
@@ -157,16 +122,72 @@ fun AlarmTimePicker(
                 modifier = Modifier.weight(1f),
                 itemsList = hoursList,
                 horizontalAlignment = Alignment.End,
-                onItemSelected = onHourSelected
+                onItemSelected = onHourSelected,
+                selectedTime = selectedHour,
+                endPaddingValues = 12.dp
             )
-
-            Spacer(modifier = Modifier.width(24.dp))
 
             TimeWheelPicker(
                 modifier = Modifier.weight(1f),
                 itemsList = minutesList,
                 horizontalAlignment = Alignment.Start,
-                onItemSelected = onMinutesSelected
+                onItemSelected = onMinutesSelected,
+                selectedTime = selectedMinutes,
+                startPaddingValues = 12.dp
+            )
+        }
+    }
+}
+
+@Composable
+fun TimeWheelPicker(
+    modifier: Modifier,
+    itemsList: List<String>,
+    horizontalAlignment: Alignment.Horizontal,
+    selectedTime: String,
+    onItemSelected: (String) -> Unit,
+    startPaddingValues: Dp = 0.dp,
+    endPaddingValues: Dp = 0.dp
+) {
+    val initialIdx = itemsList.indexOf(selectedTime)
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIdx - 2)
+    val snapFlingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
+    val currentFirstItemIdx by remember { derivedStateOf { listState.firstVisibleItemIndex } }
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (!listState.isScrollInProgress) {
+            onItemSelected(itemsList[currentFirstItemIdx + 2])
+        }
+    }
+
+    LaunchedEffect(listState.canScrollBackward) {
+        if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0) {
+            listState.stopScroll(MutatePriority.PreventUserInput)
+        }
+    }
+
+    LazyColumn(
+        state = listState,
+        flingBehavior = snapFlingBehavior,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        contentPadding = PaddingValues(start = startPaddingValues, end = endPaddingValues),
+        horizontalAlignment = horizontalAlignment,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        itemsIndexed(items = itemsList) { idx, hour ->
+            Text(
+                modifier = Modifier
+                    .height(25.dp)
+                    .width(80.dp),
+                text = hour,
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontSize = if (idx == currentFirstItemIdx + 2) 18.fsp else 16.fsp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (idx == currentFirstItemIdx + 2) Black01 else Black04
+                ),
+                textAlign = TextAlign.Center
             )
         }
     }

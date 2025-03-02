@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ fun CustomButton(
         Text(
             modifier = Modifier.padding(top = 14.dp, bottom = 14.dp),
             text = text,
-            style = TextStyle.Default.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 16.fsp
             )
         )

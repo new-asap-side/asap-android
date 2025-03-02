@@ -71,20 +71,25 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _personalEdit = MutableSharedFlow<PersonalEditState>()
     val personalEdit = _personalEdit.asSharedFlow()
 
+    private val _complete = MutableSharedFlow<Unit>()
+    val complete = _complete.asSharedFlow()
+
     private val _withdrawState = MutableStateFlow(false)
     val withdrawState get() = _withdrawState.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    init {
-        fetchGroupDetails()
-    }
+//    init {
+//        fetchGroupDetails()
+//    }
 
     fun fetchGroupDetails(internal: Boolean = false) {
         viewModelScope.launch {
             if (!internal) {
                 _groupDetailsState.value = UiState.Loading
+            } else {
+                _isLoading.value = true
             }
 
             delay(500)
@@ -127,6 +132,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
                 observingRemainTime()
                 _groupDetailsState.value = UiState.Success(result)
+                _isLoading.value = false
             }
         }
     }
@@ -221,12 +227,12 @@ class GroupDetailsViewModel @AssistedInject constructor(
                     deviceToken = FCMTokenManager.token,
                     groupPassword = null,
                 )
-            ).firstOrNull().let { response ->
-                if (response != null) _userGroupType.value = UserGroupType.Participant
+            ).catch { e ->
+                Log.d("GroupDetailsViewModel","joinGroup: $e")
+            }.collect {
+                _isLoading.value = false
+                _complete.emit(Unit)
             }
-
-            fetchGroupDetails(true)
-            _isLoading.value = false
         }
     }
 

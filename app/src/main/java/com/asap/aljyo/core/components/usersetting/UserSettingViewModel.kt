@@ -34,6 +34,8 @@ class UserSettingViewModel @Inject constructor(
     val requestState get() = _requestState.value
 
     private var _previousProfileImage: Uri? = null
+    private var _previousNickname: String = ""
+
 
     val isButtonEnabled: StateFlow<Boolean> = combine(
         _isEditMode, _userSettingState
@@ -51,16 +53,17 @@ class UserSettingViewModel @Inject constructor(
     init {
         savedStateHandle.get<String>("nickName")?.let {
             _userSettingState.value = _userSettingState.value.copy(
-                nickname = Uri.decode(it)
+                nickname = it
             )
         }
-        savedStateHandle.get<String>("profileImage").let {
+        savedStateHandle.get<String>("profileImage")?.let {
             _userSettingState.value = _userSettingState.value.copy(
-                selectedProfileImage = it?.toUri()
+                selectedProfileImage = Uri.decode(it).toUri()
             )
         }
 
-        _previousProfileImage = userSettingState.value.selectedProfileImage
+        _previousProfileImage = _userSettingState.value.selectedProfileImage
+        _previousNickname = _userSettingState.value.nickname
     }
 
     fun setEditMode(isEdit: Boolean) {
@@ -82,6 +85,13 @@ class UserSettingViewModel @Inject constructor(
     }
 
     fun checkNickname(nickname: String) {
+        if (nickname == _previousNickname) {
+            _userSettingState.value = _userSettingState.value.copy(
+                msg = UserSettingMsgType.None
+            )
+            return
+        }
+
         val nicknameRegex =  "[ㄱ-ㅎㅏ-ㅣ\\u318D\\u119E\\u11A2\\u2022\\u2025\\u00B7\\uFE55]".toRegex()
 
         if (nicknameRegex.containsMatchIn(nickname)) {

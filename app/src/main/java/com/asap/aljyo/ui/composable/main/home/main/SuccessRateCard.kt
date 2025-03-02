@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -136,22 +137,97 @@ fun SuccessRateCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     TextButton(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .dropShadow(
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color(0xFF003870).copy(alpha = 0.06f),
+                                offsetX = 4.dp, offsetY = 4.dp,
+                                blur = 8.dp
+                            ),
                         onClick = {
                             navigateToMyAlarm()
                         },
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = White,
+                            contentColor = Black01
+                        ),
                         shape = RoundedCornerShape(8.dp),
                     ) {
-                        Text(
-                            text = stringResource(R.string.alarm)
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_fill_clock),
+                                    contentDescription = "filled clock",
+                                    tint = Color.Unspecified
+                                )
+                                Text(
+                                    text = stringResource(R.string.alarm),
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontSize = 14.fsp,
+                                        color = Black01
+                                    )
+                                )
+                            }
+
+                            Text(
+                                text = stringResource(
+                                    R.string.counting,
+                                    successRate?.joinedGroupCount ?: 0
+                                ),
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontSize = 14.fsp,
+                                    color = Black01
+                                )
+                            )
+
+                        }
                     }
 
                     TextButton(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .dropShadow(
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color(0xFF003870).copy(alpha = 0.06f),
+                                offsetX = 4.dp, offsetY = 4.dp,
+                                blur = 8.dp
+                            ),
                         onClick = {},
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = White,
+                            contentColor = Black01
+                        ),
                         shape = RoundedCornerShape(8.dp),
                     ) {
+                        Row(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(R.drawable.ic_rank),
+                                contentDescription = "my ranking",
+                                tint = Color.Unspecified
+                            )
+                            Text(
+                                text = stringResource(R.string.my_ranking),
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontSize = 14.fsp,
+                                    color = Black01
+                                )
+                            )
+                        }
 
                     }
                 }
@@ -165,7 +241,7 @@ private fun SuccessRate(
     modifier: Modifier = Modifier,
     nickname: String,
     rate: Float,
-    navigateToDescript: () ->Unit
+    navigateToDescript: () -> Unit
 ) {
     Row(
         modifier = modifier,

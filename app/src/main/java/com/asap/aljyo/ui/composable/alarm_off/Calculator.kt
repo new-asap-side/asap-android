@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.animation.core.EaseOutBounce
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,10 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.service.AlarmService
@@ -40,6 +44,7 @@ import com.asap.aljyo.core.components.viewmodel.CalculatorViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
+import com.asap.aljyo.ui.shape.TailArrangement
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
@@ -140,14 +145,51 @@ data class Calculator(
         val operation by viewModel.operation.collectAsState()
 
         Box(modifier = modifier) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "${operation.expression}",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = 38.fsp,
-                    color = White
-                )
-            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .layout { measurable, constraint ->
+                        val placeable = measurable.measure(
+                            Constraints(
+                                maxWidth = (constraint.maxWidth * 0.7222).toInt(),
+                            )
+                        )
+
+                        layout(placeable.width, placeable.height) {
+                            placeable.place(
+                                0,
+                                (constraint.maxHeight * 0.1096).toInt()
+                            )
+                        }
+                    }
+                    .offset(y = 50.dp)
+                    .fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.img_calculator),
+                        contentDescription = "calculator",
+                        contentScale = ContentScale.FillWidth
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .offset(y = 40.dp),
+                ) {
+                    Text(
+                        text = "${operation.expression}",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 38.fsp,
+                            color = White
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
 
             Box(
                 modifier = Modifier

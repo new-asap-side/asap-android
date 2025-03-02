@@ -3,7 +3,6 @@ package com.asap.aljyo.ui.composable.main.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.main.home.latest.LatestScreen
-import com.asap.aljyo.ui.composable.main.home.main.MainScreen
+import com.asap.aljyo.ui.composable.main.home.main.MainTab
 import com.asap.aljyo.ui.composable.main.home.popularity.PopularityScreen
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -118,7 +117,7 @@ fun HomeTabScreen(
                 .background(Grey01)
         )
         when (tabIndex) {
-            0 -> MainScreen(
+            0 -> MainTab(
                 tabChange = { tabIndex = it },
                 navigateToDescript = navigateToDescript,
                 onGroupItemClick = onGroupItemClick

@@ -27,7 +27,7 @@ import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-internal fun MainScreen(
+internal fun MainTab(
     tabChange: (Int) -> Unit,
     navigateToDescript: () -> Unit,
     onGroupItemClick: (Boolean, Int) -> Unit,
@@ -83,8 +83,8 @@ internal fun MainScreen(
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
                     .aspectRatio(1f),
-                tabChange = tabChange,
-                navigateToDescript = navigateToDescript
+                navigateToDescript = navigateToDescript,
+                navigateToMyAlarm = {}
             )
         }
 

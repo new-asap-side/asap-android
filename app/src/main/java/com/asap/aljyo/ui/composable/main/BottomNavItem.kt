@@ -40,7 +40,7 @@ sealed class BottomNavItem(
 
     data object MyAlarm : BottomNavItem(
         icon = R.drawable.ic_my_alarm,
-        label = R.string.alarm_list,
+        label = R.string.my_alarm,
         route = MainScreenRoute.AlarmList.route
     )
 

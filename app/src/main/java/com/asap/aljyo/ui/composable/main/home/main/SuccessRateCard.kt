@@ -80,8 +80,8 @@ private val stops = arrayOf(
 @Composable
 fun SuccessRateCard(
     modifier: Modifier = Modifier,
-    tabChange: (Int) -> Unit,
     navigateToDescript: () -> Unit,
+    navigateToMyAlarm: () -> Unit,
 ) {
     val viewModel: AlarmSuccessRateViewModel = hiltViewModel()
     val successRateState by viewModel.successRateState.collectAsState()
@@ -137,10 +137,14 @@ fun SuccessRateCard(
                 ) {
                     TextButton(
                         modifier = Modifier.weight(1f),
-                        onClick = {},
+                        onClick = {
+                            navigateToMyAlarm()
+                        },
                         shape = RoundedCornerShape(8.dp),
                     ) {
-
+                        Text(
+                            text = stringResource(R.string.alarm)
+                        )
                     }
 
                     TextButton(

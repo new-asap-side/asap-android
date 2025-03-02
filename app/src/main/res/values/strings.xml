@@ -5,6 +5,7 @@
     <string name="notification_alarm_title">알죠에서 알려드려요</string>
     <string name="notification_alarm_description">알람이 울리고 있어요. 빠르게 해제하세요!</string>
     <!-- Common -->
+    <string name="alarm">알람</string>
     <string name="yes">네</string>
     <string name="no">아니오</string>
     <string name="sir">%s님</string>
@@ -32,7 +33,7 @@
     <string name="start_with_kakao">카카오로 시작하기</string>
     <!-- Bottom navigation -->
     <string name="home">홈</string>
-    <string name="alarm_list">내 알람</string>
+    <string name="my_alarm">내 알람</string>
     <string name="my_page">마이 페이지</string>
     <!-- Home Screen -->
     <string name="private_alarm_input_password">비공개 알람입니다.\n비밀번호를 입력해주세요.</string>
@@ -128,6 +129,7 @@
     <string name="alarm_title">알람 제목</string>
     <string name="alarm_rank">%s등</string>
     <!-- Alarm list -->
+    <string name="alarm_list">알람 리스트</string>
     <string name="empty_alarm">아직 생성된 알람이 없어요!</string>
     <string name="start_with_new_group">새로운 그룹과 시작해보아요</string>
     <string name="no_activated_alarm">모든 알람이\n꺼진 상태입니다.</string>

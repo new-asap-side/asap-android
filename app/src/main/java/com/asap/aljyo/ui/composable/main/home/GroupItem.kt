@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
@@ -106,42 +106,63 @@ fun GroupThumbnail(
             model = thumbnailUrl,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(8.dp)),
+                .aspectRatio(155f / 124f)
+                .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop,
             contentDescription = "Group thumbnail",
             placeholder = null,
             error = painterResource(R.drawable.ic_empty_profile)
         )
-        Row(
-            modifier = Modifier
-                .offset(x = 8.dp, y = 8.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(Color(0x99222222))
-                .padding(4.dp, 2.dp, 6.dp, 2.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val painter = if (isPublic) painterResource(R.drawable.ic_hello)
-            else painterResource(R.drawable.ic_lock)
 
-            val text = if (isPublic) stringResource(R.string.public_group)
-            else stringResource(R.string.private_group)
-
-            Icon(
-                modifier = Modifier.size(20.dp),
-                painter = painter,
-                contentDescription = "Public group icon",
-                tint = Color.Unspecified
-            )
-            Spacer(modifier = Modifier.width(2.dp))
-            Text(
-                text,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 12.fsp,
-                    color = Grey01
+        if (!isPublic) {
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .offset(x = 8.dp, y = 8.dp)
+                    .background(
+                        shape = CircleShape,
+                        color = Color(0xFF000000).copy(alpha = 0.52f)
+                    )
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(14.dp)
+                        .align(Alignment.Center),
+                    painter = painterResource(R.drawable.ic_lock),
+                    contentDescription = "lock icon",
+                    tint = Color.Unspecified
                 )
-            )
+            }
         }
+//        Row(
+//            modifier = Modifier
+//                .offset(x = 8.dp, y = 8.dp)
+//                .clip(RoundedCornerShape(4.dp))
+//                .background(Color(0x99222222))
+//                .padding(4.dp, 2.dp, 6.dp, 2.dp),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            val painter = if (isPublic) painterResource(R.drawable.ic_hello)
+//            else painterResource(R.drawable.ic_lock)
+//
+//            val text = if (isPublic) stringResource(R.string.public_group)
+//            else stringResource(R.string.private_group)
+//
+//            Icon(
+//                modifier = Modifier.size(20.dp),
+//                painter = painter,
+//                contentDescription = "Public group icon",
+//                tint = Color.Unspecified
+//            )
+//            Spacer(modifier = Modifier.width(2.dp))
+//            Text(
+//                text,
+//                style = MaterialTheme.typography.bodyMedium.copy(
+//                    fontSize = 12.fsp,
+//                    color = Grey01
+//                )
+//            )
+//        }
     }
 }
 

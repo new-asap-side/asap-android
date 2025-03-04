@@ -55,17 +55,9 @@ internal fun GroupItem(
             thumbnailUrl = alarmGroup.thumbnailUrl,
             isPublic = alarmGroup.isPublic
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            alarmGroup.title,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.fsp,
-                color = Black01
-            ),
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -78,7 +70,21 @@ internal fun GroupItem(
             GreyBackgroundText(dates)
             GreyBackgroundText(alarmGroup.alarmTime)
         }
-        Spacer(modifier = Modifier.height(4.dp))
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            alarmGroup.title,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 14.fsp,
+                color = Black01
+            ),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         GroupCounting(
             currentCount = alarmGroup.currentPerson,
             totalCount = alarmGroup.maxPersion

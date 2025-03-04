@@ -93,7 +93,7 @@ internal fun MainTab(
             TodayPopularGroup(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp),
+                    .padding(horizontal = 20.dp),
                 tabChange = tabChange,
                 onGroupItemClick = onGroupItemClick
             )

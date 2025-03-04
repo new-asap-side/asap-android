@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.core.components.main.HomeViewModel
+import com.asap.aljyo.core.components.viewmodel.main.PopularViewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.main.home.GroupItem
@@ -33,7 +34,8 @@ fun PopularityScreen(
         initialFirstVisibleItemScrollOffset = scrollInfo.second
     )
 
-    val popularityGroupState by viewModel.popularGroupState.collectAsState()
+    val popularViewModel: PopularViewModel = hiltViewModel()
+    val popularityGroupState by popularViewModel.popularGroupState.collectAsState()
 
     DisposableEffect(scrollState) {
         onDispose {

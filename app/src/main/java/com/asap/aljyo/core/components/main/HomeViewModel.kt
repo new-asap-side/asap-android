@@ -14,7 +14,6 @@ import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
-import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,15 +26,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
-    private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
-    val popularGroupState get() = _popularGroupState.asStateFlow()
-
     private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
     val latestGroupState get() = _latestGroupState.asStateFlow()
 
@@ -71,13 +66,8 @@ class HomeViewModel @Inject constructor(
     fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
         _error.value = false
         if (!internal) {
-            _popularGroupState.value = UiState.Loading
             _latestGroupState.value = UiState.Loading
         }
-
-        fetchPopularGroupUseCase()
-            .catch { e -> _popularGroupState.value = handleThrowable(e) }
-            .collect { popularGroup -> _popularGroupState.value = UiState.Success(popularGroup) }
 
         fetchLatestGroupUseCase()
             .catch { e -> _latestGroupState.value = handleThrowable(e) }

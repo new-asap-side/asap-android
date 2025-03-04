@@ -50,7 +50,7 @@ fun NewGroupList(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        SeeMoreTitle(
+        ItemTitle (
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.new_group_title)
         ) {

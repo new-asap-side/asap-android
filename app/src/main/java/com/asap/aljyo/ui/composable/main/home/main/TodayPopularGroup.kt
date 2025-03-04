@@ -49,7 +49,7 @@ fun TodayPopularGroup(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        SeeMoreTitle(
+        ItemTitle(
             modifier = Modifier.fillMaxWidth(),
             title = stringResource(R.string.today_popular_group_title)
         ) {

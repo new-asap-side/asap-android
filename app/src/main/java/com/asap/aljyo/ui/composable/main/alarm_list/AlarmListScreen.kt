@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.main.alarm_list
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,7 +56,7 @@ internal fun AlarmListScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val observer = LifecycleEventObserver { _, event ->
         when (event) {
-            Lifecycle.Event.ON_RESUME -> viewModel.resume()
+            Lifecycle.Event.ON_START -> viewModel.resume()
             Lifecycle.Event.ON_STOP -> viewModel.pause()
             else -> {}
         }
@@ -74,22 +73,6 @@ internal fun AlarmListScreen(
     }
 
     Column(modifier = Modifier) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(44.dp)
-                .background(White)
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.alarm_list),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = Black01,
-                    fontSize = 16.fsp
-                ),
-            )
-        }
-
         Surface(modifier = Modifier.weight(1f)) {
             val uiState by viewModel.alarmList.collectAsState()
             when (uiState) {

@@ -34,9 +34,7 @@ internal fun MainScreen(
         Scaffold(
             containerColor = White,
             topBar = {
-                if (selectedIndex == 0) {
-                    AljyoTopAppBar()
-                }
+                AljyoTopAppBar(mainViewModel = mainViewModel)
             },
             floatingActionButton = {
                 if (selectedIndex == 0) {

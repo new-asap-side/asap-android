@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
+import com.asap.aljyo.core.components.viewmodel.main.MainViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
@@ -52,6 +53,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navigateToDescript: () -> Unit,
+    navigateToMyAlarm: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -282,13 +284,14 @@ fun HomeScreen(
             }
         }
 
-        HomeTabScreen(
+        HomeTab(
             navigateToDescript = navigateToDescript,
+            navigateToMyAlarm = navigateToMyAlarm,
             onGroupItemClick = { isPublic, groupId ->
                 if (!isPublic) {
                     viewModel.checkJoinedGroup(groupId)
                     viewModel.selectedGroupId.value = groupId
-                    return@HomeTabScreen
+                    return@HomeTab
                 }
                 navigateToGroupDetails(groupId)
             }

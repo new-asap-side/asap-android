@@ -30,6 +30,7 @@ import com.asap.aljyo.ui.theme.White
 internal fun MainTab(
     tabChange: (Int) -> Unit,
     navigateToDescript: () -> Unit,
+    navigateToMyAlarm: () -> Unit,
     onGroupItemClick: (Boolean, Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -84,7 +85,7 @@ internal fun MainTab(
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 navigateToDescript = navigateToDescript,
-                navigateToMyAlarm = {}
+                navigateToMyAlarm = navigateToMyAlarm
             )
         }
 

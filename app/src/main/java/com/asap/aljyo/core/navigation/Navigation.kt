@@ -1,6 +1,5 @@
 package com.asap.aljyo.core.navigation
 
-import android.net.Uri
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -31,9 +30,6 @@ import com.asap.aljyo.ui.composable.group_form.group_create.CreateGroupScreen
 import com.asap.aljyo.ui.composable.group_form.group_type.SelectGroupTypeScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
 import com.asap.aljyo.ui.composable.main.MainScreen
-import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
-import com.asap.aljyo.ui.composable.main.home.HomeScreen
-import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.main.my_page.PrivacyPolicyScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
@@ -66,9 +62,7 @@ internal fun AppNavHost() {
         }
 
         composable(route = ScreenRoute.Main.route) {
-            MainScreen(
-                screenNavController = navController
-            )
+            MainScreen(screenNavController = navController)
         }
 
         composable(
@@ -260,75 +254,6 @@ internal fun AppNavHost() {
         composable(route = ScreenRoute.PrivacyPolicy.route){
             PrivacyPolicyScreen(
                 onCloseClick = { navController.popBackStack() }
-            )
-        }
-    }
-}
-
-// main screen
-@Composable
-fun MainNavHost(
-    screenNavController: NavHostController,
-    navController: NavHostController,
-) {
-    NavHost(
-        navController = navController,
-        startDestination = MainScreenRoute.Home.route
-    ) {
-        val navigateToGroupDetails: (Int) -> Unit = { groupId ->
-            screenNavController.navigate("${ScreenRoute.GroupDetails.route}/$groupId")
-        }
-
-        composable(route = MainScreenRoute.Home.route) {
-            HomeScreen(
-                navigateToDescript = {
-                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
-                },
-                navigateToGroupDetails = navigateToGroupDetails,
-            )
-        }
-
-        composable(route = MainScreenRoute.AlarmList.route) {
-            AlarmListScreen(
-                navigateToHome = {
-                    navController.navigate(MainScreenRoute.Home.route) {
-                        popUpTo(MainScreenRoute.AlarmList.route) {
-                            inclusive = true
-                        }
-                    }
-                },
-                navigateToGroupDetails = navigateToGroupDetails
-            )
-        }
-
-        composable(
-            route = MainScreenRoute.MyPage.route,
-        ) {
-            MyPageScreen(
-                navigateToDescript = {
-                    screenNavController.navigate(ScreenRoute.AljyoDescript.route)
-                },
-                navigateToPreferences = {
-                    screenNavController.navigate(ScreenRoute.Preferences.route)
-                },
-                navigateToOnboarding = {
-                    screenNavController.navigate(ScreenRoute.Onboarding.route) {
-                        popUpTo(0)
-                    }
-                },
-                navigateToProfileSetting = { nickName, profileImage ->
-                    screenNavController.navigate(
-                        "${ScreenRoute.UserSetting.route}/$nickName/${
-                            Uri.encode(
-                                profileImage
-                            )
-                        }"
-                    )
-                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
-                },
-                navigateToPrivacyPolicy = {
-                    screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)
-                }
             )
         }
     }

@@ -8,16 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.asap.aljyo.core.components.viewmodel.main.MainViewModel
 import com.asap.aljyo.core.navigation.MainNavHost
-import com.asap.aljyo.core.navigation.MainScreenRoute
 import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.composable.main.home.main.CreateGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
@@ -25,21 +24,22 @@ import com.asap.aljyo.ui.theme.White
 
 @Composable
 internal fun MainScreen(
-    screenNavController: NavHostController
+    screenNavController: NavHostController,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     AljyoTheme {
         val mainNavController = rememberNavController()
-        var homeScreen by remember { mutableStateOf(true) }
+        val selectedIndex by mainViewModel.selectedIndex.collectAsState()
 
         Scaffold(
             containerColor = White,
             topBar = {
-                if (homeScreen) {
+                if (selectedIndex == 0) {
                     AljyoTopAppBar()
                 }
             },
             floatingActionButton = {
-                if (homeScreen) {
+                if (selectedIndex == 0) {
                     CreateGroupButton(
                         modifier = Modifier,
                         onClick = {
@@ -54,10 +54,8 @@ internal fun MainScreen(
                         .navigationBarsPadding()
                         .fillMaxWidth()
                         .height(64.dp),
-                    onRouteChanged = { route ->
-                        homeScreen = route == MainScreenRoute.Home.route
-                    },
-                    navController = mainNavController
+                    navController = mainNavController,
+                    mainViewModel = mainViewModel
                 )
             }
         ) { padding ->
@@ -70,6 +68,7 @@ internal fun MainScreen(
                 MainNavHost(
                     screenNavController = screenNavController,
                     navController = mainNavController,
+                    mainViewModel = mainViewModel
                 )
             }
         }

@@ -52,6 +52,8 @@ internal fun GroupItem(
 ) {
     Column(modifier = modifier) {
         GroupThumbnail(
+            modifier = Modifier.fillMaxWidth(),
+            aspectRatio = 155f / 124f,
             thumbnailUrl = alarmGroup.thumbnailUrl,
             isPublic = alarmGroup.isPublic
         )
@@ -76,8 +78,8 @@ internal fun GroupItem(
         Text(
             alarmGroup.title,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.fsp,
-                color = Black01
+                fontSize = 15.fsp,
+                color = Color(0xFF111111)
             ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
@@ -92,6 +94,57 @@ internal fun GroupItem(
     }
 }
 
+@Composable
+internal fun LinearGroupItem(
+    modifier: Modifier = Modifier,
+    alarmGroup: AlarmGroup = AlarmGroup.dummy()
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        GroupThumbnail(
+            modifier = Modifier.size(100.dp),
+            aspectRatio = 1f,
+            isPublic = alarmGroup.isPublic,
+            thumbnailUrl = alarmGroup.thumbnailUrl
+        )
+
+        Column(
+            modifier = Modifier.weight(1f).height(100.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                val dates = if (alarmGroup.alarmDays.size == everyDay)
+                    stringResource(R.string.everyday)
+                else {
+                    val alarmDays = alarmGroup.alarmDays.sortByDay()
+                    alarmDays.joinToString(separator = " ")
+                }
+                GreyBackgroundText(dates)
+                GreyBackgroundText(alarmGroup.alarmTime)
+            }
+
+            Box(modifier = Modifier.height(42.dp)) {
+                Text(
+                    alarmGroup.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 15.fsp,
+                        color = Color(0xFF111111)
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            GroupCounting(
+                currentCount = alarmGroup.currentPerson,
+                totalCount = alarmGroup.maxPersion
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun GroupItemPreview() {
@@ -100,19 +153,27 @@ private fun GroupItemPreview() {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun GroupThumbnail(
+private fun LinearGroupItemPreview() {
+    AljyoTheme {
+        LinearGroupItem(modifier = Modifier.width(360.dp))
+    }
+}
+
+@Composable
+private fun GroupThumbnail(
+    modifier: Modifier,
+    aspectRatio: Float,
     thumbnailUrl: String,
     isPublic: Boolean
 ) {
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Box(modifier = modifier) {
         AsyncImage(
             model = thumbnailUrl,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(155f / 124f)
+                .aspectRatio(aspectRatio)
                 .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop,
             contentDescription = "Group thumbnail",
@@ -140,40 +201,11 @@ fun GroupThumbnail(
                 )
             }
         }
-//        Row(
-//            modifier = Modifier
-//                .offset(x = 8.dp, y = 8.dp)
-//                .clip(RoundedCornerShape(4.dp))
-//                .background(Color(0x99222222))
-//                .padding(4.dp, 2.dp, 6.dp, 2.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            val painter = if (isPublic) painterResource(R.drawable.ic_hello)
-//            else painterResource(R.drawable.ic_lock)
-//
-//            val text = if (isPublic) stringResource(R.string.public_group)
-//            else stringResource(R.string.private_group)
-//
-//            Icon(
-//                modifier = Modifier.size(20.dp),
-//                painter = painter,
-//                contentDescription = "Public group icon",
-//                tint = Color.Unspecified
-//            )
-//            Spacer(modifier = Modifier.width(2.dp))
-//            Text(
-//                text,
-//                style = MaterialTheme.typography.bodyMedium.copy(
-//                    fontSize = 12.fsp,
-//                    color = Grey01
-//                )
-//            )
-//        }
     }
 }
 
 @Composable
-fun GreyBackgroundText(text: String) {
+private fun GreyBackgroundText(text: String) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(4.dp))
@@ -194,10 +226,8 @@ fun GreyBackgroundText(text: String) {
 }
 
 @Composable
-fun GroupCounting(currentCount: Int, totalCount: Int) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+private fun GroupCounting(currentCount: Int, totalCount: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(R.drawable.ic_people),
             contentDescription = "People"

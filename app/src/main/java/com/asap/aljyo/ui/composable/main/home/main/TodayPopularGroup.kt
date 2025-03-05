@@ -3,10 +3,10 @@ package com.asap.aljyo.ui.composable.main.home.main
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -49,17 +49,15 @@ fun TodayPopularGroup(
         when (popularGroupsState) {
             is UiState.Error -> Unit
             UiState.Loading -> {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    repeat(3) {
-                        item {
-                            GroupItemShimmer(modifier = Modifier.width(148.dp))
-                        }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    repeat(2) {
+                        GroupItemShimmer(modifier = Modifier.width(148.dp))
                     }
                 }
             }
 
             is UiState.Success -> {
-                val popularGroups = (popularGroupsState as UiState.Success).data ?: emptyList()
+                val popularGroups = (popularGroupsState as UiState.Success).data
 
                 LazyVerticalGrid(
                     state = popularListState,

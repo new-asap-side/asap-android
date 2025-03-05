@@ -61,7 +61,7 @@
     <string name="today_popular_group_title">오늘의 인기 그룹은?</string>
     <string name="default_banner_sub_title">알죠는 처음이죠?</string>
     <string name="default_banner_title">한눈에 알아보는 알죠 사용법</string>
-    <string name="new_group_title">최근에 새로 생긴 그룹이에요</string>
+    <string name="new_group_title">신규 그룹</string>
     <!-- GroupDetails Screen -->
     <string name="next_alarm_timer_title">다음 알람까지</string>
     <string name="particularting_personnel">%d명이 참여하고 있어요!</string>

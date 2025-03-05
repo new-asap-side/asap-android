@@ -16,15 +16,16 @@ import javax.inject.Inject
 class PopularViewModel @Inject constructor(
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
 ): NetworkViewModel() {
-    private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
+    private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>>>(UiState.Loading)
     val popularGroupState get() = _popularGroupState.asStateFlow()
 
     init {
         viewModelScope.launch {
             fetchPopularGroupUseCase()
                 .catch { e -> _popularGroupState.value = handleThrowable(e) }
-                .collect { popularGroup -> _popularGroupState.value = UiState.Success(popularGroup) }
+                .collect { popularGroup ->
+                    _popularGroupState.emit(UiState.Success(popularGroup ?: emptyList()))
+                }
         }
     }
-
 }

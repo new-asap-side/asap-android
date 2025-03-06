@@ -20,6 +20,9 @@ interface GroupRepository {
     // 그룹 상세 조회
     suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?>
 
+    // 그룹 검색
+    suspend fun searchGroup(query: String): Flow<List<AlarmGroup>?>
+
     // 유저 알람 리스트 조회
     suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?>
 

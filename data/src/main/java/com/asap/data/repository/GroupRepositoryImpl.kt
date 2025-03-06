@@ -38,7 +38,7 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchGroup(query: String): Flow<List<AlarmGroup>?> {
-        TODO("Not yet implemented")
+        return remoteDataSource.searchGroup(query)
     }
 
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {

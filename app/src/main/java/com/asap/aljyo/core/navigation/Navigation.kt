@@ -1,6 +1,8 @@
 package com.asap.aljyo.core.navigation
 
 import android.os.Build
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,228 +36,247 @@ import com.asap.aljyo.ui.composable.main.my_page.PrivacyPolicyScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen
 import com.asap.aljyo.ui.composable.report.ReportScreen
+import com.asap.aljyo.ui.composable.search.SearchScreen
 import com.asap.aljyo.ui.composable.withdrawal.WithdrawalScreen
 import com.asap.aljyo.ui.composable.withdrawal_complete.WithdrawalCompleteScreen
 import com.asap.domain.entity.remote.alarm.AlarmPayload
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun AppNavHost() {
-    val navController = rememberNavController()
-    NavHost(
-        navController = navController,
-        startDestination = ScreenRoute.Onboarding.route,
-    ) {
-        composable(route = ScreenRoute.Onboarding.route) {
-            OnboardingScreen(
-                navigateToMain = {
-                    navController.navigate(ScreenRoute.Main.route) {
-                        popUpTo(route = ScreenRoute.Onboarding.route) {
-                            inclusive = true
+    SharedTransitionLayout {
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = ScreenRoute.Onboarding.route,
+        ) {
+            composable(route = ScreenRoute.Onboarding.route) {
+                OnboardingScreen(
+                    navigateToMain = {
+                        navController.navigate(ScreenRoute.Main.route) {
+                            popUpTo(route = ScreenRoute.Onboarding.route) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    navigateToUserSetting = {
+                        navController.navigate(ScreenRoute.UserSetting.route)
+                    }
+                )
+            }
+
+            composable(route = ScreenRoute.Main.route) {
+                MainScreen(
+                    screenNavController = navController,
+                    sharedTransitionScope = this@SharedTransitionLayout,
+                    animatedContentScope = this@composable,
+                )
+            }
+
+            composable(route = ScreenRoute.Search.route) {
+                SearchScreen(
+                    sharedTransitionScope = this@SharedTransitionLayout,
+                    animatedContentScope = this@composable,
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable(
+                route = "${ScreenRoute.GroupDetails.route}/{groupId}",
+                arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+                enterTransition = { defaultEnterTransition() },
+                exitTransition = { defaultExitTransition() },
+                popEnterTransition = null,
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
+                GroupDetailsScreen(
+                    navController = navController,
+                    groupId = groupId
+                )
+            }
+
+            composable(
+                route = "${ScreenRoute.Ranking.route}/{groupId}",
+                arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
+                enterTransition = { defaultEnterTransition() },
+                exitTransition = { defaultExitTransition() },
+                popEnterTransition = null,
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
+                RankingScreen(
+                    onBackPressed = { navController.popBackStack() },
+                    groupId = groupId
+                )
+            }
+
+            composable(
+                route = "${ScreenRoute.AlarmOff.route}/{${AlarmNavType.name}}",
+                arguments = listOf(
+                    navArgument(name = AlarmNavType.name) {
+                        type = AlarmNavType
+                    }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "aljyo://${ScreenRoute.AlarmOff.route}/{${AlarmNavType.name}}"
+                    }
+                )
+            ) { navBackstackEntry ->
+                val arguments = navBackstackEntry.arguments
+                val alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    arguments?.getParcelable(AlarmNavType.name, AlarmPayload::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    arguments?.getParcelable(AlarmNavType.name)
+                } ?: throw IllegalArgumentException("Argument is null!")
+
+
+                AlarmOffScreen(
+                    alarm = alarm,
+                    navigateToResult = {
+                        val query = "/groupId=${alarm.groupId}?title=${alarm.groupTitle}"
+                        val route = "${ScreenRoute.AlarmResult.route}$query"
+                        navController.navigate(route) {
+                            popUpTo("${ScreenRoute.AlarmResult.route}/{${AlarmNavType.name}}") {
+                                inclusive = true
+                            }
                         }
                     }
-                },
-                navigateToUserSetting = {
-                    navController.navigate(ScreenRoute.UserSetting.route)
-                }
-            )
-        }
+                )
+            }
 
-        composable(route = ScreenRoute.Main.route) {
-            MainScreen(screenNavController = navController)
-        }
+            composable(
+                route = "${ScreenRoute.AlarmResult.route}/groupId={groupId}?title={title}",
+                arguments = listOf(
+                    navArgument("groupId") { type = NavType.IntType },
+                    navArgument("title") { type = NavType.StringType },
+                )
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
+                val title = backStackEntry.arguments?.getString("title") ?: "Unknown"
+                AlarmResultScreen(
+                    groupId = groupId,
+                    title = title,
+                    navigateToHome = {
+                        navController.navigate(ScreenRoute.Main.route) {
+                            popUpTo(0) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    navigateToRanking = {
+                        navController.navigate("${ScreenRoute.Ranking.route}/$groupId")
+                    }
+                )
+            }
 
-        composable(
-            route = "${ScreenRoute.GroupDetails.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
-            enterTransition = { defaultEnterTransition() },
-            exitTransition = { defaultExitTransition() },
-            popEnterTransition = null,
-        ) { backStackEntry ->
-            val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
-            GroupDetailsScreen(
-                navController = navController,
-                groupId = groupId
-            )
-        }
+            composable(route = ScreenRoute.UserSetting.route) {
+                UserSettingScreen(
+                    isEditMode = false,
+                    navigateToMain = {
+                        navController.navigate(ScreenRoute.Main.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onBackClick = {}
+                )
+            }
 
-        composable(
-            route = "${ScreenRoute.Ranking.route}/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.IntType }),
-            enterTransition = { defaultEnterTransition() },
-            exitTransition = { defaultExitTransition() },
-            popEnterTransition = null,
-        ) { backStackEntry ->
-            val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
-            RankingScreen(
-                onBackPressed = { navController.popBackStack() },
-                groupId = groupId
-            )
-        }
+            composable(
+                route = ScreenRoute.Preferences.route,
+                enterTransition = { defaultEnterTransition() },
+                exitTransition = { defaultExitTransition() },
+                popEnterTransition = null
+            ) {
+                PreferencesScreen(
+                    onBackIconPressed = {
+                        navController.popBackStack()
+                    },
+                    navigateToWithdrawal = {
+                        navController.navigate(ScreenRoute.Withdrawal.route)
+                    }
+                )
+            }
 
-        composable(
-            route = "${ScreenRoute.AlarmOff.route}/{${AlarmNavType.name}}",
-            arguments = listOf(
-                navArgument(name = AlarmNavType.name) {
-                    type = AlarmNavType
-                }
-            ),
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern = "aljyo://${ScreenRoute.AlarmOff.route}/{${AlarmNavType.name}}"
-                }
-            )
-        ) { navBackstackEntry ->
-            val arguments = navBackstackEntry.arguments
-            val alarm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                arguments?.getParcelable(AlarmNavType.name, AlarmPayload::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                arguments?.getParcelable(AlarmNavType.name)
-            } ?: throw IllegalArgumentException("Argument is null!")
-
-
-            AlarmOffScreen(
-                alarm = alarm,
-                navigateToResult = {
-                    val query = "/groupId=${alarm.groupId}?title=${alarm.groupTitle}"
-                    val route = "${ScreenRoute.AlarmResult.route}$query"
-                    navController.navigate(route) {
-                        popUpTo("${ScreenRoute.AlarmResult.route}/{${AlarmNavType.name}}") {
-                            inclusive = true
+            composable(
+                route = ScreenRoute.Withdrawal.route,
+                enterTransition = { defaultEnterTransition() },
+                exitTransition = { defaultExitTransition() },
+                popEnterTransition = null,
+            ) {
+                WithdrawalScreen(
+                    onBackIconPressed = { navController.popBackStack() },
+                    navigateToComplete = {
+                        navController.navigate(ScreenRoute.WithdrawalComplete.route) {
+                            popUpTo(0) { inclusive = true }
                         }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        composable(
-            route = "${ScreenRoute.AlarmResult.route}/groupId={groupId}?title={title}",
-            arguments = listOf(
-                navArgument("groupId") { type = NavType.IntType },
-                navArgument("title") { type = NavType.StringType },
-            )
-        ) { backStackEntry ->
-            val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
-            val title = backStackEntry.arguments?.getString("title") ?: "Unknown"
-            AlarmResultScreen(
-                groupId = groupId,
-                title = title,
-                navigateToHome = {
-                    navController.navigate(ScreenRoute.Main.route) {
-                        popUpTo(0) {
-                            inclusive = true
+            composable(
+                route = ScreenRoute.WithdrawalComplete.route,
+                enterTransition = { defaultEnterTransition() },
+            ) {
+                WithdrawalCompleteScreen(
+                    navigateToOnboarding = {
+                        navController.navigate(ScreenRoute.Onboarding.route) {
+                            popUpTo(0) { inclusive = true }
                         }
                     }
-                },
-                navigateToRanking = {
-                    navController.navigate("${ScreenRoute.Ranking.route}/$groupId")
-                }
-            )
+                )
+            }
+
+            composable(
+                route = ScreenRoute.AljyoDescript.route,
+                enterTransition = { defaultEnterTransition() },
+                exitTransition = { defaultExitTransition() },
+                popEnterTransition = null,
+            ) {
+                AljyoDescriptScreen(onBackPress = { navController.popBackStack() })
+            }
+
+            groupCreateNavGraph(navController)
+
+            editNavGraph(navController)
+
+            // 개인 프로필 수정 경로
+            composable(
+                route = "${ScreenRoute.UserSetting.route}/{nickName}/{profileImage}",
+                arguments = listOf(
+                    navArgument("nickName") { type = NavType.StringType },
+                    navArgument("profileImage") { type = NavType.StringType }
+                )
+            ) {
+                UserSettingScreen(
+                    isEditMode = true,
+                    onBackClick = { navController.popBackStack() },
+                    navigateToMain = { navController.popBackStack() }
+                )
+            }
+
+            composable(
+                route = "${ScreenRoute.Report.route}/{groupId}",
+                arguments = listOf(
+                    navArgument("groupId") { type = NavType.IntType }
+                )
+            ) {
+                ReportScreen(
+                    onBackClick = { navController.popBackStack() },
+                    navigateToComplete = { navController.popBackStack() }
+                )
+            }
+
+            composable(route = ScreenRoute.PrivacyPolicy.route){
+                PrivacyPolicyScreen(
+                    onCloseClick = { navController.popBackStack() }
+                )
+            }
         }
 
-        composable(route = ScreenRoute.UserSetting.route) {
-            UserSettingScreen(
-                isEditMode = false,
-                navigateToMain = {
-                    navController.navigate(ScreenRoute.Main.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onBackClick = {}
-            )
-        }
-
-        composable(
-            route = ScreenRoute.Preferences.route,
-            enterTransition = { defaultEnterTransition() },
-            exitTransition = { defaultExitTransition() },
-            popEnterTransition = null
-        ) {
-            PreferencesScreen(
-                onBackIconPressed = {
-                    navController.popBackStack()
-                },
-                navigateToWithdrawal = {
-                    navController.navigate(ScreenRoute.Withdrawal.route)
-                }
-            )
-        }
-
-        composable(
-            route = ScreenRoute.Withdrawal.route,
-            enterTransition = { defaultEnterTransition() },
-            exitTransition = { defaultExitTransition() },
-            popEnterTransition = null,
-        ) {
-            WithdrawalScreen(
-                onBackIconPressed = { navController.popBackStack() },
-                navigateToComplete = {
-                    navController.navigate(ScreenRoute.WithdrawalComplete.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
-            )
-        }
-
-        composable(
-            route = ScreenRoute.WithdrawalComplete.route,
-            enterTransition = { defaultEnterTransition() },
-        ) {
-            WithdrawalCompleteScreen(
-                navigateToOnboarding = {
-                    navController.navigate(ScreenRoute.Onboarding.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
-            )
-        }
-
-        composable(
-            route = ScreenRoute.AljyoDescript.route,
-            enterTransition = { defaultEnterTransition() },
-            exitTransition = { defaultExitTransition() },
-            popEnterTransition = null,
-        ) {
-            AljyoDescriptScreen(onBackPress = { navController.popBackStack() })
-        }
-
-        groupCreateNavGraph(navController)
-
-        editNavGraph(navController)
-
-        // 개인 프로필 수정 경로
-        composable(
-            route = "${ScreenRoute.UserSetting.route}/{nickName}/{profileImage}",
-            arguments = listOf(
-                navArgument("nickName") { type = NavType.StringType },
-                navArgument("profileImage") { type = NavType.StringType }
-            )
-        ) {
-            UserSettingScreen(
-                isEditMode = true,
-                onBackClick = { navController.popBackStack() },
-                navigateToMain = { navController.popBackStack() }
-            )
-        }
-
-        composable(
-            route = "${ScreenRoute.Report.route}/{groupId}",
-            arguments = listOf(
-                navArgument("groupId") { type = NavType.IntType }
-            )
-        ) {
-            ReportScreen(
-                onBackClick = { navController.popBackStack() },
-                navigateToComplete = { navController.popBackStack() }
-            )
-        }
-
-        composable(route = ScreenRoute.PrivacyPolicy.route){
-            PrivacyPolicyScreen(
-                onCloseClick = { navController.popBackStack() }
-            )
-        }
     }
 }
 

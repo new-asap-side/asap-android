@@ -2,9 +2,11 @@
 
 package com.asap.aljyo.ui.composable.main
 
+import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,53 +22,76 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.main.MainViewModel
 import com.asap.aljyo.core.fsp
-import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.White
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AljyoTopAppBar(
     modifier: Modifier = Modifier,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    navigateToSearch: () -> Unit,
     mainViewModel: MainViewModel
 ) {
     val selectedIndex by mainViewModel.selectedIndex.collectAsState()
     when (selectedIndex) {
-        0 -> HomeTopAppBar(modifier)
+        0 -> {
+            HomeTopAppBar(
+                modifier,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = animatedContentScope,
+                navigateToSearch = navigateToSearch
+            )
+        }
+
         1 -> MyAlarmTopAppBar(modifier)
         2 -> MyPageTopAppBar(modifier)
         else -> Unit
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun HomeTopAppBar(modifier: Modifier = Modifier) {
-    TopAppBar(
-        modifier = modifier,
-        title = {
-            Image(
-                painter = painterResource(R.drawable.ic_aljo),
-                contentDescription = "top bar icon",
-                contentScale = ContentScale.FillHeight
-            )
-        },
-        actions = {
-            IconButton(
-                // TODO search logic
-                onClick = {}
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_search),
-                    contentDescription = "top bar action[search]"
+private fun HomeTopAppBar(
+    modifier: Modifier = Modifier,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    navigateToSearch: () -> Unit,
+) {
+    with (sharedTransitionScope) {
+        TopAppBar(
+            modifier = modifier,
+            title = {
+                Image(
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState("search-title"),
+                        animatedVisibilityScope = animatedContentScope
+                    ),
+                    painter = painterResource(R.drawable.ic_aljo),
+                    contentDescription = "top bar icon",
+                    contentScale = ContentScale.FillHeight
                 )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = White)
-    )
+            },
+            actions = {
+                IconButton(
+                    onClick = {
+                        Log.d("TopAppBar", "search icon click !")
+                        navigateToSearch()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_search),
+                        contentDescription = "top bar action[search]"
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = White)
+        )
+    }
 }
 
 @Composable
@@ -101,21 +126,4 @@ private fun MyPageTopAppBar(modifier: Modifier = Modifier) {
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = White)
     )
-
-}
-
-@Preview
-@Composable
-private fun AljyoTopBarPreview() {
-    AljyoTheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            HomeTopAppBar()
-
-            MyAlarmTopAppBar()
-            
-            MyPageTopAppBar()
-        }
-    }
 }

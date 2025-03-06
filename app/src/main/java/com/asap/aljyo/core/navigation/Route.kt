@@ -8,6 +8,8 @@ sealed class ScreenRoute(val route: String) {
 
     data object Main : ScreenRoute(route = "main")
 
+    data object Search : ScreenRoute(route = "search")
+
     data object GroupDetails : ScreenRoute(route = "group-details")
 
     data object Ranking : ScreenRoute(route = "ranking")

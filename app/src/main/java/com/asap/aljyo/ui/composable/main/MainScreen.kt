@@ -1,5 +1,9 @@
 package com.asap.aljyo.ui.composable.main
 
+import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,9 +26,12 @@ import com.asap.aljyo.ui.composable.main.home.main.CreateGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun MainScreen(
     screenNavController: NavHostController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
     AljyoTheme {
@@ -34,7 +41,15 @@ internal fun MainScreen(
         Scaffold(
             containerColor = White,
             topBar = {
-                AljyoTopAppBar(mainViewModel = mainViewModel)
+                AljyoTopAppBar(
+                    mainViewModel = mainViewModel,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = animatedContentScope,
+                    navigateToSearch = {
+                        Log.d("MainScreen", "navigate to search")
+                        screenNavController.navigate(ScreenRoute.Search.route)
+                    }
+                )
             },
             floatingActionButton = {
                 if (selectedIndex == 0) {

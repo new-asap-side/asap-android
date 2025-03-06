@@ -37,7 +37,7 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchGroupDetails(groupId = groupId, userId = userId)
     }
 
-    override suspend fun searchGroup(query: String): Flow<List<AlarmGroup>?> {
+    override suspend fun searchGroup(query: String): Flow<List<AlarmGroup>> {
         return remoteDataSource.searchGroup(query)
     }
 

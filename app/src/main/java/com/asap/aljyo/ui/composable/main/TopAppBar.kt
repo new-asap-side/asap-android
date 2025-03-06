@@ -36,7 +36,7 @@ fun AljyoTopAppBar(
 ) {
     val selectedIndex by mainViewModel.selectedIndex.collectAsState()
     when (selectedIndex) {
-        0 -> SearchTopAppBar(modifier)
+        0 -> HomeTopAppBar(modifier)
         1 -> MyAlarmTopAppBar(modifier)
         2 -> MyPageTopAppBar(modifier)
         else -> Unit
@@ -44,7 +44,7 @@ fun AljyoTopAppBar(
 }
 
 @Composable
-private fun SearchTopAppBar(modifier: Modifier = Modifier) {
+private fun HomeTopAppBar(modifier: Modifier = Modifier) {
     TopAppBar(
         modifier = modifier,
         title = {
@@ -111,7 +111,7 @@ private fun AljyoTopBarPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            SearchTopAppBar()
+            HomeTopAppBar()
 
             MyAlarmTopAppBar()
             

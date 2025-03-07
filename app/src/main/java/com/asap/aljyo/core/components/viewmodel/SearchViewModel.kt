@@ -22,8 +22,8 @@ class SearchViewModel @Inject constructor(
     private val _query = MutableStateFlow<String?>(null)
     val query get() = _query.asStateFlow()
 
-    private val _result = MutableStateFlow<RequestState<List<AlarmGroup>>>(RequestState.Initial)
-    val result get() = _result.asStateFlow()
+    private val _searchState = MutableStateFlow<RequestState<List<AlarmGroup>>>(RequestState.Initial)
+    val searchState get() = _searchState.asStateFlow()
 
     init {
         initialize()
@@ -35,9 +35,10 @@ class SearchViewModel @Inject constructor(
             _query.debounce(DEBOUNCE_TIME_OUT).collectLatest {
                 it?.let {
                     if (it.isNotEmpty()) {
+                        _searchState.emit(RequestState.Loading)
                         fetchGroupUseCase.searchGroupUseCase(it)
-                            .catch { e -> _result.emit(handleRequestThrowable(e)) }
-                            .collect { result -> _result.emit(RequestState.Success(result)) }
+                            .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
+                            .collect { result -> _searchState.emit(RequestState.Success(result)) }
                     }
                 }
             }
@@ -54,9 +55,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             _query.value?.let {
                 if (it.isNotEmpty()) {
+                    _searchState.emit(RequestState.Loading)
                     fetchGroupUseCase.searchGroupUseCase(it)
-                        .catch { e -> _result.emit(handleRequestThrowable(e)) }
-                        .collect { result -> _result.emit(RequestState.Success(result)) }
+                        .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
+                        .collect { result -> _searchState.emit(RequestState.Success(result)) }
                 }
             }
         }

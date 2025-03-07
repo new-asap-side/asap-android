@@ -177,4 +177,8 @@
     <string-array name="privacy_policy">
         <item></item>
     </string-array>
+    <!-- search -->
+    <string name="total">총</string>
+    <string name="cases">건</string>
+    <string name="filter">필터</string>
 </resources>

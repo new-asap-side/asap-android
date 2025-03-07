@@ -21,17 +21,21 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.viewmodel.SearchViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.SharedElement
 import com.asap.aljyo.ui.theme.Black00
@@ -45,6 +49,7 @@ fun SearchTopBar(
     animatedContentScope: AnimatedContentScope,
     onBackClick: () -> Unit,
 ) {
+    val viewmodel: SearchViewModel = hiltViewModel()
     TopAppBar(
         modifier = modifier,
         title = {
@@ -54,7 +59,10 @@ fun SearchTopBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val source = remember { MutableInteractionSource() }
-                    var target by remember { mutableStateOf("") }
+                    val query by viewmodel.query.collectAsState()
+                    val focusRequester = FocusRequester()
+
+                    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -69,22 +77,23 @@ fun SearchTopBar(
 
                     BasicTextField(
                         modifier = Modifier
+                            .focusRequester(focusRequester = focusRequester)
                             .sharedElement(
                                 rememberSharedContentState(SharedElement.SEARCH_BAR),
                                 animatedVisibilityScope = animatedContentScope
                             )
                             .weight(1f)
                             .height(44.dp),
-                        value = target,
+                        value = query ?: "",
                         singleLine = true,
-                        onValueChange = { target = it },
+                        onValueChange = { viewmodel.onQueryChanged(it) },
                         textStyle = MaterialTheme.typography.labelMedium.copy(
                             fontSize = 15.fsp,
                             color = Black00
                         ),
                     ) { innerTextField ->
                         TextFieldDefaults.DecorationBox(
-                            value = target,
+                            value = query ?: "",
                             innerTextField = innerTextField,
                             enabled = true,
                             singleLine = true,
@@ -93,7 +102,7 @@ fun SearchTopBar(
                             contentPadding = PaddingValues(start = 12.dp),
                             trailingIcon = {
                                 IconButton(
-                                    onClick = {}
+                                    onClick = { viewmodel.search() }
                                 ) {
                                     Icon(
                                         modifier = Modifier.sharedElement(

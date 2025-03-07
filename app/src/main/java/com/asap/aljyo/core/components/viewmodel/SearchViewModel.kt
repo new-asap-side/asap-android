@@ -50,6 +50,18 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun search() {
+        viewModelScope.launch {
+            _query.value?.let {
+                if (it.isNotEmpty()) {
+                    fetchGroupUseCase.searchGroupUseCase(it)
+                        .catch { e -> _result.emit(handleRequestThrowable(e)) }
+                        .collect { result -> _result.emit(RequestState.Success(result)) }
+                }
+            }
+        }
+    }
+
     companion object {
         const val DEBOUNCE_TIME_OUT = 500L
     }

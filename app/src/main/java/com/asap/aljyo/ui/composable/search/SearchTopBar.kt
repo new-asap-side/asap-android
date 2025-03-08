@@ -87,7 +87,7 @@ fun SearchTopBar(
                             )
                             .weight(1f)
                             .height(44.dp),
-                        value = query ?: "",
+                        value = query,
                         singleLine = true,
                         onValueChange = { viewmodel.onQueryChanged(it) },
                         textStyle = MaterialTheme.typography.labelMedium.copy(
@@ -96,7 +96,7 @@ fun SearchTopBar(
                         ),
                     ) { innerTextField ->
                         TextFieldDefaults.DecorationBox(
-                            value = query ?: "",
+                            value = query,
                             innerTextField = innerTextField,
                             enabled = true,
                             singleLine = true,

@@ -1,6 +1,5 @@
 package com.asap.aljyo.core.components.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.domain.entity.remote.AlarmGroup
@@ -22,14 +21,13 @@ class SearchViewModel @Inject constructor(
 ) : NetworkViewModel() {
     override val prefix: String = "Search"
 
-    private val _query = MutableStateFlow<String?>(null)
+    private val _query = MutableStateFlow("")
     val query get() = _query.asStateFlow()
 
     private val _searchState = MutableStateFlow<RequestState<List<AlarmGroup>>>(RequestState.Initial)
     val searchState get() = _searchState.asStateFlow()
 
     init {
-        Log.d(tag, "init block")
         initialize()
     }
 
@@ -37,19 +35,17 @@ class SearchViewModel @Inject constructor(
     fun initialize() {
         viewModelScope.launch {
             _query.debounce(DEBOUNCE_TIME_OUT).collectLatest {
-                it?.let {
-                    if (it.isNotEmpty()) {
-                        _searchState.emit(RequestState.Loading)
-                        fetchGroupUseCase.searchGroupUseCase(it)
-                            .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
-                            .collect { result -> _searchState.emit(RequestState.Success(result)) }
-                    }
+                if (it.isNotEmpty()) {
+                    _searchState.emit(RequestState.Loading)
+                    fetchGroupUseCase.searchGroupUseCase(it)
+                        .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
+                        .collect { result -> _searchState.emit(RequestState.Success(result)) }
                 }
             }
         }
     }
 
-    fun onQueryChanged(query: String?) {
+    fun onQueryChanged(query: String) {
         viewModelScope.launch {
             _query.emit(query)
         }
@@ -57,13 +53,11 @@ class SearchViewModel @Inject constructor(
 
     fun search() {
         viewModelScope.launch {
-            _query.value?.let {
-                if (it.isNotEmpty()) {
-                    _searchState.emit(RequestState.Loading)
-                    fetchGroupUseCase.searchGroupUseCase(it)
-                        .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
-                        .collect { result -> _searchState.emit(RequestState.Success(result)) }
-                }
+            if (_query.value.isNotEmpty()) {
+                _searchState.emit(RequestState.Loading)
+                fetchGroupUseCase.searchGroupUseCase(_query.value)
+                    .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
+                    .collect { result -> _searchState.emit(RequestState.Success(result)) }
             }
         }
     }

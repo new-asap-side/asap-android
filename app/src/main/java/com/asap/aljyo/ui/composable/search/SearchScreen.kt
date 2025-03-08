@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.search
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -35,6 +34,7 @@ fun SearchScreen(
 ) {
     var focused by remember { mutableStateOf(true) }
     val viewmodel: SearchViewModel = hiltViewModel()
+    val query by viewmodel.query.collectAsState()
     val searchState by viewmodel.searchState.collectAsState()
 
     AljyoTheme {
@@ -44,17 +44,30 @@ fun SearchScreen(
                     modifier = Modifier,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = animatedContentScope,
-                    onFocusChanged = {
-                        Log.d("SearchScreen", "focuse changed $it")
-                        focused = it
-                    },
+                    onFocusChanged = { focused = it },
                     onBackClick = onBackClick
                 )
             },
             containerColor = White
         ) { paddingValues ->
+            if (query.isEmpty() or query.isBlank()) {
+                RecentSearchList(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                )
+                return@Scaffold
+            }
+
             when (searchState) {
-                RequestState.Initial -> Unit
+                RequestState.Initial -> {
+                    RecentSearchList(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    )
+                }
+
                 RequestState.Loading -> {
                     Box(
                         modifier = Modifier
@@ -81,7 +94,7 @@ fun SearchScreen(
                     )
                 }
 
-                is RequestState.Error -> TODO()
+                is RequestState.Error -> Unit
             }
         }
     }

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Recent_search_history")
+@Entity(tableName = "SearchList")
 data class SearchEntity(
     @PrimaryKey
     @ColumnInfo("query")

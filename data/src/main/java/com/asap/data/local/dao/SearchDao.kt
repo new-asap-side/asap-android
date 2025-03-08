@@ -11,9 +11,9 @@ interface SearchDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(search: SearchEntity)
 
-    @Query("SELECT * FROM Recent_search_history")
+    @Query("SELECT * FROM SearchList")
     suspend fun selectAll(): List<SearchEntity>
 
-    @Query("DELETE FROM Recent_search_history")
+    @Query("DELETE FROM SearchList")
     suspend fun deleteAll()
 }

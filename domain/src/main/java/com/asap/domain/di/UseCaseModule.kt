@@ -33,6 +33,8 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchRankingNumberUseCase
 import com.asap.domain.usecase.group.FetchRankingNumberUseCaseImpl
+import com.asap.domain.usecase.group.GetSearchedListUseCase
+import com.asap.domain.usecase.group.GetSearchedListUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
 import com.asap.domain.usecase.group.SearchGroupUseCase
@@ -123,6 +125,11 @@ interface UseCaseModule {
     fun bindSearchGroupUseCase(
         searchGroupUseCaseImpl: SearchGroupUseCaseImpl
     ): SearchGroupUseCase
+
+    @Binds
+    fun bindGetSearchedListUseCase(
+        getSearchedListUseCaseImpl: GetSearchedListUseCaseImpl
+    ): GetSearchedListUseCase
 
     @Binds
     fun bindFetchGroupRankingUseCase(

@@ -81,5 +81,6 @@ dependencies {
     implementation(libs.firebase.messaging)
 
     // domain module
+    implementation(project(":utility"))
     implementation(project(":domain"))
 }

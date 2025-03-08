@@ -10,8 +10,8 @@ import com.asap.domain.entity.local.SearchEntity
 import com.asap.domain.entity.local.User
 
 @Database(
+    version = 3,
     entities = [User::class, AlarmEntity::class, SearchEntity::class],
-    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -2,6 +2,7 @@ package com.asap.data.remote.datasource
 
 import com.asap.data.remote.request.SaveProfileRequest
 import com.asap.data.remote.response.CheckNicknameResponse
+import com.asap.data.remote.response.FetchProfileItemResponse
 import com.asap.data.remote.service.UserService
 import com.asap.domain.entity.remote.DeleteUserRequestBody
 import com.asap.domain.entity.remote.WhetherResponse
@@ -10,6 +11,7 @@ import com.asap.domain.entity.remote.user.UserProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
@@ -58,5 +60,15 @@ class UserRemoteDataSource @Inject constructor(
             if (!response.isSuccessful) throw HttpException(response)
             emit(response.body())
         }
+    }
+
+    suspend fun fetchProfileItem(userId: String): FetchProfileItemResponse {
+        val response = userService.fetchProfileItem(userId)
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        return response.body() ?: throw Exception("Fetch Profile Item Body Is Null")
     }
 }

@@ -15,8 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PopularViewModel @Inject constructor(
     private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
-    override val prefix: String = "Popular"
 ): NetworkViewModel() {
+    override val prefix: String = "Popular"
+
     private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>>>(UiState.Loading)
     val popularGroupState get() = _popularGroupState.asStateFlow()
 

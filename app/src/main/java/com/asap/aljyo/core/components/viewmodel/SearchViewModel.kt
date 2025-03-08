@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.domain.entity.remote.AlarmGroup
@@ -17,8 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val fetchGroupUseCase: FetchGroupUseCase, override val prefix: String = "Search"
+    private val fetchGroupUseCase: FetchGroupUseCase
 ) : NetworkViewModel() {
+    override val prefix: String = "Search"
+
     private val _query = MutableStateFlow<String?>(null)
     val query get() = _query.asStateFlow()
 
@@ -26,6 +29,7 @@ class SearchViewModel @Inject constructor(
     val searchState get() = _searchState.asStateFlow()
 
     init {
+        Log.d(tag, "init block")
         initialize()
     }
 

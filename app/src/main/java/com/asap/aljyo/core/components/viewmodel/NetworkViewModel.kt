@@ -8,8 +8,7 @@ import retrofit2.HttpException
 
 abstract class NetworkViewModel: ViewModel() {
     protected abstract val prefix: String
-    protected val tag
-        get() = "${prefix}ViewModel"
+    protected val tag get() = "${prefix}ViewModel"
 
     protected fun handleThrowable(e: Throwable): UiState.Error {
         return when (e) {

@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val fetchGroupUseCase: FetchGroupUseCase
+    private val fetchGroupUseCase: FetchGroupUseCase, override val prefix: String = "Search"
 ) : NetworkViewModel() {
     private val _query = MutableStateFlow<String?>(null)
     val query get() = _query.asStateFlow()

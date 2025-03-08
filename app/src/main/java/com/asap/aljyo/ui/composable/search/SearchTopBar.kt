@@ -32,6 +32,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -120,7 +121,7 @@ fun SearchTopBar(
                             shape = RoundedCornerShape(8.dp),
                             placeholder = {
                                 Text(
-                                    text = "알람 제목을 검색해보세요",
+                                    text = stringResource(R.string.search_alarm_hint),
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontSize = 15.fsp,
                                         color = Color(0xFFAAAAAA)

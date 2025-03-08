@@ -60,13 +60,7 @@ fun SearchScreen(
             }
 
             when (searchState) {
-                RequestState.Initial -> {
-                    RecentSearchList(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .fillMaxSize()
-                    )
-                }
+                RequestState.Initial -> Unit
 
                 RequestState.Loading -> {
                     Box(

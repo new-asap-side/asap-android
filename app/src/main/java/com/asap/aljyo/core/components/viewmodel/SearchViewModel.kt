@@ -2,6 +2,8 @@ package com.asap.aljyo.core.components.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.UiState
+import com.asap.domain.entity.local.SearchEntity
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.usecase.group.FetchGroupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +28,9 @@ class SearchViewModel @Inject constructor(
 
     private val _searchState = MutableStateFlow<RequestState<List<AlarmGroup>>>(RequestState.Initial)
     val searchState get() = _searchState.asStateFlow()
+
+    private val _searchedList = MutableStateFlow<UiState<List<SearchEntity>>>(UiState.Loading)
+    val searchedList get() = _searchedList.asStateFlow()
 
     init {
         initialize()
@@ -58,6 +63,14 @@ class SearchViewModel @Inject constructor(
                 fetchGroupUseCase.searchGroupUseCase(_query.value)
                     .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
                     .collect { result -> _searchState.emit(RequestState.Success(result)) }
+            }
+        }
+    }
+
+    fun getSearchedList() {
+        viewModelScope.launch {
+            fetchGroupUseCase.getSearchedListUseCase().let {
+                _searchedList.emit(UiState.Success(it))
             }
         }
     }

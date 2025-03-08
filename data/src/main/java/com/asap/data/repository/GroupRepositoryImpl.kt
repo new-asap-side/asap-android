@@ -48,6 +48,10 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.searchGroup(query)
     }
 
+    override suspend fun getSearchedList(): List<SearchEntity> {
+        return searchDao.selectAll()
+    }
+
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {
         return remoteDataSource.fetchUserAlarmList(userId = userId)
     }

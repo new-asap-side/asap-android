@@ -1,5 +1,6 @@
 package com.asap.domain.di
 
+import com.asap.domain.usecase.group.DeleteAllSearchEntityUseCase
 import com.asap.domain.usecase.group.DeleteSearchEntityUseCase
 import com.asap.domain.usecase.group.GetSearchedListUseCase
 import com.asap.domain.usecase.group.SearchGroupUseCase
@@ -16,10 +17,12 @@ object UseCaseProvider {
     fun provideFetchGroupUseCase(
         searchGroupUseCase: SearchGroupUseCase,
         getSearchedListUseCase: GetSearchedListUseCase,
-        deleteSearchEntityUseCase: DeleteSearchEntityUseCase
+        deleteSearchEntityUseCase: DeleteSearchEntityUseCase,
+        deleteAllSearchEntityUseCase: DeleteAllSearchEntityUseCase
     ): SearchGroupUseCaseWrapper = SearchGroupUseCaseWrapper(
         searchGroupUseCase = searchGroupUseCase,
         getSearchedListUseCase = getSearchedListUseCase,
-        deleteSearchEntityUseCase = deleteSearchEntityUseCase
+        deleteSearchEntityUseCase = deleteSearchEntityUseCase,
+        deleteAllSearchEntityUseCase = deleteAllSearchEntityUseCase
     )
 }

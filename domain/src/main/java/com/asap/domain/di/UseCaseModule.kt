@@ -20,6 +20,8 @@ import com.asap.domain.usecase.auth.RefreshTokenUseCase
 import com.asap.domain.usecase.auth.RefreshTokenUseCaseImpl
 import com.asap.domain.usecase.auth.RegisterTokenUseCase
 import com.asap.domain.usecase.auth.RegisterTokenUseCaseImpl
+import com.asap.domain.usecase.group.DeleteAllSearchEntityUseCase
+import com.asap.domain.usecase.group.DeleteAllSearchEntityUseCaseImpl
 import com.asap.domain.usecase.group.DeleteSearchEntityUseCase
 import com.asap.domain.usecase.group.DeleteSearchEntityUseCaseImpl
 import com.asap.domain.usecase.group.FetchAlarmListUseCase
@@ -136,6 +138,11 @@ interface UseCaseModule {
     fun bindDeleteSearchEntityUseCase(
         deleteSearchEntityUseCaseImpl: DeleteSearchEntityUseCaseImpl
     ): DeleteSearchEntityUseCase
+
+    @Binds
+    fun bindDeleteAllSearchEntityUseCase(
+        deleteAllSearchEntityUseCaseImpl: DeleteAllSearchEntityUseCaseImpl
+    ) : DeleteAllSearchEntityUseCase
 
     @Binds
     fun bindFetchGroupRankingUseCase(

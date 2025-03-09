@@ -9,7 +9,8 @@ import javax.inject.Inject
 data class SearchGroupUseCaseWrapper(
     val searchGroupUseCase: SearchGroupUseCase,
     val getSearchedListUseCase: GetSearchedListUseCase,
-    val deleteSearchEntityUseCase: DeleteSearchEntityUseCase
+    val deleteSearchEntityUseCase: DeleteSearchEntityUseCase,
+    val deleteAllSearchEntityUseCase: DeleteAllSearchEntityUseCase
 )
 
 // 알람 그룹 검색

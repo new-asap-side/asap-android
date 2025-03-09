@@ -88,7 +88,14 @@ class SearchViewModel @Inject constructor(
     }
 
     fun deleteAll() {
-
+        viewModelScope.launch {
+            usecase.run {
+                deleteAllSearchEntityUseCase()
+                getSearchedListUseCase().let {
+                    _searchedList.emit(UiState.Success(it))
+                }
+            }
+        }
     }
 
     companion object {

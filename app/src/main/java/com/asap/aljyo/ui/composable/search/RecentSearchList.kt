@@ -100,7 +100,7 @@ fun RecentSearchList(modifier: Modifier) {
 
                                 IconButton(
                                     modifier = Modifier.size(20.dp),
-                                    onClick = {}
+                                    onClick = { viewModel.delete(item.query) }
                                 ) {
                                     Icon(
                                         Icons.Default.Close,

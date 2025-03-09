@@ -76,11 +76,13 @@ class SearchViewModel @Inject constructor(
     }
 
     fun delete(query: String) {
-
+        viewModelScope.launch {
+            usecase
+        }
     }
 
     fun deleteAll() {
-        
+
     }
 
     companion object {

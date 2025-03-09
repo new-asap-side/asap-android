@@ -27,6 +27,11 @@ interface DeleteSearchEntityUseCase {
     suspend operator fun invoke(query: String)
 }
 
+// 알람 그룹 검색 전체 삭제
+interface DeleteAllSearchEntityUseCase {
+    suspend operator fun invoke()
+}
+
 class SearchGroupUseCaseImpl @Inject constructor(
     private val repository: GroupRepository
 ) : SearchGroupUseCase {
@@ -44,5 +49,13 @@ class DeleteSearchEntityUseCaseImpl @Inject constructor(
 ) : DeleteSearchEntityUseCase {
     override suspend fun invoke(query: String) {
         repository.deleteSearchEntity(query)
+    }
+}
+
+class DeleteAllSearchEntityUseCaseImpl @Inject constructor(
+    private val repository: GroupRepository
+) : DeleteAllSearchEntityUseCase {
+    override suspend fun invoke() {
+        repository.deleteAllSearchEntity()
     }
 }

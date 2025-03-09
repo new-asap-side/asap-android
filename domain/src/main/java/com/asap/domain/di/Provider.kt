@@ -1,8 +1,8 @@
 package com.asap.domain.di
 
-import com.asap.domain.usecase.group.FetchGroupUseCase
 import com.asap.domain.usecase.group.GetSearchedListUseCase
 import com.asap.domain.usecase.group.SearchGroupUseCase
+import com.asap.domain.usecase.group.SearchGroupUseCaseWrapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object UseCaseProvider {
     fun provideFetchGroupUseCase(
         searchGroupUseCase: SearchGroupUseCase,
         getSearchedListUseCase: GetSearchedListUseCase
-    ): FetchGroupUseCase = FetchGroupUseCase(
+    ): SearchGroupUseCaseWrapper = SearchGroupUseCaseWrapper(
         searchGroupUseCase = searchGroupUseCase,
         getSearchedListUseCase = getSearchedListUseCase
     )

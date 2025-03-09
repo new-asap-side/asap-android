@@ -6,7 +6,7 @@ import com.asap.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-data class FetchGroupUseCase(
+data class SearchGroupUseCaseWrapper(
     val searchGroupUseCase: SearchGroupUseCase,
     val getSearchedListUseCase: GetSearchedListUseCase
 )

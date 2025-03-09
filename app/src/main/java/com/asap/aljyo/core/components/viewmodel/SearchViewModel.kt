@@ -75,6 +75,14 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun delete(query: String) {
+
+    }
+
+    fun deleteAll() {
+        
+    }
+
     companion object {
         const val DEBOUNCE_TIME_OUT = 500L
     }

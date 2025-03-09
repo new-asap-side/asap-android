@@ -1,6 +1,7 @@
 package com.asap.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,6 +14,9 @@ interface SearchDao {
 
     @Query("SELECT * FROM SearchList")
     suspend fun selectAll(): List<SearchEntity>
+
+    @Delete
+    suspend fun delete(vararg entity: SearchEntity)
 
     @Query("DELETE FROM SearchList")
     suspend fun deleteAll()

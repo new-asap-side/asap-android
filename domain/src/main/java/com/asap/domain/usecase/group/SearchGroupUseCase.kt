@@ -24,7 +24,7 @@ interface GetSearchedListUseCase {
 
 // 알람 그룹 검색 기록 단일 삭제
 interface DeleteSearchEntityUseCase {
-    suspend operator fun invoke(entity: SearchEntity)
+    suspend operator fun invoke(query: String)
 }
 
 class SearchGroupUseCaseImpl @Inject constructor(
@@ -42,7 +42,7 @@ class GetSearchedListUseCaseImpl @Inject constructor(
 class DeleteSearchEntityUseCaseImpl @Inject constructor(
     private val repository: GroupRepository
 ) : DeleteSearchEntityUseCase {
-    override suspend fun invoke(entity: SearchEntity) {
-        repository.deleteSearchEntity(entity)
+    override suspend fun invoke(query: String) {
+        repository.deleteSearchEntity(query)
     }
 }

@@ -48,8 +48,8 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.searchGroup(query)
     }
 
-    override suspend fun deleteSearchEntity(entity: SearchEntity) {
-        searchDao.delete(entity)
+    override suspend fun deleteSearchEntity(query: String) {
+        searchDao.deleteByQury(query)
     }
 
     override suspend fun getSearchedList(): List<SearchEntity> {

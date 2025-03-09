@@ -28,7 +28,7 @@ interface GroupRepository {
     suspend fun getSearchedList(): List<SearchEntity>
 
     // 그룹 검색 기록 삭제
-    suspend fun deleteSearchEntity(entity: SearchEntity)
+    suspend fun deleteSearchEntity(query: String)
 
     // 유저 알람 리스트 조회
     suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?>

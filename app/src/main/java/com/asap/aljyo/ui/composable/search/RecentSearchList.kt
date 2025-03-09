@@ -79,22 +79,24 @@ fun RecentSearchList(modifier: Modifier) {
             when (searchedListState) {
                 UiState.Loading, is UiState.Error -> Unit
                 is UiState.Success -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.empty_searched),
-                            style = MaterialTheme.typography.labelMedium.copy(
-                                fontSize = 15.fsp,
-                                color = Color(0xFF666666),
-                            )
-                        )
-                    }
-
-                    (searchedListState as UiState.Success).data.forEach { item ->
+                    (searchedListState as UiState.Success).data.also {
+                        if (it.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.empty_searched),
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontSize = 15.fsp,
+                                        color = Color(0xFF666666)
+                                    )
+                                )
+                            }
+                        }
+                    }.forEach { item ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,

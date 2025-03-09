@@ -77,7 +77,13 @@ class SearchViewModel @Inject constructor(
 
     fun delete(query: String) {
         viewModelScope.launch {
-            usecase.deleteSearchEntityUseCase(query)
+            usecase.run {
+                deleteSearchEntityUseCase(query)
+                getSearchedListUseCase().let {
+                    _searchedList.emit(UiState.Success(it))
+                }
+            }
+
         }
     }
 

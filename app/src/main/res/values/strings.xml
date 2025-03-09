@@ -181,6 +181,7 @@
     <string name="search_alarm_hint">알람 제목을 검색해보세요</string>
     <string name="recent_search">최근검색</string>
     <string name="delete_all">전체삭제</string>
+    <string name="empty_searched">최근에 검색한 기록이 없습니다.</string>
     <string name="total">총</string>
     <string name="cases">건</string>
     <string name="filter">필터</string>

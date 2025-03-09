@@ -2,10 +2,12 @@ package com.asap.aljyo.ui.composable.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -75,8 +77,23 @@ fun RecentSearchList(modifier: Modifier) {
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             when (searchedListState) {
-                UiState.Loading, is UiState.Error-> Unit
+                UiState.Loading, is UiState.Error -> Unit
                 is UiState.Success -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.empty_searched),
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontSize = 15.fsp,
+                                color = Color(0xFF666666),
+                            )
+                        )
+                    }
+
                     (searchedListState as UiState.Success).data.forEach { item ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),

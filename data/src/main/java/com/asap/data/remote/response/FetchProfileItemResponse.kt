@@ -6,13 +6,13 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FetchProfileItemResponse(
     @Json(name = "profileItems")
-    val profileItems: List<ProfileItem>,
+    val profileItems: List<ProfileItemResponse>,
     @Json(name = "totalRankScore")
     val totalRankScore: Int
 )
 
 @JsonClass(generateAdapter = true)
-data class ProfileItem(
+data class ProfileItemResponse(
     @Json(name = "is_red_point")
     val isRedPoint: Boolean,
     @Json(name = "is_unlocked")

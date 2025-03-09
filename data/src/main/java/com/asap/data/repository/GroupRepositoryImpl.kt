@@ -52,6 +52,10 @@ class GroupRepositoryImpl @Inject constructor(
         searchDao.deleteByQury(query)
     }
 
+    override suspend fun deleteAllSearchEntity() {
+        searchDao.deleteAll()
+    }
+
     override suspend fun getSearchedList(): List<SearchEntity> {
         return searchDao.selectAll()
     }

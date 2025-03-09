@@ -30,6 +30,9 @@ interface GroupRepository {
     // 그룹 검색 기록 삭제
     suspend fun deleteSearchEntity(query: String)
 
+    // 그룹 검색 기록 전체 삭제
+    suspend fun deleteAllSearchEntity()
+
     // 유저 알람 리스트 조회
     suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?>
 

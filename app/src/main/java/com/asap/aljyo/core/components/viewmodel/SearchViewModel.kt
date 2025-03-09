@@ -5,7 +5,7 @@ import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.local.SearchEntity
 import com.asap.domain.entity.remote.AlarmGroup
-import com.asap.domain.usecase.group.FetchGroupUseCase
+import com.asap.domain.usecase.group.SearchGroupUseCaseWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val fetchGroupUseCase: FetchGroupUseCase
+    private val usecase: SearchGroupUseCaseWrapper
 ) : NetworkViewModel() {
     override val prefix: String = "Search"
 
@@ -42,7 +42,7 @@ class SearchViewModel @Inject constructor(
             _query.debounce(DEBOUNCE_TIME_OUT).collectLatest {
                 if (it.isNotEmpty()) {
                     _searchState.emit(RequestState.Loading)
-                    fetchGroupUseCase.searchGroupUseCase(it)
+                    usecase.searchGroupUseCase(it)
                         .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
                         .collect { result -> _searchState.emit(RequestState.Success(result)) }
                 }
@@ -60,7 +60,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             if (_query.value.isNotEmpty()) {
                 _searchState.emit(RequestState.Loading)
-                fetchGroupUseCase.searchGroupUseCase(_query.value)
+                usecase.searchGroupUseCase(_query.value)
                     .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
                     .collect { result -> _searchState.emit(RequestState.Success(result)) }
             }
@@ -69,7 +69,7 @@ class SearchViewModel @Inject constructor(
 
     fun getSearchedList() {
         viewModelScope.launch {
-            fetchGroupUseCase.getSearchedListUseCase().let {
+            usecase.getSearchedListUseCase().let {
                 _searchedList.emit(UiState.Success(it))
             }
         }

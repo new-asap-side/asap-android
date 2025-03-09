@@ -26,7 +26,6 @@ import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCaseImpl
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase
 import com.asap.domain.usecase.group.FetchGroupRankingUseCaseImpl
-import com.asap.domain.usecase.group.FetchGroupUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchPopularGroupUseCase

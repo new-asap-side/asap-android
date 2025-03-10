@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 sealed interface AlarmUnlockContent {
     data object Slide : AlarmUnlockContent
     data object Card : AlarmUnlockContent
+    data object Calculator : AlarmUnlockContent
 }
 
 @JsonClass(generateAdapter = true)
@@ -29,6 +30,7 @@ data class AlarmPayload(
     val content get() = when (alarmUnlockContent) {
         "SLIDE" -> AlarmUnlockContent.Slide
         "CARD" -> AlarmUnlockContent.Card
+        "CALCULATOR" -> AlarmUnlockContent.Calculator
         else -> throw Exception("Unknown unlock alarm type.")
     }
 }

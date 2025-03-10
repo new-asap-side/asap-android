@@ -19,6 +19,7 @@ import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GroupService {
     // 인기 그룹 조회
@@ -35,6 +36,10 @@ interface GroupService {
         @Path("group_id") groupId: Int,
         @Path("user_id") userId: Int
     ): Response<GroupDetails>
+
+    // 그룹 검색
+    @GET("/group/group-search")
+    suspend fun searchGroup(@Query("groupName") query: String): Response<List<AlarmGroup>>
 
     // 유저 알람 리스트 조회
     @GET("/group/user/{user_id}")

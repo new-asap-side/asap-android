@@ -83,6 +83,28 @@ internal fun AppNavHost() {
                     }
                 )
             }
+            
+            composable(
+                route = "${ScreenRoute.GroupDetails.route}/{groupId}?isNew={isNew}",
+                arguments = listOf(
+                    navArgument("groupId") { type = NavType.IntType },
+                    navArgument("isNew") {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    }
+                ),
+                enterTransition = { defaultEnterTransition() },
+                exitTransition = { defaultExitTransition() },
+                popEnterTransition = null,
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getInt("groupId") ?: 0
+                val isNew = backStackEntry.arguments?.getBoolean("isNew") ?: false
+                GroupDetailsScreen(
+                    navController = navController,
+                    isNew = isNew,
+                    groupId = groupId
+                )
+            }
 
             composable(
                 route = "${ScreenRoute.GroupDetails.route}/{groupId}",
@@ -269,6 +291,19 @@ internal fun AppNavHost() {
                     navigateToComplete = { navController.popBackStack() }
                 )
             }
+            
+            composable(route = MainScreenRoute.Home.route) {
+                HomeScreen(
+                    navigateToDescript = {
+                        screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                    },
+                    navigateToGroupDetails = navigateToGroupDetails,
+                    onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
+                    navigateToPersonalSetting = { groupId ->
+                        screenNavController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
+                    }
+                )
+            }
 
             composable(route = ScreenRoute.PrivacyPolicy.route){
                 PrivacyPolicyScreen(
@@ -277,6 +312,29 @@ internal fun AppNavHost() {
             }
         }
 
+            composable(
+                route = MainScreenRoute.MyPage.route,
+            ) {
+                MyPageScreen(
+                    navigateToDescript = {
+                        screenNavController.navigate(ScreenRoute.AljyoDescript.route)
+                    },
+                    navigateToPreferences = {
+                        screenNavController.navigate(ScreenRoute.Preferences.route)
+                    },
+                    navigateToOnboarding = {
+                        screenNavController.navigate(ScreenRoute.Onboarding.route) {
+                            popUpTo(0)
+                        }
+                    },
+                    navigateToProfileSetting = { nickName, profileImage ->
+                        screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
+                    },
+                    navigateToPrivacyPolicy = {
+                        screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)
+                    }
+                )
+            }
     }
 }
 
@@ -330,8 +388,8 @@ fun NavGraphBuilder.groupCreateNavGraph(
             viewModel = hiltViewModel(parentEntry),
             onBackClick = { navController.popBackStack() },
             navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}/create?musicTitle=$it") },
-            onCompleteClick = { groupId ->
-                navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId") {
+            onCompleteClick = { groupId->
+                navController.navigate("${ScreenRoute.GroupDetails.route}/$groupId?isNew=true") {
                     popUpTo(ScreenRoute.GroupType.route) { inclusive = true }
                 }
             }
@@ -379,15 +437,24 @@ fun NavGraphBuilder.editNavGraph(
     }
 
     composable(
-        route = "${ScreenRoute.PersonalEdit.route}/{groupId}/{setting}",
+        route = "${ScreenRoute.PersonalEdit.route}/{groupId}?setting={setting}",
         arguments = listOf(
             navArgument("groupId") { type = NavType.IntType },
-            navArgument("setting") { type = CustomNavType.PersonalEditType }
+            navArgument("setting") {
+                type = CustomNavType.PersonalEditType
+                nullable = true
+            }
         )
     ) {
         PersonalEditScreen(
             onBackClick = { navController.popBackStack() },
-            navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") }
+            navigateToAlarmMusicScreen = { navController.navigate("${ScreenRoute.AlarmMusic.route}?musicTitle=$it") },
+            navigateToGroupDetails = {
+                navController.navigate("${ScreenRoute.GroupDetails.route}/$it"){
+                    launchSingleTop = true
+                    popUpTo("${ScreenRoute.PersonalEdit.route}/{groupId}?setting={setting}") { inclusive = true }
+                }
+            }
         )
     }
 

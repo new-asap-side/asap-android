@@ -44,7 +44,6 @@ fun ProfileImagePicker(
     Box(
         modifier = modifier
             .size(88.dp)
-            .background(Grey02, shape = CircleShape)
             .clickable(
                 interactionSource = remember{ MutableInteractionSource() },
                 indication = null,
@@ -52,7 +51,7 @@ fun ProfileImagePicker(
             )
     ) {
             AsyncImage(
-                model = profileImage ?: R.drawable.ic_profile_default,
+                model = profileImage,
                 contentDescription = "Profile Image",
                 contentScale = if (profileImage == null) ContentScale.Fit else ContentScale.Crop,
                 error = painterResource(R.drawable.ic_empty_profile),
@@ -60,12 +59,10 @@ fun ProfileImagePicker(
                     .fillMaxSize()
                     .clip(CircleShape)
                     .align(Alignment.Center)
-                    .then(if(profileImage == null) Modifier.offset(y = 12.dp) else Modifier)
             )
         Box(
             modifier = Modifier
                 .size(28.dp)
-                .shadow(8.dp, shape = CircleShape)
                 .background(White, shape = CircleShape)
                 .clip(CircleShape)
                 .border(1.dp, Grey02, shape = CircleShape)

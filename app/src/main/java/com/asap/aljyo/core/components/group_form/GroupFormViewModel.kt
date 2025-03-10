@@ -32,11 +32,11 @@ class GroupFormViewModel @Inject constructor(
     private val _alarmScreenState = MutableStateFlow(AlarmScreenState())
     val alarmScreenState: StateFlow<AlarmScreenState> get() = _alarmScreenState.asStateFlow()
 
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading = _isLoading.asStateFlow()
+
     private val _complete = MutableSharedFlow<Int?>()
     val complete = _complete.asSharedFlow()
-
-    private val _showDialog = MutableSharedFlow<Boolean>()
-    val showDialog = _showDialog.asSharedFlow()
 
     private var groupId: Int? = null
 
@@ -127,12 +127,12 @@ class GroupFormViewModel @Inject constructor(
 
     fun onCompleteClicked() {
         viewModelScope.launch {
+            _isLoading.value = true
             val volume = if (_alarmScreenState.value.alarmType == "VIBRATION") {
                 null
             } else {
                 _alarmScreenState.value.alarmVolume
             }
-            Log.d("VM", "volume: $volume")
 
             createGroupUseCase(
                 groupImage = PictureUtil.encodeType(_groupScreenState.value.groupImage)
@@ -156,14 +156,9 @@ class GroupFormViewModel @Inject constructor(
             }
         }.invokeOnCompletion {
             viewModelScope.launch {
-                _showDialog.emit(true)
+                _isLoading.value = false
+                _complete.emit(groupId)
             }
-        }
-    }
-
-    fun navigateToDetail() {
-        viewModelScope.launch {
-            _complete.emit(groupId)
         }
     }
 }

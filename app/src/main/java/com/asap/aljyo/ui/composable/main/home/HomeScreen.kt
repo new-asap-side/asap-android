@@ -39,6 +39,8 @@ import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.components.viewmodel.main.MainViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.composable.common.dialog.DialogButtonType
+import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
@@ -47,6 +49,8 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +59,8 @@ fun HomeScreen(
     navigateToDescript: () -> Unit,
     navigateToMyAlarm: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
+    navigateToPersonalSetting: (Int) -> Unit,
+    onCreateButtonClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Surface(
@@ -86,6 +92,13 @@ fun HomeScreen(
                     isError = true
                     isLoading = false
                 }
+                val privateGroupState = viewModel.privateGroupState
+                var password by remember { mutableStateOf("") }
+                var isLoading by remember { mutableStateOf(false) }
+                var isError by remember { mutableStateOf(false) }
+                val sheetState = rememberModalBottomSheetState()
+                val requestJoinState by viewModel.joinResponseState.collectAsState()
+                var showDialog by remember { mutableStateOf(false) }
 
                 is RequestState.Success -> {
                     isLoading = false
@@ -101,6 +114,30 @@ fun HomeScreen(
                 RequestState.Initial -> Unit
                 RequestState.Loading -> {
                     isLoading = true
+
+                LaunchedEffect(requestJoinState) {
+                    when (requestJoinState) {
+                        is RequestState.Error -> {
+                            isError = true
+                            isLoading = false
+                        }
+                        is RequestState.Success -> {
+                            isLoading = false
+                            val groupId = viewModel.selectedGroupId.value!!
+                            coroutineScope.launch {
+                                hideSheet()
+                            }.invokeOnCompletion {
+                                viewModel.joinStateClear()
+                                navigateToPersonalSetting(groupId)
+                            }
+                        }
+
+                        RequestState.Initial -> Unit
+                        RequestState.Loading -> {
+                            isLoading = true
+                        }
+                    }
+
                 }
             }
         }
@@ -132,6 +169,34 @@ fun HomeScreen(
                 }
             ) {
                 val interactionSource = remember { MutableInteractionSource() }
+
+                LaunchedEffect(Unit) {
+                    viewModel.showDialog.collect {
+                        showDialog = it
+                    }
+                }
+
+                if (privateGroupState.showPasswordSheet) {
+                    BottomSheet(
+                        modifier = Modifier.padding(
+                                horizontal = 20.dp,
+                                vertical = 24.dp
+                            ),
+                        sheetState = sheetState,
+                        onDismissRequest = { viewModel.clearPrivateGroupState() },
+                        arrangement = Arrangement.SpaceBetween,
+                        title = {
+                            Text(
+                                text = stringResource(R.string.private_alarm_input_password),
+                                style = MaterialTheme.typography.headlineMedium.copy(
+                                    color = Black01,
+                                    fontSize = 18.fsp
+                                )
+                            )
+                        }
+                    ) {
+                        val interactionSource = remember { MutableInteractionSource() }
+
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -255,6 +320,31 @@ fun HomeScreen(
                                 fontSize = 16.fsp
                             )
                         )
+
+                            TextButton(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight(),
+                                enabled = password.length >= 4 && !isLoading,
+                                colors = ButtonDefaults.textButtonColors(
+                                    disabledContainerColor = Grey02,
+                                    disabledContentColor = Black04,
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = White
+                                ),
+                                shape = RoundedCornerShape(10.dp),
+                                onClick = {
+                                    viewModel.joinGroup(password = password)
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.join),
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontSize = 16.fsp
+                                    )
+                                )
+                            }
+                        }
                     }
 
                     TextButton(
@@ -271,6 +361,24 @@ fun HomeScreen(
                         shape = RoundedCornerShape(10.dp),
                         onClick = {
                             viewModel.joinGroup(password = password, alarmType = "VIBRATION")
+
+                if (showDialog) {
+                    PrecautionsDialog(
+                        buttonType = DialogButtonType.SINGLE,
+                        title = "그룹 인원이 모두 찼어요",
+                        description = "다른 그룹을 찾아볼까요?",
+                        onDismissRequest = { showDialog = false },
+                        onConfirm =  { showDialog = false }
+                    )
+                }
+
+                HomeTabScreen(
+                    navigateToDescript = navigateToDescript,
+                    onGroupItemClick = { isPublic, groupId ->
+                        if (!isPublic) {
+                            viewModel.checkJoinedGroup(groupId)
+                            viewModel.selectedGroupId.value = groupId
+                            return@HomeTabScreen
                         }
                     ) {
                         Text(

@@ -75,80 +75,83 @@ fun AlarmMusicScreen(
         Music("Alarm10", R.raw.alarm10)
     )
 
-    Scaffold(
-        containerColor = White,
-        topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-                    .height(56.dp)
-                    .background(White)
-            ) {
-                IconButton(
+    AljyoTheme {
+        Scaffold(
+            containerColor = White,
+            topBar = {
+                Box(
                     modifier = Modifier
-                        .align(Alignment.CenterStart),
-                    onClick = onBackClick
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .height(56.dp)
+                        .background(White)
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_top_back),
-                        contentDescription = "BACK"
+                    IconButton(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart),
+                        onClick = onBackClick
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_top_back),
+                            contentDescription = "BACK"
+                        )
+                    }
+
+                    Text(
+                        text = "노래선택",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = Black,
+                            fontSize = 16.fsp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
-
-                Text(
-                    text = "노래선택",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        color = Black,
-                        fontSize = 16.fsp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
+            },
+            bottomBar = {
+                CustomButton(
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp)
+                        .navigationBarsPadding(),
+                    text = "완료",
+                    enable = selectedMusic.isNullOrEmpty().not(),
+                    onClick = {
+                        onCompleteClick(selectedMusic!!)
+                    }
                 )
             }
-        },
-        bottomBar = {
-            CustomButton(
-                modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp)
-                    .navigationBarsPadding(),
-                text = "완료",
-                enable = selectedMusic.isNullOrEmpty().not(),
-                onClick = {
-                    onCompleteClick(selectedMusic!!)
-                }
-            )
-        }
-    ) { innerPadding ->
+        ) { innerPadding ->
 
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .padding(innerPadding)
+                    .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                items(alarmMusicList) { music ->
-                    MusicItem(
-                        modifier = Modifier.padding(bottom = 24.dp),
-                        item = music,
-                        isSelected = music.musicTitle == selectedMusic,
-                        onClick = {
-                            selectedMusic = music.musicTitle
-                            mediaPlayer?.release()
-                            mediaPlayer = MediaPlayer.create(context, music.music).apply {
-                                isLooping = true
-                                start()
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    items(alarmMusicList) { music ->
+                        MusicItem(
+                            modifier = Modifier.padding(bottom = 24.dp),
+                            item = music,
+                            isSelected = music.musicTitle == selectedMusic,
+                            onClick = {
+                                selectedMusic = music.musicTitle
+                                mediaPlayer?.release()
+                                mediaPlayer = MediaPlayer.create(context, music.music).apply {
+                                    isLooping = true
+                                    start()
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
     }
+
     DisposableEffect(Unit) {
         onDispose {
             mediaPlayer?.release()
@@ -180,7 +183,7 @@ fun MusicItem(
                 .weight(1f)
                 .padding(end = 4.dp),
             text = item.musicTitle,
-            style = MaterialTheme.typography.bodyMedium.copy(
+            style = MaterialTheme.typography.labelMedium.copy(
                 color = Black01,
                 fontSize = 15.fsp,
             ),

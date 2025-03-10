@@ -139,9 +139,10 @@ data class Calculator(
     @Composable
     override fun Content() {
         val viewModel = provide()
-        val enable by viewModel.enable.collectAsState()
-        val selectedIndex by viewModel.selectedIndex.collectAsState()
+//        val enable by viewModel.enable.collectAsState()
+//        val selectedIndex by viewModel.selectedIndex.collectAsState()
         val operation by viewModel.operation.collectAsState()
+        val choiceState by viewModel.choiceState.collectAsState()
 
         Box(modifier = modifier) {
             Box(
@@ -209,7 +210,7 @@ data class Calculator(
                 ) {
                     operation.choice.forEachIndexed { index, number ->
                         val iconSize by animateDpAsState(
-                            targetValue = if (index == selectedIndex) 66.dp else 0.dp,
+                            targetValue = if (index == choiceState.index) 66.dp else 0.dp,
                             animationSpec = tween(200, easing = EaseOutBounce),
                             label = "choice effect"
                         )
@@ -225,7 +226,7 @@ data class Calculator(
                                 ),
                             shape = RoundedCornerShape(24.dp),
                             onClick = { viewModel.emit(id, index, number) },
-                            enabled = enable,
+                            enabled = choiceState.enable,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = White,
                                 disabledContainerColor = White,
@@ -233,12 +234,18 @@ data class Calculator(
                                 disabledContentColor = Black04
                             )
                         ) {
+                            val icon = if (operation.isAnswer(number)) {
+                                painterResource(R.drawable.ic_answer)
+                            } else {
+                                painterResource(R.drawable.ic_wrong)
+                            }
+
                             Box(modifier = Modifier.fillMaxSize()) {
                                 Icon(
                                     modifier = Modifier
                                         .align(Alignment.Center)
                                         .size(iconSize),
-                                    painter = painterResource(R.drawable.ic_wrong),
+                                    painter = icon,
                                     tint = Color.Unspecified,
                                     contentDescription = "effect"
                                 )

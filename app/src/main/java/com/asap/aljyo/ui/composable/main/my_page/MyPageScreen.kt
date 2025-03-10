@@ -51,6 +51,7 @@ internal fun MyPageScreen(
     navigateToOnboarding: () -> Unit,
     navigateToProfileSetting: (String?, String?) -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
+    navigateToCustomizeProfile: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
 
@@ -110,6 +111,7 @@ internal fun MyPageScreen(
 
                 Box(
                     modifier = Modifier
+                        .clickable { navigateToCustomizeProfile() }
                         .height(52.dp)
                         .padding(horizontal = 20.dp)
                         .background(color = White, shape = RoundedCornerShape(14.dp))
@@ -205,7 +207,8 @@ private fun Preview() {
             navigateToOnboarding = {},
             navigateToPreferences = {},
             navigateToProfileSetting = { _, _ -> },
-            navigateToPrivacyPolicy = {}
+            navigateToPrivacyPolicy = {},
+            navigateToCustomizeProfile = {}
         )
     }
 }

@@ -291,19 +291,7 @@ internal fun AppNavHost() {
                     navigateToComplete = { navController.popBackStack() }
                 )
             }
-            
-            composable(route = MainScreenRoute.Home.route) {
-                HomeScreen(
-                    navigateToDescript = {
-                        screenNavController.navigate(ScreenRoute.AljyoDescript.route)
-                    },
-                    navigateToGroupDetails = navigateToGroupDetails,
-                    onCreateButtonClick = { screenNavController.navigate(ScreenRoute.GroupType.route) },
-                    navigateToPersonalSetting = { groupId ->
-                        screenNavController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
-                    }
-                )
-            }
+
 
             composable(route = ScreenRoute.PrivacyPolicy.route){
                 PrivacyPolicyScreen(
@@ -311,30 +299,6 @@ internal fun AppNavHost() {
                 )
             }
         }
-
-            composable(
-                route = MainScreenRoute.MyPage.route,
-            ) {
-                MyPageScreen(
-                    navigateToDescript = {
-                        screenNavController.navigate(ScreenRoute.AljyoDescript.route)
-                    },
-                    navigateToPreferences = {
-                        screenNavController.navigate(ScreenRoute.Preferences.route)
-                    },
-                    navigateToOnboarding = {
-                        screenNavController.navigate(ScreenRoute.Onboarding.route) {
-                            popUpTo(0)
-                        }
-                    },
-                    navigateToProfileSetting = { nickName, profileImage ->
-                        screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
-                    },
-                    navigateToPrivacyPolicy = {
-                        screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)
-                    }
-                )
-            }
     }
 }
 

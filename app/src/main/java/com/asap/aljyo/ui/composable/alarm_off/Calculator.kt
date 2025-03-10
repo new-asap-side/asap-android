@@ -139,8 +139,6 @@ data class Calculator(
     @Composable
     override fun Content() {
         val viewModel = provide()
-//        val enable by viewModel.enable.collectAsState()
-//        val selectedIndex by viewModel.selectedIndex.collectAsState()
         val operation by viewModel.operation.collectAsState()
         val choiceState by viewModel.choiceState.collectAsState()
 

@@ -44,7 +44,6 @@ import com.asap.aljyo.core.components.viewmodel.CalculatorViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
-import com.asap.aljyo.ui.shape.TailArrangement
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
@@ -163,22 +162,24 @@ data class Calculator(
                         }
                     }
                     .offset(y = 50.dp)
+                    .dropShadow(
+                        color = Color(0xFFE87D8D),
+                        shape = RoundedCornerShape(16.dp),
+                        blur = 24.dp
+                    )
                     .fillMaxSize()
             ) {
-                Box(
+                Image(
                     modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.img_calculator),
-                        contentDescription = "calculator",
-                        contentScale = ContentScale.FillWidth
-                    )
-                }
+                    painter = painterResource(R.drawable.img_calculator),
+                    contentDescription = "calculator",
+                    contentScale = ContentScale.FillWidth
+                )
 
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .offset(y = 40.dp),
+                        .offset(y = 40.dp)
                 ) {
                     Text(
                         text = "${operation.expression}",

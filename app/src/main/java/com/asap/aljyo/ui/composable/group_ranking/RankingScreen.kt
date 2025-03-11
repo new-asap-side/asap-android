@@ -110,7 +110,7 @@ internal fun RankingScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(R.string.select_time),
+                            text = stringResource(R.string.rank_score_guide),
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontSize = 18.fsp,
                                 color = Black01

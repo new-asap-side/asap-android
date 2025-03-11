@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -81,12 +83,15 @@ fun ResultCard(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
+            // profile image
             AsyncImage(
                 model = rankState.profile,
                 contentDescription = "Profile Image",
                 contentScale = ContentScale.Fit,
                 error = painterResource(R.drawable.ic_empty_profile),
-                modifier = Modifier.size(152.dp)
+                modifier = Modifier
+                    .size(152.dp)
+                    .clip(CircleShape)
             )
 
             Icon(

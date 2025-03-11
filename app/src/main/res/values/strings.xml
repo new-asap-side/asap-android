@@ -127,8 +127,11 @@
     <string name="description_rainbow">꿈과 희망이 반짝거릴 거에요.</string>
     <string name="title_cloud">콩닥콩닥 설레임의 방울</string>
     <string name="description_cloud">설레는 일이 가득할 거 같아요!</string>
-    <string name="alarm_title">알람 제목</string>
+    <string name="alarm_off_result_title">%s님의 알람 해제 결과는</string>
+    <string name="group_name">그룹명</string>
     <string name="alarm_rank">%s등</string>
+    <string name="alarm_point">획득 포인트</string>
+    <string name="point">+%d점</string>
     <!-- Alarm list -->
     <string name="alarm_list">알람 리스트</string>
     <string name="empty_alarm">아직 생성된 알람이 없어요!</string>

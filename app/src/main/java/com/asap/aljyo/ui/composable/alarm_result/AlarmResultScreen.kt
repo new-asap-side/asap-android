@@ -55,12 +55,12 @@ internal fun AlarmResultScreen(
     title: String,
     navigateToHome: () -> Unit,
     navigateToRanking: () -> Unit,
-    viewModel: AlarmResultViewModel = hiltViewModel()
 ) {
+    val viewModel: AlarmResultViewModel = hiltViewModel()
     val context = LocalContext.current
 
     LaunchedEffect(groupId) {
-        viewModel.fetchRankingNumber((groupId))
+//        viewModel.fetchRankingNumber((groupId))
     }
 
     SideEffect {
@@ -144,29 +144,15 @@ internal fun AlarmResultScreen(
                     .background(brush = Brush.linearGradient(colors))
                     .padding(paddingValues)
             ) {
-                val rankNumberState by viewModel.rankingNumber.collectAsState()
-                val rankNumber = if (rankNumberState is UiState.Success) {
-                    (rankNumberState as UiState.Success).data
-                } else {
-                    "-"
-                }
+                val rankState by viewModel.rankState.collectAsState()
 
-                FortuneCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    index = 0,
-                    rank = rankNumber
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                AlarmTitle(
+                ResultCard(
                     modifier = Modifier
-                        .padding(horizontal = 40.dp)
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(16))
-                        .background(Color(0xFFDB7797).copy(alpha = 0.5f))
-                        .padding(horizontal = 20.dp, vertical = 16.dp),
-                    title = title
+                        .padding(horizontal = 40.dp),
+                    title = title,
+                    rank = rankState.rank,
+                    score = rankState.score
                 )
             }
         }

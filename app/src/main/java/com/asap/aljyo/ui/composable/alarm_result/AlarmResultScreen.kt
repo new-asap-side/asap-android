@@ -27,7 +27,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.alarm_result.AlarmResultViewModel
 import com.asap.aljyo.core.fsp
-import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
@@ -60,7 +58,7 @@ internal fun AlarmResultScreen(
     val context = LocalContext.current
 
     LaunchedEffect(groupId) {
-//        viewModel.fetchRankingNumber((groupId))
+        viewModel.fetchRankingNumber((groupId))
     }
 
     SideEffect {
@@ -151,8 +149,7 @@ internal fun AlarmResultScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 40.dp),
                     title = title,
-                    rank = rankState.rank,
-                    score = rankState.score
+                    rankState = rankState
                 )
             }
         }

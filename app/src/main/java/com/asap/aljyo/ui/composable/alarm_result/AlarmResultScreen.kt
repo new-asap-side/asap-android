@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -34,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.alarm_result.AlarmResultViewModel
 import com.asap.aljyo.core.fsp
@@ -140,9 +142,23 @@ internal fun AlarmResultScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(brush = Brush.linearGradient(colors))
-                    .padding(paddingValues)
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val rankState by viewModel.rankState.collectAsState()
+                val time by viewModel.timeCollector.collectAsStateWithLifecycle()
+
+                Spacer(modifier = Modifier.height(40.dp))
+
+                Text(
+                    text = time,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 86.fsp,
+                        color = White
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
 
                 ResultCard(
                     modifier = Modifier

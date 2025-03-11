@@ -12,13 +12,13 @@ import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.GroupRepository
-import com.asap.utility.datetime.CurrentTimeDot
 import com.asap.utility.datetime.DateTimeParser
+import com.asap.utility.datetime.TimeDot
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
-    @CurrentTimeDot
+    @TimeDot
     private val parser: DateTimeParser,
     private val remoteDataSource: GroupRemoteDataSource,
     localDataSource: AppDatabase,

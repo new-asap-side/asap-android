@@ -23,3 +23,13 @@ internal class CurrentTimeDotParser : AljyoDateTimeFormatter(), DateTimeParser {
         format(formatter)
     }
 }
+
+// 현재 시간 기준 HH:mm format
+internal class TimeColonParser : AljyoDateTimeFormatter(), DateTimeParser {
+    override val formatter: DateTimeFormatter
+        get() = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREA)
+
+    override fun parse(): String = now().run {
+        format(formatter)
+    }
+}

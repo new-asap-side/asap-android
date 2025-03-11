@@ -15,7 +15,7 @@ abstract class AljyoDateTimeFormatter {
 }
 
 // 현재 시간 기준으로 yyyy.MM.dd format
-internal class CurrentTimeDotParser : AljyoDateTimeFormatter(), DateTimeParser {
+internal class TimeDotParser : AljyoDateTimeFormatter(), DateTimeParser {
     override val formatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
 

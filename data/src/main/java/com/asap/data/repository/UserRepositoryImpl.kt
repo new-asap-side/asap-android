@@ -93,6 +93,14 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun unlockProfileItem(profileId: Int): Boolean {
+        return remoteDataSource.unlockProfileItem(profileId)
+    }
+
+    override suspend fun saveProfileItem(profileId: Int): Boolean {
+        return remoteDataSource.saveProfileItem(profileId)
+    }
+
     companion object {
         private const val TAG = "UserRepositoryImpl"
     }

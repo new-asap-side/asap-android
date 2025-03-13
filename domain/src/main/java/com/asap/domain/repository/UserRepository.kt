@@ -28,4 +28,8 @@ interface UserRepository {
 
     suspend fun fetchProfileItem(userId: String): ProfileItemListModel
 
+    suspend fun unlockProfileItem(profileId: Int): Boolean
+
+    suspend fun saveProfileItem(profileId: Int): Boolean
+
 }

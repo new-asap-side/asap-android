@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,7 +74,8 @@ internal fun UnRankingArea(
                                 modifier = Modifier.clip(CircleShape),
                                 model = rank.thumbnail,
                                 contentDescription = "Group particular thumbnail",
-                                error = painterResource(R.drawable.ic_empty_profile)
+                                error = painterResource(R.drawable.ic_empty_profile),
+                                contentScale = ContentScale.Crop
                             )
                             if (mIndex - 3 == index) {
                                 MeBadge(

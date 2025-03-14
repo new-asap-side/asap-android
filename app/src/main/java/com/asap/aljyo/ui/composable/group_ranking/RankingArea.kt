@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -149,7 +150,8 @@ private fun RankingProfile(
                     .size(size)
                     .clip(CircleShape),
                 error = painterResource(R.drawable.ic_empty_profile),
-                contentDescription = "Ranking profile thumbnail"
+                contentDescription = "Ranking profile thumbnail",
+                contentScale = ContentScale.Crop
             )
             Icon(
                 modifier = Modifier

@@ -140,8 +140,9 @@ fun CustomizeProfileScreen(
                         text = "저장하기",
                         enable = true,
                         onClick = {
-                            onBackClick()
+                            selectedItemIdx = if (selectedItemIdx == -1) usedItemIdx else selectedItemIdx
                             viewModel.setProfileItem(state.profileItems[selectedItemIdx].profileId)
+                            onBackClick()
                         }
                     )
                 }

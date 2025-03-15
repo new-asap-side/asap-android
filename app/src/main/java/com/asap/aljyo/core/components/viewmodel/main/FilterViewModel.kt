@@ -1,11 +1,8 @@
 package com.asap.aljyo.core.components.viewmodel.main
 
-import androidx.lifecycle.viewModelScope
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import com.asap.aljyo.core.components.viewmodel.NetworkViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 sealed class Filter {
     data object Total: Filter()
@@ -18,11 +15,10 @@ sealed class Filter {
 abstract class FilterViewModel(
     override val prefix: String = "Filter"
 ) : NetworkViewModel() {
-    private val _filterState = MutableStateFlow<Filter>(Filter.Total)
-    val filterState get() = _filterState.asStateFlow()
+    private val _filterState = mutableStateOf<Filter>(Filter.Total)
+    val filterState: State<Filter> get() = _filterState
 
-    fun filter(select: Filter) {
-        viewModelScope.launch { _filterState.emit(select) }
+    fun select(filter: Filter) {
+        _filterState.value = filter
     }
-
 }

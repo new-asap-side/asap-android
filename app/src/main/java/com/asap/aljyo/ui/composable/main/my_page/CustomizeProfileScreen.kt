@@ -32,6 +32,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -74,11 +76,16 @@ fun CustomizeProfileScreen(
     onBackClick: () -> Unit
 ) {
     var openItemEvent by remember { mutableStateOf(false) }
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val usedItemIdx by remember { mutableIntStateOf(state.profileItems.indexOfFirst { it.isUsed }) }
-//    val usedItemIdx by remember { mutableIntStateOf(0) }
-    var selectedItemIdx by remember { mutableIntStateOf(state.profileItems.indexOfFirst { it.isUsed }) }
     var touchUnlockItemIdx: Int = -1
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val usedItemIdx by remember {
+        derivedStateOf { state.profileItems.indexOfFirst { it.isUsed } }
+    }
+    var selectedItemIdx by remember { mutableIntStateOf(usedItemIdx) }
+
+    LaunchedEffect(usedItemIdx) {
+        selectedItemIdx = usedItemIdx
+    }
 
     AljyoTheme {
         Scaffold(
@@ -131,7 +138,8 @@ fun CustomizeProfileScreen(
                         text = "저장하기",
                         enable = true,
                         onClick = {
-
+                            onBackClick()
+                            viewModel.setProfileItem(state.profileItems[selectedItemIdx].profileId)
                         }
                     )
                 }
@@ -223,6 +231,7 @@ fun CustomizeProfileScreen(
                                     item = item,
                                     isSelected = selectedItemIdx == idx,
                                     onUnlockableClick = {
+                                        viewModel.unlockProfileItem(item.profileId)
                                         item.isUnlocked = CustomItemState.UNLOCK
                                         touchUnlockItemIdx = idx
                                         openItemEvent = true

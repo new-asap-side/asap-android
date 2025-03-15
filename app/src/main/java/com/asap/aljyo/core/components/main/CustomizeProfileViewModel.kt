@@ -8,6 +8,8 @@ import com.asap.aljyo.R
 import com.asap.domain.model.ProfileItemListModel
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
+import com.asap.domain.usecase.user.SaveProfileItemUseCase
+import com.asap.domain.usecase.user.UnlockProfileItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +20,8 @@ import javax.inject.Inject
 class CustomizeProfileViewModel @Inject constructor(
     private val fetchProfileItemUseCase: FetchProfileItemUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val unlockProfileItemUseCase: UnlockProfileItemUseCase,
+    private val saveProfileItemUseCase: SaveProfileItemUseCase
 ): ViewModel(){
     private val _state = MutableStateFlow(CustomizeProfileScreenState())
     val state = _state.asStateFlow()
@@ -38,6 +42,18 @@ class CustomizeProfileViewModel @Inject constructor(
                 totalRankScore = profileItems.totalRankScore,
                 profileItems = profileItems.profileItems
             )
+        }
+    }
+
+    fun unlockProfileItem(itemId: Int) {
+        viewModelScope.launch {
+            unlockProfileItemUseCase(itemId)
+        }
+    }
+
+    fun setProfileItem(itemId: Int) {
+        viewModelScope.launch {
+            saveProfileItemUseCase(itemId)
         }
     }
 }

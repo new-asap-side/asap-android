@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -89,7 +88,7 @@ fun HomeTab(
                     }
                 }
                 Tab(
-                    modifier = Modifier.height(48.dp).wrapContentWidth(),
+                    modifier = Modifier.height(48.dp).fillMaxWidth(),
                     selected = selected,
                     selectedContentColor = Black01,
                     unselectedContentColor = Black03,

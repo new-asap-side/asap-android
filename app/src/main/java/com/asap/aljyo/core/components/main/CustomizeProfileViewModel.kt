@@ -38,8 +38,6 @@ class CustomizeProfileViewModel @Inject constructor(
                 totalRankScore = profileItems.totalRankScore,
                 profileItems = profileItems.profileItems
             )
-
-            Log.d("CustomizeProfileViewModel:","${_state.value}")
         }
     }
 }
@@ -89,7 +87,7 @@ object ProfileItemListDataMapper {
 
         private fun updateUnlockState(isUnlocked: Boolean, itemName: String, totalRankScore: Int): CustomItemState {
             val itemScore = itemName.replace("_","").toInt()
-            Log.d("UnlockState", "totalRankScore: $totalRankScore, itemScore: $itemScore")
+
             return when {
                 isUnlocked -> CustomItemState.UNLOCK
                 !isUnlocked && totalRankScore >= itemScore -> CustomItemState.UNLOCKABLE

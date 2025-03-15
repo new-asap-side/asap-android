@@ -53,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.CustomItemState
+import com.asap.aljyo.core.components.main.CustomizeProfileScreenState
 import com.asap.aljyo.core.components.main.CustomizeProfileViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
@@ -63,6 +64,7 @@ import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.time.delay
 
 data class ProfileCustom(
     @DrawableRes val image: Int,
@@ -291,37 +293,53 @@ fun CustomizeProfileScreen(
                             }
                         }
 
-                        if (false) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 24.dp, start = 20.dp, end = 20.dp)
-                                    .background(Red02, RoundedCornerShape(14.dp))
-                                    .padding(top = 9.dp, bottom = 9.dp, start = 24.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-
-                                ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .padding(end = 16.dp)
-                                        .size(28.dp),
-                                    painter = painterResource(R.drawable.ic_bell),
-                                    contentDescription = "BELL ICON",
-                                    tint = Color.Unspecified
-                                )
-                                Text(
-                                    text = "누적 랭킹 점수가 50,000점이 넘어\n" +
-                                            "아이템을 해제할 수 있어요!",
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontSize = 14.fsp,
-                                        color = Black01
-                                    )
-                                )
-                            }
-                        }
+                        ShowUnlockMessage(state)
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ShowUnlockMessage(state: CustomizeProfileScreenState) {
+    var isShow by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isShow) {
+        kotlinx.coroutines.delay(5000)
+        isShow = false
+    }
+
+    if (state.profileItems.any { it.isUnlocked == CustomItemState.UNLOCKABLE }
+        && isShow) {
+        val unlockScore = state.profileItems.first { it.isUnlocked == CustomItemState.UNLOCKABLE }
+            .itemName.replace("_",",")
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp, start = 20.dp, end = 20.dp)
+                .background(Red02, RoundedCornerShape(14.dp))
+                .padding(top = 9.dp, bottom = 9.dp, start = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+            Icon(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(28.dp),
+                painter = painterResource(R.drawable.ic_bell),
+                contentDescription = "BELL ICON",
+                tint = Color.Unspecified
+            )
+            Text(
+                text = "누적 랭킹 점수가 ${unlockScore}점이 넘어\n" +
+                        "아이템을 해제할 수 있어요!",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 14.fsp,
+                    color = Black01
+                )
+            )
         }
     }
 }

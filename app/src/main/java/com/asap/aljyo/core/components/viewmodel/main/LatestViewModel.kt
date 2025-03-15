@@ -15,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LatestViewModel @Inject constructor(
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
-) : NetworkViewModel() {
+) : FilterViewModel() {
+
     override val prefix: String = "Latest"
 
     private val _latestState = MutableStateFlow<UiState<List<AlarmGroup>>>(UiState.Loading)

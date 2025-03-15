@@ -1,5 +1,7 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
+import android.graphics.ImageDecoder
+import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,15 +41,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import coil3.gif.GifDecoder
+import coil3.request.ImageRequest
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
@@ -214,17 +223,22 @@ fun AlarmTypeScreen(
                         },
                         content = {
                             Column {
-                                // TODO: GIF
-                                Box(
-                                    modifier = Modifier
-                                        .size(320.dp)
-                                        .background(color = Red01)
+                                val previewGif = when(isShowTimeBottomSheet.second) {
+                                    "SLIDE" -> "file:///android_asset/slide.gif"
+                                    "CARD" -> "file:///android_asset/card.gif"
+                                    else -> "file:///android_asset/calculator.gif"
+                                }
+                                AsyncImage(
+                                    model = previewGif,
+                                    contentDescription = "PREVIEW GIF",
+                                    modifier = Modifier.size(320.dp)
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 CustomButton(
                                     text = "선택하기",
                                     enable = true,
                                     onClick = {
+                                        viewModel.onAlarmUnlockContentsSelected(isShowTimeBottomSheet.second)
                                         coroutineScope.launch { sheetState.hide() }
                                             .invokeOnCompletion {
                                                 if (!sheetState.isVisible) isShowTimeBottomSheet =
@@ -258,7 +272,6 @@ fun BoxWithIcon(
                 shape = RoundedCornerShape(10.dp)
             )
             .background(
-//                color = if (isSelected) Red02 else White,
                 color = White,
                 shape = RoundedCornerShape(10.dp)
             )
@@ -311,6 +324,31 @@ fun BoxWithIcon(
         }
     }
 }
+
+//@Composable
+//fun GifImage(
+//    modifier: Modifier = Modifier,
+//) {
+//    val context = LocalContext.current
+//    val imageLoader = ImageLoader.Builder(context)
+//        .components {
+//            if (SDK_INT >= 28) {
+//                add(ImageDecoder.Factory())
+//            } else {
+//                add(GifDecoder.Factory())
+//            }
+//        }
+//        .build()
+//    Image(
+//        painter = rememberAsyncImagePainter(
+//            ImageRequest.Builder(context).data(data = R.drawable.YOUR_GIF_HERE).apply(block = {
+//                size(Size.ORIGINAL)
+//            }).build(), imageLoader = imageLoader
+//        ),
+//        contentDescription = null,
+//        modifier = modifier.fillMaxWidth(),
+//    )
+//}
 
 
 @Preview

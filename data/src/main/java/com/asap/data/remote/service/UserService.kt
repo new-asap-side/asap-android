@@ -31,10 +31,10 @@ interface UserService {
     @GET("/profile/item")
     suspend fun fetchProfileItem(@Query("user_id") userId: String): Response<FetchProfileItemResponse>
 
-    @GET("/profile/item-open")
-    suspend fun unlockProfileItem(@Body body: Map<String, Int>): Response<Boolean>
+    @POST("/profile/item-open")
+    suspend fun unlockProfileItem(@Body body: Map<String, Int>): Response<WhetherResponse>
 
-    @GET("/profile/save-profile")
-    suspend fun saveProfileItem(@Body body: Map<String, Int>): Response<Boolean>
+    @POST("/profile/item-equipment")
+    suspend fun saveProfileItem(@Body body: Map<String, Int>): Response<WhetherResponse>
 
 }

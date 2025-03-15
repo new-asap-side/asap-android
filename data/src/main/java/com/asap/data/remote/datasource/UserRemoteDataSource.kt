@@ -81,7 +81,7 @@ class UserRemoteDataSource @Inject constructor(
             throw HttpException(response)
         }
 
-        return response.body() ?: false
+        return response.body()?.result ?: false
     }
 
     suspend fun saveProfileItem(profileId: Int): Boolean {
@@ -93,6 +93,6 @@ class UserRemoteDataSource @Inject constructor(
             throw HttpException(response)
         }
 
-        return response.body() ?: false
+        return response.body()?.result ?: false
     }
 }

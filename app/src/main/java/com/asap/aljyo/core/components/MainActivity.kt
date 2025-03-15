@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         val uri = intent.data.toString()
         Log.d(TAG, "received uri: $uri")
 
-        val isAlarmUri = uri.startsWith("aljyo://${ScreenRoute.ReleaseAlarm.route}")
+        val isAlarmUri = uri.startsWith("aljyo://${ScreenRoute.AlarmOff.route}")
         if (!isAlarmUri) {
             return
         }

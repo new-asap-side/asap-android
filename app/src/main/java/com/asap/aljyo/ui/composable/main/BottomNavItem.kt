@@ -1,37 +1,31 @@
 package com.asap.aljyo.ui.composable.main
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.core.navigation.MainScreenRoute
 import com.asap.aljyo.ui.theme.AljyoTheme
-import com.asap.aljyo.ui.theme.Grey03
-import com.asap.aljyo.ui.theme.Red01
-import com.asap.aljyo.ui.theme.Red02
-import com.asap.aljyo.ui.theme.White
 
 sealed class BottomNavItem(
     val icon: Int,
@@ -44,9 +38,9 @@ sealed class BottomNavItem(
         route = MainScreenRoute.Home.route,
     )
 
-    data object AlarmList : BottomNavItem(
-        icon = R.drawable.ic_alarm_list,
-        label = R.string.alarm_list,
+    data object MyAlarm : BottomNavItem(
+        icon = R.drawable.ic_my_alarm,
+        label = R.string.my_alarm,
         route = MainScreenRoute.AlarmList.route
     )
 
@@ -55,90 +49,54 @@ sealed class BottomNavItem(
         label = R.string.my_page,
         route = MainScreenRoute.MyPage.route
     )
-}
 
-@Composable
-fun BottomNavItemMain(
-    onClick: () -> Unit
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier
-            .size(60.dp)
-            .clip(CircleShape)
-            .background(White)
-            .padding(4.dp)
-            .clip(CircleShape)
-            .background(Red02),
+    @Composable
+    fun Item(
+        selected: Boolean,
+        onClick: () -> Unit,
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_home),
-            tint = Red01,
-            contentDescription = "Home icon",
-        )
+        TextButton (
+            modifier = Modifier.height(48.dp),
+            onClick = onClick,
+            contentPadding = PaddingValues(),
+            shape = RoundedCornerShape(5.dp),
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = if (selected) Color(0xFF222222) else Color(0xFFAAAAAA)
+            )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxHeight().padding(vertical = 2.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    modifier = Modifier.size(26.dp),
+                    painter = painterResource(icon),
+                    contentDescription = "Bottom navigation bar item"
+                )
+
+                Text(
+                    text = stringResource(label),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontSize = 11.fsp,
+                    )
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun BottomNavItemMainPreview() {
-    BottomNavItemMain {
-
-    }
-}
-
-@Composable
-fun BottomNavItemSub(
-    isSelected: Boolean = false,
-    icon: Int,
-    label: Int,
-    onClick: () -> Unit,
-) {
-    val tint = if (isSelected) Red01 else Grey03
-    TextButton(
-        onClick = onClick,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = "bottom navigation item",
-                    tint = tint,
-                )
-            }
-            Spacer(Modifier.height(4.dp))
-            Text(
-                stringResource(label),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = tint,
-                    fontSize = 11.fsp,
-                    lineHeight = 17.fsp
-                )
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun BottomNavItemSubPreview() {
+fun BottomNavItemPreview() {
     AljyoTheme {
-        Row {
-            BottomNavItemSub(
-                icon = BottomNavItem.AlarmList.icon,
-                label = BottomNavItem.AlarmList.label,
-                onClick = {}
-            )
-            Spacer(Modifier.width(10.dp))
-            BottomNavItemSub(
-                icon = BottomNavItem.MyPage.icon,
-                label = BottomNavItem.MyPage.label,
-                onClick = {},
-            )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            BottomNavItem.Home.Item(selected = true) {}
+            BottomNavItem.MyAlarm.Item(selected = false) {}
+            BottomNavItem.MyPage.Item(selected = false) {}
         }
     }
 }

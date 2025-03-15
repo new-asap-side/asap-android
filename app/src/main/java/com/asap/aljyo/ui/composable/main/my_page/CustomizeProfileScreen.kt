@@ -140,8 +140,7 @@ fun CustomizeProfileScreen(
                         text = "저장하기",
                         enable = true,
                         onClick = {
-                            selectedItemIdx = if (selectedItemIdx == -1) usedItemIdx else selectedItemIdx
-                            viewModel.setProfileItem(state.profileItems[selectedItemIdx].profileId)
+                            viewModel.setProfileItem(selectedItemIdx)
                             onBackClick()
                         }
                     )
@@ -234,10 +233,10 @@ fun CustomizeProfileScreen(
                                     item = item,
                                     isSelected = selectedItemIdx == idx,
                                     onUnlockableClick = {
-                                        viewModel.unlockProfileItem(item.profileId)
                                         item.isUnlocked = CustomItemState.UNLOCK
                                         touchUnlockItemIdx = idx
                                         openItemEvent = true
+                                        viewModel.unlockProfileItem(item.profileId)
                                     },
                                     onUnlockClick = {
                                         selectedItemIdx = if (selectedItemIdx == idx) -1 else idx
@@ -246,7 +245,7 @@ fun CustomizeProfileScreen(
                             }
                         }
 
-                        if (openItemEvent) {
+                        if (openItemEvent && touchUnlockItemIdx != -1) {
                             Dialog(
                                 onDismissRequest = { openItemEvent = false }
                             ) {

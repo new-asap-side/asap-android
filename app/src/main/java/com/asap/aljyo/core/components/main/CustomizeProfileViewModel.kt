@@ -22,7 +22,7 @@ class CustomizeProfileViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val unlockProfileItemUseCase: UnlockProfileItemUseCase,
     private val saveProfileItemUseCase: SaveProfileItemUseCase
-): ViewModel(){
+) : ViewModel() {
     private val _state = MutableStateFlow(CustomizeProfileScreenState())
     val state = _state.asStateFlow()
 
@@ -51,7 +51,10 @@ class CustomizeProfileViewModel @Inject constructor(
         }
     }
 
-    fun setProfileItem(itemId: Int) {
+    fun setProfileItem(selectedItemIdx: Int) {
+        val itemId =
+            if (selectedItemIdx == -1) _state.value.profileItems.first { it.isUsed }.profileId else _state.value.profileItems[selectedItemIdx].profileId
+
         viewModelScope.launch {
             saveProfileItemUseCase(itemId)
         }
@@ -77,7 +80,10 @@ object ProfileItemListDataMapper {
     }
 
     object ProfileItemDataMapper {
-        fun toData(response: ProfileItemListModel.ProfileItemModel, totalRankScore: Int): ProfileItemListData.ProfileItemData {
+        fun toData(
+            response: ProfileItemListModel.ProfileItemModel,
+            totalRankScore: Int
+        ): ProfileItemListData.ProfileItemData {
             return with(response) {
                 ProfileItemListData.ProfileItemData(
                     customItem = setProfileImage(itemName),
@@ -91,7 +97,7 @@ object ProfileItemListDataMapper {
         }
 
         private fun setProfileImage(itemName: String): Int {
-            return when(itemName) {
+            return when (itemName) {
                 "20_000" -> R.drawable.ic_custom_1
                 "50_000" -> R.drawable.ic_custom_2
                 "100_000" -> R.drawable.ic_custom_3
@@ -101,8 +107,12 @@ object ProfileItemListDataMapper {
             }
         }
 
-        private fun updateUnlockState(isUnlocked: Boolean, itemName: String, totalRankScore: Int): CustomItemState {
-            val itemScore = itemName.replace("_","").toInt()
+        private fun updateUnlockState(
+            isUnlocked: Boolean,
+            itemName: String,
+            totalRankScore: Int
+        ): CustomItemState {
+            val itemScore = itemName.replace("_", "").toInt()
 
             return when {
                 isUnlocked -> CustomItemState.UNLOCK

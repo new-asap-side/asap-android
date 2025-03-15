@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -31,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,8 +45,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.CustomItemState
 import com.asap.aljyo.core.components.main.CustomizeProfileViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
@@ -69,19 +71,10 @@ fun CustomizeProfileScreen(
     viewModel: CustomizeProfileViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
-    val dummy = remember {
-        mutableStateListOf(
-            ProfileCustom(R.drawable.ic_custom_1, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_2, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_3, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_4, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_5, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_6, CustomItemState.UNLOCKABLE),
-        )
-    }
     var openItemEvent by remember { mutableStateOf(false) }
     var touchUnlockItemIdx: Int? = null
     var selectedItemIdx by remember { mutableStateOf<Int?>(null) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     AljyoTheme {
         Scaffold(
@@ -150,7 +143,7 @@ fun CustomizeProfileScreen(
                         .padding(top = 42.dp)
                         .size(100.dp)
                         .clip(CircleShape),
-                    model = R.drawable.group_random_2,
+                    model = state.profileImage,
                     error = painterResource(R.drawable.ic_empty_profile),
                     contentDescription = "My page profile image",
                     contentScale = ContentScale.Crop
@@ -187,9 +180,9 @@ fun CustomizeProfileScreen(
                                     color = Black02
                                 )
                             )
-
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "1,000점",
+                                text = state.totalRankScore.toString(),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontSize = 14.fsp,
                                     color = Black01
@@ -204,19 +197,18 @@ fun CustomizeProfileScreen(
                             verticalArrangement = Arrangement.spacedBy(7.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            itemsIndexed(dummy) { idx, item ->
+                            itemsIndexed(state.profileItems) { idx, item ->
                                 CustomItem(
                                     item = item,
                                     isSelected = selectedItemIdx == idx,
-                                    onClick = {
-                                        if (dummy[idx].state == CustomItemState.UNLOCK) {
-                                            selectedItemIdx = idx
-                                        } else {
-                                            dummy[idx] = item.copy(state = CustomItemState.UNLOCK)
-                                            touchUnlockItemIdx = idx
-                                            openItemEvent = true
-                                        }
-                                    }
+                                    onUnlockableClick = {
+                                        item.isUnlocked = CustomItemState.UNLOCK
+                                        touchUnlockItemIdx = idx
+                                        openItemEvent = true
+                                    },
+                                    onUnlockClick = {
+                                        selectedItemIdx = idx
+                                    },
                                 )
                             }
                         }
@@ -251,7 +243,8 @@ fun CustomizeProfileScreen(
                                         contentScale = ContentScale.Crop
                                     )
                                     Icon(
-                                        painter = painterResource(dummy[touchUnlockItemIdx!!].image),
+//                                        painter = painterResource(dummy[touchUnlockItemIdx!!].image),
+                                        painter = painterResource(state.profileItems[touchUnlockItemIdx!!].customItem),
                                         contentDescription = "UNLOCK CUSTOM ITEM",
                                         tint = Color.Unspecified
                                     )

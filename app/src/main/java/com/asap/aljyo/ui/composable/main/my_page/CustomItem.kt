@@ -1,6 +1,5 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,49 +27,59 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.CustomItemState
+import com.asap.aljyo.core.components.main.ProfileItemListData
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
 
-enum class CustomItemState {
-    LOCK, UNLOCKABLE, UNLOCK
-}
 
 @Composable
 fun CustomItem(
-    item: ProfileCustom,
+    item: ProfileItemListData.ProfileItemData,
     isSelected: Boolean,
-    onClick: () -> Unit,
+    onUnlockableClick: () -> Unit,
+    onUnlockClick: () -> Unit,
 ) {
      Box(
          modifier = Modifier
-             .clickable(onClick = onClick)
              .size(100.dp)
              .clip(RoundedCornerShape(14.dp))
              .then(
-                 if (isSelected) Modifier.background(Red02).border(1.5.dp, Red01, RoundedCornerShape(14.dp)) else Modifier
+                 if (isSelected) Modifier
+                     .background(Red02)
+                     .border(1.5.dp, Red01, RoundedCornerShape(14.dp)) else Modifier
+             )
+             .then(
+                 when(item.isUnlocked) {
+                     CustomItemState.UNLOCK -> Modifier.clickable(onClick = onUnlockClick)
+                     CustomItemState.UNLOCKABLE -> Modifier.clickable(onClick = onUnlockableClick)
+                     else -> Modifier
+                 }
              )
      ) {
          AsyncImage(
              modifier = Modifier
                  .fillMaxSize()
                  .then(
-                     if (item.state != CustomItemState.UNLOCK) {
+                     if (item.isUnlocked != CustomItemState.UNLOCK) {
                          Modifier.blur(10.dp)
                      } else {
                          Modifier
                      }
                  ),
-             model = item.image,
+             model = item.customItem,
              error = painterResource(R.drawable.ic_card_touch),
              contentDescription = "CUSTOM ITEM IMAGE",
              contentScale = ContentScale.Crop
          )
      }
 
-    if (item.state == CustomItemState.LOCK) {
+    if (item.isUnlocked == CustomItemState.LOCK) {
+        val itemScore = item.itemName.replace("_",",")
+
         Box(
             modifier = Modifier
                 .background(
@@ -95,7 +103,7 @@ fun CustomItem(
 
                 Text(
                     modifier = Modifier.padding(bottom = 6.dp),
-                    text = "20,000점\n도달 시 해제",
+                    text = "${itemScore}점\n도달 시 해제",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 14.fsp,
                         color = White,
@@ -107,10 +115,9 @@ fun CustomItem(
         }
     }
 
-    if (item.state == CustomItemState.UNLOCKABLE) {
+    if (item.isUnlocked == CustomItemState.UNLOCKABLE) {
         Box(
             modifier = Modifier
-                .clickable(onClick = onClick)
                 .background(
                     color = Red01.copy(0.5f),
                     shape = RoundedCornerShape(14.dp)
@@ -135,7 +142,7 @@ fun CustomItem(
 @Composable
 @Preview
 fun PreviewCustomItem() {
-    val dummy = ProfileCustom(R.drawable.ic_custom_2, CustomItemState.UNLOCK)
-
-    CustomItem(dummy, true) {}
+//    val dummy = ProfileCustom(R.drawable.ic_custom_2, CustomItemState.UNLOCK)
+//
+//    CustomItem(dummy, true) {}
 }

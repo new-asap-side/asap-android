@@ -6,7 +6,7 @@ import javax.inject.Inject
 class SaveProfileItemUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(profileItemId: Int, userId: Int): Boolean {
-        return userRepository.saveProfileItem(profileItemId, userId)
+    suspend operator fun invoke(profileItemId: Int, userId: Int, resetFlag: Boolean): Boolean {
+        return userRepository.saveProfileItem(profileItemId, userId, resetFlag)
     }
 }

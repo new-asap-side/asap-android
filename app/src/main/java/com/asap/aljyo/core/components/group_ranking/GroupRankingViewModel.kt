@@ -58,6 +58,18 @@ class GroupRankingViewModel @AssistedInject constructor(
         }
     }
 
+    fun selectTab(index: Int) {
+        if (_state.value !is UiState.Success) {
+            return
+        }
+
+        (_state.value as UiState.Success).data.let { state ->
+            viewModelScope.launch {
+                _state.emit(UiState.Success(state.copy(selectedTabIndex = index)))
+            }
+        }
+    }
+
     fun getRankList(): List<GroupRanking> {
         if (_state.value !is UiState.Success) {
             return emptyList()

@@ -25,7 +25,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,7 +42,6 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,15 +52,6 @@ fun PasswordSheet(
 ) {
     var password by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
-    val hideSheet = {
-        coroutineScope.launch {
-            sheetState.hide()
-        }.invokeOnCompletion {
-            if (!sheetState.isVisible) { }
-        }
-    }
-
     val showSheet by viewModel.showSheet.collectAsState(false)
     val joinState by viewModel.joinState.collectAsState()
 
@@ -75,7 +64,6 @@ fun PasswordSheet(
                 navigateToPersonalSetting(groupId)
             }
         }
-
     }
 
     if (showSheet) {
@@ -213,7 +201,7 @@ fun PasswordSheet(
                         contentColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(10.dp),
-                    onClick = { hideSheet() }
+                    onClick = { viewModel.hideSheet() }
                 ) {
                     Text(
                         text = stringResource(R.string.exit),

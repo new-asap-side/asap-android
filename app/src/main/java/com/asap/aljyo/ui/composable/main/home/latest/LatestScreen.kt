@@ -52,7 +52,7 @@ fun LatestScreen(
         initialFirstVisibleItemScrollOffset = scrollInfo.second
     )
 
-    val latestGroupState by latestViewModel.latestState.collectAsState()
+    val latestGroupState by latestViewModel.groupState.collectAsState()
     var showFilterSheet by remember { mutableStateOf(false) }
 
     DisposableEffect(scrollState) {

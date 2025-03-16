@@ -26,6 +26,9 @@ interface UserDao {
     @Query("UPDATE User SET refresh_token = :refreshToken WHERE user_id = :userId")
     suspend fun updateRefreshToken(refreshToken: String, userId: Int)
 
+    @Query("UPDATE User SET profileItem = :profileItem WHERE user_id = :userId")
+    suspend fun updateProfileItem(profileItem: Int?, userId: Int)
+
     @Query("SELECT * FROM User")
     suspend fun selectAll(): List<User>
 

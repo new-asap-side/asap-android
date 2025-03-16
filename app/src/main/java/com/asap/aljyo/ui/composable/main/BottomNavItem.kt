@@ -1,6 +1,7 @@
 package com.asap.aljyo.ui.composable.main
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -53,6 +54,7 @@ sealed class BottomNavItem(
     @Composable
     fun Item(
         selected: Boolean,
+        isNewNotification: Boolean = false,
         onClick: () -> Unit,
     ) {
         TextButton (
@@ -70,11 +72,23 @@ sealed class BottomNavItem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    modifier = Modifier.size(26.dp),
-                    painter = painterResource(icon),
-                    contentDescription = "Bottom navigation bar item"
-                )
+                Box {
+                    Icon(
+                        modifier = Modifier
+                            .padding(horizontal = 11.dp)
+                            .size(26.dp),
+                        painter = painterResource(icon),
+                        contentDescription = "Bottom navigation bar item"
+                    )
+                    if (isNewNotification) {
+                        Icon(
+                            modifier = Modifier.align(Alignment.TopEnd),
+                            painter = painterResource(R.drawable.ic_new),
+                            contentDescription = "IS NEW ICON",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
 
                 Text(
                     text = stringResource(label),

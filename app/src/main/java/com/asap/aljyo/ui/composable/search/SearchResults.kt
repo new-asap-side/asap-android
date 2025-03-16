@@ -26,6 +26,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.composable.common.sheet.PasswordSheet
 import com.asap.aljyo.ui.composable.main.home.GroupItem
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.domain.entity.remote.AlarmGroup
@@ -35,9 +36,13 @@ import com.asap.domain.entity.remote.AlarmGroup
 fun SearchResults(
     modifier: Modifier,
     groups: List<AlarmGroup>,
-    showFilterSheet: () -> Unit
+    showFilterSheet: () -> Unit,
+    navigateToGroupDetails: (Int) -> Unit,
+    navigateToPersonalSetting: (Int) -> Unit,
 ) {
     val gridState = rememberLazyGridState()
+
+    PasswordSheet(1, navigateToPersonalSetting)
 
     Column(modifier = modifier) {
         Row(

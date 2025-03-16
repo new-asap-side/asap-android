@@ -80,6 +80,16 @@ internal fun AppNavHost() {
                     animatedContentScope = this@composable,
                     onBackClick = {
                         navController.popBackStack()
+                    },
+                    navigateToGroupDetails = { groupId ->
+                        navController.navigate(
+                            route = "${ScreenRoute.GroupDetails.route}/$groupId"
+                        )
+                    },
+                    navigateToPersonalSetting = { groupId ->
+                        navController.navigate(
+                            route = "${ScreenRoute.PersonalEdit.route}/$groupId"
+                        )
                     }
                 )
             }

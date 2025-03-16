@@ -32,6 +32,8 @@ fun SearchScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     onBackClick: () -> Unit,
+    navigateToGroupDetails: (Int) -> Unit,
+    navigateToPersonalSetting: (Int) -> Unit
 ) {
     var focused by remember { mutableStateOf(true) }
     var showFilterSheet by remember { mutableStateOf(false) }
@@ -93,7 +95,9 @@ fun SearchScreen(
                             .padding(paddingValues)
                             .fillMaxSize(),
                         groups = result,
-                        showFilterSheet = { showFilterSheet = true }
+                        showFilterSheet = { showFilterSheet = true },
+                        navigateToGroupDetails = navigateToGroupDetails,
+                        navigateToPersonalSetting = navigateToPersonalSetting
                     )
                 }
 

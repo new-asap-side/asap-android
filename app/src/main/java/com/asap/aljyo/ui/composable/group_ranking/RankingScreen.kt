@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -52,7 +50,6 @@ import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.composable.common.dialog.LoadingDialog
-import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
@@ -183,10 +180,7 @@ internal fun RankingScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = White
-                    ),
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = White),
                     title = {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
@@ -266,31 +260,21 @@ internal fun RankingScreen(
                     val mIndex = viewModel.mIndex ?: -1
 
                     Column(
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
                     ) {
-                        RankingArea(
+                        RankingTab(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(
-                                    horizontal = 20.dp,
-                                    vertical = 60.dp
-                                ),
-                            rankings = viewModel.getRankList(),
-                            mIndex = mIndex
+                                .height(48.dp),
                         )
-                        UnRankingArea(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .dropShadow(
-                                    RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                                    offsetY = (-1).dp
-                                )
-                                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                                .background(White)
-                                .padding(28.dp)
-                                .weight(1f),
-                            unRakings = viewModel.getUnRankList(),
-                            mIndex = mIndex
+
+                        RankingPager(
+                            modifier = Modifier.fillMaxSize(),
+                            mIndex = mIndex,
+                            ranks = viewModel.getRankList(),
+                            unranks = viewModel.getUnRankList()
                         )
                     }
                 }

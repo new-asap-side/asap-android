@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -258,6 +259,7 @@ internal fun RankingScreen(
 
                 is UiState.Success -> {
                     val mIndex = viewModel.mIndex ?: -1
+                    val pagerState = rememberPagerState { 2 }
 
                     Column(
                         modifier = Modifier
@@ -268,10 +270,16 @@ internal fun RankingScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
+                            onTabSelect = { index ->
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
                         )
 
                         RankingPager(
                             modifier = Modifier.fillMaxSize(),
+                            state = pagerState,
                             mIndex = mIndex,
                             ranks = viewModel.getRankList(),
                             unranks = viewModel.getUnRankList()

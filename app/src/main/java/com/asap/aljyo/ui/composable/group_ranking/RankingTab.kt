@@ -40,6 +40,7 @@ private val rankingTabs = listOf(
 @Composable
 fun RankingTab(
     modifier: Modifier,
+    onTabSelect: (Int) -> Unit
 ) {
     val rankingViewModel: GroupRankingViewModel = hiltViewModel()
     val state by rankingViewModel.state.collectAsState()
@@ -81,7 +82,10 @@ fun RankingTab(
                         selected = selected,
                         selectedContentColor = Black01,
                         unselectedContentColor = Black03,
-                        onClick = { rankingViewModel.selectTab(index) }
+                        onClick = {
+                            rankingViewModel.selectTab(index)
+                            onTabSelect(index)
+                        }
                     ) {
                         Text(
                             text = stringResource(item.title),

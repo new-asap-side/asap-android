@@ -26,6 +26,8 @@ class CustomizeProfileViewModel @Inject constructor(
     private val _state = MutableStateFlow(CustomizeProfileScreenState())
     val state = _state.asStateFlow()
 
+    private var userId: String = ""
+
     init {
         fetchProfileItem()
     }
@@ -33,7 +35,7 @@ class CustomizeProfileViewModel @Inject constructor(
     private fun fetchProfileItem() {
         viewModelScope.launch {
             val userInfo = getUserInfoUseCase()
-            val userId = (userInfo?.userId ?: -1).toString()
+            userId = (userInfo?.userId ?: -1).toString()
             val profileImg = userInfo?.profileImg
             val profileItems = ProfileItemListDataMapper.toData(fetchProfileItemUseCase(userId))
 
@@ -56,7 +58,7 @@ class CustomizeProfileViewModel @Inject constructor(
             if (selectedItemIdx == -1) _state.value.profileItems.first { it.isUsed }.profileId else _state.value.profileItems[selectedItemIdx].profileId
 
         viewModelScope.launch {
-            saveProfileItemUseCase(itemId)
+            saveProfileItemUseCase(itemId, userId.toInt())
         }
     }
 }

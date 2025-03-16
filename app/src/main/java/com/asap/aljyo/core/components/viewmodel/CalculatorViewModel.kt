@@ -11,6 +11,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class ChoiceState(
+    val enable: Boolean = true,
+    val index: Int,
+) {
+    fun enable() = this.copy(enable = true, index = -1)
+
+    fun disable(index: Int) = this.copy(enable = false, index = index)
+}
+
 @HiltViewModel
 class CalculatorViewModel @Inject constructor(
     alarmOffUseCase: AlarmOffUseCase
@@ -20,40 +29,29 @@ class CalculatorViewModel @Inject constructor(
     private val _operation = MutableStateFlow(randomOperation())
     val operation get() = _operation.asStateFlow()
 
-    // 선택지 enable state
-    private val _enable = MutableStateFlow(true)
-    val enable get() = _enable.asStateFlow()
+    private val _choiceState = MutableStateFlow(ChoiceState(index = -1))
+    val choiceState get() = _choiceState.asStateFlow()
 
-    // 선택한 오답 index state
-    private val _selectedIndex = MutableStateFlow(-1)
-    val selectedIndex get() = _selectedIndex.asStateFlow()
-
+    // 사용자 선택 이벤트 처리
     fun emit(groupId: Int, index: Int, value: Int) {
-        if(_operation.value.isAnswer(value)) {
-            handleAnswer(groupId)
-            return
-        }
-        handleWrongAnswer(index)
-    }
-
-    private fun handleAnswer(groupId: Int) {
-        solveCount ++
-
-        if (solveCount == ArithmeticOperation.GAME_COUNT) {
-            alarmOff(groupId)
-            return
-        }
         viewModelScope.launch {
+            _choiceState.emit(_choiceState.value.disable(index))
+            val answer = _operation.value.isAnswer(value)
+            delay(
+                if (answer) {
+                    solveCount++
+                    1000
+                } else {
+                    2000
+                }
+            )
+
+            if (solveCount == ArithmeticOperation.GAME_COUNT) {
+                alarmOff(groupId)
+                return@launch
+            }
+            _choiceState.emit(_choiceState.value.enable())
             _operation.emit(randomOperation())
         }
-    }
-
-    private fun handleWrongAnswer(index: Int) = viewModelScope.launch {
-        _enable.emit(false)
-        _selectedIndex.emit(index)
-
-        delay(1000)
-        _enable.emit(true)
-        _selectedIndex.emit(-1)
     }
 }

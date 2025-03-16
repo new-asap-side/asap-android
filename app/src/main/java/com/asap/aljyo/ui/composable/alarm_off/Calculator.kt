@@ -44,7 +44,6 @@ import com.asap.aljyo.core.components.viewmodel.CalculatorViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
-import com.asap.aljyo.ui.shape.TailArrangement
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
@@ -140,9 +139,8 @@ data class Calculator(
     @Composable
     override fun Content() {
         val viewModel = provide()
-        val enable by viewModel.enable.collectAsState()
-        val selectedIndex by viewModel.selectedIndex.collectAsState()
         val operation by viewModel.operation.collectAsState()
+        val choiceState by viewModel.choiceState.collectAsState()
 
         Box(modifier = modifier) {
             Box(
@@ -163,22 +161,24 @@ data class Calculator(
                         }
                     }
                     .offset(y = 50.dp)
+                    .dropShadow(
+                        color = Color(0xFFE87D8D),
+                        shape = RoundedCornerShape(16.dp),
+                        blur = 24.dp
+                    )
                     .fillMaxSize()
             ) {
-                Box(
+                Image(
                     modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.img_calculator),
-                        contentDescription = "calculator",
-                        contentScale = ContentScale.FillWidth
-                    )
-                }
+                    painter = painterResource(R.drawable.img_calculator),
+                    contentDescription = "calculator",
+                    contentScale = ContentScale.FillWidth
+                )
 
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .offset(y = 40.dp),
+                        .offset(y = 40.dp)
                 ) {
                     Text(
                         text = "${operation.expression}",
@@ -208,7 +208,7 @@ data class Calculator(
                 ) {
                     operation.choice.forEachIndexed { index, number ->
                         val iconSize by animateDpAsState(
-                            targetValue = if (index == selectedIndex) 66.dp else 0.dp,
+                            targetValue = if (index == choiceState.index) 66.dp else 0.dp,
                             animationSpec = tween(200, easing = EaseOutBounce),
                             label = "choice effect"
                         )
@@ -224,7 +224,7 @@ data class Calculator(
                                 ),
                             shape = RoundedCornerShape(24.dp),
                             onClick = { viewModel.emit(id, index, number) },
-                            enabled = enable,
+                            enabled = choiceState.enable,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = White,
                                 disabledContainerColor = White,
@@ -232,12 +232,18 @@ data class Calculator(
                                 disabledContentColor = Black04
                             )
                         ) {
+                            val icon = if (operation.isAnswer(number)) {
+                                painterResource(R.drawable.ic_answer)
+                            } else {
+                                painterResource(R.drawable.ic_wrong)
+                            }
+
                             Box(modifier = Modifier.fillMaxSize()) {
                                 Icon(
                                     modifier = Modifier
                                         .align(Alignment.Center)
                                         .size(iconSize),
-                                    painter = painterResource(R.drawable.ic_wrong),
+                                    painter = icon,
                                     tint = Color.Unspecified,
                                     contentDescription = "effect"
                                 )

@@ -1,10 +1,11 @@
 package com.asap.aljyo.core.components.group_ranking
 
-import android.util.Log
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.asap.aljyo.core.components.viewmodel.NetworkViewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase
@@ -17,14 +18,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
+
+@Stable
+data class RankingScreenState(
+    val selectedTabIndex: Int,
+    val ranks: List<GroupRanking> = emptyList()
+)
 
 class GroupRankingViewModel @AssistedInject constructor(
+    @Assisted private val groupId: Int,
     private val fetchGroupRankingUseCase: FetchGroupRankingUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    @Assisted private val groupId: Int
-) : ViewModel() {
-    private val _state = MutableStateFlow<UiState<List<GroupRanking>?>>(UiState.Loading)
+) : NetworkViewModel() {
+    override val prefix: String = "GroupRanking"
+
+    private val _state = MutableStateFlow<UiState<RankingScreenState>>(UiState.Loading)
     val state get() = _state.asStateFlow()
 
     private val _mIndex = mutableStateOf<Int?>(null)
@@ -34,23 +42,34 @@ class GroupRankingViewModel @AssistedInject constructor(
         fetchGroupRanking()
     }
 
-    fun fetchGroupRanking() = viewModelScope.launch {
-        _state.value = UiState.Loading
-        delay(500)
-        fetchGroupRankingUseCase(groupId).catch { e ->
-            Log.e(TAG, "fetchGroupRanking error - $e")
-            val errorCode = when (e) {
-                is HttpException -> e.code()
-                else -> -1
-            }
-            _state.value = UiState.Error(errorCode = errorCode)
-        }.collect { rankingList ->
-            val mNickname = getUserInfoUseCase().let { it?.nickname }
-            _mIndex.value = rankingList?.indexOf(
-                rankingList.find { mNickname == it.nickName }
-            )
+    fun fetchGroupRanking() {
+        viewModelScope.launch {
+            delay(500)
+            fetchGroupRankingUseCase(groupId).catch { e ->
+                _state.emit(handleThrowable(e))
+            }.collect { result ->
+                result?.let { ranks ->
+                    _mIndex.value = getUserInfoUseCase()?.let { user ->
+                        ranks.indexOf(ranks.find { user.nickname == it.nickName })
+                    }
 
-            _state.value = UiState.Success(rankingList)
+                    _state.emit(
+                        UiState.Success(RankingScreenState(0, ranks))
+                    )
+                }
+            }
+        }
+    }
+
+    fun selectTab(index: Int) {
+        if (_state.value !is UiState.Success) {
+            return
+        }
+
+        (_state.value as UiState.Success).data.let { state ->
+            viewModelScope.launch {
+                _state.emit(UiState.Success(state.copy(selectedTabIndex = index)))
+            }
         }
     }
 
@@ -59,11 +78,8 @@ class GroupRankingViewModel @AssistedInject constructor(
             return emptyList()
         }
 
-        val ranklist = (_state.value as UiState.Success).data ?: emptyList()
-        return if (ranklist.size < 3) {
-            ranklist
-        } else {
-            ranklist.subList(0, 3)
+        return (_state.value as UiState.Success).data.ranks.let { ranks ->
+            if (ranks.size < 3) ranks else ranks.subList(0, 3)
         }
     }
 
@@ -72,11 +88,8 @@ class GroupRankingViewModel @AssistedInject constructor(
             return emptyList()
         }
 
-        val ranklist = (_state.value as UiState.Success).data ?: emptyList()
-        return if (ranklist.size < 3) {
-            emptyList()
-        } else {
-            ranklist.subList(3, ranklist.size)
+        return (_state.value as UiState.Success).data.ranks.let { ranks ->
+            if (ranks.size < 3) emptyList() else ranks.drop(3)
         }
     }
 
@@ -86,8 +99,6 @@ class GroupRankingViewModel @AssistedInject constructor(
     }
 
     companion object {
-        private const val TAG = "GroupRankingViewModel"
-
         @Suppress("UNCHECKED_CAST")
         fun provideGroupRankingViewModelFactory(
             factory: GroupRankingViewModelFactory,

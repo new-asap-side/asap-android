@@ -4,4 +4,8 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class CurrentTimeDot
+annotation class TimeDot
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class TimeColon

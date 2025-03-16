@@ -1,6 +1,5 @@
 package com.asap.aljyo.core.components.viewmodel.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
@@ -18,6 +17,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     private val _selectedIndex = MutableStateFlow(0)
     val selectedIndex get() = _selectedIndex.asStateFlow()
+    
     private val _isNew = MutableStateFlow(false)
     val isNew = _isNew.asStateFlow()
 

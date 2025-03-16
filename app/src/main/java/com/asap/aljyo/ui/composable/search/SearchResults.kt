@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.viewmodel.PasswordViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.main.home.GroupItem
 import com.asap.aljyo.ui.theme.Black01
@@ -33,7 +35,10 @@ import com.asap.domain.entity.remote.AlarmGroup
 @Composable
 fun SearchResults(
     modifier: Modifier,
-    groups: List<AlarmGroup>
+    groups: List<AlarmGroup>,
+    showFilterSheet: () -> Unit,
+    navigateToGroupDetails: (Int) -> Unit,
+    passwordViewModel: PasswordViewModel
 ) {
     val gridState = rememberLazyGridState()
 
@@ -63,7 +68,9 @@ fun SearchResults(
             )
 
             Row(
-                modifier = Modifier.wrapContentWidth(),
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .clickable { showFilterSheet() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -89,8 +96,19 @@ fun SearchResults(
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(groups.size) {
-                GroupItem(alarmGroup = groups[it])
+            groups.forEach { group ->
+                item {
+                    GroupItem(
+                        modifier = Modifier.clickable {
+                            if (group.isPublic) {
+                                navigateToGroupDetails(group.groupId)
+                            } else {
+                                passwordViewModel.showSheet()
+                            }
+                        },
+                        alarmGroup = group
+                    )
+                }
             }
         }
     }

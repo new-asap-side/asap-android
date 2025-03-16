@@ -33,7 +33,7 @@ fun TodayPopularGroup(
 ) {
     val viewmodel: PopularViewModel = hiltViewModel()
     val popularListState = rememberLazyGridState()
-    val popularGroupsState by viewmodel.popularGroupState.collectAsState()
+    val popularGroupsState by viewmodel.groupState.collectAsState()
 
     Column(
         modifier = modifier,

@@ -7,8 +7,8 @@ internal class Addition : ArithmeticOperation(), ExpressionGenerator {
     override val expression: BinaryExpression = generate()
 
     override val choice: List<Int> = mutableListOf<Int>().apply {
-        val random1 = Random.nextInt(4, 16)
-        val random2 = Random.nextInt(4, 16)
+        val random1 = Random.nextInt(1, 50)
+        val random2 = Random.nextInt(1, 50)
         val answer = expression.left + expression.right
 
         add(answer)
@@ -30,8 +30,8 @@ internal class Subtraction : ArithmeticOperation(), ExpressionGenerator {
     override val expression: BinaryExpression = generate()
 
     override val choice: List<Int> = mutableListOf<Int>().apply {
-        val random1 = Random.nextInt(4, 16)
-        val random2 = Random.nextInt(4, 16)
+        val random1 = Random.nextInt(1, 50)
+        val random2 = Random.nextInt(1, 50)
         val answer = expression.left - expression.right
 
         add(answer)
@@ -72,6 +72,7 @@ internal class Multiplication : ArithmeticOperation(), ExpressionGenerator {
 }
 
 fun randomOperation(): ArithmeticOperation {
-    val operations = arrayOf(Addition(), Subtraction(), Multiplication())
-    return operations[Random.nextInt(0, 3)]
+    return arrayOf(
+        Addition(), Subtraction(), Multiplication()
+    )[Random.nextInt(0, 3)]
 }

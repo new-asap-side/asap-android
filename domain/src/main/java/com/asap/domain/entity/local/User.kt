@@ -16,5 +16,6 @@ data class User(
     @ColumnInfo(name = "refresh_token")
     val refreshToken: String,
     val profileImg: String? = null,
-    val nickname: String? = null
+    val nickname: String? = null,
+    val profileItem: Int? = null
 )

@@ -71,4 +71,28 @@ class UserRemoteDataSource @Inject constructor(
 
         return response.body() ?: throw Exception("Fetch Profile Item Body Is Null")
     }
+
+    suspend fun unlockProfileItem(profileId: Int): Boolean {
+        val response = userService.unlockProfileItem(
+            mapOf("profile_id" to profileId)
+        )
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        return response.body()?.result ?: false
+    }
+
+    suspend fun saveProfileItem(profileId: Int): Boolean {
+        val response = userService.saveProfileItem(
+            mapOf("profile_id" to profileId)
+        )
+
+        if (!response.isSuccessful) {
+            throw HttpException(response)
+        }
+
+        return response.body()?.result ?: false
+    }
 }

@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -30,8 +32,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,8 +49,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.main.CustomItemState
+import com.asap.aljyo.core.components.main.CustomizeProfileScreenState
 import com.asap.aljyo.core.components.main.CustomizeProfileViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
@@ -57,6 +64,7 @@ import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.time.delay
 
 data class ProfileCustom(
     @DrawableRes val image: Int,
@@ -69,19 +77,17 @@ fun CustomizeProfileScreen(
     viewModel: CustomizeProfileViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
-    val dummy = remember {
-        mutableStateListOf(
-            ProfileCustom(R.drawable.ic_custom_1, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_2, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_3, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_4, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_5, CustomItemState.UNLOCKABLE),
-            ProfileCustom(R.drawable.ic_custom_6, CustomItemState.UNLOCKABLE),
-        )
-    }
     var openItemEvent by remember { mutableStateOf(false) }
-    var touchUnlockItemIdx: Int? = null
-    var selectedItemIdx by remember { mutableStateOf<Int?>(null) }
+    var touchUnlockItemIdx: Int = -1
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val usedItemIdx by remember {
+        derivedStateOf { state.profileItems.indexOfFirst { it.isUsed } }
+    }
+    var selectedItemIdx by remember { mutableIntStateOf(usedItemIdx) }
+
+    LaunchedEffect(usedItemIdx) {
+        selectedItemIdx = usedItemIdx
+    }
 
     AljyoTheme {
         Scaffold(
@@ -115,7 +121,7 @@ fun CustomizeProfileScreen(
                         .padding(start = 20.dp, end = 20.dp, top = 16.dp)
                 ) {
                     IconButton(
-                        onClick = { TODO() },
+                        onClick = { selectedItemIdx = usedItemIdx },
                         modifier = Modifier
                             .size(52.dp)
                             .border(1.dp, Red01, RoundedCornerShape(10.dp))
@@ -133,7 +139,10 @@ fun CustomizeProfileScreen(
                             .padding(start = 8.dp),
                         text = "저장하기",
                         enable = true,
-                        onClick = { TODO() }
+                        onClick = {
+                            viewModel.setProfileItem(selectedItemIdx)
+                            onBackClick()
+                        }
                     )
                 }
             },
@@ -145,16 +154,31 @@ fun CustomizeProfileScreen(
                     .background(Color(0xFFE6E6E6)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .padding(top = 42.dp)
-                        .size(100.dp)
-                        .clip(CircleShape),
-                    model = R.drawable.group_random_2,
-                    error = painterResource(R.drawable.ic_empty_profile),
-                    contentDescription = "My page profile image",
-                    contentScale = ContentScale.Crop
-                )
+                Box(
+                    Modifier
+                        .padding(top = 32.dp)
+                        .size(130.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape),
+                        model = state.profileImage,
+                        error = painterResource(R.drawable.ic_empty_profile),
+                        contentDescription = "My page profile image",
+                        contentScale = ContentScale.Crop
+                    )
+
+                    if (selectedItemIdx != -1) {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = painterResource(state.profileItems[selectedItemIdx].customItem),
+                            contentDescription = "SELECTED CUSTOM ITEM",
+                            tint = Color.Unspecified
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(42.dp))
 
@@ -187,9 +211,9 @@ fun CustomizeProfileScreen(
                                     color = Black02
                                 )
                             )
-
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "1,000점",
+                                text = state.totalRankScore,
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontSize = 14.fsp,
                                     color = Black01
@@ -204,24 +228,24 @@ fun CustomizeProfileScreen(
                             verticalArrangement = Arrangement.spacedBy(7.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            itemsIndexed(dummy) { idx, item ->
+                            itemsIndexed(state.profileItems) { idx, item ->
                                 CustomItem(
                                     item = item,
                                     isSelected = selectedItemIdx == idx,
-                                    onClick = {
-                                        if (dummy[idx].state == CustomItemState.UNLOCK) {
-                                            selectedItemIdx = idx
-                                        } else {
-                                            dummy[idx] = item.copy(state = CustomItemState.UNLOCK)
-                                            touchUnlockItemIdx = idx
-                                            openItemEvent = true
-                                        }
-                                    }
+                                    onUnlockableClick = {
+                                        item.isUnlocked = CustomItemState.UNLOCK
+                                        touchUnlockItemIdx = idx
+                                        openItemEvent = true
+                                        viewModel.unlockProfileItem(item.profileId)
+                                    },
+                                    onUnlockClick = {
+                                        selectedItemIdx = if (selectedItemIdx == idx) -1 else idx
+                                    },
                                 )
                             }
                         }
 
-                        if (openItemEvent) {
+                        if (openItemEvent && touchUnlockItemIdx != -1) {
                             Dialog(
                                 onDismissRequest = { openItemEvent = false }
                             ) {
@@ -241,24 +265,25 @@ fun CustomizeProfileScreen(
                                         contentDescription = "UNLOCK BG",
                                         tint = Color.Unspecified
                                     )
-                                    Image(
+                                    AsyncImage(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(75.dp)
                                             .clip(CircleShape),
-                                        painter = painterResource(R.drawable.group_random_1),
-                                        contentDescription = "CUSTOM ITEM IMAGE",
+                                        model = state.profileImage,
+                                        error = painterResource(R.drawable.ic_empty_profile),
+                                        contentDescription = "My page profile image",
                                         contentScale = ContentScale.Crop
                                     )
                                     Icon(
-                                        painter = painterResource(dummy[touchUnlockItemIdx!!].image),
+                                        painter = painterResource(state.profileItems[touchUnlockItemIdx].customItem),
                                         contentDescription = "UNLOCK CUSTOM ITEM",
                                         tint = Color.Unspecified
                                     )
 
                                     Text(
                                         modifier = Modifier.align(Alignment.BottomCenter),
-                                        text = "${touchUnlockItemIdx?.plus(1)}단계 아이템 해제!",
+                                        text = "${touchUnlockItemIdx.plus(1)}단계 아이템 해제!",
                                         style = MaterialTheme.typography.headlineMedium.copy(
                                             color = White,
                                             fontSize = 24.fsp
@@ -268,37 +293,53 @@ fun CustomizeProfileScreen(
                             }
                         }
 
-                        if (false) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 24.dp, start = 20.dp, end = 20.dp)
-                                    .background(Red02, RoundedCornerShape(14.dp))
-                                    .padding(top = 9.dp, bottom = 9.dp, start = 24.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-
-                                ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .padding(end = 16.dp)
-                                        .size(28.dp),
-                                    painter = painterResource(R.drawable.ic_bell),
-                                    contentDescription = "BELL ICON",
-                                    tint = Color.Unspecified
-                                )
-                                Text(
-                                    text = "누적 랭킹 점수가 50,000점이 넘어\n" +
-                                            "아이템을 해제할 수 있어요!",
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontSize = 14.fsp,
-                                        color = Black01
-                                    )
-                                )
-                            }
-                        }
+                        ShowUnlockMessage(state)
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ShowUnlockMessage(state: CustomizeProfileScreenState) {
+    var isShow by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isShow) {
+        kotlinx.coroutines.delay(5000)
+        isShow = false
+    }
+
+    if (state.profileItems.any { it.isUnlocked == CustomItemState.UNLOCKABLE }
+        && isShow) {
+        val unlockScore = state.profileItems.first { it.isUnlocked == CustomItemState.UNLOCKABLE }
+            .itemName.replace("_",",")
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp, start = 20.dp, end = 20.dp)
+                .background(Red02, RoundedCornerShape(14.dp))
+                .padding(top = 9.dp, bottom = 9.dp, start = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+            Icon(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(28.dp),
+                painter = painterResource(R.drawable.ic_bell),
+                contentDescription = "BELL ICON",
+                tint = Color.Unspecified
+            )
+            Text(
+                text = "누적 랭킹 점수가 ${unlockScore}점이 넘어\n" +
+                        "아이템을 해제할 수 있어요!",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 14.fsp,
+                    color = Black01
+                )
+            )
         }
     }
 }

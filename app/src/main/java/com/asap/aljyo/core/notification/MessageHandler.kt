@@ -33,13 +33,13 @@ class AlarmMessageHandler @Inject constructor(
     override val tag: String
         get() = this::class.simpleName ?: "AlarmMessageHandler"
 
-    private val uri = "aljyo://${ScreenRoute.ReleaseAlarm.route}"
+    private val uri = "aljyo://${ScreenRoute.AlarmOff.route}"
 
     override fun handleMessage(data: Map<String, String>) {
         Log.d(tag, "$data")
         val groupId = (data["group_id"] ?: "-1").toInt()
 
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Default).launch {
             val deactivated = getDeactivatedAlarmListUseCase()
             val isDeactivated = deactivated.map { it.groupId }.contains(groupId)
             if (isDeactivated) {

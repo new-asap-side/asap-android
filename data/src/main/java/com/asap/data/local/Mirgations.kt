@@ -14,3 +14,13 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         db.execSQL("DROP TABLE KakaoUser")
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE SearchList(" +
+                    "query TEXT PRIMARY KEY NOT NULL," +
+                    "date TEXT NOT NULL" +
+                ")")
+    }
+
+}

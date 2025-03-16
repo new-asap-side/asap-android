@@ -1,14 +1,15 @@
 package com.asap.aljyo.core.components.main
 
+import android.icu.text.DecimalFormat
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asap.aljyo.ui.UiState
-import com.asap.data.remote.response.FetchProfileItemResponse
-import com.asap.data.remote.response.ProfileItemResponse
+import com.asap.aljyo.R
 import com.asap.domain.model.ProfileItemListModel
-import com.asap.domain.usecase.user.CacheUserProfileUseCase
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
+import com.asap.domain.usecase.user.SaveProfileItemUseCase
+import com.asap.domain.usecase.user.UnlockProfileItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,56 +20,124 @@ import javax.inject.Inject
 class CustomizeProfileViewModel @Inject constructor(
     private val fetchProfileItemUseCase: FetchProfileItemUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-): ViewModel(){
-    private val _state = MutableStateFlow<UiState<CustomizeProfileScreenState>>(UiState.Loading)
+    private val unlockProfileItemUseCase: UnlockProfileItemUseCase,
+    private val saveProfileItemUseCase: SaveProfileItemUseCase
+) : ViewModel() {
+    private val _state = MutableStateFlow(CustomizeProfileScreenState())
     val state = _state.asStateFlow()
 
+    private var userId: String = ""
+
     init {
+        fetchProfileItem()
+    }
+
+    private fun fetchProfileItem() {
         viewModelScope.launch {
-            val userId = getUserInfoUseCase()?.userId ?: -1
-            fetchProfileItemUseCase(userId.toString())
+            val userInfo = getUserInfoUseCase()
+            userId = (userInfo?.userId ?: -1).toString()
+            val profileImg = userInfo?.profileImg
+            val profileItems = ProfileItemListDataMapper.toData(fetchProfileItemUseCase(userId))
+
+            _state.value = _state.value.copy(
+                profileImage = profileImg,
+                totalRankScore = profileItems.totalRankScore,
+                profileItems = profileItems.profileItems
+            )
+        }
+    }
+
+    fun unlockProfileItem(itemId: Int) {
+        viewModelScope.launch {
+            unlockProfileItemUseCase(itemId)
+        }
+    }
+
+    fun setProfileItem(selectedItemIdx: Int) {
+        val itemId =
+            if (selectedItemIdx == -1) _state.value.profileItems.first { it.isUsed }.profileId else _state.value.profileItems[selectedItemIdx].profileId
+        val resetFlag = selectedItemIdx == -1
+
+        viewModelScope.launch {
+            saveProfileItemUseCase(itemId, userId.toInt(), resetFlag)
         }
     }
 }
 
 data class CustomizeProfileScreenState(
     val profileImage: String? = null,
-    val totalRankScore: Int = 0,
+    val totalRankScore: String = "0",
     val profileItems: List<ProfileItemListData.ProfileItemData> = emptyList()
 )
 
 object ProfileItemListDataMapper {
     fun toData(response: ProfileItemListModel): ProfileItemListData {
         return with(response) {
+            val totalScore = DecimalFormat("#,###").format(totalRankScore)
+
             ProfileItemListData(
-                totalRankScore = response.totalRankScore,
-                profileItems = response.profileItems.map { ProfileItemDataMapper.toData(it) }
+                totalRankScore = totalScore,
+                profileItems = profileItems.map { ProfileItemDataMapper.toData(it, 100000) }
             )
         }
     }
 
     object ProfileItemDataMapper {
-        fun toData(response: ProfileItemListModel.ProfileItemModel): ProfileItemListData.ProfileItemData {
+        fun toData(
+            response: ProfileItemListModel.ProfileItemModel,
+            totalRankScore: Int
+        ): ProfileItemListData.ProfileItemData {
             return with(response) {
                 ProfileItemListData.ProfileItemData(
+                    customItem = setProfileImage(itemName),
                     isRedPoint = isRedPoint,
-                    isUnlocked = isUnlocked,
+                    isUnlocked = updateUnlockState(isUnlocked, itemName, totalRankScore),
                     isUsed = isUsed,
                     itemName = itemName,
                     profileId = profileId
                 )
             }
         }
+
+        private fun setProfileImage(itemName: String): Int {
+            return when (itemName) {
+                "20_000" -> R.drawable.ic_custom_1
+                "50_000" -> R.drawable.ic_custom_2
+                "100_000" -> R.drawable.ic_custom_3
+                "200_000" -> R.drawable.ic_custom_4
+                "400_000" -> R.drawable.ic_custom_5
+                else -> R.drawable.ic_custom_6
+            }
+        }
+
+        private fun updateUnlockState(
+            isUnlocked: Boolean,
+            itemName: String,
+            totalRankScore: Int
+        ): CustomItemState {
+            val itemScore = itemName.replace("_", "").toInt()
+
+            return when {
+                isUnlocked -> CustomItemState.UNLOCK
+                !isUnlocked && totalRankScore >= itemScore -> CustomItemState.UNLOCKABLE
+                else -> CustomItemState.LOCK
+            }
+        }
     }
 }
 
+enum class CustomItemState {
+    LOCK, UNLOCKABLE, UNLOCK
+}
+
 data class ProfileItemListData(
-    val totalRankScore: Int,
+    val totalRankScore: String,
     val profileItems: List<ProfileItemData>
 ) {
     data class ProfileItemData(
+        val customItem: Int,
         val isRedPoint: Boolean,
-        val isUnlocked: Boolean,
+        var isUnlocked: CustomItemState,
         val isUsed: Boolean,
         val itemName: String,
         val profileId: Int

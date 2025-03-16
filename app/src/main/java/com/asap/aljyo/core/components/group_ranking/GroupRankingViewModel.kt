@@ -13,6 +13,7 @@ import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -41,19 +42,21 @@ class GroupRankingViewModel @AssistedInject constructor(
         fetchGroupRanking()
     }
 
-    fun fetchGroupRanking() = viewModelScope.launch {
-        _state.value = UiState.Loading
-        fetchGroupRankingUseCase(groupId).catch { e ->
-            _state.emit(handleThrowable(e))
-        }.collect { result ->
-            result?.let { ranks ->
-                _mIndex.value = getUserInfoUseCase()?.let { user ->
-                    ranks.indexOf(ranks.find { user.nickname == it.nickName })
-                }
+    fun fetchGroupRanking() {
+        viewModelScope.launch {
+            delay(500)
+            fetchGroupRankingUseCase(groupId).catch { e ->
+                _state.emit(handleThrowable(e))
+            }.collect { result ->
+                result?.let { ranks ->
+                    _mIndex.value = getUserInfoUseCase()?.let { user ->
+                        ranks.indexOf(ranks.find { user.nickname == it.nickName })
+                    }
 
-                _state.emit(
-                    UiState.Success(RankingScreenState(0, ranks))
-                )
+                    _state.emit(
+                        UiState.Success(RankingScreenState(0, ranks))
+                    )
+                }
             }
         }
     }

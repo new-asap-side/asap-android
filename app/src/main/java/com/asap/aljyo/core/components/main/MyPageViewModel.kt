@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.group.GetUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
@@ -40,6 +41,7 @@ class MyPageViewModel @Inject constructor(
                     MyPageState(
                         nickName = userInfo?.nickname,
                         profileImage = userInfo?.profileImg,
+                        profileItem = PictureUtil.getProfileItemById(userInfo?.profileItem),
                         profileItemNotification = profileItem.profileItems.count { it.isRedPoint }
                     )
                 )

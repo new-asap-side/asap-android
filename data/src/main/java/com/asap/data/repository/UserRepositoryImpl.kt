@@ -100,7 +100,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun saveProfileItem(profileItemId: Int, userId: Int, resetFlag: Boolean): Boolean {
         return remoteDataSource.saveProfileItem(profileItemId).also { response ->
             if (response) {
-              userDao.updateProfileItem(profileItem = if (resetFlag) -1 else profileItemId, userId = userId)
+              userDao.updateProfileItem(profileItem = if (resetFlag) null else profileItemId, userId = userId)
             }
         }
     }

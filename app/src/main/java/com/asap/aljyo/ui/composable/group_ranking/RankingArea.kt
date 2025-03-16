@@ -206,19 +206,22 @@ private fun Preview() {
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 300,
-                    rankNumber = 1
+                    rankNumber = 1,
+                    createdAt = "21:30:01"
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 200,
-                    rankNumber = 2
+                    rankNumber = 2,
+                    createdAt = "21:30:01"
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 100,
-                    rankNumber = 3
+                    rankNumber = 3,
+                    createdAt = "21:30:01"
                 )
             ),
             mIndex = 0

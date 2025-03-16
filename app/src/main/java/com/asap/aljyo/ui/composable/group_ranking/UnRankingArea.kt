@@ -178,18 +178,21 @@ private fun Preview() {
                     thumbnail = "",
                     rankScore = 100,
                     rankNumber = 4,
+                    createdAt = "21:30:01"
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 50,
                     rankNumber = 5,
+                    createdAt = "21:30:01"
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 10,
                     rankNumber = 6,
+                    createdAt = "21:30:01"
                 )
             ),
             mIndex = 3

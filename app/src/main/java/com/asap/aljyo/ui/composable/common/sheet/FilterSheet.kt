@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
@@ -71,12 +72,13 @@ fun FilterSheet(
                     )
                 )
 
-                IconButton(onClick = { hideSheet() }) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "close"
-                    )
-                }
+                Icon(
+                    Icons.Default.Close,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { hideSheet() },
+                    contentDescription = "close"
+                )
             }
         },
         content = {
@@ -112,7 +114,7 @@ private fun FilterList(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { viewModel.select(Filter.Total) }
+                .clickable { viewModel.filter(Filter.Total) }
                 .padding(vertical = 10.dp)
         ) {
             Spacer(modifier = Modifier.width(20.dp))
@@ -130,7 +132,7 @@ private fun FilterList(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { viewModel.select(Filter.Public) }
+                .clickable { viewModel.filter(Filter.Public) }
                 .padding(vertical = 10.dp)
         ) {
             Spacer(modifier = Modifier.width(20.dp))
@@ -148,7 +150,7 @@ private fun FilterList(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { viewModel.select(Filter.Private) }
+                .clickable { viewModel.filter(Filter.Private) }
                 .padding(vertical = 10.dp)
         ) {
             Spacer(modifier = Modifier.width(20.dp))

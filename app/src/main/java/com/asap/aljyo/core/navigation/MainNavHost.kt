@@ -82,6 +82,9 @@ fun MainNavHost(
                 },
                 navigateToPrivacyPolicy = {
                     screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)
+                },
+                navigateToCustomizeProfile = {
+                    screenNavController.navigate(ScreenRoute.CustomizeProfile.route)
                 }
             )
         }

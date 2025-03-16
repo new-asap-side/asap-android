@@ -4,6 +4,7 @@ import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.entity.remote.user.SaveProfileResponse
 import com.asap.domain.entity.remote.user.UserProfile
+import com.asap.domain.model.ProfileItemListModel
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -24,5 +25,11 @@ interface UserRepository {
     suspend fun deleteRemoteUserInfo(survey: String): Flow<WhetherResponse?>
 
     suspend fun deleteLocalUserInfo()
+
+    suspend fun fetchProfileItem(userId: String): ProfileItemListModel
+
+    suspend fun unlockProfileItem(profileId: Int): Boolean
+
+    suspend fun saveProfileItem(profileItemId: Int, userId: Int, resetFlag: Boolean): Boolean
 
 }

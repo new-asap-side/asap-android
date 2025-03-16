@@ -52,7 +52,7 @@ fun PopularityScreen(
     )
 
     val popularViewModel: PopularViewModel = hiltViewModel()
-    val popularityGroupState by popularViewModel.popularGroupState.collectAsState()
+    val popularityGroupState by popularViewModel.groupState.collectAsState()
     var showFilterSheet by remember { mutableStateOf(false) }
 
     DisposableEffect(scrollState) {
@@ -127,7 +127,7 @@ fun PopularityScreen(
                 }
 
                 is UiState.Success -> {
-                    val popularGroup = (popularityGroupState as UiState.Success).data ?: emptyList()
+                    val popularGroup = (popularityGroupState as UiState.Success).data
                     popularGroup.forEach { group ->
                         item {
                             GroupItem(

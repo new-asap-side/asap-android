@@ -84,8 +84,6 @@ class GroupRankingViewModel @AssistedInject constructor(
     }
 
     companion object {
-        private const val TAG = "GroupRankingViewModel"
-
         @Suppress("UNCHECKED_CAST")
         fun provideGroupRankingViewModelFactory(
             factory: GroupRankingViewModelFactory,

@@ -109,6 +109,8 @@
     </string-array>
     <!-- Ranking Screen -->
     <string name="group_ranking">그룹 랭킹</string>
+    <string name="total_ranking">전체 랭킹</string>
+    <string name="today_ranking">오늘 알람 성공 여부</string>
     <string name="score">%s점</string>
     <string name="rank_score_guide">점수 제공 안내</string>
     <string name="rank_score_descript">알람 해제 성공 시 1등: 2000점/ 2등: 1800점 / 3등: 1600점 / 4등: 1400점 / 5등: 1200점 / 6등: 1000점 / 7등: 800점 / 8등: 600점 / 9등: 400점 / 10등: 200점이 부여됩니다.</string>

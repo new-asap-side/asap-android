@@ -27,7 +27,7 @@ fun ProfileBox(
     modifier: Modifier = Modifier,
     profileImagePadding: Dp = 0.dp,
     profileItemPadding: Dp = 0.dp,
-    profileImage: Int,
+    profileImage: String?,
     profileItem: Int? = null,
 ) {
     Box(
@@ -63,12 +63,12 @@ fun ProfileBox(
 @Composable
 fun PreviewProfileBox() {
     AljyoTheme {
-        ProfileBox(
-            modifier = Modifier.size(120.dp),
-            profileImagePadding = 10.dp,
-//            profileItemPadding = ,
-            profileImage = R.drawable.group_random_1,
-            profileItem = R.drawable.ic_custom_1
-        )
+//        ProfileBox(
+//            modifier = Modifier.size(120.dp),
+//            profileImagePadding = 10.dp,
+////            profileItemPadding = ,
+//            profileImage = R.drawable.group_random_1,
+//            profileItem = R.drawable.ic_custom_1
+//        )
     }
 }

@@ -21,7 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.core.components.viewmodel.SearchViewModel
-import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.sheet.FilterSheet
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
 
@@ -33,9 +34,10 @@ fun SearchScreen(
     onBackClick: () -> Unit,
 ) {
     var focused by remember { mutableStateOf(true) }
+    var showFilterSheet by remember { mutableStateOf(false) }
     val viewmodel: SearchViewModel = hiltViewModel()
     val query by viewmodel.query.collectAsState()
-    val searchState by viewmodel.searchState.collectAsState()
+    val searchState by viewmodel.groupState.collectAsState()
 
     AljyoTheme {
         Scaffold(
@@ -50,6 +52,14 @@ fun SearchScreen(
             },
             containerColor = White
         ) { paddingValues ->
+            if(showFilterSheet) {
+                FilterSheet(
+                    modifier = Modifier,
+                    onDismissRequest = { showFilterSheet = false },
+                    viewModel = viewmodel
+                )
+            }
+
             if (query.isEmpty() or query.isBlank()) {
                 RecentSearchList(
                     modifier = Modifier
@@ -60,9 +70,7 @@ fun SearchScreen(
             }
 
             when (searchState) {
-                RequestState.Initial -> Unit
-
-                RequestState.Loading -> {
+                UiState.Loading -> {
                     Box(
                         modifier = Modifier
                             .padding(paddingValues)
@@ -77,18 +85,19 @@ fun SearchScreen(
                     }
                 }
 
-                is RequestState.Success -> {
-                    val result = (searchState as RequestState.Success).data
+                is UiState.Success -> {
+                    val result = (searchState as UiState.Success).data
 
                     SearchResults(
                         modifier = Modifier
                             .padding(paddingValues)
                             .fillMaxSize(),
-                        groups = result
+                        groups = result,
+                        showFilterSheet = { showFilterSheet = true }
                     )
                 }
 
-                is RequestState.Error -> Unit
+                is UiState.Error -> Unit
             }
         }
     }

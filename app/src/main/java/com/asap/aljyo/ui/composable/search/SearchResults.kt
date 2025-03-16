@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,8 @@ import com.asap.domain.entity.remote.AlarmGroup
 @Composable
 fun SearchResults(
     modifier: Modifier,
-    groups: List<AlarmGroup>
+    groups: List<AlarmGroup>,
+    showFilterSheet: () -> Unit
 ) {
     val gridState = rememberLazyGridState()
 
@@ -63,7 +65,9 @@ fun SearchResults(
             )
 
             Row(
-                modifier = Modifier.wrapContentWidth(),
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .clickable { showFilterSheet() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

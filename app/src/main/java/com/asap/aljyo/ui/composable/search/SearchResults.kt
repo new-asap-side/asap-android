@@ -25,8 +25,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.viewmodel.PasswordViewModel
 import com.asap.aljyo.core.fsp
-import com.asap.aljyo.ui.composable.common.sheet.PasswordSheet
 import com.asap.aljyo.ui.composable.main.home.GroupItem
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.domain.entity.remote.AlarmGroup
@@ -38,11 +38,9 @@ fun SearchResults(
     groups: List<AlarmGroup>,
     showFilterSheet: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
-    navigateToPersonalSetting: (Int) -> Unit,
+    passwordViewModel: PasswordViewModel
 ) {
     val gridState = rememberLazyGridState()
-
-    PasswordSheet(1, navigateToPersonalSetting)
 
     Column(modifier = modifier) {
         Row(
@@ -98,8 +96,19 @@ fun SearchResults(
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(groups.size) {
-                GroupItem(alarmGroup = groups[it])
+            groups.forEach { group ->
+                item {
+                    GroupItem(
+                        modifier = Modifier.clickable {
+                            if (group.isPublic) {
+                                navigateToGroupDetails(group.groupId)
+                            } else {
+                                passwordViewModel.showSheet()
+                            }
+                        },
+                        alarmGroup = group
+                    )
+                }
             }
         }
     }

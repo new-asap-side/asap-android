@@ -65,18 +65,6 @@ object PictureUtil {
         Uri.parse("${ContentResolver.SCHEME_ANDROID_RESOURCE}://${BuildConfig.APPLICATION_ID}/${R.drawable.group_random_4}")
     )
 
-    fun getProfileItemById(profileItemId: Int?): Int? {
-        return when(profileItemId) {
-            121 -> R.drawable.ic_custom_1
-            122 -> R.drawable.ic_custom_2
-            123 -> R.drawable.ic_custom_3
-            124 -> R.drawable.ic_custom_4
-            125 -> R.drawable.ic_custom_5
-            126 -> R.drawable.ic_custom_6
-            else -> null
-        }
-    }
-
     fun getProfileItemByName(profileItemName: String?): Int? {
         return when(profileItemName) {
             "20_000" -> R.drawable.ic_custom_1

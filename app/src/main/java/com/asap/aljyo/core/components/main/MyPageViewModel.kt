@@ -41,7 +41,7 @@ class MyPageViewModel @Inject constructor(
                     MyPageState(
                         nickName = userInfo?.nickname,
                         profileImage = userInfo?.profileImg,
-                        profileItem = PictureUtil.getProfileItemById(userInfo?.profileItem),
+                        profileItem = PictureUtil.getProfileItemByName(userInfo?.profileItem),
                         profileItemNotification = profileItem.profileItems.count { it.isRedPoint }
                     )
                 )

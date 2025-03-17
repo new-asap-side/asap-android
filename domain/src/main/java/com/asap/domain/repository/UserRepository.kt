@@ -30,6 +30,6 @@ interface UserRepository {
 
     suspend fun unlockProfileItem(profileId: Int): Boolean
 
-    suspend fun saveProfileItem(profileItemId: Int, userId: Int, resetFlag: Boolean): Boolean
+    suspend fun saveProfileItem(profileItemId: Int, profileItemName: String, userId: Int, resetFlag: Boolean): Boolean
 
 }

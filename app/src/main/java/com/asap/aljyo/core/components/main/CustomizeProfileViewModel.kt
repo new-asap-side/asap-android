@@ -56,10 +56,11 @@ class CustomizeProfileViewModel @Inject constructor(
     fun setProfileItem(selectedItemIdx: Int) {
         val itemId =
             if (selectedItemIdx == -1) _state.value.profileItems.first { it.isUsed }.profileId else _state.value.profileItems[selectedItemIdx].profileId
+        val itemName = _state.value.profileItems.first { it.profileId == itemId }.itemName
         val resetFlag = selectedItemIdx == -1
 
         viewModelScope.launch {
-            saveProfileItemUseCase(itemId, userId.toInt(), resetFlag)
+            saveProfileItemUseCase(itemId, itemName, userId.toInt(), resetFlag)
         }
     }
 }

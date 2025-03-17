@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.viewmodel.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.domain.usecase.user.FetchProfileItemUseCase

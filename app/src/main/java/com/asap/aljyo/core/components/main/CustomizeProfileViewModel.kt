@@ -77,7 +77,7 @@ object ProfileItemListDataMapper {
 
             ProfileItemListData(
                 totalRankScore = totalScore,
-                profileItems = profileItems.map { ProfileItemDataMapper.toData(it, totalRankScore) }
+                profileItems = profileItems.map { ProfileItemDataMapper.toData(it, 20000) }
             )
         }
     }

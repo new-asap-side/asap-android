@@ -70,8 +70,8 @@ fun MainNavHost(
                         popUpTo(0)
                     }
                 },
-                navigateToProfileSetting = { nickName, profileImage ->
-                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
+                navigateToProfileSetting = { nickName, profileImage, profileItem ->
+                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}/$profileItem")
                 },
                 navigateToPrivacyPolicy = {
                     screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)

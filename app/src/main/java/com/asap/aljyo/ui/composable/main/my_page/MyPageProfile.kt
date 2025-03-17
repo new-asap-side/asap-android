@@ -36,7 +36,7 @@ fun MyPageProfile(
     profileImage: String?,
     profileItem: Int?,
     nickname: String?,
-    navigateToSetting: (String?, String?) -> Unit
+    navigateToSetting: (String?, String?, Int?) -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -83,7 +83,7 @@ fun MyPageProfile(
                 contentColor = Black02
             ),
             onClick = {
-                navigateToSetting(nickname, profileImage)
+                navigateToSetting(nickname, profileImage, profileItem)
             }
         ) {
             Text(
@@ -105,7 +105,7 @@ private fun Preview() {
             profileImage = "",
             profileItem = null,
             nickname = "알죠",
-            navigateToSetting = {_, _ -> }
+            navigateToSetting = {_, _ ,_-> }
         )
     }
 }

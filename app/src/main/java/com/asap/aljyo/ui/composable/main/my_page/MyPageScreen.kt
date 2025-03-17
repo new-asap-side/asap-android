@@ -47,7 +47,7 @@ internal fun MyPageScreen(
     navigateToDescript: () -> Unit,
     navigateToPreferences: () -> Unit,
     navigateToOnboarding: () -> Unit,
-    navigateToProfileSetting: (String?, String?) -> Unit,
+    navigateToProfileSetting: (String?, String?, Int?) -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
     navigateToCustomizeProfile: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel()
@@ -80,8 +80,8 @@ internal fun MyPageScreen(
                     nickname = state.nickName,
                     profileImage = state.profileImage,
                     profileItem = state.profileItem,
-                    navigateToSetting = { nickname, profileImage ->
-                        navigateToProfileSetting(nickname, profileImage)
+                    navigateToSetting = { nickname, profileImage, profileItem ->
+                        navigateToProfileSetting(nickname, profileImage, profileItem)
                         viewModel.fetchScreenFlag()
                     }
                 )
@@ -190,7 +190,7 @@ private fun Preview() {
             navigateToDescript = {},
             navigateToOnboarding = {},
             navigateToPreferences = {},
-            navigateToProfileSetting = { _, _ -> },
+            navigateToProfileSetting = { _, _ ,_-> },
             navigateToPrivacyPolicy = {},
             navigateToCustomizeProfile = {}
         )

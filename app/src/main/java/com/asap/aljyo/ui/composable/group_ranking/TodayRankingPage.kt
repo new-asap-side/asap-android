@@ -23,8 +23,10 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.composable.common.ProfileBox
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.entity.remote.GroupRanking
 
 @Stable
@@ -45,8 +47,7 @@ fun TodayRankingPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 20.dp)
-                        .height(36.dp),
+                        .padding(vertical = 16.dp, horizontal = 20.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -59,14 +60,12 @@ fun TodayRankingPage(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape),
-                        model = rank.thumbnail,
-                        error = painterResource(R.drawable.ic_empty_profile),
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop
+                    ProfileBox(
+                        modifier = Modifier.size(46.dp),
+                        profileItem = PictureUtil.getProfileItemByName(rank.profileItem),
+                        profileImage = rank.thumbnail,
+                        profileImagePadding = 5.dp,
+                        profileItemPadding = 2.dp,
                     )
 
                     Spacer(modifier = Modifier.width(11.dp))

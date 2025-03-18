@@ -9,8 +9,11 @@ import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +25,11 @@ class AlarmSuccessRateViewModel @Inject constructor(
     private val _offRateState = MutableStateFlow<UiState<AlarmOffRate?>>(UiState.Loading)
     val successRateState get() = _offRateState.asStateFlow()
 
+    private val mascotVisible = flow {
+        println("flow block")
+        emit(true)
+    }.shareIn(viewModelScope, started = SharingStarted.WhileSubscribed())
+
     fun fetchOffRate() {
         viewModelScope.launch(Dispatchers.Default) {
             fetchAlarmOffRateUseCase().catch {
@@ -31,6 +39,12 @@ class AlarmSuccessRateViewModel @Inject constructor(
                     _offRateState.emit(UiState.Success(offRate))
                 }
             }
+        }
+    }
+
+    fun animate() {
+        viewModelScope.launch {
+            mascotVisible.collect {  }
         }
     }
 }

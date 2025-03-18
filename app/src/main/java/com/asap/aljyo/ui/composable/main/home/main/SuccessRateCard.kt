@@ -62,7 +62,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
@@ -325,22 +324,20 @@ private fun SuccessRateProgress(
 
     val animateProgress by animateFloatAsState(
         progress,
-        animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+        animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing),
         label = "animated progress value",
         finishedListener = { trigger = true }
     )
     val update = updateTransition(trigger, label = "observer")
-    val alpha by update.animateFloat(label = "alpha") {
-        if (it) 1f else 0f
+    val alpha by update.animateFloat(label = "alpha") { triggered ->
+        if (triggered) 1f else 0f
     }
-    val tranistion by update.animateDp(label = "transition") {
-        if (it) 0.dp else 20.dp
+    val tranistion by update.animateDp(label = "transition") { triggered ->
+        if (triggered) 0.dp else 20.dp
     }
 
-    LaunchedEffect(trigger) {
-        if (!trigger) {
-            progress = max(10f, rate)
-        }
+    LaunchedEffect(Unit) {
+        progress = max(10f, rate)
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -426,12 +423,10 @@ private fun SuccessRateProgress(
                 }
 
                 Image(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     painter = mascotResource,
                     contentDescription = "aljyo illust",
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.FillHeight
                 )
             }
 

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,6 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.main.PopularViewModel
 import com.asap.aljyo.ui.UiState
@@ -31,9 +35,16 @@ fun TodayPopularGroup(
     tabChange: (Int) -> Unit,
     onGroupItemClick: (Boolean, Int) -> Unit,
 ) {
-    val viewmodel: PopularViewModel = hiltViewModel()
+    val popularViewModel: PopularViewModel = hiltViewModel()
     val popularListState = rememberLazyGridState()
-    val popularGroupsState by viewmodel.groupState.collectAsState()
+    val popularGroupsState by popularViewModel.groupState.collectAsState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(Unit) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            popularViewModel.fetchPopularGroup()
+        }
+    }
 
     Column(
         modifier = modifier,

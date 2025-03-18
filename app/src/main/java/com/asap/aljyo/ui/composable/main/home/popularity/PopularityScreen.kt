@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.components.viewmodel.main.PopularViewModel
@@ -43,24 +47,31 @@ import com.asap.aljyo.ui.composable.main.home.GroupItemShimmer
 @Composable
 fun PopularityScreen(
     onGroupItemClick: (Boolean, Int) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.POPULAR_TAB_SCROLL_KEY] ?: Pair(0, 0)
+    val scrollInfo = homeViewModel.scrollPositionMap[HomeViewModel.POPULAR] ?: Pair(0, 0)
     val scrollState = rememberLazyGridState(
         initialFirstVisibleItemIndex = scrollInfo.first,
         initialFirstVisibleItemScrollOffset = scrollInfo.second
     )
 
+    val lifecycleOwner = LocalLifecycleOwner.current
     val popularViewModel: PopularViewModel = hiltViewModel()
     val popularityGroupState by popularViewModel.groupState.collectAsState()
     var showFilterSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            popularViewModel.fetchPopularGroup()
+        }
+    }
 
     DisposableEffect(scrollState) {
         onDispose {
             val index = scrollState.firstVisibleItemIndex
             val offset = scrollState.firstVisibleItemScrollOffset
-            viewModel.saveScrollPosition(
-                HomeViewModel.POPULAR_TAB_SCROLL_KEY,
+            homeViewModel.saveScrollPosition(
+                HomeViewModel.POPULAR,
                 index, offset
             )
         }
@@ -68,7 +79,7 @@ fun PopularityScreen(
 
     if (popularityGroupState is UiState.Error) {
         ErrorBox(modifier = Modifier.fillMaxSize()) {
-            viewModel.fetchHomeData()
+            popularViewModel.fetchPopularGroup()
         }
         return
     }
@@ -89,7 +100,9 @@ fun PopularityScreen(
             horizontalArrangement = Arrangement.End
         ) {
             Row(
-                modifier = Modifier.wrapContentWidth().clickable { showFilterSheet = true },
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .clickable { showFilterSheet = true },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

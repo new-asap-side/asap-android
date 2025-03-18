@@ -28,7 +28,7 @@ fun MainTab(
     onGroupItemClick: (Boolean, Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.MAIN_TAB_SCROLL_KEY] ?: Pair(0, 0)
+    val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.MAIN] ?: Pair(0, 0)
     val scrollState = rememberLazyListState(
         initialFirstVisibleItemIndex = scrollInfo.first,
         initialFirstVisibleItemScrollOffset = scrollInfo.second
@@ -39,7 +39,7 @@ fun MainTab(
             val index = scrollState.firstVisibleItemIndex
             val offset = scrollState.firstVisibleItemScrollOffset
             viewModel.saveScrollPosition(
-                HomeViewModel.MAIN_TAB_SCROLL_KEY,
+                HomeViewModel.MAIN,
                 index, offset
             )
         }

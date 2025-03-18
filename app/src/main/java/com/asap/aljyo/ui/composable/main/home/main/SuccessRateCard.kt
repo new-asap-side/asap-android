@@ -61,6 +61,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.main.AlarmSuccessRateViewModel
 import com.asap.aljyo.core.fsp
@@ -87,6 +91,13 @@ fun SuccessRateCard(
     val viewModel: AlarmSuccessRateViewModel = hiltViewModel()
     val successRateState by viewModel.successRateState.collectAsState()
     val user by viewModel.user.collectAsState()
+    val lifecyleOwner = LocalLifecycleOwner.current
+    
+    LaunchedEffect(Unit) {
+        lifecyleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.fetchOffRate()
+        }
+    }
 
     when (successRateState) {
         is UiState.Error -> Unit

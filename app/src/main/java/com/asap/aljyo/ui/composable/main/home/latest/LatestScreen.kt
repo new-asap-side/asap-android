@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.components.viewmodel.main.LatestViewModel
@@ -46,21 +50,28 @@ fun LatestScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val latestViewModel: LatestViewModel = hiltViewModel()
-    val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.LATEST_TAB_SCROLL_KEY] ?: Pair(0, 0)
+    val scrollInfo = viewModel.scrollPositionMap[HomeViewModel.LATEST] ?: Pair(0, 0)
     val scrollState = rememberLazyGridState(
         initialFirstVisibleItemIndex = scrollInfo.first,
         initialFirstVisibleItemScrollOffset = scrollInfo.second
     )
 
+    val lifecycleOwner = LocalLifecycleOwner.current
     val latestGroupState by latestViewModel.groupState.collectAsState()
     var showFilterSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            latestViewModel.fetchLatestGroup()
+        }
+    }
 
     DisposableEffect(scrollState) {
         onDispose {
             val index = scrollState.firstVisibleItemIndex
             val offset = scrollState.firstVisibleItemScrollOffset
             viewModel.saveScrollPosition(
-                HomeViewModel.LATEST_TAB_SCROLL_KEY,
+                HomeViewModel.LATEST,
                 index, offset
             )
         }
@@ -68,7 +79,7 @@ fun LatestScreen(
 
     if (latestGroupState is UiState.Error) {
         ErrorBox(modifier = Modifier.fillMaxSize()) {
-            viewModel.fetchHomeData()
+            latestViewModel.fetchLatestGroup()
         }
         return
     }

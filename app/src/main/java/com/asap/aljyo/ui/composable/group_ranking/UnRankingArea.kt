@@ -72,12 +72,6 @@ internal fun UnRankingArea(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Box{
-//                            AsyncImage(
-//                                modifier = Modifier.clip(CircleShape),
-//                                model = rank.thumbnail,
-//                                contentDescription = "Group particular thumbnail",
-//                                error = painterResource(R.drawable.ic_empty_profile)
-//                            )
                             ProfileBox(
                                 modifier = Modifier.size(46.dp),
                                 profileItem = PictureUtil.getProfileItemByName(rank.profileItem),
@@ -85,7 +79,7 @@ internal fun UnRankingArea(
                                 profileImagePadding = 5.dp,
                                 profileItemPadding = 2.dp,
                             )
-                            if (true) {
+                            if (mIndex - 3 == index) {
                                 MeBadge(
                                     modifier = Modifier
                                         .padding(5.dp)
@@ -187,6 +181,7 @@ private fun Preview() {
                     thumbnail = "",
                     rankScore = 100,
                     rankNumber = 4,
+                    createdAt = "21:30:01",
                     profileItem = null
                 ),
                 GroupRanking(
@@ -194,6 +189,7 @@ private fun Preview() {
                     thumbnail = "",
                     rankScore = 50,
                     rankNumber = 5,
+                    createdAt = "21:30:01",
                     profileItem = null
                 ),
                 GroupRanking(
@@ -201,6 +197,7 @@ private fun Preview() {
                     thumbnail = "",
                     rankScore = 10,
                     rankNumber = 6,
+                    createdAt = "21:30:01",
                     profileItem = null
                 )
             ),

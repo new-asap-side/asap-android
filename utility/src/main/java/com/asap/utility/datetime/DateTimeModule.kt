@@ -8,7 +8,11 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object DateTimeModule {
-    @CurrentTimeDot
+    @TimeDot
     @Provides
-    fun provideCurrentTimeDotParser(): DateTimeParser = CurrentTimeDotParser()
+    fun provideTimeDotParser(): DateTimeParser = TimeDotParser()
+
+    @TimeColon
+    @Provides
+    fun provideTimeColonParser(): DateTimeParser = TimeColonParser()
 }

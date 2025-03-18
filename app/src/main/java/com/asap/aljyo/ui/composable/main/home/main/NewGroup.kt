@@ -41,7 +41,7 @@ fun NewGroupList(
     onGroupItemClick: (Boolean, Int) -> Unit,
 ) {
     val latestViewModel: LatestViewModel = hiltViewModel()
-    val latestGroupState by latestViewModel.latestState.collectAsState()
+    val latestGroupState by latestViewModel.groupState.collectAsState()
     val listState = rememberLazyListState()
 
     LazyColumn(

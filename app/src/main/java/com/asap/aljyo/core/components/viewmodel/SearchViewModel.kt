@@ -1,10 +1,9 @@
 package com.asap.aljyo.core.components.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.asap.aljyo.ui.RequestState
+import com.asap.aljyo.core.components.viewmodel.main.FilterViewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.local.SearchEntity
-import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.usecase.group.SearchGroupUseCaseWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -20,14 +19,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val usecase: SearchGroupUseCaseWrapper
-) : NetworkViewModel() {
+) : FilterViewModel() {
     override val prefix: String = "Search"
 
     private val _query = MutableStateFlow("")
     val query get() = _query.asStateFlow()
-
-    private val _searchState = MutableStateFlow<RequestState<List<AlarmGroup>>>(RequestState.Initial)
-    val searchState get() = _searchState.asStateFlow()
 
     private val _searchedList = MutableStateFlow<UiState<List<SearchEntity>>>(UiState.Loading)
     val searchedList get() = _searchedList.asStateFlow()
@@ -41,10 +37,15 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             _query.debounce(DEBOUNCE_TIME_OUT).collectLatest {
                 if (it.isNotEmpty()) {
-                    _searchState.emit(RequestState.Loading)
                     usecase.searchGroupUseCase(it)
-                        .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
-                        .collect { result -> _searchState.emit(RequestState.Success(result)) }
+                        .catch { e ->
+                            originGroups.emit(emptyList())
+                            mGroupState.emit(handleThrowable(e))
+                        }
+                        .collect { result ->
+                            originGroups.emit(result)
+                            mGroupState.emit(UiState.Success(result))
+                        }
                 }
             }
         }
@@ -59,10 +60,10 @@ class SearchViewModel @Inject constructor(
     fun search() {
         viewModelScope.launch {
             if (_query.value.isNotEmpty()) {
-                _searchState.emit(RequestState.Loading)
+                mGroupState.emit(UiState.Loading)
                 usecase.searchGroupUseCase(_query.value)
-                    .catch { e -> _searchState.emit(handleRequestThrowable(e)) }
-                    .collect { result -> _searchState.emit(RequestState.Success(result)) }
+                    .catch { e -> mGroupState.emit(handleThrowable(e)) }
+                    .collect { result -> mGroupState.emit(UiState.Success(result)) }
             }
         }
     }

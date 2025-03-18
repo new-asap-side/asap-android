@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -110,7 +111,7 @@ internal fun RankingScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = stringResource(R.string.select_time),
+                            text = stringResource(R.string.rank_score_guide),
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontSize = 18.fsp,
                                 color = Black01
@@ -183,10 +184,7 @@ internal fun RankingScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = White
-                    ),
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = White),
                     title = {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
@@ -264,33 +262,30 @@ internal fun RankingScreen(
 
                 is UiState.Success -> {
                     val mIndex = viewModel.mIndex ?: -1
+                    val pagerState = rememberPagerState { 2 }
 
                     Column(
-                        modifier = Modifier.padding(paddingValues)
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
                     ) {
-                        RankingArea(
+                        RankingTab(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(
-                                    horizontal = 20.dp,
-                                    vertical = 60.dp
-                                ),
-                            rankings = viewModel.getRankList(),
-                            mIndex = mIndex
+                                .height(48.dp),
+                            onTabSelect = { index ->
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
                         )
-                        UnRankingArea(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .dropShadow(
-                                    RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                                    offsetY = (-1).dp
-                                )
-                                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                                .background(White)
-                                .padding(28.dp)
-                                .weight(1f),
-                            unRankings = viewModel.getUnRankList(),
-                            mIndex = mIndex
+
+                        RankingPager(
+                            modifier = Modifier.fillMaxSize(),
+                            state = pagerState,
+                            mIndex = mIndex,
+                            ranks = viewModel.getRankList(),
+                            unranks = viewModel.getUnRankList()
                         )
                     }
                 }

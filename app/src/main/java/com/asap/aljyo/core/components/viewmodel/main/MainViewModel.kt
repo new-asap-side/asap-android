@@ -18,6 +18,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     private val _selectedIndex = MutableStateFlow(0)
     val selectedIndex get() = _selectedIndex.asStateFlow()
+    
     private val _isNew = MutableStateFlow(false)
     val isNew = _isNew.asStateFlow()
 

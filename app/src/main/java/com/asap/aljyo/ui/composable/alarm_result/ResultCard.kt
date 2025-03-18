@@ -1,5 +1,7 @@
 package com.asap.aljyo.ui.composable.alarm_result
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,9 +33,11 @@ import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.alarm_result.RankingState
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.composable.common.ProfileBox
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.util.PictureUtil
 
 @Composable
 fun ResultCard(
@@ -84,14 +88,21 @@ fun ResultCard(
             contentAlignment = Alignment.Center
         ) {
             // profile image
-            AsyncImage(
-                model = rankState.profile,
-                contentDescription = "Profile Image",
-                contentScale = ContentScale.Fit,
-                error = painterResource(R.drawable.ic_empty_profile),
-                modifier = Modifier
-                    .size(152.dp)
-                    .clip(CircleShape)
+//            AsyncImage(
+//                model = rankState.profile,
+//                contentDescription = "Profile Image",
+//                contentScale = ContentScale.Fit,
+//                error = painterResource(R.drawable.ic_empty_profile),
+//                modifier = Modifier
+//                    .size(152.dp)
+//                    .clip(CircleShape)
+//            )
+            ProfileBox(
+                modifier = Modifier.size(152.dp),
+                profileImage = rankState.profile,
+                profileItem = PictureUtil.getProfileItemByName(rankState.profileItem),
+                profileImagePadding = 12.dp,
+                profileItemPadding = 5.dp,
             )
 
             Icon(

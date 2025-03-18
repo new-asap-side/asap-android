@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel
+import com.asap.aljyo.core.components.viewmodel.GroupRankingViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.theme.Black01

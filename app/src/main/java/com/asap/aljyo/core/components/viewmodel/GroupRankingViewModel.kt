@@ -1,11 +1,10 @@
-package com.asap.aljyo.core.components.group_ranking
+package com.asap.aljyo.core.components.viewmodel
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.asap.aljyo.core.components.viewmodel.NetworkViewModel
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.usecase.group.FetchGroupRankingUseCase

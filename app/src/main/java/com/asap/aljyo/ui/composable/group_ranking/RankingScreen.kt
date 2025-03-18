@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.group_ranking.GroupRankingViewModel
+import com.asap.aljyo.core.components.viewmodel.GroupRankingViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.di.ViewModelFactoryProvider
 import com.asap.aljyo.ui.UiState

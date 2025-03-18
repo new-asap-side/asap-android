@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_ranking
 
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,16 +29,18 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.composable.common.ProfileBox
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.White
+import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.entity.remote.GroupRanking
 
 @Composable
 internal fun UnRankingArea(
     modifier: Modifier = Modifier,
-    unRakings: List<GroupRanking>,
+    unRankings: List<GroupRanking>,
     mIndex: Int,
 ) {
     val scrollState = rememberScrollState(initial = 0)
@@ -45,12 +48,12 @@ internal fun UnRankingArea(
         modifier = modifier.verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(36.dp)
     ) {
-        if (unRakings.isEmpty()) {
+        if (unRankings.isEmpty()) {
             repeat(5) { count ->
                 EmptyProfile(count + 4)
             }
         } else {
-            unRakings.forEachIndexed { index, rank ->
+            unRankings.forEachIndexed { index, rank ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -68,16 +71,24 @@ internal fun UnRankingArea(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Box(modifier = Modifier.size(36.dp)) {
-                            AsyncImage(
-                                modifier = Modifier.clip(CircleShape),
-                                model = rank.thumbnail,
-                                contentDescription = "Group particular thumbnail",
-                                error = painterResource(R.drawable.ic_empty_profile)
+                        Box{
+//                            AsyncImage(
+//                                modifier = Modifier.clip(CircleShape),
+//                                model = rank.thumbnail,
+//                                contentDescription = "Group particular thumbnail",
+//                                error = painterResource(R.drawable.ic_empty_profile)
+//                            )
+                            ProfileBox(
+                                modifier = Modifier.size(46.dp),
+                                profileItem = PictureUtil.getProfileItemByName(rank.profileItem),
+                                profileImage = rank.thumbnail,
+                                profileImagePadding = 5.dp,
+                                profileItemPadding = 2.dp,
                             )
-                            if (mIndex - 3 == index) {
+                            if (true) {
                                 MeBadge(
                                     modifier = Modifier
+                                        .padding(5.dp)
                                         .align(Alignment.BottomCenter)
                                         .clip(RoundedCornerShape(100))
                                         .border(
@@ -106,7 +117,7 @@ internal fun UnRankingArea(
                         )
                     }
                     Text(
-                        text = "${rank.rankScore}점",
+                        text = "${DecimalFormat("#,###").format(rank.rankScore)}점",
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontSize = 14.fsp,
                             color = Black03
@@ -170,24 +181,27 @@ private fun Preview() {
     AljyoTheme {
         UnRankingArea(
             modifier = Modifier.fillMaxWidth(),
-            unRakings = listOf(
+            unRankings = listOf(
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 100,
                     rankNumber = 4,
+                    profileItem = null
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 50,
                     rankNumber = 5,
+                    profileItem = null
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
                     thumbnail = "",
                     rankScore = 10,
                     rankNumber = 6,
+                    profileItem = null
                 )
             ),
             mIndex = 3

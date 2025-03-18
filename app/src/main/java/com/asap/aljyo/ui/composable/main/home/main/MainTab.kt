@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,21 +12,16 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.ui.composable.common.Banner
-import com.asap.aljyo.ui.composable.common.ErrorBox
 import com.asap.aljyo.ui.theme.White
 
 @Composable
-internal fun MainTab(
+fun MainTab(
     tabChange: (Int) -> Unit,
     navigateToDescript: () -> Unit,
     navigateToMyAlarm: () -> Unit,
@@ -40,20 +34,6 @@ internal fun MainTab(
         initialFirstVisibleItemScrollOffset = scrollInfo.second
     )
 
-    val error = viewModel.error
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val observer = LifecycleEventObserver { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_START -> viewModel.fetchHomeData(internal = true)
-            else -> {}
-        }
-    }
-
-    LaunchedEffect(lifecycleOwner) {
-        lifecycleOwner.lifecycle.addObserver(observer)
-    }
-
     DisposableEffect(scrollState) {
         onDispose {
             val index = scrollState.firstVisibleItemIndex
@@ -62,12 +42,6 @@ internal fun MainTab(
                 HomeViewModel.MAIN_TAB_SCROLL_KEY,
                 index, offset
             )
-        }
-    }
-
-    if (error) {
-        ErrorBox(modifier = Modifier.fillMaxSize()) {
-            viewModel.fetchHomeData()
         }
     }
 

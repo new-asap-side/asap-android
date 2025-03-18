@@ -28,14 +28,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase
 ) : ViewModel() {
-    private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
-    val latestGroupState get() = _latestGroupState.asStateFlow()
-
     val selectedGroupId = mutableStateOf<Int?>(null)
 
     private val _joinResponseState =
@@ -66,17 +62,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             userInfo.value = getUserInfoUseCase()
         }
-    }
-
-    fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
-        _error.value = false
-        if (!internal) {
-            _latestGroupState.value = UiState.Loading
-        }
-
-        fetchLatestGroupUseCase()
-            .catch { e -> _latestGroupState.value = handleThrowable(e) }
-            .collect { latestGroup -> _latestGroupState.value = UiState.Success(latestGroup) }
     }
 
     fun saveScrollPosition(key: String, index: Int, offset: Int) {

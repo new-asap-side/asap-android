@@ -49,6 +49,10 @@ interface GroupService {
     @GET("/group/rank/{group_id}")
     suspend fun fetchGroupRanking(@Path("group_id") groupId: Int): Response<List<GroupRanking>>
 
+    // 그룹 일일 랭킹 조회
+    @GET("/group/rank-today/{group_id}")
+    suspend fun fetchTodayRanking(@Path("group_id") groupId: Int): Response<List<GroupRanking>>
+
     // 랭킹 등수 조회
     @GET("/group/rank/{group_id}/{user_id}")
     suspend fun fetchRankingNumber(

@@ -45,6 +45,9 @@ interface GroupRepository {
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>
 
+    // 그룹 일일 랭킹 조회
+    suspend fun fetchTodayRanking(groupId: Int): Flow<List<GroupRanking>?>
+
     // 그룹 랭킹 등수 조회
     suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?>
 

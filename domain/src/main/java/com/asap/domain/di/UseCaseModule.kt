@@ -36,6 +36,8 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchRankingNumberUseCase
 import com.asap.domain.usecase.group.FetchRankingNumberUseCaseImpl
+import com.asap.domain.usecase.group.FetchTodayRankingUseCase
+import com.asap.domain.usecase.group.FetchTodayRankingUseCaseImpl
 import com.asap.domain.usecase.group.GetSearchedListUseCase
 import com.asap.domain.usecase.group.GetSearchedListUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
@@ -148,6 +150,11 @@ interface UseCaseModule {
     fun bindFetchGroupRankingUseCase(
         fetchGroupRankingUseCaseImpl: FetchGroupRankingUseCaseImpl
     ): FetchGroupRankingUseCase
+
+    @Binds
+    fun bindFetchTodayRankingUseCase(
+        fetchTodayRankingUseCaseImpl: FetchTodayRankingUseCaseImpl
+    ): FetchTodayRankingUseCase
 
     @Binds
     fun bindFetchRankingNumberUseCase(

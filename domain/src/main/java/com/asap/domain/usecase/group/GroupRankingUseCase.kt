@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 data class GroupRankingUseCase(
     val fetchGroupRankingUseCase: FetchGroupRankingUseCase,
-    val fetchRankingNumberUseCase: FetchRankingNumberUseCase,
     val fetchTodayRankingUseCase: FetchTodayRankingUseCase
 )
 

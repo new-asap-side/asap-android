@@ -77,7 +77,7 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchTodayRanking(groupId: Int): Flow<List<GroupRanking>?> {
-        TODO("Not yet implemented")
+        return remoteDataSource.fetchTodayRanking(groupId = groupId)
     }
 
     override suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?> {

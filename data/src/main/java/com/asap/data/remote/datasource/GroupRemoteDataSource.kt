@@ -92,7 +92,7 @@ class GroupRemoteDataSource @Inject constructor(
     suspend fun fetchTodayRanking(groupId: Int) = flow {
         groupService.fetchTodayRanking(groupId = groupId).let { response ->
             if (!response.isSuccessful) throw HttpException(response)
-            emit(response)
+            emit(response.body())
         }
     }
 

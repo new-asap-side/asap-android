@@ -43,3 +43,12 @@ class FetchRankingNumberUseCaseImpl @Inject constructor(
         return groupRepository.fetchRankingNumber(groupId = groupId)
     }
 }
+
+class FetchTodayRankingUseCaseImpl @Inject constructor(
+    private val groupRepository: GroupRepository
+) : FetchTodayRankingUseCase {
+    override suspend fun invoke(groupId: Int): Flow<List<GroupRanking>?> {
+        return groupRepository.fetchTodayRanking(groupId = groupId)
+    }
+
+}

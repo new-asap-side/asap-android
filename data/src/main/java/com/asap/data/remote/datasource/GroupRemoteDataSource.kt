@@ -82,6 +82,13 @@ class GroupRemoteDataSource @Inject constructor(
         }
     }
 
+    suspend fun fetchMyRanking(userId: Int) = flow {
+        groupService.fetchMyRankings(userId = userId).let { response ->
+            if (!response.isSuccessful) throw HttpException(response)
+            emit(response.body())
+        }
+    }
+
     suspend fun fetchGroupRanking(groupId: Int) = flow {
         groupService.fetchGroupRanking(groupId = groupId).let { response ->
             if(!response.isSuccessful) throw HttpException(response)

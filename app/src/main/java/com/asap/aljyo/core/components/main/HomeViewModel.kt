@@ -162,13 +162,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun checkMileStone() {
-        Log.d("HomeViewModel:","checkMileStone실행")
         viewModelScope.launch {
             val userId = getUserInfoUseCase()?.userId ?: -1
             val totalScore = fetchProfileItemUseCase(userId.toString()).totalRankScore
 
             for (milestone in milestones) {
-                if (100000 >= milestone && !alertMilestones.contains(milestone)) {
+                if (totalScore >= milestone && !alertMilestones.contains(milestone)) {
                     _showMilestoneDialog.emit(true)
                     alertMilestones.add(milestone)
                     saveMileStone()

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,13 +28,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.GroupRankingViewModel
@@ -219,20 +222,20 @@ internal fun RankingScreen(
                 )
             },
         ) { paddingValues ->
-            val factory = EntryPointAccessors.fromActivity(
+            val viewModel: GroupRankingViewModel = EntryPointAccessors.fromActivity(
                 context as Activity,
                 ViewModelFactoryProvider::class.java
-            ).groupRankingViewModelFactory()
-
-            val viewModel: GroupRankingViewModel = viewModel(
-                factory = GroupRankingViewModel.provideGroupRankingViewModelFactory(
-                    factory = factory,
-                    groupId = groupId
+            ).groupRankingViewModelFactory().let { factory ->
+                viewModel(
+                    factory = GroupRankingViewModel.provideGroupRankingViewModelFactory(
+                        factory = factory,
+                        groupId = groupId
+                    )
                 )
-            )
-            val state by viewModel.state.collectAsState()
+            }
+            val rankingState by viewModel.rankingState.collectAsStateWithLifecycle()
 
-            when (state) {
+            when (rankingState) {
                 is UiState.Error -> {
                     Box(
                         modifier = Modifier
@@ -242,7 +245,10 @@ internal fun RankingScreen(
                         ErrorBox(
                             modifier = Modifier.align(Alignment.Center)
                         ) {
-                            viewModel.fetchGroupRanking()
+                            viewModel.run {
+                                fetchGroupRanking()
+                                fetchTodayRanking()
+                            }
                         }
                     }
                 }
@@ -250,16 +256,24 @@ internal fun RankingScreen(
                 UiState.Loading -> Box(
                     modifier = Modifier
                         .padding(paddingValues)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
                     LoadingDialog(
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.size(20.dp)
                     ) { }
                 }
 
                 is UiState.Success -> {
-                    val mIndex = viewModel.mIndex ?: -1
                     val pagerState = rememberPagerState { 2 }
+                    val mIndex = viewModel.mIndex
+                    val (selectedIndex, total, today) = (rankingState as UiState.Success).data
+
+                    LaunchedEffect(pagerState) {
+                        snapshotFlow { pagerState.currentPage }.collect {
+                            viewModel.selectTab(it)
+                        }
+                    }
 
                     Column(
                         modifier = Modifier
@@ -270,7 +284,9 @@ internal fun RankingScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
+                            selectedIndex = selectedIndex,
                             onTabSelect = { index ->
+                                viewModel.selectTab(index)
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(index)
                                 }
@@ -279,10 +295,11 @@ internal fun RankingScreen(
 
                         RankingPager(
                             modifier = Modifier.fillMaxSize(),
-                            state = pagerState,
+                            pagerState = pagerState,
                             mIndex = mIndex,
-                            ranks = viewModel.getRankList(),
-                            unranks = viewModel.getUnRankList()
+                            ranks = viewModel.sliceRanks(total ?: emptyList()),
+                            unranks = viewModel.sliceUnRanks(total ?: emptyList()),
+                            todayRanks = today ?: emptyList()
                         )
                     }
                 }

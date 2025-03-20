@@ -47,74 +47,79 @@ internal fun UnRankingArea(
         verticalArrangement = Arrangement.spacedBy(36.dp)
     ) {
         if (unRakings.isEmpty()) {
-            repeat(5) { count ->
+            repeat(7) { count ->
                 EmptyProfile(count + 4)
             }
         } else {
-            unRakings.forEachIndexed { index, rank ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    Text(
-                        text = (index + 4).toString(),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 14.fsp,
-                            color = Black03
-                        )
-                    )
+            (0 .. 6).forEach { index ->
+                if (unRakings.size > index) {
+                    val rank = unRakings[index]
                     Row(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(20.dp)
                     ) {
-                        Box(modifier = Modifier.size(36.dp)) {
-                            AsyncImage(
-                                modifier = Modifier.clip(CircleShape),
-                                model = rank.thumbnail,
-                                contentDescription = "Group particular thumbnail",
-                                error = painterResource(R.drawable.ic_empty_profile),
-                                contentScale = ContentScale.Crop
-                            )
-                            if (mIndex - 3 == index) {
-                                MeBadge(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .clip(RoundedCornerShape(100))
-                                        .border(
-                                            width = 1.dp,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            shape = RoundedCornerShape(100)
-                                        )
-                                        .background(White)
-                                        .padding(
-                                            horizontal = 6.5.dp,
-                                            vertical = 1.5.dp
-                                        ),
-                                    style = MaterialTheme.typography.labelMedium.copy(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = 11.fsp
-                                    )
-                                )
-                            }
-                        }
                         Text(
-                            text = rank.nickName,
+                            text = (index + 4).toString(),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontSize = 14.fsp,
-                                color = Black01
+                                color = Black03
                             )
                         )
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Box(modifier = Modifier.size(36.dp)) {
+                                AsyncImage(
+                                    modifier = Modifier.clip(CircleShape),
+                                    model = rank.thumbnail,
+                                    contentDescription = "Group particular thumbnail",
+                                    error = painterResource(R.drawable.ic_empty_profile),
+                                    contentScale = ContentScale.Crop
+                                )
+                                if (mIndex - 3 == index) {
+                                    MeBadge(
+                                        modifier = Modifier
+                                            .align(Alignment.BottomCenter)
+                                            .clip(RoundedCornerShape(100))
+                                            .border(
+                                                width = 1.dp,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                shape = RoundedCornerShape(100)
+                                            )
+                                            .background(White)
+                                            .padding(
+                                                horizontal = 6.5.dp,
+                                                vertical = 1.5.dp
+                                            ),
+                                        style = MaterialTheme.typography.labelMedium.copy(
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontSize = 11.fsp
+                                        )
+                                    )
+                                }
+                            }
+                            Text(
+                                text = rank.nickName,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontSize = 14.fsp,
+                                    color = Black01
+                                )
+                            )
+                        }
+                        Text(
+                            text = "${rank.rankScore}점",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontSize = 14.fsp,
+                                color = Black03
+                            ),
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
-                    Text(
-                        text = "${rank.rankScore}점",
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontSize = 14.fsp,
-                            color = Black03
-                        ),
-                        overflow = TextOverflow.Ellipsis
-                    )
+                } else {
+                    EmptyProfile(index + 4)
                 }
             }
         }

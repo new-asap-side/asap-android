@@ -17,3 +17,11 @@ data class GroupRanking(
     @Json(name = "created_at")
     val createdAt: String
 )
+
+@JsonClass(generateAdapter = true)
+data class MyRankingEntity(
+    @Json(name = "title")
+    val title: String,
+    @Json(name = "rank_number")
+    val rankNumber: Int
+)

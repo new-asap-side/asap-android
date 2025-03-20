@@ -1,23 +1,15 @@
 package com.asap.aljyo.core.components.edit
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asap.data.remote.firebase.FCMTokenManager
-import com.asap.domain.entity.remote.GroupJoinRequest
-import com.asap.domain.entity.remote.UserGroupType
 import com.asap.domain.usecase.group.EditPersonalUseCase
-import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -73,7 +65,7 @@ class PersonalEditViewModel @Inject constructor(
             editPersonalUseCase(
                 groupId = groupId,
                 alarmType = _state.value.alarmType,
-                alarmVolume = if (_state.value.alarmType == "VIBRATION") null else _state.value.alarmVolume?.toInt(),
+                alarmVolume = if (_state.value.alarmType == "VIBRATION") null else _state.value.alarmVolume.toInt(),
                 musicTitle = if (_state.value.alarmType == "VIBRATION") null else _state.value.musicTitle,
             )
         }.invokeOnCompletion {

@@ -42,6 +42,8 @@ import com.asap.domain.usecase.group.GetSearchedListUseCase
 import com.asap.domain.usecase.group.GetSearchedListUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
+import com.asap.domain.usecase.group.MyRankingUseCase
+import com.asap.domain.usecase.group.MyRankingUseCaseImpl
 import com.asap.domain.usecase.group.SearchGroupUseCase
 import com.asap.domain.usecase.group.SearchGroupUseCaseImpl
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
@@ -145,6 +147,11 @@ interface UseCaseModule {
     fun bindDeleteAllSearchEntityUseCase(
         deleteAllSearchEntityUseCaseImpl: DeleteAllSearchEntityUseCaseImpl
     ) : DeleteAllSearchEntityUseCase
+
+    @Binds
+    fun bindMyRankingUseCase(
+        myRankingUseCaseImpl: MyRankingUseCaseImpl
+    ) : MyRankingUseCase
 
     @Binds
     fun bindFetchGroupRankingUseCase(

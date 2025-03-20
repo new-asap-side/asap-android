@@ -1,6 +1,6 @@
 package com.asap.data.remote.datasource
 
-import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.data.remote.TokenManager
 import com.asap.data.remote.service.AuthService
 import com.asap.domain.entity.remote.AuthKakaoBody
 import com.asap.domain.entity.remote.auth.AuthResponse
@@ -17,7 +17,7 @@ class AuthRemoteDataSource @Inject constructor(
         val response = authService.authKakao(
             AuthKakaoBody(
                 kakaoAccessToken = kakaoAccessToken,
-                alarmToken = FCMTokenManager.token
+                alarmToken = TokenManager.fcmToken
             )
         )
         if (!response.isSuccessful) {

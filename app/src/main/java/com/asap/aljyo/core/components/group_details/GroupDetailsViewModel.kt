@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
-import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.data.remote.TokenManager
 import com.asap.data.utility.DateTimeManager
 import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.GroupDetails
@@ -223,7 +223,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 GroupJoinRequest(
                     userId = userInfo?.userId?.toInt() ?: -1,
                     groupId = groupId,
-                    deviceToken = FCMTokenManager.token,
+                    deviceToken = TokenManager.fcmToken,
                     groupPassword = null,
                 )
             ).catch { e ->

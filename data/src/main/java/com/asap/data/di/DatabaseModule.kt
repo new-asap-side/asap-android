@@ -1,6 +1,7 @@
 package com.asap.data.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
@@ -39,5 +40,11 @@ object DatabaseModule {
         return PreferenceDataStoreFactory.create (
             produceFile = { context.preferencesDataStoreFile(BuildConfig.TOKEN_DATASTORE_NAME) }
         )
+    }
+
+    @Provides
+    @Singleton
+    fun providesSp(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("app_preferences",Context.MODE_PRIVATE)
     }
 }

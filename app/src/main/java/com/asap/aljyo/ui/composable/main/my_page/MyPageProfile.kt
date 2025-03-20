@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
+import com.asap.aljyo.ui.composable.common.ProfileBox
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -32,8 +34,9 @@ import com.asap.aljyo.ui.theme.Grey02
 fun MyPageProfile(
     modifier: Modifier = Modifier,
     profileImage: String?,
+    profileItem: Int?,
     nickname: String?,
-    navigateToSetting: (String?, String?) -> Unit
+    navigateToSetting: (String?, String?, Int?) -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -44,19 +47,26 @@ fun MyPageProfile(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-            ) {
-                AsyncImage(
-                    modifier = Modifier.fillMaxSize(),
-                    model = profileImage,
-                    error = painterResource(R.drawable.ic_empty_profile),
-                    contentDescription = "My page profile image",
-                    contentScale = ContentScale.Crop
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .size(56.dp)
+//                    .clip(CircleShape)
+//            ) {
+//                AsyncImage(
+//                    modifier = Modifier.fillMaxSize(),
+//                    model = profileImage,
+//                    error = painterResource(R.drawable.ic_empty_profile),
+//                    contentDescription = "My page profile image",
+//                    contentScale = ContentScale.Crop
+//                )
+//            }
+            ProfileBox(
+                modifier = Modifier.size(70.dp),
+                profileImagePadding = 8.dp,
+                profileItemPadding = 4.dp,
+                profileItem = profileItem,
+                profileImage = profileImage
+            )
 
             Text(
                 text = nickname ?: "알 수 없음",
@@ -73,7 +83,7 @@ fun MyPageProfile(
                 contentColor = Black02
             ),
             onClick = {
-                navigateToSetting(nickname, profileImage)
+                navigateToSetting(nickname, profileImage, profileItem)
             }
         ) {
             Text(
@@ -93,8 +103,9 @@ private fun Preview() {
         MyPageProfile(
             modifier = Modifier.fillMaxWidth(),
             profileImage = "",
+            profileItem = null,
             nickname = "알죠",
-            navigateToSetting = {_, _ -> }
+            navigateToSetting = {_, _ ,_-> }
         )
     }
 }

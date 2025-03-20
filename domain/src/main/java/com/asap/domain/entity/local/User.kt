@@ -17,5 +17,5 @@ data class User(
     val refreshToken: String,
     val profileImg: String? = null,
     val nickname: String? = null,
-    val profileItem: Int? = null
+    val profileItem: String? = null
 )

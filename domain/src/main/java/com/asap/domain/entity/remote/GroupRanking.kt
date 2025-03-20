@@ -15,5 +15,7 @@ data class GroupRanking(
     @Json(name = "rankScore")
     val rankScore: Int,
     @Json(name = "created_at")
-    val createdAt: String
+    val createdAt: String,
+    @Json(name = "itemName")
+    val profileItem: String?,
 )

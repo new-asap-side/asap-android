@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +47,7 @@ internal fun MyPageScreen(
     navigateToDescript: () -> Unit,
     navigateToPreferences: () -> Unit,
     navigateToOnboarding: () -> Unit,
-    navigateToProfileSetting: (String?, String?) -> Unit,
+    navigateToProfileSetting: (String?, String?, Int?) -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
     navigateToCustomizeProfile: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel()
@@ -77,8 +79,9 @@ internal fun MyPageScreen(
                         .padding(horizontal = 20.dp),
                     nickname = state.nickName,
                     profileImage = state.profileImage,
-                    navigateToSetting = { nickname, profileImage ->
-                        navigateToProfileSetting(nickname, profileImage)
+                    profileItem = state.profileItem,
+                    navigateToSetting = { nickname, profileImage, profileItem ->
+                        navigateToProfileSetting(nickname, profileImage, profileItem)
                         viewModel.fetchScreenFlag()
                     }
                 )
@@ -187,7 +190,7 @@ private fun Preview() {
             navigateToDescript = {},
             navigateToOnboarding = {},
             navigateToPreferences = {},
-            navigateToProfileSetting = { _, _ -> },
+            navigateToProfileSetting = { _, _ ,_-> },
             navigateToPrivacyPolicy = {},
             navigateToCustomizeProfile = {}
         )

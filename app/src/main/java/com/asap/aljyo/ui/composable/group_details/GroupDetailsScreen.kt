@@ -163,7 +163,8 @@ fun GroupDetailsScreen(
             CustomAlertDialog(
                 title = "그룹 생성 완료!",
                 content = "$nextAlarmTime 후부터 알람이 울려요",
-                onClick = { showDialog = false },
+                onClickConfirm = { showDialog = false },
+                confirmText = "확인",
                 dialogImg = R.drawable.group_dialog_img
             )
         }

@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.alarm_result
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.domain.usecase.group.FetchRankingNumberUseCase
@@ -20,6 +21,7 @@ import javax.inject.Inject
 data class RankingState(
     val nickname: String = "",
     val profile: String = "",
+    val profileItem: String = "",
     val rank: String,
     val score: Int = (if (rank == "-") 0 else 2000 - (rank.toInt() - 1) * 200)
 ) {
@@ -73,6 +75,7 @@ class AlarmResultViewModel @Inject constructor(
                             RankingState(
                                 nickname = userInfo.nickname ?: "",
                                 profile = userInfo.profileImg ?: "",
+                                profileItem = userInfo.profileItem ?: "",
                                 rank = it.rankNumber.toString()
                             )
                         )

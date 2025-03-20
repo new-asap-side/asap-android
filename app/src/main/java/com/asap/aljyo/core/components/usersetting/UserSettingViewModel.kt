@@ -61,6 +61,11 @@ class UserSettingViewModel @Inject constructor(
                 selectedProfileImage = Uri.decode(it).toUri()
             )
         }
+        savedStateHandle.get<String>("profileItem")?.let {
+            _userSettingState.value = _userSettingState.value.copy(
+                profileItem = it.toInt()
+            )
+        }
 
         _previousProfileImage = _userSettingState.value.selectedProfileImage
         _previousNickname = _userSettingState.value.nickname

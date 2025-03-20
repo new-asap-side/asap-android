@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.main
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
+import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,7 +33,9 @@ class HomeViewModel @Inject constructor(
     private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val joinGroupUseCase: JoinGroupUseCase
+    private val joinGroupUseCase: JoinGroupUseCase,
+    private val fetchProfileItemUseCase: FetchProfileItemUseCase,
+    private val sp: SharedPreferences
 ) : ViewModel() {
     private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
     val latestGroupState get() = _latestGroupState.asStateFlow()
@@ -62,7 +66,17 @@ class HomeViewModel @Inject constructor(
     private val _showDialog = MutableSharedFlow<Boolean>()
     val showDialog = _showDialog.asSharedFlow()
 
+    private val milestones = listOf(20000, 50000, 100000, 2000000, 400000, 700000)
+    private val alertMilestones = mutableSetOf<Int>().apply {
+        val completeMilestones = sp.getStringSet("alert_milestones", emptySet()) ?: emptySet()
+        completeMilestones.mapTo(this) {it.toInt()}
+    }
+
+    private val _showMilestoneDialog = MutableSharedFlow<Boolean>()
+    val showMilestoneDialog = _showMilestoneDialog.asSharedFlow()
+
     init {
+        Log.d("HomeViewModel: ","HomeViewModel 실행")
         viewModelScope.launch {
             userInfo.value = getUserInfoUseCase()
         }
@@ -145,6 +159,26 @@ class HomeViewModel @Inject constructor(
             is HttpException -> UiState.Error(e.code())
             else -> UiState.Error(-1)
         }
+    }
+
+    fun checkMileStone() {
+        viewModelScope.launch {
+            val userId = getUserInfoUseCase()?.userId ?: -1
+            val totalScore = fetchProfileItemUseCase(userId.toString()).totalRankScore
+
+            for (milestone in milestones) {
+                if (totalScore >= milestone && !alertMilestones.contains(milestone)) {
+                    _showMilestoneDialog.emit(true)
+                    alertMilestones.add(milestone)
+                    saveMileStone()
+                }
+            }
+        }
+    }
+
+    private fun saveMileStone() {
+        val completeMileStones = alertMilestones.map { it.toString() }.toSet()
+        sp.edit().putStringSet("alert_milestones",completeMileStones).apply()
     }
 
     companion object {

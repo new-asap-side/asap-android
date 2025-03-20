@@ -45,7 +45,7 @@ fun TotalRankingPage(
                 .background(White)
                 .padding(28.dp)
                 .weight(1f),
-            unRakings = unranks,
+            unRankings = unranks,
             mIndex = mIndex
         )
     }

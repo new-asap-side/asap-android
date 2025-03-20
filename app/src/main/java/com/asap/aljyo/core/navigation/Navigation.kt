@@ -281,10 +281,14 @@ internal fun AppNavHost() {
 
             // 개인 프로필 수정 경로
             composable(
-                route = "${ScreenRoute.UserSetting.route}/{nickName}/{profileImage}",
+                route = "${ScreenRoute.UserSetting.route}/{nickName}/{profileImage}/{profileItem}",
                 arguments = listOf(
                     navArgument("nickName") { type = NavType.StringType },
-                    navArgument("profileImage") { type = NavType.StringType }
+                    navArgument("profileImage") { type = NavType.StringType },
+                    navArgument("profileItem") {
+                        type = NavType.StringType
+                        nullable = true
+                    }
                 )
             ) {
                 UserSettingScreen(

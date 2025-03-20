@@ -9,7 +9,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
-import com.asap.domain.entity.remote.MyRankingEntity
+import com.asap.domain.entity.remote.MyRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.GroupRepository
@@ -73,7 +73,7 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.withdrawGroup(userId, groupId)
     }
 
-    override suspend fun fetchMyRanking(): Flow<List<MyRankingEntity>?> {
+    override suspend fun fetchMyRanking(): Flow<List<MyRanking>?> {
         return getUserId().let { userId ->
             remoteDataSource.fetchMyRanking(userId)
         }

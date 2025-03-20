@@ -7,7 +7,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
-import com.asap.domain.entity.remote.MyRankingEntity
+import com.asap.domain.entity.remote.MyRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
@@ -44,7 +44,7 @@ interface GroupRepository {
     suspend fun withdrawGroup(userId: Int, groupId: Int): Flow<WhetherResponse?>
 
     // 내 랭킹 조회
-    suspend fun fetchMyRanking(): Flow<List<MyRankingEntity>?>
+    suspend fun fetchMyRanking(): Flow<List<MyRanking>?>
 
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>

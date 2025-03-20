@@ -19,7 +19,7 @@ data class GroupRanking(
 )
 
 @JsonClass(generateAdapter = true)
-data class MyRankingEntity(
+data class MyRanking(
     @Json(name = "title")
     val title: String,
     @Json(name = "rank_number")

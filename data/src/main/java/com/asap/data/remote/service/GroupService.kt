@@ -11,7 +11,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
-import com.asap.domain.entity.remote.MyRankingEntity
+import com.asap.domain.entity.remote.MyRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import retrofit2.Response
@@ -48,7 +48,7 @@ interface GroupService {
 
     // 내 알람 랭킹 조회
     @GET("/group/my-rank/{user_id}")
-    suspend fun fetchMyRankings(@Path("user_id") userId: Int): Response<List<MyRankingEntity>>
+    suspend fun fetchMyRankings(@Path("user_id") userId: Int): Response<List<MyRanking>>
 
     // 그룹 랭킹
     @GET("/group/rank/{group_id}")

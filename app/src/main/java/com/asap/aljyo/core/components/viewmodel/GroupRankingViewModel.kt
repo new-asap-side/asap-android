@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.usecase.group.GetUserInfoUseCase
 import com.asap.domain.usecase.group.GroupRankingUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 @Immutable
 data class RankingScreenState(
@@ -31,6 +31,7 @@ data class RankingScreenState(
 class GroupRankingViewModel @AssistedInject constructor(
     @Assisted private val groupId: Int,
     private val rankingUseCase: GroupRankingUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : NetworkViewModel() {
     override val prefix: String = "GroupRanking"
 
@@ -66,7 +67,12 @@ class GroupRankingViewModel @AssistedInject constructor(
                 todayRanking.emit(null)
             }.collect { result ->
                 result?.let { totalRanks ->
-                    totalRanking.emit(totalRanks)
+                    totalRanks.run {
+                        _mIndex.value = indexOfFirst { ranks ->
+                            ranks.nickName == getUserInfoUseCase()?.nickname
+                        }
+                        totalRanking.emit(totalRanks)
+                    }
                 }
             }
         }

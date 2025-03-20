@@ -34,6 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.main.HomeViewModel
 import com.asap.aljyo.core.fsp
@@ -41,6 +43,7 @@ import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.dialog.DialogButtonType
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
+import com.asap.aljyo.ui.composable.group_form.group_alarm.CustomAlertDialog
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Black04
@@ -48,6 +51,7 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +61,7 @@ fun HomeScreen(
     navigateToMyAlarm: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
     navigateToPersonalSetting: (Int) -> Unit,
+    navigateToCustomizeProfile: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Surface(
@@ -72,6 +77,7 @@ fun HomeScreen(
         val sheetState = rememberModalBottomSheetState()
         val requestJoinState by viewModel.joinResponseState.collectAsState()
         var showDialog by remember { mutableStateOf(false) }
+        var showMilestoneDialog by remember { mutableStateOf(false) }
 
 
         val hideSheet = {
@@ -120,6 +126,16 @@ fun HomeScreen(
             viewModel.showDialog.collect {
                 showDialog = it
             }
+        }
+
+        LaunchedEffect(Unit) {
+            viewModel.showMilestoneDialog.collect {
+                showMilestoneDialog = it
+            }
+        }
+
+        LifecycleEventEffect(Lifecycle.Event.ON_START) {
+            viewModel.checkMileStone()
         }
 
         if (privateGroupState.showPasswordSheet) {
@@ -301,6 +317,19 @@ fun HomeScreen(
                 description = "다른 그룹을 찾아볼까요?",
                 onDismissRequest = { showDialog = false },
                 onConfirm = { showDialog = false }
+            )
+        }
+
+        if (showMilestoneDialog) {
+            CustomAlertDialog(
+                buttonType = DialogButtonType.DOUBLE,
+                title = "새로운 아이템이 해제되었어요!",
+                content = "마이페이지에서 확인하세요",
+                onClickConfirm = navigateToCustomizeProfile,
+                onDismissRequest = { showMilestoneDialog = false },
+                confirmText = "확인하러 가기",
+                dismissText = "닫기",
+                dialogImg = R.drawable.group_dialog_img
             )
         }
 

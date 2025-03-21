@@ -408,7 +408,7 @@ private fun SuccessRateProgress(
                     painterResource(R.drawable.img_aljyo_mascot)
 
                 BubbleBox(
-                    modifier = Modifier.height(50.dp),
+                    modifier = Modifier.weight(0.3f),
                     tailHeight = tailHeight,
                     containerColor = Color(0xFF330315)
                 ) { modifier ->
@@ -425,7 +425,7 @@ private fun SuccessRateProgress(
                 }
 
                 Image(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(0.7f),
                     painter = mascotResource,
                     contentDescription = "aljyo illust",
                     contentScale = ContentScale.FillHeight

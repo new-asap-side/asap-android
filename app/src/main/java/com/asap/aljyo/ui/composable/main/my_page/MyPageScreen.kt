@@ -69,7 +69,6 @@ internal fun MyPageScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Grey01)
-                    .padding(bottom = 52.dp)
             ) {
                 Spacer(modifier = Modifier.height(42.dp))
 

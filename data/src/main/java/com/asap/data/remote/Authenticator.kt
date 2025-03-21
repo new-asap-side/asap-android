@@ -1,6 +1,9 @@
 package com.asap.data.remote
 
+import com.asap.domain.ExpiredTokenHandler
 import com.asap.domain.usecase.auth.RefreshTokenUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -32,10 +35,16 @@ class TokenAuthenticator @Inject constructor(
                     header(HeaderInterceptor.RETRY_COUNT, "${retryCount + 1}")
                 }.build()
             } else {
+                expired()
                 null
             }
         } catch (e: Exception) {
+            expired()
             null
         }
+    }
+
+    private fun expired() {
+        ExpiredTokenHandler.emit(CoroutineScope(Dispatchers.Default))
     }
 }

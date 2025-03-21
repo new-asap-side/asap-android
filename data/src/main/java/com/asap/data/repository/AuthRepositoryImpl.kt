@@ -1,6 +1,5 @@
 package com.asap.data.repository
 
-import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.TokenManager
@@ -67,8 +66,10 @@ class AuthRepositoryImpl @Inject constructor(
             )
         )
 
-        sessionLocalDataSource.updateAccessToken(response.accessToken)
-        sessionLocalDataSource.updateRefreshToken(response.refreshToken)
+        sessionLocalDataSource.run {
+            updateAccessToken(response.accessToken)
+            updateRefreshToken(response.refreshToken)
+        }
     }
 
     override suspend fun checkCachedAuth(): Boolean {
@@ -78,13 +79,14 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshToken(): Boolean {
         try {
             val refreshToken = sessionLocalDataSource.getRefreshToken() ?: ""
-            Log.v(TAG, "refresh token by sessionLocalDataSource: $refreshToken")
+            remoteDataSource.refreshToken(token = refreshToken)?.let { (access, refresh) ->
+                updateToken(access, refresh)
 
-            val response = remoteDataSource.refreshToken(refreshToken)
-            updateToken(
-                response?.accessToken ?: "",
-                response?.refreshToken ?: ""
-            )
+                TokenManager.run {
+                    this.accessToken = access
+                    this.refreshToken = refresh
+                }
+            }
             return true
         } catch (e: HttpException) {
             return false

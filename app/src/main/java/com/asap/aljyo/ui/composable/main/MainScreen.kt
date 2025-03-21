@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +27,7 @@ import com.asap.aljyo.core.navigation.ScreenRoute
 import com.asap.aljyo.ui.composable.main.home.main.CreateGroupButton
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.ExpiredTokenHandler
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -37,6 +40,21 @@ internal fun MainScreen(
     AljyoTheme {
         val mainNavController = rememberNavController()
         val selectedIndex by mainViewModel.selectedIndex.collectAsState()
+        val scope = rememberCoroutineScope()
+
+        LaunchedEffect(Unit) {
+            ExpiredTokenHandler.subscribe(
+                scope = scope,
+                block = {
+                    mainViewModel.deleteUserInfo()
+                    screenNavController.navigate(ScreenRoute.Onboarding.route) {
+                        popUpTo(route = ScreenRoute.Main.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
 
         Scaffold(
             containerColor = White,

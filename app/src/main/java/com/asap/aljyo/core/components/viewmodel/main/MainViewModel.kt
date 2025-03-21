@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val deleteLocalUserInfoUseCase: DeleteLocalUserInfoUseCase,
     private val fetchProfileItemUseCase: FetchProfileItemUseCase,
     private val sp: SharedPreferences
 ) : ViewModel() {
@@ -50,5 +52,11 @@ class MainViewModel @Inject constructor(
 
     fun select(index: Int) = viewModelScope.launch {
         _selectedIndex.emit(index)
+    }
+
+    fun deleteUserInfo() {
+        viewModelScope.launch {
+            deleteLocalUserInfoUseCase()
+        }
     }
 }

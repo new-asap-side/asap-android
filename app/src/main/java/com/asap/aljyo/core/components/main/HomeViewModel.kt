@@ -8,13 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.main.home.PrivateGroupState
-import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.data.remote.TokenManager
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
-import com.asap.domain.usecase.group.FetchLatestGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
@@ -30,16 +28,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase,
     private val fetchProfileItemUseCase: FetchProfileItemUseCase,
     private val sp: SharedPreferences
 ) : ViewModel() {
-    private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
-    val latestGroupState get() = _latestGroupState.asStateFlow()
-
     val selectedGroupId = mutableStateOf<Int?>(null)
 
     private val _joinResponseState =
@@ -51,11 +45,12 @@ class HomeViewModel @Inject constructor(
     private val userInfo = mutableStateOf<User?>(null)
 
     private val _scrollPositionMap = mutableMapOf(
-        MAIN_TAB_SCROLL_KEY to Pair(0, 0),
-        POPULAR_TAB_SCROLL_KEY to Pair(0, 0),
-        LATEST_TAB_SCROLL_KEY to Pair(0, 0),
+        MAIN to Pair(0, 0),
+        POPULAR to Pair(0, 0),
+        LATEST to Pair(0, 0),
     )
-    val scrollPositionMap get() = _scrollPositionMap
+    val scrollPositionMap: Map<String, Pair<Int, Int>>
+        get() = _scrollPositionMap.toMap()
 
     private val _error = mutableStateOf(false)
     val error get() = _error.value
@@ -82,17 +77,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
-        _error.value = false
-        if (!internal) {
-            _latestGroupState.value = UiState.Loading
-        }
-
-        fetchLatestGroupUseCase()
-            .catch { e -> _latestGroupState.value = handleThrowable(e) }
-            .collect { latestGroup -> _latestGroupState.value = UiState.Success(latestGroup) }
-    }
-
     fun saveScrollPosition(key: String, index: Int, offset: Int) {
         _scrollPositionMap[key] = Pair(index, offset)
     }
@@ -108,11 +92,11 @@ class HomeViewModel @Inject constructor(
 
             // join이 되어 있지 않은 상황이라면 인원수 체크를 해서 다이얼로그 노출
             if (joined.not()) {
-               details?.takeIf { it.currentPerson == it.maxPerson }?.let {
-                   Log.d("HomeViewModel:","ShowDialog")
-                   _showDialog.emit(true)
-                   return@collect
-               }
+                details?.takeIf { it.currentPerson == it.maxPerson }?.let {
+                    Log.d("HomeViewModel:", "ShowDialog")
+                    _showDialog.emit(true)
+                    return@collect
+                }
             }
 
             _privateGroupState.value = _privateGroupState.value.copy(
@@ -129,7 +113,7 @@ class HomeViewModel @Inject constructor(
             GroupJoinRequest(
                 userId = (userInfo?.userId?.toInt() ?: -1),
                 groupId = (selectedGroupId.value ?: -1),
-                deviceToken = FCMTokenManager.token,
+                deviceToken = TokenManager.fcmToken,
                 groupPassword = password,
             )
         ).catch { e ->
@@ -184,8 +168,8 @@ class HomeViewModel @Inject constructor(
     companion object {
         const val TAG = "HomeViewModel"
 
-        const val MAIN_TAB_SCROLL_KEY = "main"
-        const val POPULAR_TAB_SCROLL_KEY = "popular"
-        const val LATEST_TAB_SCROLL_KEY = "latest"
+        const val MAIN = "main"
+        const val POPULAR = "popular"
+        const val LATEST = "latest"
     }
 }

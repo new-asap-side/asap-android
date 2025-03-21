@@ -32,10 +32,7 @@ import com.asap.aljyo.ui.composable.group_form.group_create.CreateGroupScreen
 import com.asap.aljyo.ui.composable.group_form.group_type.SelectGroupTypeScreen
 import com.asap.aljyo.ui.composable.group_ranking.RankingScreen
 import com.asap.aljyo.ui.composable.main.MainScreen
-import com.asap.aljyo.ui.composable.main.alarm_list.AlarmListScreen
-import com.asap.aljyo.ui.composable.main.home.HomeScreen
 import com.asap.aljyo.ui.composable.main.my_page.CustomizeProfileScreen
-import com.asap.aljyo.ui.composable.main.my_page.MyPageScreen
 import com.asap.aljyo.ui.composable.main.my_page.PrivacyPolicyScreen
 import com.asap.aljyo.ui.composable.onboarding.OnboardingScreen
 import com.asap.aljyo.ui.composable.preferences.PreferencesScreen

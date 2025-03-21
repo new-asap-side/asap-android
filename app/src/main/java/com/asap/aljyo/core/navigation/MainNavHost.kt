@@ -41,6 +41,9 @@ fun MainNavHost(
                 navigateToPersonalSetting = { groupId ->
                     screenNavController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
                 },
+                navigateToRanking = { groupId ->
+                    screenNavController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
+                },
                 navigateToCustomizeProfile = { screenNavController.navigate(route = ScreenRoute.CustomizeProfile.route) }
             )
         }

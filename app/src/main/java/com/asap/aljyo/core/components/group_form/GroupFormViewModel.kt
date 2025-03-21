@@ -1,13 +1,12 @@
 package com.asap.aljyo.core.components.group_form
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.util.PictureUtil
 import com.asap.aljyo.util.format
-import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.data.remote.TokenManager
 import com.asap.domain.usecase.group.CreateGroupUseCase
 import com.asap.domain.usecase.group.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -150,7 +149,7 @@ class GroupFormViewModel @Inject constructor(
                 maxPerson = _groupScreenState.value.maxPerson,
                 title = _groupScreenState.value.title,
                 musicTitle = if (_alarmScreenState.value.alarmType == "VIBRATION") null else _alarmScreenState.value.musicTitle,
-                deviceToken = FCMTokenManager.token
+                deviceToken = TokenManager.fcmToken
             ).let { id ->
                 groupId = id
             }

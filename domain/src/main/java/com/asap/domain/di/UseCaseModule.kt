@@ -36,10 +36,14 @@ import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.FetchPopularGroupUseCaseImpl
 import com.asap.domain.usecase.group.FetchRankingNumberUseCase
 import com.asap.domain.usecase.group.FetchRankingNumberUseCaseImpl
+import com.asap.domain.usecase.group.FetchTodayRankingUseCase
+import com.asap.domain.usecase.group.FetchTodayRankingUseCaseImpl
 import com.asap.domain.usecase.group.GetSearchedListUseCase
 import com.asap.domain.usecase.group.GetSearchedListUseCaseImpl
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCaseImpl
+import com.asap.domain.usecase.group.MyRankingUseCase
+import com.asap.domain.usecase.group.MyRankingUseCaseImpl
 import com.asap.domain.usecase.group.SearchGroupUseCase
 import com.asap.domain.usecase.group.SearchGroupUseCaseImpl
 import com.asap.domain.usecase.user.CheckCachedProfileUseCase
@@ -145,9 +149,19 @@ interface UseCaseModule {
     ) : DeleteAllSearchEntityUseCase
 
     @Binds
+    fun bindMyRankingUseCase(
+        myRankingUseCaseImpl: MyRankingUseCaseImpl
+    ) : MyRankingUseCase
+
+    @Binds
     fun bindFetchGroupRankingUseCase(
         fetchGroupRankingUseCaseImpl: FetchGroupRankingUseCaseImpl
     ): FetchGroupRankingUseCase
+
+    @Binds
+    fun bindFetchTodayRankingUseCase(
+        fetchTodayRankingUseCaseImpl: FetchTodayRankingUseCaseImpl
+    ): FetchTodayRankingUseCase
 
     @Binds
     fun bindFetchRankingNumberUseCase(

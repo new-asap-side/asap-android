@@ -49,7 +49,7 @@ internal fun RankingArea(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
         RankingProfile(
@@ -77,6 +77,7 @@ internal fun RankingArea(
                 )
             )
         }
+        
         RankingProfile(
             painter = painterResource(R.drawable.ic_gold_crown),
             size = 120.dp,
@@ -102,6 +103,7 @@ internal fun RankingArea(
                 )
             )
         }
+
         RankingProfile(
             painter = painterResource(R.drawable.ic_bronze_crown),
             size = 86.dp,

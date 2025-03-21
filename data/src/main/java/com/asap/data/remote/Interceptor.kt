@@ -1,30 +1,25 @@
 package com.asap.data.remote
 
 import android.util.Log
-import com.asap.data.local.source.SessionLocalDataSource
-import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-class HeaderInterceptor @Inject constructor(
-    private val sessionLocalDataSource: SessionLocalDataSource
-) : Interceptor {
+class HeaderInterceptor @Inject constructor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val accessToken = runBlocking {
-            sessionLocalDataSource.getAccessToken() ?: ""
-        }
-        Log.v(TAG, "accesssToken: $accessToken")
+        val accessToken = TokenManager.accessToken
+        Log.v(TAG, "Header authorization access-token: $accessToken")
 
-        val requestBuilder = chain.request().newBuilder()
+        return chain.request().newBuilder()
             .addHeader("Content-Type", "application/json")
-            .addHeader(AUTH_KEY, "Bearer $accessToken")
-
-        return chain.proceed(requestBuilder.build())
+            .addHeader(AUTH_KEY, "Bearer $accessToken").run {
+                chain.proceed(build())
+            }
     }
 
     companion object {
         const val AUTH_KEY = "Authorization"
         const val TAG = "HeeaderInterceptor"
+        const val RETRY_COUNT = "Retry-count"
     }
 }

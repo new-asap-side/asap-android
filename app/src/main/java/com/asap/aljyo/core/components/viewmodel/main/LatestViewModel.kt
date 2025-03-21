@@ -18,7 +18,7 @@ class LatestViewModel @Inject constructor(
         fetchLatestGroup()
     }
 
-    private fun fetchLatestGroup() {
+    fun fetchLatestGroup() {
         viewModelScope.launch {
             fetchLatestGroupUseCase()
                 .catch { e ->

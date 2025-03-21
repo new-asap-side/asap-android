@@ -43,6 +43,7 @@ import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.composable.common.dialog.DialogButtonType
 import com.asap.aljyo.ui.composable.common.dialog.PrecautionsDialog
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
+import com.asap.aljyo.ui.composable.common.sheet.MyRankingSheet
 import com.asap.aljyo.ui.composable.group_form.group_alarm.CustomAlertDialog
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
@@ -51,7 +52,6 @@ import com.asap.aljyo.ui.theme.Error
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +61,7 @@ fun HomeScreen(
     navigateToMyAlarm: () -> Unit,
     navigateToGroupDetails: (Int) -> Unit,
     navigateToPersonalSetting: (Int) -> Unit,
+    navigateToRanking: (Int) -> Unit,
     navigateToCustomizeProfile: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -127,6 +128,14 @@ fun HomeScreen(
                 showDialog = it
             }
         }
+
+        MyRankingSheet(
+            modifier = Modifier.padding(
+                horizontal = 20.dp,
+                vertical = 24.dp
+            ),
+            navigateToRanking = navigateToRanking
+        )
 
         LaunchedEffect(Unit) {
             viewModel.showMilestoneDialog.collect {

@@ -22,8 +22,8 @@ android {
         applicationId = "com.asap.aljyo"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -127,6 +127,7 @@ dependencies {
     // coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.gif)
 
     // firebase
     implementation(platform(libs.firebase.bom))
@@ -152,5 +153,6 @@ dependencies {
 
     // module
     implementation(project(":domain"))
+    implementation(project(":utility"))
     implementation(project(":data"))
 }

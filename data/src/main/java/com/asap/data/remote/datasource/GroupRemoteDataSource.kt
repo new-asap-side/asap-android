@@ -11,7 +11,6 @@ import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
-import com.asap.domain.entity.remote.GroupRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +37,13 @@ class GroupRemoteDataSource @Inject constructor(
         }
 
         emit(response.body())
+    }
+
+    suspend fun searchGroup(query: String): Flow<List<AlarmGroup>> = flow {
+        groupService.searchGroup(query).also {
+            if (!it.isSuccessful) throw HttpException(it)
+            emit(it.body() ?: emptyList())
+        }
     }
 
     suspend fun fetchGroupDetails(groupId: Int, userId: Int): Flow<GroupDetails?> = flow {
@@ -68,21 +74,33 @@ class GroupRemoteDataSource @Inject constructor(
     }
 
     suspend fun withdrawGroup(userId: Int, groupId: Int): Flow<WhetherResponse?> = flow {
-        groupService.withdrawGroup(mapOf("user_id" to userId, "group_id" to groupId)).also {
-            if (!it.isSuccessful) {
-                throw HttpException(it)
-            }
-            emit(it.body())
+        groupService.withdrawGroup(
+            mapOf("user_id" to userId, "group_id" to groupId)
+        ).let { response ->
+            if (!response.isSuccessful) throw HttpException(response)
+            emit(response.body())
         }
     }
 
-    suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> = flow {
-        val response = groupService.fetchGroupRanking(groupId = groupId)
-        if(!response.isSuccessful) {
-            throw HttpException(response)
+    suspend fun fetchMyRanking(userId: Int) = flow {
+        groupService.fetchMyRankings(userId = userId).let { response ->
+            if (!response.isSuccessful) throw HttpException(response)
+            emit(response.body())
         }
+    }
 
-        emit(response.body())
+    suspend fun fetchGroupRanking(groupId: Int) = flow {
+        groupService.fetchGroupRanking(groupId = groupId).let { response ->
+            if(!response.isSuccessful) throw HttpException(response)
+            emit(response.body())
+        }
+    }
+
+    suspend fun fetchTodayRanking(groupId: Int) = flow {
+        groupService.fetchTodayRanking(groupId = groupId).let { response ->
+            if (!response.isSuccessful) throw HttpException(response)
+            emit(response.body())
+        }
     }
 
     suspend fun fetchRankingNumber(groupId: Int, userId: Int): Flow<RankingNumberResponse?> = flow {

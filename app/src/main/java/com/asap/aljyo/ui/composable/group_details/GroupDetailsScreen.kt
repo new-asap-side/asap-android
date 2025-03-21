@@ -2,7 +2,6 @@ package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
 import android.graphics.Color
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -34,10 +34,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,15 +49,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
@@ -79,7 +77,6 @@ import com.asap.aljyo.ui.theme.White
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.UserGroupType
 import dagger.hilt.android.EntryPointAccessors
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -141,29 +138,44 @@ fun GroupDetailsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.groupEdit.collect {
-            navController.navigate("${ScreenRoute.GroupEdit.route}/${CustomNavType.groupEditType.serializeAsValue(it)}")
+            navController.navigate(
+                "${ScreenRoute.GroupEdit.route}/${
+                    CustomNavType.groupEditType.serializeAsValue(
+                        it
+                    )
+                }"
+            )
         }
     }
 
     LaunchedEffect(Unit) {
         viewModel.personalEdit.collect {
-            navController.navigate("${ScreenRoute.PersonalEdit.route}/$groupId?setting=${CustomNavType.PersonalEditType.serializeAsValue(it)}")
+            navController.navigate(
+                "${ScreenRoute.PersonalEdit.route}/$groupId?setting=${
+                    CustomNavType.PersonalEditType.serializeAsValue(
+                        it
+                    )
+                }"
+            )
         }
     }
 
     if (showDialog) {
-        (groupDetails as? UiState.Success)?.data?.let {groupDetail ->
+        (groupDetails as? UiState.Success)?.data?.let { groupDetail ->
             val duration = with(groupDetail) {
                 val diffTimes = alarmDays.map { DateTimeManager.diffFromNow("$it $alarmTime") }
 
-                if (diffTimes.all { it == 0L }) DateTimeManager.ONE_WEEKS_MINUTES else diffTimes.filter { it != 0L }.min()
+                if (diffTimes.all { it == 0L }) DateTimeManager.ONE_WEEKS_MINUTES else diffTimes.filter { it != 0L }
+                    .min()
             }
-            val nextAlarmTime = DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"),"").trim()
+            val nextAlarmTime =
+                DateTimeManager.parseToDay(duration).replace(Regex("00[가-힣]+"), "").trim()
 
             CustomAlertDialog(
                 title = "그룹 생성 완료!",
                 content = "$nextAlarmTime 후부터 알람이 울려요",
-                onClick = { showDialog = false },
+                onClickConfirm = { showDialog = false },
+                confirmText = "확인",
                 dialogImg = R.drawable.group_dialog_img
             )
         }
@@ -182,7 +194,6 @@ fun GroupDetailsScreen(
         val sheetState = rememberModalBottomSheetState()
         var showBottomSheet by remember { mutableStateOf(false) }
         var showLeaveGroupDialog by remember { mutableStateOf(false) }
-//        var showReportGroupDialog by remember { mutableStateOf(false) }
 
         val hideBottomSheet = {
             coroutineScope.launch {
@@ -289,12 +300,18 @@ fun GroupDetailsScreen(
             )
         }
 
+        // scroll state
+        val scrollState = rememberLazyListState()
+        val scrollOffset by remember { derivedStateOf { scrollState.firstVisibleItemScrollOffset } }
+        val thumbnailHeight = LocalDensity.current.run { 270.dp.toPx() }
+        val dimmed = if (scrollOffset > thumbnailHeight) true else false
+
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surface.copy(
-                            alpha = 0f
+                            alpha = if(dimmed) 1f else 0f
                         ),
                     ),
                     title = {
@@ -338,7 +355,7 @@ fun GroupDetailsScreen(
                                 contentDescription = "Top app bar navigation icon"
                             )
                         }
-                    }
+                    },
                 )
             },
             bottomBar = {
@@ -370,7 +387,9 @@ fun GroupDetailsScreen(
                     .padding(bottom = padding.calculateBottomPadding())
                     .fillMaxSize(),
             ) {
+
                 LazyColumn(
+                    state = scrollState,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     item {

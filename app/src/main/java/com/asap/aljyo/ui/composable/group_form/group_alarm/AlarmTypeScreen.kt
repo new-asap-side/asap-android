@@ -1,11 +1,14 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
+import android.graphics.ImageDecoder
+import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,30 +31,49 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import coil3.gif.GifDecoder
+import coil3.request.ImageRequest
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
+import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
+import com.asap.aljyo.ui.composable.group_form.group_create.AlarmTimePicker
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
+import kotlinx.coroutines.launch
+import org.checkerframework.common.subtyping.qual.Bottom
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +83,9 @@ fun AlarmTypeScreen(
     navigateToAlarmSetting: () -> Unit
 ) {
     val alarmState by viewModel.alarmScreenState.collectAsStateWithLifecycle()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
+    var isShowTimeBottomSheet by remember { mutableStateOf(Pair(false, "")) }
 
     AljyoTheme {
         Scaffold(
@@ -108,33 +137,119 @@ fun AlarmTypeScreen(
                         fontWeight = FontWeight.Bold,
                     )
                 )
-                Spacer(modifier = Modifier.weight(1f))
 
-                Image(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    painter = painterResource(R.drawable.alarm_bell),
-                    contentDescription = "Alarm Bell Image"
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = "그룹 생성 후에도 변경이 가능해요!",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Black03,
+                        fontSize = 15.fsp,
+                    )
                 )
+//                Spacer(modifier = Modifier.weight(1f))
+//
+//                Image(
+//                    modifier = Modifier.align(Alignment.CenterHorizontally),
+//                    painter = painterResource(R.drawable.alarm_bell),
+//                    contentDescription = "Alarm Bell Image"
+//                )
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(30.dp))
 
                 BoxWithIcon(
                     icon = R.drawable.ic_slide,
                     text = "밀어서 알람 해제",
                     isSelected = alarmState.alarmUnlockContents == "SLIDE",
-                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("SLIDE") }
+                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("SLIDE") },
+                    onPreviewClick = { isShowTimeBottomSheet = Pair(true, "SLIDE") }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 BoxWithIcon(
-                    icon = R.drawable.ic_card_touch,
+                    icon = R.drawable.ic_card,
                     text = "카드를 터치하여 알람 해제",
                     isSelected = alarmState.alarmUnlockContents == "CARD",
-                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CARD") }
+                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CARD") },
+                    onPreviewClick = { isShowTimeBottomSheet = Pair(true, "CARD") }
                 )
 
-                Spacer(modifier = Modifier.height(36.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+
+                BoxWithIcon(
+                    icon = R.drawable.ic_calculator,
+                    text = "3번 계산하고 알람 해제",
+                    isSelected = alarmState.alarmUnlockContents == "CALCULATION",
+                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CALCULATION") },
+                    onPreviewClick = { isShowTimeBottomSheet = Pair(true, "CALCULATION") }
+                )
+
+//                Spacer(modifier = Modifier.height(36.dp))
+                if (isShowTimeBottomSheet.first) {
+                    BottomSheet(
+                        modifier = Modifier.padding(
+                            horizontal = 20.dp,
+                            vertical = 24.dp
+                        ),
+                        sheetState = sheetState,
+                        onDismissRequest = { isShowTimeBottomSheet = Pair(false, "") },
+                        title = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 28.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "알람해제 컨텐츠 미리보기",
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontSize = 18.fsp,
+                                        color = Black01
+                                    )
+                                )
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "close",
+                                    modifier = Modifier
+                                        .clickable {
+                                            coroutineScope.launch { sheetState.hide() }
+                                                .invokeOnCompletion {
+                                                    if (!sheetState.isVisible) isShowTimeBottomSheet =
+                                                        Pair(false, "")
+                                                }
+                                        }
+                                )
+                            }
+                        },
+                        content = {
+                            Column {
+                                val previewGif = when(isShowTimeBottomSheet.second) {
+                                    "SLIDE" -> "file:///android_asset/slide.gif"
+                                    "CARD" -> "file:///android_asset/card.gif"
+                                    else -> "file:///android_asset/calculator.gif"
+                                }
+                                AsyncImage(
+                                    model = previewGif,
+                                    contentDescription = "PREVIEW GIF",
+                                    modifier = Modifier.size(320.dp)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                CustomButton(
+                                    text = "선택하기",
+                                    enable = true,
+                                    onClick = {
+                                        viewModel.onAlarmUnlockContentsSelected(isShowTimeBottomSheet.second)
+                                        coroutineScope.launch { sheetState.hide() }
+                                            .invokeOnCompletion {
+                                                if (!sheetState.isVisible) isShowTimeBottomSheet =
+                                                    Pair(false, "")
+                                            }
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -145,18 +260,19 @@ fun BoxWithIcon(
     @DrawableRes icon: Int,
     text: String,
     isSelected: Boolean,
-    onCheckedChange: () -> Unit
+    onCheckedChange: () -> Unit,
+    onPreviewClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .border(
-                width = 2.dp,
+                width = 1.dp,
                 color = if (isSelected) Red01 else Grey02,
                 shape = RoundedCornerShape(10.dp)
             )
             .background(
-                color = if (isSelected) Red02 else White,
+                color = White,
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(
@@ -179,17 +295,73 @@ fun BoxWithIcon(
                 contentDescription = "IconPublic",
                 tint = Color.Unspecified
             )
+
             Text(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(start = 10.dp),
                 text = text,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = if (isSelected) Red01 else Black01,
                     fontSize = 16.fsp,
-                    fontWeight = if(isSelected) FontWeight.Bold else FontWeight.Medium,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                )
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                modifier = Modifier
+                    .clickable { onPreviewClick() }
+                    .padding(end = 7.dp)
+                    .background(color = Grey01, shape = RoundedCornerShape(6.dp))
+                    .padding(vertical = 3.dp, horizontal = 7.dp),
+                text = "미리보기",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Black02,
+                    fontSize = 14.fsp
                 )
             )
         }
+    }
+}
+
+//@Composable
+//fun GifImage(
+//    modifier: Modifier = Modifier,
+//) {
+//    val context = LocalContext.current
+//    val imageLoader = ImageLoader.Builder(context)
+//        .components {
+//            if (SDK_INT >= 28) {
+//                add(ImageDecoder.Factory())
+//            } else {
+//                add(GifDecoder.Factory())
+//            }
+//        }
+//        .build()
+//    Image(
+//        painter = rememberAsyncImagePainter(
+//            ImageRequest.Builder(context).data(data = R.drawable.YOUR_GIF_HERE).apply(block = {
+//                size(Size.ORIGINAL)
+//            }).build(), imageLoader = imageLoader
+//        ),
+//        contentDescription = null,
+//        modifier = modifier.fillMaxWidth(),
+//    )
+//}
+
+
+@Preview
+@Composable
+fun PreviewBoxWithIcon() {
+    AljyoTheme {
+        BoxWithIcon(
+            icon = R.drawable.ic_card_touch,
+            text = "카드를 터치하여 알람 해제",
+            isSelected = true,
+            onCheckedChange = {},
+            onPreviewClick = {}
+        )
+
     }
 }

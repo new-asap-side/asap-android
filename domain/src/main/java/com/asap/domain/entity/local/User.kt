@@ -15,6 +15,10 @@ data class User(
     val accessToken: String,
     @ColumnInfo(name = "refresh_token")
     val refreshToken: String,
+    @ColumnInfo(name = "profile_image")
     val profileImg: String? = null,
-    val nickname: String? = null
+    @ColumnInfo(name = "profile_item")
+    val profileItem: String? = null,
+    @ColumnInfo(name = "nickname")
+    val nickname: String? = null,
 )

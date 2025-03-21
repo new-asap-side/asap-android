@@ -11,6 +11,7 @@ import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.MyRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import retrofit2.Response
@@ -19,6 +20,7 @@ import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GroupService {
     // 인기 그룹 조회
@@ -36,13 +38,25 @@ interface GroupService {
         @Path("user_id") userId: Int
     ): Response<GroupDetails>
 
+    // 그룹 검색
+    @GET("/group/group-search")
+    suspend fun searchGroup(@Query("groupName") query: String): Response<List<AlarmGroup>>
+
     // 유저 알람 리스트 조회
     @GET("/group/user/{user_id}")
     suspend fun fetchUserAlarmList(@Path("user_id") userId: Int): Response<List<AlarmSummary>>
 
+    // 내 알람 랭킹 조회
+    @GET("/group/my-rank/{user_id}")
+    suspend fun fetchMyRankings(@Path("user_id") userId: Int): Response<List<MyRanking>>
+
     // 그룹 랭킹
     @GET("/group/rank/{group_id}")
     suspend fun fetchGroupRanking(@Path("group_id") groupId: Int): Response<List<GroupRanking>>
+
+    // 그룹 일일 랭킹 조회
+    @GET("/group/rank-today/{group_id}")
+    suspend fun fetchTodayRanking(@Path("group_id") groupId: Int): Response<List<GroupRanking>>
 
     // 랭킹 등수 조회
     @GET("/group/rank/{group_id}/{user_id}")

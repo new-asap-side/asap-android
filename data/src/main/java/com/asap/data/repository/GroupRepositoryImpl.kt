@@ -2,23 +2,30 @@ package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
 import com.asap.data.remote.datasource.GroupRemoteDataSource
+import com.asap.domain.entity.local.SearchEntity
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.MyRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import com.asap.domain.repository.GroupRepository
+import com.asap.utility.datetime.DateTimeParser
+import com.asap.utility.datetime.TimeDot
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
+    @TimeDot
+    private val parser: DateTimeParser,
     private val remoteDataSource: GroupRemoteDataSource,
     localDataSource: AppDatabase,
 ): GroupRepository {
     private val userDao = localDataSource.userDao()
+    private val searchDao = localDataSource.searchDao()
 
     private suspend fun getUserId(): Int {
         return (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
@@ -37,6 +44,23 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.fetchGroupDetails(groupId = groupId, userId = userId)
     }
 
+    override suspend fun searchGroup(query: String): Flow<List<AlarmGroup>> {
+        searchDao.insert(SearchEntity(query, parser.parse()))
+        return remoteDataSource.searchGroup(query)
+    }
+
+    override suspend fun deleteSearchEntity(query: String) {
+        searchDao.deleteByQury(query)
+    }
+
+    override suspend fun deleteAllSearchEntity() {
+        searchDao.deleteAll()
+    }
+
+    override suspend fun getSearchedList(): List<SearchEntity> {
+        return searchDao.selectAll()
+    }
+
     override suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?> {
         return remoteDataSource.fetchUserAlarmList(userId = userId)
     }
@@ -49,8 +73,18 @@ class GroupRepositoryImpl @Inject constructor(
         return remoteDataSource.withdrawGroup(userId, groupId)
     }
 
+    override suspend fun fetchMyRanking(): Flow<List<MyRanking>?> {
+        return getUserId().let { userId ->
+            remoteDataSource.fetchMyRanking(userId)
+        }
+    }
+
     override suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?> {
         return remoteDataSource.fetchGroupRanking(groupId = groupId)
+    }
+
+    override suspend fun fetchTodayRanking(groupId: Int): Flow<List<GroupRanking>?> {
+        return remoteDataSource.fetchTodayRanking(groupId = groupId)
     }
 
     override suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?> {

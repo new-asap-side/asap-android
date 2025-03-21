@@ -5,6 +5,7 @@
     <string name="notification_alarm_title">알죠에서 알려드려요</string>
     <string name="notification_alarm_description">알람이 울리고 있어요. 빠르게 해제하세요!</string>
     <!-- Common -->
+    <string name="alarm">알람</string>
     <string name="yes">네</string>
     <string name="no">아니오</string>
     <string name="sir">%s님</string>
@@ -32,7 +33,7 @@
     <string name="start_with_kakao">카카오로 시작하기</string>
     <!-- Bottom navigation -->
     <string name="home">홈</string>
-    <string name="alarm_list">알람 리스트</string>
+    <string name="my_alarm">내 알람</string>
     <string name="my_page">마이 페이지</string>
     <!-- Home Screen -->
     <string name="private_alarm_input_password">비공개 알람입니다.\n비밀번호를 입력해주세요.</string>
@@ -42,11 +43,16 @@
     <string name="main">메인</string>
     <string name="sorted_by_populrity">인기순</string>
     <string name="sorted_by_latest">최신순</string>
-    <string name="of">님의</string>
-    <string name="release_alarm_succes_rate">알람 해제 성공률은</string>
-    <string name="is">에요</string>
+    <string name="your_alarm_off_success_rate">님의 알람 해제 성공률</string>
+    <string name="this_month">이번 달</string>
+    <string name="rate">%.1f%%</string>
+    <string name="success">성공!</string>
+    <string name="use_information">사용 안내</string>
+    <string name="fighting">화이팅!</string>
     <string name="start_lively_today">오늘 하루도 활기차게 시작해요!</string>
     <string name="participating_group">참여중인 그룹</string>
+    <string name="my_ranking">내 랭킹 확인</string>
+    <string name="no_exist_my_alarm">참여중인 알람이 없습니다.</string>
     <string name="counting">%d개</string>
     <string name="see_more">더보기</string>
     <string name="public_group">공개</string>
@@ -56,7 +62,7 @@
     <string name="today_popular_group_title">오늘의 인기 그룹은?</string>
     <string name="default_banner_sub_title">알죠는 처음이죠?</string>
     <string name="default_banner_title">한눈에 알아보는 알죠 사용법</string>
-    <string name="new_group_title">최근에 새로 생긴 그룹이에요</string>
+    <string name="new_group_title">신규 그룹</string>
     <!-- GroupDetails Screen -->
     <string name="next_alarm_timer_title">다음 알람까지</string>
     <string name="particularting_personnel">%d명이 참여하고 있어요!</string>
@@ -104,10 +110,13 @@
     </string-array>
     <!-- Ranking Screen -->
     <string name="group_ranking">그룹 랭킹</string>
+    <string name="total_ranking">전체 랭킹</string>
+    <string name="today_ranking">오늘 알람 성공 여부</string>
     <string name="score">%s점</string>
-    <string name="select_time">시간 선택</string>
-    <string name="rank_score_descript">알람 해제 성공 시 1등-1000점/ 2등-950점 / 3등-900점 / 4등-850점 / 5등-800점 / 6등-750점 / 7등-700점 / 8등-650점이 부여됩니다.</string>
+    <string name="rank_score_guide">점수 제공 안내</string>
+    <string name="rank_score_descript">알람 해제 성공 시 1등: 2000점/ 2등: 1800점 / 3등: 1600점 / 4등: 1400점 / 5등: 1200점 / 6등: 1000점 / 7등: 800점 / 8등: 600점 / 9등: 400점 / 10등: 200점이 부여됩니다.</string>
     <string name="no_points_score">알람을 해제하지 못하였을 시 점수는 부여되지 않습니다.</string>
+    <string name="no_goes_off_yet">아직 오늘의 알람이\n울리지 않았어요.</string>
     <!-- Release alarm -->
     <string name="drag_description">원을 옆으로 밀고\n오늘의 운세를 확인하세요!</string>
     <string name="drag_to_release_alarm">옆으로 밀어서 알람 해제</string>
@@ -122,9 +131,13 @@
     <string name="description_rainbow">꿈과 희망이 반짝거릴 거에요.</string>
     <string name="title_cloud">콩닥콩닥 설레임의 방울</string>
     <string name="description_cloud">설레는 일이 가득할 거 같아요!</string>
-    <string name="alarm_title">알람 제목</string>
+    <string name="alarm_off_result_title">%s님의 알람 해제 결과는</string>
+    <string name="group_name">그룹명</string>
     <string name="alarm_rank">%s등</string>
+    <string name="alarm_point">획득 포인트</string>
+    <string name="point">+%d점</string>
     <!-- Alarm list -->
+    <string name="alarm_list">알람 리스트</string>
     <string name="empty_alarm">아직 생성된 알람이 없어요!</string>
     <string name="start_with_new_group">새로운 그룹과 시작해보아요</string>
     <string name="no_activated_alarm">모든 알람이\n꺼진 상태입니다.</string>
@@ -171,4 +184,12 @@
     <string-array name="privacy_policy">
         <item></item>
     </string-array>
+    <!-- search -->
+    <string name="search_alarm_hint">알람 제목을 검색해보세요</string>
+    <string name="recent_search">최근검색</string>
+    <string name="delete_all">전체삭제</string>
+    <string name="empty_searched">최근에 검색한 기록이 없습니다.</string>
+    <string name="total">총</string>
+    <string name="cases">건</string>
+    <string name="filter">필터</string>
 </resources>

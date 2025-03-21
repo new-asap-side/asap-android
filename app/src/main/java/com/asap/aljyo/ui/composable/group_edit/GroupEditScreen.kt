@@ -409,16 +409,23 @@ fun AlarmContentSelector(
 
         RadioButtonWithText(
             text = "밀어서 알람 해제",
-            icon = R.drawable.ic_hand,
-
+            icon = R.drawable.ic_slide,
             isSelected = alarmContent == "SLIDE",
             onClick = { onContentClick("SLIDE") }
         )
         Spacer(modifier = Modifier.height(14.dp))
 
         RadioButtonWithText(
-            text = "캐릭터를 터치하여 알람 해제",
-            icon = R.drawable.ic_card_touch,
+            text = "카드를 모두 뒤집어 알람 해제",
+            icon = R.drawable.ic_card,
+            isSelected = alarmContent == "CARD",
+            onClick = { onContentClick("CARD") }
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+
+        RadioButtonWithText(
+            text = "3번 계산하고 알람 해제",
+            icon = R.drawable.ic_calculator,
             isSelected = alarmContent == "CARD",
             onClick = { onContentClick("CARD") }
         )
@@ -454,25 +461,25 @@ fun RadioButtonWithText(
                 )
         )
 
-        Text(
-            modifier = Modifier,
-            text = text,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = Black01,
-                fontSize = 15.sp,
-            )
-        )
-
         icon?.let {
             Icon(
                 modifier = Modifier
-                    .padding(start = 2.dp)
                     .size(24.dp),
                 painter = painterResource(icon),
                 contentDescription = "SLIDE ICON",
                 tint = Color.Unspecified
             )
         }
+
+        Text(
+            modifier = Modifier
+                .padding(start = if (icon != null) 6.dp else 0.dp),
+            text = text,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = Black01,
+                fontSize = 15.sp,
+            )
+        )
     }
 }
 

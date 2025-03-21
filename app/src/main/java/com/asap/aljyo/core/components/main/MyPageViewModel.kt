@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.usecase.group.GetUserInfoUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
+import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val deleteLocalUserInfoUseCase: DeleteLocalUserInfoUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val fetchProfileItemUseCase: FetchProfileItemUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiState<MyPageState>>(UiState.Loading)
@@ -28,19 +31,20 @@ class MyPageViewModel @Inject constructor(
     }
 
     fun fetchScreen() {
-        Log.d("MypageViewModel:","fetchScreen 함수 실행")
         if (_fetchScreenFlag.value) {
-            Log.d("MypageViewModel:","fetchScreen 실행")
             viewModelScope.launch {
-                getUserInfoUseCase().let {
-                    _state.value = UiState.Success(
-                        MyPageState(
-                            nickName = it?.nickname,
-                            profileImage = it?.profileImg
-                        )
+                val userInfo = getUserInfoUseCase()
+                val userId = (userInfo?.userId ?: -1).toString()
+                val profileItem = fetchProfileItemUseCase(userId)
+
+                _state.value = UiState.Success(
+                    MyPageState(
+                        nickName = userInfo?.nickname,
+                        profileImage = userInfo?.profileImg,
+                        profileItem = PictureUtil.getProfileItemByName(userInfo?.profileItem),
+                        profileItemNotification = profileItem.profileItems.count { it.isRedPoint }
                     )
-                }
-                Log.d("MyPageViewModel:","State: ${_state.value}")
+                )
             }
         }
         _fetchScreenFlag.value = false

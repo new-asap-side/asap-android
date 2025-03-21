@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
-import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.data.remote.TokenManager
 import com.asap.data.utility.DateTimeManager
 import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.GroupDetails
@@ -29,7 +29,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -224,7 +223,7 @@ class GroupDetailsViewModel @AssistedInject constructor(
                 GroupJoinRequest(
                     userId = userInfo?.userId?.toInt() ?: -1,
                     groupId = groupId,
-                    deviceToken = FCMTokenManager.token,
+                    deviceToken = TokenManager.fcmToken,
                     groupPassword = null,
                 )
             ).catch { e ->

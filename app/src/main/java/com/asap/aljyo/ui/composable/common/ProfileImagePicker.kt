@@ -39,32 +39,39 @@ import com.asap.aljyo.ui.theme.White
 fun ProfileImagePicker(
     modifier: Modifier = Modifier,
     profileImage: Uri?,
+    profileItem: Int? = null,
     onClick: () -> Unit
 ) {
     Box(
         modifier = modifier
-            .size(88.dp)
             .clickable(
                 interactionSource = remember{ MutableInteractionSource() },
                 indication = null,
                 onClick = onClick
             )
     ) {
-            AsyncImage(
-                model = profileImage,
-                contentDescription = "Profile Image",
-                contentScale = if (profileImage == null) ContentScale.Fit else ContentScale.Crop,
-                error = painterResource(R.drawable.ic_empty_profile),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape)
-                    .align(Alignment.Center)
-            )
+//        AsyncImage(
+//            model = profileImage,
+//            contentDescription = "Profile Image",
+//            contentScale = if (profileImage == null) ContentScale.Fit else ContentScale.Crop,
+//            error = painterResource(R.drawable.ic_empty_profile),
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .clip(CircleShape)
+//                .align(Alignment.Center)
+//        )
+        ProfileBox(
+            modifier = Modifier.fillMaxSize(),
+            profileImagePadding = 12.dp,
+            profileItemPadding = 6.dp,
+            profileImage = profileImage.toString(),
+            profileItem = profileItem
+        )
         Box(
             modifier = Modifier
+                .padding(bottom = 12.dp, end = 12.dp)
                 .size(28.dp)
                 .background(White, shape = CircleShape)
-                .clip(CircleShape)
                 .border(1.dp, Grey02, shape = CircleShape)
                 .align(Alignment.BottomEnd)
         ) {
@@ -84,6 +91,7 @@ fun ProfileImagePicker(
 fun ProfileImagePickerPreview() {
     AljyoTheme {
         ProfileImagePicker(
+            modifier = Modifier.size(80.dp),
             profileImage = null,
             onClick = {}
         )

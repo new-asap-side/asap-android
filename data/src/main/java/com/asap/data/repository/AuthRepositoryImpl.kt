@@ -1,10 +1,9 @@
 package com.asap.data.repository
 
-import android.util.Log
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
+import com.asap.data.remote.TokenManager
 import com.asap.data.remote.datasource.AuthRemoteDataSource
-import com.asap.data.remote.firebase.FCMTokenManager
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.repository.AuthRepository
@@ -28,29 +27,33 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.authKakao(kakaoAccessToken = kakaoAccessToken)
     }
 
-    /// FCM Token
     override suspend fun registerToken() {
-        val token = sessionLocalDataSource.getFCMToken()
+        with (sessionLocalDataSource) {
+            val fcmToken = getFCMToken()
+            if (fcmToken == null) {
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(
+                    OnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            return@OnCompleteListener
+                        }
 
-        if (token == null) {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(
-                OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
+                        // memory cache
+                        TokenManager.fcmToken = task.result
+                        CoroutineScope(Dispatchers.IO).launch {
+                            // local cache
+                            sessionLocalDataSource.registerFCMToken(task.result)
+                        }
                     }
+                )
+            } else {
+                TokenManager.fcmToken = fcmToken
+            }
 
-                    // memory cache
-                    FCMTokenManager.token = task.result
-                    CoroutineScope(Dispatchers.IO).launch {
-                        // local cache
-                        sessionLocalDataSource.registerFCMToken(task.result)
-                    }
-                }
-            )
-        } else {
-            FCMTokenManager.token = token
+            TokenManager.run {
+                accessToken = getAccessToken()
+                refreshToken = getRefreshToken()
+            }
         }
-        Log.d(TAG, FCMTokenManager.token)
     }
 
     override suspend fun cacheKakaoAuth(response: AuthResponse) {
@@ -63,8 +66,10 @@ class AuthRepositoryImpl @Inject constructor(
             )
         )
 
-        sessionLocalDataSource.updateAccessToken(response.accessToken)
-        sessionLocalDataSource.updateRefreshToken(response.refreshToken)
+        sessionLocalDataSource.run {
+            updateAccessToken(response.accessToken)
+            updateRefreshToken(response.refreshToken)
+        }
     }
 
     override suspend fun checkCachedAuth(): Boolean {
@@ -74,13 +79,14 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshToken(): Boolean {
         try {
             val refreshToken = sessionLocalDataSource.getRefreshToken() ?: ""
-            Log.v(TAG, "refresh token by sessionLocalDataSource: $refreshToken")
+            remoteDataSource.refreshToken(token = refreshToken)?.let { (access, refresh) ->
+                updateToken(access, refresh)
 
-            val response = remoteDataSource.refreshToken(refreshToken)
-            updateToken(
-                response?.accessToken ?: "",
-                response?.refreshToken ?: ""
-            )
+                TokenManager.run {
+                    this.accessToken = access
+                    this.refreshToken = refresh
+                }
+            }
             return true
         } catch (e: HttpException) {
             return false

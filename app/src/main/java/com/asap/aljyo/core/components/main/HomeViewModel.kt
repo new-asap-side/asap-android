@@ -1,5 +1,6 @@
 package com.asap.aljyo.core.components.main
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,17 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.main.home.PrivateGroupState
-import com.asap.data.remote.firebase.FCMTokenManager
+import com.asap.data.remote.TokenManager
 import com.asap.domain.entity.local.User
-import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
-import com.asap.domain.entity.remote.alarm.AlarmOffRate
-import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
-import com.asap.domain.usecase.group.FetchLatestGroupUseCase
-import com.asap.domain.usecase.group.FetchPopularGroupUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
+import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,22 +28,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fetchALarmOffRateUseCase: FetchAlarmOffRateUseCase,
-    private val fetchPopularGroupUseCase: FetchPopularGroupUseCase,
-    private val fetchLatestGroupUseCase: FetchLatestGroupUseCase,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val joinGroupUseCase: JoinGroupUseCase
+    private val joinGroupUseCase: JoinGroupUseCase,
+    private val fetchProfileItemUseCase: FetchProfileItemUseCase,
+    private val sp: SharedPreferences
 ) : ViewModel() {
-    private val _cardState = MutableStateFlow<UiState<AlarmOffRate?>>(UiState.Loading)
-    val cardState get() = _cardState.asStateFlow()
-
-    private val _popularGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
-    val popularGroupState get() = _popularGroupState.asStateFlow()
-
-    private val _latestGroupState = MutableStateFlow<UiState<List<AlarmGroup>?>>(UiState.Loading)
-    val latestGroupState get() = _latestGroupState.asStateFlow()
-
     val selectedGroupId = mutableStateOf<Int?>(null)
 
     private val _joinResponseState =
@@ -58,11 +45,12 @@ class HomeViewModel @Inject constructor(
     private val userInfo = mutableStateOf<User?>(null)
 
     private val _scrollPositionMap = mutableMapOf(
-        MAIN_TAB_SCROLL_KEY to Pair(0, 0),
-        POPULAR_TAB_SCROLL_KEY to Pair(0, 0),
-        LATEST_TAB_SCROLL_KEY to Pair(0, 0),
+        MAIN to Pair(0, 0),
+        POPULAR to Pair(0, 0),
+        LATEST to Pair(0, 0),
     )
-    val scrollPositionMap get() = _scrollPositionMap
+    val scrollPositionMap: Map<String, Pair<Int, Int>>
+        get() = _scrollPositionMap.toMap()
 
     private val _error = mutableStateOf(false)
     val error get() = _error.value
@@ -73,31 +61,20 @@ class HomeViewModel @Inject constructor(
     private val _showDialog = MutableSharedFlow<Boolean>()
     val showDialog = _showDialog.asSharedFlow()
 
+    private val milestones = listOf(20000, 50000, 100000, 2000000, 400000, 700000)
+    private val alertMilestones = mutableSetOf<Int>().apply {
+        val completeMilestones = sp.getStringSet("alert_milestones", emptySet()) ?: emptySet()
+        completeMilestones.mapTo(this) {it.toInt()}
+    }
+
+    private val _showMilestoneDialog = MutableSharedFlow<Boolean>()
+    val showMilestoneDialog = _showMilestoneDialog.asSharedFlow()
+
     init {
+        Log.d("HomeViewModel: ","HomeViewModel 실행")
         viewModelScope.launch {
             userInfo.value = getUserInfoUseCase()
         }
-    }
-
-    fun fetchHomeData(internal: Boolean = false) = viewModelScope.launch {
-        _error.value = false
-        if (!internal) {
-            _cardState.value = UiState.Loading
-            _popularGroupState.value = UiState.Loading
-            _latestGroupState.value = UiState.Loading
-        }
-
-        fetchALarmOffRateUseCase()
-            .catch { e -> _cardState.value = handleThrowable(e) }
-            .collect { resultCard -> _cardState.value = UiState.Success(resultCard) }
-
-        fetchPopularGroupUseCase()
-            .catch { e -> _popularGroupState.value = handleThrowable(e) }
-            .collect { popularGroup -> _popularGroupState.value = UiState.Success(popularGroup) }
-
-        fetchLatestGroupUseCase()
-            .catch { e -> _latestGroupState.value = handleThrowable(e) }
-            .collect { latestGroup -> _latestGroupState.value = UiState.Success(latestGroup) }
     }
 
     fun saveScrollPosition(key: String, index: Int, offset: Int) {
@@ -115,11 +92,11 @@ class HomeViewModel @Inject constructor(
 
             // join이 되어 있지 않은 상황이라면 인원수 체크를 해서 다이얼로그 노출
             if (joined.not()) {
-               details?.takeIf { it.currentPerson == it.maxPerson }?.let {
-                   Log.d("HomeViewModel:","ShowDialog")
-                   _showDialog.emit(true)
-                   return@collect
-               }
+                details?.takeIf { it.currentPerson == it.maxPerson }?.let {
+                    Log.d("HomeViewModel:", "ShowDialog")
+                    _showDialog.emit(true)
+                    return@collect
+                }
             }
 
             _privateGroupState.value = _privateGroupState.value.copy(
@@ -136,7 +113,7 @@ class HomeViewModel @Inject constructor(
             GroupJoinRequest(
                 userId = (userInfo?.userId?.toInt() ?: -1),
                 groupId = (selectedGroupId.value ?: -1),
-                deviceToken = FCMTokenManager.token,
+                deviceToken = TokenManager.fcmToken,
                 groupPassword = password,
             )
         ).catch { e ->
@@ -168,11 +145,31 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun checkMileStone() {
+        viewModelScope.launch {
+            val userId = getUserInfoUseCase()?.userId ?: -1
+            val totalScore = fetchProfileItemUseCase(userId.toString()).totalRankScore
+
+            for (milestone in milestones) {
+                if (totalScore >= milestone && !alertMilestones.contains(milestone)) {
+                    _showMilestoneDialog.emit(true)
+                    alertMilestones.add(milestone)
+                    saveMileStone()
+                }
+            }
+        }
+    }
+
+    private fun saveMileStone() {
+        val completeMileStones = alertMilestones.map { it.toString() }.toSet()
+        sp.edit().putStringSet("alert_milestones",completeMileStones).apply()
+    }
+
     companion object {
         const val TAG = "HomeViewModel"
 
-        const val MAIN_TAB_SCROLL_KEY = "main"
-        const val POPULAR_TAB_SCROLL_KEY = "popular"
-        const val LATEST_TAB_SCROLL_KEY = "latest"
+        const val MAIN = "main"
+        const val POPULAR = "popular"
+        const val LATEST = "latest"
     }
 }

@@ -75,7 +75,7 @@ fun MemberPicker(
                 )
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
-                    text = "최대 8명",
+                    text = "최대 10명",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 12.fsp,
                         color = Black03
@@ -107,7 +107,7 @@ fun MemberPicker(
                 IconButton(
                     modifier = Modifier.size(16.dp),
                     onClick = { onPlusClick(value + 1) },
-                    enabled = value < 8
+                    enabled = value < 10
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_plus),

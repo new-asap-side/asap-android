@@ -1,11 +1,13 @@
 package com.asap.domain.repository
 
+import com.asap.domain.entity.local.SearchEntity
 import com.asap.domain.entity.remote.AlarmGroup
 import com.asap.domain.entity.remote.AlarmSummary
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.entity.remote.GroupRanking
+import com.asap.domain.entity.remote.MyRanking
 import com.asap.domain.entity.remote.RankingNumberResponse
 import com.asap.domain.entity.remote.WhetherResponse
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,18 @@ interface GroupRepository {
     // 그룹 상세 조회
     suspend fun fetchGroupDetails(groupId: Int): Flow<GroupDetails?>
 
+    // 그룹 검색
+    suspend fun searchGroup(query: String): Flow<List<AlarmGroup>>
+
+    // 그룹 검색 기록 조회
+    suspend fun getSearchedList(): List<SearchEntity>
+
+    // 그룹 검색 기록 삭제
+    suspend fun deleteSearchEntity(query: String)
+
+    // 그룹 검색 기록 전체 삭제
+    suspend fun deleteAllSearchEntity()
+
     // 유저 알람 리스트 조회
     suspend fun fetchUserAlarmList(userId: Int): Flow<List<AlarmSummary>?>
 
@@ -29,8 +43,14 @@ interface GroupRepository {
     // 그룹 탈퇴
     suspend fun withdrawGroup(userId: Int, groupId: Int): Flow<WhetherResponse?>
 
+    // 내 랭킹 조회
+    suspend fun fetchMyRanking(): Flow<List<MyRanking>?>
+
     // 그룹 랭킹 조회
     suspend fun fetchGroupRanking(groupId: Int): Flow<List<GroupRanking>?>
+
+    // 그룹 일일 랭킹 조회
+    suspend fun fetchTodayRanking(groupId: Int): Flow<List<GroupRanking>?>
 
     // 그룹 랭킹 등수 조회
     suspend fun fetchRankingNumber(groupId: Int): Flow<RankingNumberResponse?>

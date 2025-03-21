@@ -10,7 +10,7 @@ import com.asap.domain.entity.local.SearchEntity
 import com.asap.domain.entity.local.User
 
 @Database(
-    version = 3,
+    version = 4,
     entities = [User::class, AlarmEntity::class, SearchEntity::class],
     exportSchema = false
 )

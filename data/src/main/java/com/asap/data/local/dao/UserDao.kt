@@ -14,7 +14,7 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg user: User)
 
-    @Query("UPDATE User SET profileImg = :profileImg WHERE user_id = :userId")
+    @Query("UPDATE User SET `profile_image` = :profileImg WHERE user_id = :userId")
     suspend fun updateProfileImg(profileImg: String?, userId: Int)
 
     @Query("UPDATE User SET nickname = :nickname WHERE user_id = :userId")
@@ -26,7 +26,7 @@ interface UserDao {
     @Query("UPDATE User SET refresh_token = :refreshToken WHERE user_id = :userId")
     suspend fun updateRefreshToken(refreshToken: String, userId: Int)
 
-    @Query("UPDATE User SET profileItem = :profileItem WHERE user_id = :userId")
+    @Query("UPDATE User SET `profile_item` = :profileItem WHERE user_id = :userId")
     suspend fun updateProfileItem(profileItem: String?, userId: Int)
 
     @Query("SELECT * FROM User")

@@ -17,6 +17,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.asap.data.BuildConfig
 import com.asap.data.local.MIGRATION_1_2
 import com.asap.data.local.MIGRATION_2_3
+import com.asap.data.local.MIGRATION_3_4
 
 import javax.inject.Singleton
 
@@ -28,7 +29,7 @@ object DatabaseModule {
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "aljo.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
 
     @Provides
     @Singleton

@@ -50,6 +50,7 @@ fun MainNavHost(
         composable(route = MainScreenRoute.AlarmList.route) {
             AlarmListScreen(
                 navigateToHome = {
+                    mainViewModel.select(0)
                     navController.navigate(MainScreenRoute.Home.route) {
                         popUpTo(MainScreenRoute.AlarmList.route) {
                             inclusive = true

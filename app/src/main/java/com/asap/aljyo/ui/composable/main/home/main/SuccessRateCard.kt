@@ -65,6 +65,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
+import com.asap.aljyo.core.components.viewmodel.MyRankingViewModel
 import com.asap.aljyo.core.components.viewmodel.main.AlarmSuccessRateViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
@@ -88,6 +89,7 @@ fun SuccessRateCard(
     navigateToMyAlarm: () -> Unit,
 ) {
     val viewModel: AlarmSuccessRateViewModel = hiltViewModel()
+    val myRankingViewModel: MyRankingViewModel = hiltViewModel()
     val successRateState by viewModel.successRateState.collectAsState()
     val user by viewModel.user.collectAsState()
     val lifecyleOwner = LocalLifecycleOwner.current
@@ -212,7 +214,7 @@ fun SuccessRateCard(
                                 offsetX = 4.dp, offsetY = 4.dp,
                                 blur = 8.dp
                             ),
-                        onClick = {},
+                        onClick = { myRankingViewModel.showSheet() },
                         colors = ButtonDefaults.elevatedButtonColors(
                             containerColor = White,
                             contentColor = Black01
@@ -429,9 +431,7 @@ private fun SuccessRateProgress(
                     contentScale = ContentScale.FillHeight
                 )
             }
-
         }
-
 
         Image(
             modifier = Modifier

@@ -177,8 +177,8 @@ private fun GroupThumbnail(
                 .clip(RoundedCornerShape(12.dp)),
             contentScale = ContentScale.Crop,
             contentDescription = "Group thumbnail",
-            placeholder = null,
-            error = painterResource(R.drawable.ic_empty_profile)
+            placeholder = painterResource(R.drawable.img_loading),
+            error = painterResource(R.drawable.img_loading)
         )
 
         if (!isPublic) {

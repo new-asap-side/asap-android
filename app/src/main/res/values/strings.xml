@@ -52,6 +52,7 @@
     <string name="start_lively_today">오늘 하루도 활기차게 시작해요!</string>
     <string name="participating_group">참여중인 그룹</string>
     <string name="my_ranking">내 랭킹 확인</string>
+    <string name="no_exist_my_alarm">참여중인 알람이 없습니다.</string>
     <string name="counting">%d개</string>
     <string name="see_more">더보기</string>
     <string name="public_group">공개</string>

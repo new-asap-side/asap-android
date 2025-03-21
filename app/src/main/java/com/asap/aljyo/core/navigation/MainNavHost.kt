@@ -40,6 +40,9 @@ fun MainNavHost(
                 navigateToGroupDetails = navigateToGroupDetails,
                 navigateToPersonalSetting = { groupId ->
                     screenNavController.navigate(route = "${ScreenRoute.PersonalEdit.route}/$groupId")
+                },
+                navigateToRanking = { groupId ->
+                    screenNavController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
                 }
             )
         }
@@ -78,7 +81,13 @@ fun MainNavHost(
                             )
                         }"
                     )
-                    screenNavController.navigate("${ScreenRoute.UserSetting.route}/$nickName/${Uri.encode(profileImage)}")
+                    screenNavController.navigate(
+                        "${ScreenRoute.UserSetting.route}/$nickName/${
+                            Uri.encode(
+                                profileImage
+                            )
+                        }"
+                    )
                 },
                 navigateToPrivacyPolicy = {
                     screenNavController.navigate(ScreenRoute.PrivacyPolicy.route)

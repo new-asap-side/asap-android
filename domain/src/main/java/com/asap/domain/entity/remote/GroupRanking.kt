@@ -20,6 +20,8 @@ data class GroupRanking(
 
 @JsonClass(generateAdapter = true)
 data class MyRanking(
+    @Json(name = "groupId")
+    val groupId: Int = 1,
     @Json(name = "title")
     val title: String,
     @Json(name = "rank_number")

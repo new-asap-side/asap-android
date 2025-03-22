@@ -122,7 +122,7 @@ fun GroupDetailsScreen(
     val groupDetails by viewModel.groupDetails.collectAsState()
     val withdrawState by viewModel.withdrawState.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    var showDialog by remember { mutableStateOf(isNew) }
+    val checkNew by viewModel.checkNew.collectAsState()
     var initialized by rememberSaveable { mutableStateOf(false) }
 
     LifecycleEventEffect(Lifecycle.Event.ON_START) {
@@ -160,7 +160,7 @@ fun GroupDetailsScreen(
         }
     }
 
-    if (showDialog) {
+    if (isNew && checkNew) {
         (groupDetails as? UiState.Success)?.data?.let { groupDetail ->
             val duration = with(groupDetail) {
                 val diffTimes = alarmDays.map { DateTimeManager.diffFromNow("$it $alarmTime") }
@@ -174,7 +174,7 @@ fun GroupDetailsScreen(
             CustomAlertDialog(
                 title = "그룹 생성 완료!",
                 content = "$nextAlarmTime 후부터 알람이 울려요",
-                onClickConfirm = { showDialog = false },
+                onClickConfirm = { viewModel.toggleCheckNew() },
                 confirmText = "확인",
                 dialogImg = R.drawable.group_dialog_img
             )
@@ -368,12 +368,15 @@ fun GroupDetailsScreen(
                     userGroupType = userGroupType,
                     enabled = viewModel.checkJoinGroup(),
                     onRankingClick = {
+                        viewModel.toggleCheckNew()
                         navController.navigate(route = "${ScreenRoute.Ranking.route}/$groupId")
                     },
                     navigateToGroupEdit = {
+                        viewModel.toggleCheckNew()
                         viewModel.navigateToGroupEdit()
                     },
                     navigateToPersonalEdit = {
+                        viewModel.toggleCheckNew()
                         viewModel.navigateToPersonalEdit()
                     },
                     onJoinClick = {

@@ -1,5 +1,10 @@
-package com.asap.utility.datetime
+package com.asap.utility.di
 
+import com.asap.utility.datetime.DateTimeParser
+import com.asap.utility.datetime.TimeColon
+import com.asap.utility.datetime.TimeColonParser
+import com.asap.utility.datetime.TimeDot
+import com.asap.utility.datetime.TimeDotParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

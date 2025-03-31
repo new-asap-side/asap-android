@@ -2,7 +2,8 @@ package com.asap.aljyo.core.components.service
 
 import android.util.Log
 import com.asap.aljyo.core.notification.MessageHandler
-import com.asap.data.remote.TokenManager
+import com.asap.domain.entity.remote.auth.TokenManager
+
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint

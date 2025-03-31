@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.util.PictureUtil
 import com.asap.aljyo.util.format
-import com.asap.data.remote.TokenManager
+import com.asap.domain.entity.remote.auth.TokenManager
+
 import com.asap.domain.usecase.group.CreateGroupUseCase
 import com.asap.domain.usecase.group.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

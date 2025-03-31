@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.core.components.edit.GroupEditState
 import com.asap.aljyo.core.components.edit.PersonalEditState
 import com.asap.aljyo.ui.UiState
-import com.asap.data.remote.TokenManager
 import com.asap.data.utility.DateTimeManager
 import com.asap.data.utility.DateTimeManager.sortByDay
 import com.asap.domain.entity.remote.GroupDetails
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupMember
 import com.asap.domain.entity.remote.UserGroupType
+import com.asap.domain.entity.remote.auth.TokenManager
 import com.asap.domain.usecase.group.FetchGroupDetailsUseCase
 import com.asap.domain.usecase.group.JoinGroupUseCase
 import com.asap.domain.usecase.group.WithdrawGroupUseCase

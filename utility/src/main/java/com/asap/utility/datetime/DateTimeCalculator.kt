@@ -14,6 +14,10 @@ internal abstract class AljyoDateTimeCalculator : DateTimeCalculator {
     protected abstract val base: Long
 
     protected fun now(): LocalDateTime = LocalDateTime.now()
+
+    private fun format() {
+
+    }
 }
 
 // (date time) - (월 21:00)

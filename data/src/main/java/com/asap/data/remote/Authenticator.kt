@@ -1,6 +1,7 @@
 package com.asap.data.remote
 
 import com.asap.domain.ExpiredTokenHandler
+import com.asap.domain.entity.remote.auth.TokenManager
 import com.asap.domain.usecase.auth.RefreshTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

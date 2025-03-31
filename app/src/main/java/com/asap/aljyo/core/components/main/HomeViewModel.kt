@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
 import com.asap.aljyo.ui.UiState
 import com.asap.aljyo.ui.composable.main.home.PrivateGroupState
-import com.asap.data.remote.TokenManager
+import com.asap.domain.entity.remote.auth.TokenManager
+
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse

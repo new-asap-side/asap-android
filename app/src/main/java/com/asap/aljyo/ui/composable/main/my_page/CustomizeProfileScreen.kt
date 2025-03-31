@@ -141,7 +141,6 @@ fun CustomizeProfileScreen(
                         enable = true,
                         onClick = {
                             viewModel.setProfileItem(selectedItemIdx)
-//                            onBackClick()
                         }
                     )
                 }

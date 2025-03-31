@@ -56,6 +56,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -63,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.MyRankingViewModel
@@ -90,10 +92,10 @@ fun SuccessRateCard(
 ) {
     val viewModel: AlarmSuccessRateViewModel = hiltViewModel()
     val myRankingViewModel: MyRankingViewModel = hiltViewModel()
-    val successRateState by viewModel.successRateState.collectAsState()
+    val successRateState by viewModel.successRateState.collectAsStateWithLifecycle()
     val user by viewModel.user.collectAsState()
     val lifecyleOwner = LocalLifecycleOwner.current
-    
+
     LaunchedEffect(Unit) {
         lifecyleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.fetchOffRate()
@@ -191,12 +193,21 @@ fun SuccessRateCard(
                             }
 
                             Text(
-                                text = stringResource(
-                                    R.string.counting,
-                                    successRate?.joinedGroupCount ?: 0
-                                ),
-                                style = MaterialTheme.typography.labelMedium.copy(
+                                text = buildAnnotatedString {
+                                    append("${successRate?.joinedGroupCount ?: 0}")
+                                    withStyle(
+                                        style = SpanStyle(
+                                            fontWeight = FontWeight.Normal,
+                                            color = Black01,
+                                            textDecoration = TextDecoration.None
+                                        ),
+                                    ) {
+                                        append("개")
+                                    }
+                                },
+                                style = MaterialTheme.typography.headlineMedium.copy(
                                     fontSize = 14.fsp,
+                                    textDecoration = TextDecoration.Underline,
                                     color = Black01
                                 )
                             )
@@ -240,7 +251,6 @@ fun SuccessRateCard(
                                 )
                             )
                         }
-
                     }
                 }
             }

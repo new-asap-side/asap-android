@@ -150,7 +150,7 @@ fun CustomizeProfileScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .background(Color(0xFFE6E6E6)),
+                    .background(Color(0xFFFAF8F8)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(

@@ -1,13 +1,17 @@
 package com.asap.aljyo.ui.composable.main.my_page
 
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -77,22 +81,19 @@ fun MyPageProfile(
             )
         }
 
-        TextButton(
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = Grey02,
-                contentColor = Black02
-            ),
-            onClick = {
-                navigateToSetting(nickname, profileImage, profileItem)
-            }
-        ) {
-            Text(
-                text = stringResource(R.string.edit_my_info),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.fsp
-                )
+        Text(
+            modifier = Modifier
+                .background(Grey02, RoundedCornerShape(100.dp))
+                .clickable {
+                    navigateToSetting(nickname, profileImage, profileItem)
+                }
+                .padding(vertical = 4.dp, horizontal = 10.dp),
+            text = stringResource(R.string.edit_my_info),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 14.fsp,
+                color = Black02
             )
-        }
+        )
     }
 }
 

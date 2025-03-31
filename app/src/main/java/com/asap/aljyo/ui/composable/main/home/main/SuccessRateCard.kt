@@ -274,6 +274,7 @@ private fun SuccessRate(
                 },
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 15.fsp,
+                    letterSpacing = -(0.02).fsp,
                     color = Black01
                 )
             )
@@ -293,7 +294,8 @@ private fun SuccessRate(
                     append(stringResource(R.string.success))
                 },
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = 23.fsp,
+                    fontSize = 18.fsp,
+                    letterSpacing = -(0.02).fsp,
                 )
             )
         }
@@ -350,7 +352,7 @@ private fun SuccessRateProgress(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(20.dp)
+                .height(14.dp)
                 .clip(shape = CircleShape)
                 .background(White)
                 .drawBehind {
@@ -358,7 +360,7 @@ private fun SuccessRateProgress(
                         color = Color(0xFFEFB1C7),
                         start = Offset(30f, size.height / 2),
                         end = Offset(size.width - 30f, size.height / 2),
-                        strokeWidth = 5f,
+                        strokeWidth = 2f,
                         pathEffect = PathEffect.dashPathEffect(
                             floatArrayOf(10f, 10f), 0f
                         )
@@ -372,7 +374,7 @@ private fun SuccessRateProgress(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .height(20.dp)
+                    .height(14.dp)
                     .width(progressDp)
                     .background(
                         shape = CircleShape, brush = Brush.linearGradient(

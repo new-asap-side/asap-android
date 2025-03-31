@@ -1,10 +1,10 @@
 package com.asap.data.remote.datasource
 
-import com.asap.data.remote.TokenManager
 import com.asap.data.remote.service.AuthService
 import com.asap.domain.entity.remote.AuthKakaoBody
 import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.entity.remote.auth.RefreshTokenResponse
+import com.asap.domain.entity.remote.auth.TokenManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException

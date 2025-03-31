@@ -179,9 +179,9 @@ fun AlarmTypeScreen(
                 BoxWithIcon(
                     icon = R.drawable.ic_calculator,
                     text = "3번 계산하고 알람 해제",
-                    isSelected = alarmState.alarmUnlockContents == "CALCULATION",
-                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CALCULATION") },
-                    onPreviewClick = { isShowTimeBottomSheet = Pair(true, "CALCULATION") }
+                    isSelected = alarmState.alarmUnlockContents == "CALCULATOR",
+                    onCheckedChange = { viewModel.onAlarmUnlockContentsSelected("CALCULATOR") },
+                    onPreviewClick = { isShowTimeBottomSheet = Pair(true, "CALCULATOR") }
                 )
 
 //                Spacer(modifier = Modifier.height(36.dp))

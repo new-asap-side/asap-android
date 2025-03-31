@@ -78,36 +78,6 @@ fun NewGroupList(
                         )
                     }
                 }
-
-                item {
-                    TextButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(44.dp)
-                            .border(width = 1.dp, color = Black03, shape = RoundedCornerShape(10.dp)),
-                        onClick = { tabChange(2) },
-                        colors = ButtonDefaults.textButtonColors(
-                            containerColor = White,
-                            contentColor = Black03
-                        )
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = stringResource(R.string.see_more),
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontSize = 16.fsp,
-                                )
-                            )
-
-                            Icon(
-                                Icons.AutoMirrored.Default.KeyboardArrowRight,
-                                contentDescription = "close"
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
             }
         }
     }

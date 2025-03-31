@@ -419,6 +419,7 @@ private fun SuccessRateProgress(
                             modifier = Modifier.align(Alignment.Center),
                             text = text,
                             style = MaterialTheme.typography.titleMedium.copy(
+                                fontSize = 12.fsp,
                                 color = White
                             ),
                             textAlign = TextAlign.Center

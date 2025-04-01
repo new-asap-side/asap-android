@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.viewmodel.SearchViewModel
 import com.asap.aljyo.core.fsp
@@ -36,7 +37,7 @@ import com.asap.aljyo.ui.UiState
 @Composable
 fun RecentSearchList(modifier: Modifier) {
     val viewModel: SearchViewModel = hiltViewModel()
-    val searchedListState by viewModel.searchedList.collectAsState()
+    val searchedListState by viewModel.searchedList.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getSearchedList()
@@ -71,10 +72,7 @@ fun RecentSearchList(modifier: Modifier) {
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             when (searchedListState) {
                 UiState.Loading, is UiState.Error -> Unit
@@ -98,7 +96,12 @@ fun RecentSearchList(modifier: Modifier) {
                         }
                     }.forEach { item ->
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.onQueryChanged(item.query)
+                                }
+                                .padding(horizontal = 20.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {

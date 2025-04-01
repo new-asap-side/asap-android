@@ -106,12 +106,12 @@ object ProfileItemListDataMapper {
 
         private fun setProfileImage(itemName: String): Int {
             return when (itemName) {
-                "20_000" -> R.drawable.ic_custom_1
-                "50_000" -> R.drawable.ic_custom_2
-                "100_000" -> R.drawable.ic_custom_3
-                "200_000" -> R.drawable.ic_custom_4
-                "400_000" -> R.drawable.ic_custom_5
-                else -> R.drawable.ic_custom_6
+                "20_000" -> R.drawable.img_custom_1
+                "50_000" -> R.drawable.img_custom_2
+                "100_000" -> R.drawable.img_custom_3
+                "200_000" -> R.drawable.img_custom_4
+                "400_000" -> R.drawable.img_custom_5
+                else -> R.drawable.img_custom_6
             }
         }
 

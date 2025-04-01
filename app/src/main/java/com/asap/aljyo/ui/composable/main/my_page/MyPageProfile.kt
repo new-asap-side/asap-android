@@ -51,23 +51,9 @@ fun MyPageProfile(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-//            Box(
-//                modifier = Modifier
-//                    .size(56.dp)
-//                    .clip(CircleShape)
-//            ) {
-//                AsyncImage(
-//                    modifier = Modifier.fillMaxSize(),
-//                    model = profileImage,
-//                    error = painterResource(R.drawable.ic_empty_profile),
-//                    contentDescription = "My page profile image",
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
             ProfileBox(
-                modifier = Modifier.size(70.dp),
+                modifier = Modifier.size(71.dp),
                 profileImagePadding = 8.dp,
-                profileItemPadding = 4.dp,
                 profileItem = profileItem,
                 profileImage = profileImage
             )

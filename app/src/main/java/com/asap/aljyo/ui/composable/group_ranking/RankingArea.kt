@@ -80,7 +80,7 @@ internal fun RankingArea(
         
         RankingProfile(
             painter = painterResource(R.drawable.ic_gold_crown),
-            size = 120.dp,
+            size = 117.dp,
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontSize = 16.fsp,
                 color = Black01,
@@ -151,8 +151,7 @@ private fun RankingProfile(
         ) {
             ProfileBox(
                 modifier = Modifier.size(size),
-                profileImagePadding = 13.dp,
-                profileItemPadding = 7.dp,
+                profileImagePadding = 12.dp,
                 profileImage = ranking?.thumbnail ?: "",
                 profileItem = PictureUtil.getProfileItemByName(ranking?.profileItem),
             )

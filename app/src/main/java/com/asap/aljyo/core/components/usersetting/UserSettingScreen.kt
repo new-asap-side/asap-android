@@ -139,7 +139,7 @@ fun UserSettingScreen(
                         launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     },
                     modifier = Modifier
-                        .size(122.dp)
+                        .size(112.dp)
                         .align(Alignment.CenterHorizontally)
                 )
 

@@ -43,7 +43,7 @@
     <string name="main">메인</string>
     <string name="sorted_by_populrity">인기순</string>
     <string name="sorted_by_latest">최신순</string>
-    <string name="your_alarm_off_success_rate">님의 알람 해제 성공률</string>
+    <string name="your_alarm_off_success_rate">님 알람 해제 성공률</string>
     <string name="this_month">이번 달</string>
     <string name="rate">%.1f%%</string>
     <string name="success">성공!</string>

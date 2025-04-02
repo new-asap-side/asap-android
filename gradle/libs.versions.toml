@@ -26,6 +26,7 @@ datastore = "1.1.1"
 google-services = "4.4.2"
 firebase-bom = "33.6.0"
 glance-appwidget = "1.1.0"
+coroutine-test = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -94,6 +95,8 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance-appwidget"}
 glance-material = { group = "androidx.glance", name = "glance-material3", version.ref = "glance-appwidget"}
 
+# coroutine-test
+coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine-test" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -11,7 +11,9 @@ import com.asap.domain.usecase.user.GetUserInfoUseCase
 import com.asap.domain.usecase.user.SaveProfileItemUseCase
 import com.asap.domain.usecase.user.UnlockProfileItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,6 +27,8 @@ class CustomizeProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(CustomizeProfileScreenState())
     val state = _state.asStateFlow()
+    private val _complete = MutableSharedFlow<Unit>()
+    val complete = _complete.asSharedFlow()
 
     private var userId: String = ""
 
@@ -64,7 +68,7 @@ class CustomizeProfileViewModel @Inject constructor(
 
         viewModelScope.launch {
             saveProfileItemUseCase(itemId, itemName, userId.toInt(), resetFlag)
-            fetchProfileItem()
+            _complete.emit(Unit)
         }
     }
 }

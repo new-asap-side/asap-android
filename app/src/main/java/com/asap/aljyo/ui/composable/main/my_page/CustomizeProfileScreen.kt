@@ -64,6 +64,10 @@ import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.time.delay
 
 data class ProfileCustom(
@@ -87,6 +91,13 @@ fun CustomizeProfileScreen(
 
     LaunchedEffect(usedItemIdx) {
         selectedItemIdx = usedItemIdx
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            Log.d("CustomizePofileScreen:","complete Block Run")
+            onBackClick()
+        }
     }
 
     AljyoTheme {
@@ -291,7 +302,6 @@ fun CustomizeProfileScreen(
                                 }
                             }
                         }
-
                         ShowUnlockMessage(state)
                     }
                 }

@@ -13,7 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,32 +26,40 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
-import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
+import com.asap.aljyo.core.components.viewmodel.group_details.AlarmTimerViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black02
 import com.asap.aljyo.ui.theme.White
+import com.asap.domain.entity.remote.GroupDetails
 
+@Stable
 @Composable
 fun AlarmTimer(
     modifier: Modifier = Modifier,
-    viewModel: GroupDetailsViewModel
+    details: GroupDetails
 ) {
-    val remainTime by viewModel.nextAlarmTime.collectAsState()
+    val viewModel: AlarmTimerViewModel = hiltViewModel()
+    val remain by viewModel.remainTime.collectAsStateWithLifecycle()
     var visible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(remainTime.isNotEmpty()) {
-        visible = remainTime.isNotEmpty()
+    LaunchedEffect(remain.isNotEmpty()) {
+        if (remain.isEmpty()) {
+            details.run {
+                viewModel.start(alarmDays.joinToString(" "), alarmTime)
+            }
+        } else {
+            visible = true
+        }
     }
 
     AnimatedVisibility(
         visible = visible,
         enter = slideInVertically(
-            initialOffsetY = { fullHeight ->
-                -fullHeight
-            },
+            initialOffsetY = { fullHeight -> -fullHeight },
             animationSpec = tween(durationMillis = 200)
         )
     ) {
@@ -73,7 +81,7 @@ fun AlarmTimer(
                 )
             )
             Text(
-                text = remainTime,
+                text = remain,
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontSize = 14.fsp,
                     color = MaterialTheme.colorScheme.primary

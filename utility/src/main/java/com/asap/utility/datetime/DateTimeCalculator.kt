@@ -12,6 +12,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import javax.inject.Inject
 
 // 현재 시간을 기준으로 다음 알람 시간까지 남은 시간 계산
 interface DateTimeCalculator {
@@ -22,7 +23,6 @@ interface DateTimeCalculator {
 // ex) day: "월 화 수", time: 21:00
 data class DayTime(val days: String, val time: String)
 
-// extenstions
 private fun Long.decimal() = String.format(Locale.KOREAN, "%02d", this)
 
 // Long을 second로 보고 0일 HH:mm:ss로 변환
@@ -40,15 +40,16 @@ private fun Long.toDateByColum(): String {
     }
 }
 
-abstract class BaseDateTimeCalculator(private val scope: CoroutineScope) : DateTimeCalculator {
+internal abstract class BaseDateTimeCalculator(
+    private val scope: CoroutineScope
+) : DateTimeCalculator {
     private val formatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("E HH:mm", Locale.KOREAN)
 
     // KST
-    private val now
-        get() = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+    private val now get() = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
 
-    override suspend fun calculate(days: String, time: String): Deferred<String> = scope.async {
+    override suspend fun calculate(days: String, time: String) = scope.async {
         minimumDuration(DayTime(days, time)).toDateByColum()
     }
 
@@ -83,12 +84,10 @@ abstract class BaseDateTimeCalculator(private val scope: CoroutineScope) : DateT
         }
 }
 
-internal class RemainSecondCalculator(
-    scope: CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-) : BaseDateTimeCalculator(scope = scope) {
-
+internal class SecondsCalculator : BaseDateTimeCalculator(
+    scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+) {
     override fun minimumDuration(dayTime: DayTime): Long {
         return convert(dayTime = dayTime).map { it.seconds }.minOf { it }
     }
-
 }

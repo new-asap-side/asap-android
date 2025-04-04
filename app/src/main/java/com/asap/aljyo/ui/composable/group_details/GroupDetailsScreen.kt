@@ -1,9 +1,6 @@
 package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
-import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -47,12 +43,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -73,7 +67,6 @@ import com.asap.aljyo.ui.composable.group_form.group_alarm.CustomAlertDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
-import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.UserGroupType
@@ -81,7 +74,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.graphics.Color as gColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

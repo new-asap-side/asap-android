@@ -74,7 +74,8 @@ fun GroupSummation(
                         model = groupDetails?.groupThumbnailImageUrl,
                         contentDescription = "Group thumbnail",
                         contentScale = ContentScale.Crop,
-                        error = painterResource(R.drawable.ic_empty_profile)
+                        placeholder = painterResource(R.drawable.img_loading),
+                        error = painterResource(R.drawable.img_loading)
                     )
 
                     Box(

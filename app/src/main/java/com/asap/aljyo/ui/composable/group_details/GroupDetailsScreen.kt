@@ -1,7 +1,6 @@
 package com.asap.aljyo.ui.composable.group_details
 
 import android.app.Activity
-import android.graphics.Color
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -34,10 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,15 +45,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.asap.aljyo.R
@@ -73,12 +73,15 @@ import com.asap.aljyo.ui.composable.group_form.group_alarm.CustomAlertDialog
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 import com.asap.data.utility.DateTimeManager
 import com.asap.domain.entity.remote.UserGroupType
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.graphics.Color as gColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,24 +91,12 @@ fun GroupDetailsScreen(
     groupId: Int,
 ) {
     val context = LocalContext.current
+    val systemUiController = rememberSystemUiController()
     SideEffect {
-        val activity = (context as ComponentActivity)
-        activity.enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                Color.TRANSPARENT,
-                Color.TRANSPARENT
-            ),
-            navigationBarStyle = SystemBarStyle.light(
-                White.toArgb(),
-                White.toArgb(),
-            )
-        )
-        val window = activity.window
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        systemUiController.setStatusBarColor(Color.Transparent, darkIcons = false)
     }
 
     val coroutineScope = rememberCoroutineScope()
-
     val factory = EntryPointAccessors.fromActivity(
         activity = context as Activity,
         entryPoint = ViewModelFactoryProvider::class.java
@@ -119,9 +110,9 @@ fun GroupDetailsScreen(
     )
 
     val userGroupType = viewModel.userGroupType
-    val groupDetails by viewModel.groupDetails.collectAsState()
-    val withdrawState by viewModel.withdrawState.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val groupDetails by viewModel.groupDetails.collectAsStateWithLifecycle()
+    val withdrawState by viewModel.withdrawState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(isNew) }
     var initialized by rememberSaveable { mutableStateOf(false) }
 
@@ -302,29 +293,36 @@ fun GroupDetailsScreen(
 
         // scroll state
         val scrollState = rememberLazyListState()
-        val scrollOffset by remember { derivedStateOf { scrollState.firstVisibleItemScrollOffset } }
-        val thumbnailHeight = LocalDensity.current.run { 270.dp.toPx() }
-        val dimmed = if (scrollOffset > thumbnailHeight) true else false
+        val colorStops = arrayOf(
+            0.0f to Color(0xFF000000),
+            0.71f to Color(0xFF000000).copy(alpha = 0.4f),
+            1.0f to Color(0xFF000000).copy(alpha = 0.0f)
+        )
 
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
+                    modifier = Modifier.background(
+                      brush = Brush.verticalGradient(colorStops = colorStops)
+                    ),
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface.copy(
-                            alpha = if(dimmed) 1f else 0f
-                        ),
+                        containerColor = Color.Transparent
                     ),
                     title = {
-                        AlarmTimer(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(100))
-                                .background(color = White.copy(alpha = 0.88f))
-                                .padding(
-                                    vertical = 6.dp,
-                                    horizontal = 14.dp
-                                ),
-                            viewModel = viewModel
-                        )
+                        if (groupDetails is UiState.Success) {
+                            (groupDetails as UiState.Success).data?.let { details ->
+                                AlarmTimer(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(100))
+                                        .background(color = White.copy(alpha = 0.88f))
+                                        .padding(
+                                            vertical = 6.dp,
+                                            horizontal = 14.dp
+                                        ),
+                                    details = details
+                                )
+                            }
+                        }
                     },
                     actions = {
                         when (userGroupType) {

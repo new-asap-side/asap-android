@@ -27,6 +27,7 @@ google-services = "4.4.2"
 firebase-bom = "33.6.0"
 glance-appwidget = "1.1.0"
 coroutine-test = "1.9.0"
+system-ui-controller = "0.17.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -97,6 +98,9 @@ glance-material = { group = "androidx.glance", name = "glance-material3", versio
 
 # coroutine-test
 coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine-test" }
+
+# systemUiController
+system-ui-controller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "system-ui-controller" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

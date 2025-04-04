@@ -426,7 +426,8 @@ internal fun GroupPersonnel(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(R.drawable.ic_my_page),
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(R.drawable.ic_profile_default),
                 contentDescription = "Group personnel icon",
                 tint = MaterialTheme.colorScheme.primary
             )

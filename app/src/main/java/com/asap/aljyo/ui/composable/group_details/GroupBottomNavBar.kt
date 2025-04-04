@@ -22,15 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +46,6 @@ import com.asap.aljyo.ui.theme.Black04
 import com.asap.aljyo.ui.theme.White
 import com.asap.domain.entity.remote.UserGroupType
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 
 @Composable
@@ -88,10 +86,8 @@ internal fun GroupBottomNavBar(
                 navigateToPersonalEdit = navigateToPersonalEdit,
                 navigateToGroupEdit = {}
             )
-
             null -> Unit
         }
-
     }
 }
 
@@ -105,7 +101,6 @@ private fun ParticipantBottomBar(
     navigateToPersonalEdit: () -> Unit
 ) {
     var showPopup by remember { mutableStateOf(true) }
-    var popupWidth by remember { mutableIntStateOf(0) }
     var popupOffset by remember { mutableStateOf(IntOffset.Zero) }
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -222,31 +217,19 @@ private fun ParticipantBottomBar(
     }
     Button(
         modifier = modifier.onGloballyPositioned { coordinates ->
-            val y = coordinates.positionInRoot().y.roundToInt()
-            val btnHeight = coordinates.size.height
-
-            val rootBounds = coordinates.boundsInRoot()
-
-            val popupX = rootBounds.right.toInt() - popupWidth
-            val popupY = y - btnHeight
-
-            popupOffset = IntOffset(
-                x = popupX,
-                y = popupY
-            )
-
+            popupOffset = coordinates.run {
+                IntOffset(
+                    x = positionInParent().x.toInt(),
+                    y = positionInRoot().y.toInt() - size.height
+                )
+            }
         },
         shape = RoundedCornerShape(10.dp),
         onClick = onRankingClick
     ) {
         if (showPopup) {
-            ConfirmRankingPopUp(
-                modifier = Modifier.onGloballyPositioned { coordinates ->
-                    popupWidth = coordinates.size.width
-                },
-                onDismiss = {
-                    showPopup = false
-                },
+            RankingPopup(
+                onDismiss = { showPopup = false },
                 offset = popupOffset
             )
         }

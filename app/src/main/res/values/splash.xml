@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.SplashScreen.Custom" parent="Theme.SplashScreen">
+    <style name="Theme.SplashScreen.Aljyo" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FFFD2F7A</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_inset_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.Aljyo</item>

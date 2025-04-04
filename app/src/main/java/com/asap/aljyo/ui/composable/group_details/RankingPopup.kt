@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +26,6 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import com.asap.aljyo.R
@@ -38,7 +38,8 @@ import com.asap.aljyo.ui.theme.White
 import kotlin.math.roundToInt
 
 @Composable
-internal fun ConfirmRankingPopUp(
+@NonRestartableComposable
+internal fun RankingPopup(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
     offset: IntOffset,
@@ -111,7 +112,7 @@ internal fun ConfirmRankingPopUp(
 @Composable
 private fun ConfirmRankingDialogPreview() {
     AljyoTheme {
-        ConfirmRankingPopUp(
+        RankingPopup(
             onDismiss = {},
             offset = IntOffset.Zero
         )

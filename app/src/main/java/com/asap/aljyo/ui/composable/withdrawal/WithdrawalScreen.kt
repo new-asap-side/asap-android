@@ -1,7 +1,6 @@
 package com.asap.aljyo.ui.composable.withdrawal
 
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,7 +32,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,9 +48,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.withdrawal.WithdrawalViewModel
@@ -72,15 +69,8 @@ internal fun WithdrawalScreen(
     onBackIconPressed: () -> Unit,
     navigateToComplete: () -> Unit,
     viewModel: WithdrawalViewModel = hiltViewModel(),
-    preview: Boolean = false
 ) {
     val context = LocalContext.current
-    if (!preview) {
-        SideEffect {
-            val window = (context as ComponentActivity).window
-            WindowCompat.setDecorFitsSystemWindows(window, true)
-        }
-    }
 
     AljyoTheme {
         Scaffold(
@@ -158,6 +148,7 @@ internal fun WithdrawalScreen(
 
                 Row(
                     modifier = Modifier
+                        .navigationBarsPadding()
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 6.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -319,17 +310,5 @@ internal fun WithdrawalScreen(
 
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    AljyoTheme {
-        WithdrawalScreen(
-            onBackIconPressed = {},
-            navigateToComplete = {},
-            preview = true
-        )
     }
 }

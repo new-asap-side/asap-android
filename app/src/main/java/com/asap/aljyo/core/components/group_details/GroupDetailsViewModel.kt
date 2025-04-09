@@ -23,24 +23,20 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.util.LinkedList
-import java.util.Queue
 
 class GroupDetailsViewModel @AssistedInject constructor(
+    @Assisted private val groupId: Int,
     private val fetchGroupDetailsUseCase: FetchGroupDetailsUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val joinGroupUseCase: JoinGroupUseCase,
     private val withdrawGroupUseCase: WithdrawGroupUseCase,
-    @Assisted private val groupId: Int
 ) : ViewModel() {
     private val _groupDetailsState = MutableStateFlow<UiState<GroupDetails?>>(UiState.Loading)
     val groupDetails get() = _groupDetailsState.asStateFlow()
@@ -50,19 +46,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _privateSettingState = MutableStateFlow<GroupMember?>(null)
     val privateSettingState get() = _privateSettingState.asStateFlow()
-
-    private var active = true
-
-    private val _fastestAlarmQueue: Queue<String> = LinkedList()
-    private val _nextAlarmTimeFlow: Flow<String> = flow {
-        val nextAlarmTime = _fastestAlarmQueue.peek()
-        if (nextAlarmTime != null) {
-            emit(nextAlarmTime)
-        }
-    }
-
-    private val _nextAlarmTime = MutableStateFlow("")
-    val nextAlarmTime get() = _nextAlarmTime.asStateFlow()
 
     private val _groupEdit = MutableSharedFlow<GroupEditState>()
     val groupEdit = _groupEdit.asSharedFlow()
@@ -78,10 +61,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
-
-//    init {
-//        fetchGroupDetails()
-//    }
 
     fun fetchGroupDetails(internal: Boolean = false) {
         viewModelScope.launch {
@@ -121,39 +100,8 @@ class GroupDetailsViewModel @AssistedInject constructor(
                         }
                     }
                 }
-
-                // 다음 알람 시간 세팅
-                sortedByFastest(
-                    result?.alarmDays?.map { day ->
-                        "$day ${result.alarmTime}"
-                    } ?: listOf()
-                )
-
-                observingRemainTime()
                 _groupDetailsState.value = UiState.Success(result)
                 _isLoading.value = false
-            }
-        }
-    }
-
-    private fun sortedByFastest(dates: List<String>) {
-        dates.sortedBy {
-            DateTimeManager.diffFromNow(it)
-        }.also { list ->
-            _fastestAlarmQueue.addAll(list)
-        }
-    }
-
-    private fun observingRemainTime() = viewModelScope.launch {
-        while (active) {
-            delay(1000)
-            _nextAlarmTimeFlow.collect { nextAlarmDate ->
-                val duration = DateTimeManager.diffFromNow(nextAlarmDate, basedMinite = false)
-                if (duration < 0L) {
-                    val last = _fastestAlarmQueue.poll()
-                    _fastestAlarmQueue.add(last)
-                }
-                _nextAlarmTime.value = DateTimeManager.parseToDayBySecond(duration)
             }
         }
     }
@@ -258,11 +206,6 @@ class GroupDetailsViewModel @AssistedInject constructor(
         } else {
             false
         }
-    }
-
-    override fun onCleared() {
-        active = false
-        super.onCleared()
     }
 
     @AssistedFactory

@@ -10,3 +10,12 @@ sealed class Network<in I, out R>(
     open val scope: CoroutineScope,
     open val block: suspend (I) -> Boolean
 ): Event<I, Deferred<R>>
+
+data class Patch<in I>(
+    override val scope: CoroutineScope,
+    override val block: suspend (I) -> Boolean
+): Network<I, Boolean>(scope, block) {
+    override suspend fun process(input: I) = scope.async {
+        block(input)
+    }
+}

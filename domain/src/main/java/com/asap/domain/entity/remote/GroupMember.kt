@@ -24,5 +24,7 @@ data class MemberSetting(
     @Json(name = "nick_name")
     val nickName: String,
     @Json(name = "profile_image_url")
-    val profileImageUrl: String
+    val profileImageUrl: String,
+    @Json(name = "item_name")
+    val profileItem: String?
 )

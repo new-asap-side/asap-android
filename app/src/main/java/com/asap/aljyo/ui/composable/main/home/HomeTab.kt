@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -58,10 +59,10 @@ fun HomeTab(
 
     Column(modifier = modifier) {
         ScrollableTabRow(
-            modifier = modifier,
+            modifier = Modifier.padding(start = 20.dp),
             selectedTabIndex = tabIndex,
+            edgePadding = (-20).dp,
             containerColor = White,
-            edgePadding = 0.dp,
             contentColor = White,
             indicator = { tabPositions ->
                 TabRowDefaults.PrimaryIndicator(
@@ -88,7 +89,7 @@ fun HomeTab(
                     }
                 }
                 Tab(
-                    modifier = Modifier.height(48.dp).fillMaxWidth(),
+                    modifier = Modifier.height(48.dp).padding(horizontal = 20.dp),
                     selected = selected,
                     selectedContentColor = Black01,
                     unselectedContentColor = Black03,

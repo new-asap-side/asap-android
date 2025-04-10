@@ -151,8 +151,14 @@ dependencies {
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material)
 
+    // system-ui-controller
+    implementation(libs.system.ui.controller)
+
     // module
     implementation(project(":domain"))
     implementation(project(":utility"))
+    implementation(project(":core"))
+
+    // 없애야함
     implementation(project(":data"))
 }

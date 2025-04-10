@@ -19,10 +19,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import asap.aljyo.core.event.Patch
+import asap.aljyo.core.event.shortToast
 import com.asap.aljyo.core.components.viewmodel.main.MainViewModel
 import com.asap.aljyo.core.navigation.MainNavHost
 import com.asap.aljyo.core.navigation.ScreenRoute
@@ -41,14 +44,31 @@ internal fun MainScreen(
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val systemUiController = rememberSystemUiController()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
     SideEffect {
         systemUiController.setStatusBarColor(Color.White, darkIcons = true)
+    }
+
+    LaunchedEffect(Unit) {
+        with(mainViewModel) {
+            patchToken(scope)
+            networkEvent.collect { event ->
+                if (event is Patch) {
+                    event.process(Unit).also(::println).await().let { success ->
+                        if (!success) {
+                            shortToast(context, "토큰 갱신에 실패했습니다.")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     AljyoTheme {
         val mainNavController = rememberNavController()
         val selectedIndex by mainViewModel.selectedIndex.collectAsState()
-        val scope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
             ExpiredTokenHandler.subscribe(

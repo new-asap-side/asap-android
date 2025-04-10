@@ -74,7 +74,8 @@ fun GroupSummation(
                         model = groupDetails?.groupThumbnailImageUrl,
                         contentDescription = "Group thumbnail",
                         contentScale = ContentScale.Crop,
-                        error = painterResource(R.drawable.ic_empty_profile)
+                        placeholder = painterResource(R.drawable.img_loading),
+                        error = painterResource(R.drawable.img_loading)
                     )
 
                     Box(
@@ -425,7 +426,8 @@ internal fun GroupPersonnel(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(R.drawable.ic_my_page),
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(R.drawable.ic_profile_default),
                 contentDescription = "Group personnel icon",
                 tint = MaterialTheme.colorScheme.primary
             )

@@ -1,13 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.asap.utility"
+    namespace = "asap.aljyo.core"
     compileSdk = 34
 
     defaultConfig {
@@ -41,11 +38,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
-    testImplementation(libs.coroutine.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    /// hilt
-    implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
 }

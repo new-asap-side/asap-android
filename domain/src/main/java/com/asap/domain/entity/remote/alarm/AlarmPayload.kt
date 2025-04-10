@@ -30,7 +30,7 @@ data class AlarmPayload(
     val content get() = when (alarmUnlockContent) {
         "SLIDE" -> AlarmUnlockContent.Slide
         "CARD" -> AlarmUnlockContent.Card
-        "CALCULATOR" -> AlarmUnlockContent.Calculator
+        "CALCULATION" -> AlarmUnlockContent.Calculator
         else -> throw Exception("Unknown unlock alarm type.")
     }
 }

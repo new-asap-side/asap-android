@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -46,4 +45,7 @@ dependencies {
     /// hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
+
+    // module
+    implementation(project(":core"))
 }

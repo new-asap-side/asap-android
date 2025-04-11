@@ -58,7 +58,7 @@ internal fun MainScreen(
                 if (event is Patch) {
                     event.process(Unit).also(::println).await().let { success ->
                         if (!success) {
-                            shortToast(context, "토큰 갱신에 실패했습니다.")
+                            context.shortToast("토큰 갱신에 실패했습니다.")
                         }
                     }
                 }

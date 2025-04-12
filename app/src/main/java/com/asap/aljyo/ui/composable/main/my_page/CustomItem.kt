@@ -73,7 +73,6 @@ fun CustomItem(
              model = item.customItem,
              error = painterResource(R.drawable.ic_card_touch),
              contentDescription = "CUSTOM ITEM IMAGE",
-             contentScale = ContentScale.Crop
          )
      }
 

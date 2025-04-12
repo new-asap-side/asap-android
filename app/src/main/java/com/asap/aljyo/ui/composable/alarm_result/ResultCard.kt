@@ -101,8 +101,7 @@ fun ResultCard(
                 modifier = Modifier.size(152.dp),
                 profileImage = rankState.profile,
                 profileItem = PictureUtil.getProfileItemByName(rankState.profileItem),
-                profileImagePadding = 12.dp,
-                profileItemPadding = 5.dp,
+                profileImagePadding = 16.dp,
             )
 
             Icon(

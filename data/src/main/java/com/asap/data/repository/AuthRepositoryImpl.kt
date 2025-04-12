@@ -2,10 +2,10 @@ package com.asap.data.repository
 
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
-import com.asap.data.remote.TokenManager
 import com.asap.data.remote.datasource.AuthRemoteDataSource
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.auth.AuthResponse
+import com.asap.domain.entity.remote.auth.TokenManager
 import com.asap.domain.repository.AuthRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -30,6 +30,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun registerToken() {
         with (sessionLocalDataSource) {
             val fcmToken = getFCMToken()
+            println("FCM-token: $fcmToken")
             if (fcmToken == null) {
                 FirebaseMessaging.getInstance().token.addOnCompleteListener(
                     OnCompleteListener { task ->
@@ -38,8 +39,8 @@ class AuthRepositoryImpl @Inject constructor(
                         }
 
                         // memory cache
-                        TokenManager.fcmToken = task.result
-                        CoroutineScope(Dispatchers.IO).launch {
+                        TokenManager.fcmToken = task.result.also(::println)
+                        CoroutineScope(Dispatchers.Default).launch {
                             // local cache
                             sessionLocalDataSource.registerFCMToken(task.result)
                         }
@@ -90,6 +91,16 @@ class AuthRepositoryImpl @Inject constructor(
             return true
         } catch (e: HttpException) {
             return false
+        }
+    }
+
+    override suspend fun patchAlarmToken(token: String): Boolean {
+        return try {
+            val userId = (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
+            remoteDataSource.patchAlarmToken(userId, TokenManager.fcmToken)
+            true
+        } catch (e: HttpException) {
+            false
         }
     }
 

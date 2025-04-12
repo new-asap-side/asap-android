@@ -50,7 +50,7 @@
             android:clearTaskOnLaunch="true"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.SplashScreen.Custom">
+            android:theme="@style/Theme.SplashScreen.Aljyo">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

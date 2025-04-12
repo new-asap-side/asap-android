@@ -1,9 +1,6 @@
 package com.asap.aljyo.ui.composable.group_form.group_alarm
 
-import android.graphics.ImageDecoder
-import android.os.Build.VERSION.SDK_INT
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -41,29 +37,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import coil3.compose.rememberAsyncImagePainter
-import coil3.gif.GifDecoder
-import coil3.request.ImageRequest
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_form.GroupFormViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.GroupProgressbar
-import com.asap.aljyo.ui.composable.group_form.group_create.AlarmTimePicker
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
@@ -71,9 +59,7 @@ import com.asap.aljyo.ui.theme.Black03
 import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Grey02
 import com.asap.aljyo.ui.theme.Red01
-import com.asap.aljyo.ui.theme.Red02
 import kotlinx.coroutines.launch
-import org.checkerframework.common.subtyping.qual.Bottom
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

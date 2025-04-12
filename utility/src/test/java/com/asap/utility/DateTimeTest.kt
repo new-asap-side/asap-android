@@ -1,19 +1,18 @@
 package com.asap.utility
 
-import com.asap.utility.datetime.DayTime
-import com.asap.utility.datetime.RemainSecondCalculator
+import com.asap.utility.datetime.SecondsCalculator
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class DateTimeTest {
     @Test
-    fun calculator_test() {
-        RemainSecondCalculator().run {
-            mapDayTime("월 화 수 21:00").also {
-                assert(it.size == 3)
-                assert(it[0] == DayTime("월", "21:00"))
-                assert(it[1] == DayTime("화", "21:00"))
-                assert(it[2] == DayTime("수", "21:00"))
-            }
+    fun remainSecondTest() = runTest {
+        val deferred = SecondsCalculator().run {
+            calculate("월 화 수 목 금 토 일", "21:00").also(::println)
         }
+
+        assert(deferred.isActive)
+        deferred.await()
+        assert(deferred.isCompleted)
     }
 }

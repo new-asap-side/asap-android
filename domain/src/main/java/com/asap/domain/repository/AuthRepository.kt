@@ -15,5 +15,7 @@ interface AuthRepository {
 
     suspend fun refreshToken(): Boolean
 
+    suspend fun patchAlarmToken(token: String): Boolean
+
     suspend fun updateToken(accessToken: String, refreshToken: String)
 }

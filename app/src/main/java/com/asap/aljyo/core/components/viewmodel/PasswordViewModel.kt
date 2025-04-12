@@ -2,7 +2,8 @@ package com.asap.aljyo.core.components.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.asap.aljyo.ui.RequestState
-import com.asap.data.remote.TokenManager
+import com.asap.domain.entity.remote.auth.TokenManager
+
 import com.asap.domain.entity.remote.GroupJoinRequest
 import com.asap.domain.entity.remote.GroupJoinResponse
 import com.asap.domain.usecase.group.GetUserInfoUseCase

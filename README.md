@@ -1,7 +1,7 @@
 
 <img width="100" height="100" src="https://github.com/user-attachments/assets/3ebb960d-5ace-4f6c-8fd3-5cc2a19d855d"/>
 
-## 알죠 - 그룹 알람 서비스
+## [알죠 - 그룹 알람 서비스](https://play.google.com/store/apps/details?id=com.asap.aljyo&hl=ko)
 
 ![image](https://github.com/user-attachments/assets/7c5ccc88-c5fe-47fd-a696-d71fa24d8b4a)
 

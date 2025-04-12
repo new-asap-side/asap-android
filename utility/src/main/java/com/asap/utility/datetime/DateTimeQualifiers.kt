@@ -9,3 +9,7 @@ annotation class TimeDot
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class TimeColon
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Seconds

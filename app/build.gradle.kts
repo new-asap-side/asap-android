@@ -22,8 +22,8 @@ android {
         applicationId = "com.asap.aljyo"
         minSdk = 26
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 7
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -151,8 +151,14 @@ dependencies {
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material)
 
+    // system-ui-controller
+    implementation(libs.system.ui.controller)
+
     // module
     implementation(project(":domain"))
     implementation(project(":utility"))
+    implementation(project(":core"))
+
+    // 없애야함
     implementation(project(":data"))
 }

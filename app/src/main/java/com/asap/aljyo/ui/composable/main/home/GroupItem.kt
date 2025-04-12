@@ -112,7 +112,7 @@ internal fun LinearGroupItem(
 
         Column(
             modifier = Modifier.weight(1f).height(100.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 val dates = if (alarmGroup.alarmDays.size == everyDay)
@@ -125,17 +125,15 @@ internal fun LinearGroupItem(
                 GreyBackgroundText(alarmGroup.alarmTime)
             }
 
-            Box(modifier = Modifier.height(42.dp)) {
-                Text(
-                    alarmGroup.title,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontSize = 15.fsp,
-                        color = Color(0xFF111111)
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                alarmGroup.title,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 15.fsp,
+                    color = Color(0xFF111111)
+                ),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
 
             GroupCounting(
                 currentCount = alarmGroup.currentPerson,

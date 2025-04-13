@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -15,6 +17,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -93,11 +96,14 @@ fun PagerContent(
 
         Box(
             modifier = Modifier
+                .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .aspectRatio(320f / 380f)
         ) {
             Image(
+                modifier = Modifier.fillMaxSize(),
                 painter = painter,
+                contentScale = ContentScale.FillWidth,
                 contentDescription = "Pager content image"
             )
         }
@@ -117,7 +123,9 @@ fun IntroductionPager(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorizontalPager(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             state = pagerState
         ) { page ->
             contents[page]()

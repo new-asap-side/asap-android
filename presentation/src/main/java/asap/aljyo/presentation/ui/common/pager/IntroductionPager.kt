@@ -2,13 +2,11 @@ package asap.aljyo.presentation.ui.common.pager
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
@@ -94,26 +92,23 @@ fun PagerContent(
             title = title
         )
 
-        Box(
+        Image(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .aspectRatio(320f / 380f)
-        ) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painter,
-                contentScale = ContentScale.FillWidth,
-                contentDescription = "Pager content image"
-            )
-        }
+                .fillMaxSize(),
+            painter = painter,
+            contentScale = ContentScale.Fit,
+            contentDescription = "Pager content image"
+        )
     }
 }
 
 @Stable
 @Composable
 fun IntroductionPager(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     contents: List<@Composable () -> Unit> = introductionContents,
 ) {
     val pagerState = rememberPagerState(pageCount = { contents.size })
@@ -145,9 +140,7 @@ fun IntroductionPager(
 @Composable
 private fun IntroductionPagerPreview() {
     AljyoTheme {
-        IntroductionPager(
-            modifier = Modifier.size(width = 320.dp, height = 480.dp),
-        )
+        IntroductionPager()
     }
 }
 

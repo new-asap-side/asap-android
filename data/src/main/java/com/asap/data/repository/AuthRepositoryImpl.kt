@@ -1,5 +1,6 @@
 package com.asap.data.repository
 
+import android.content.Context
 import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.AuthRemoteDataSource
@@ -9,6 +10,11 @@ import com.asap.domain.entity.remote.auth.TokenManager
 import com.asap.domain.repository.AuthRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +28,35 @@ class AuthRepositoryImpl @Inject constructor(
     localDataSource: AppDatabase
 ) : AuthRepository {
     private val userDao = localDataSource.userDao()
+
+    override suspend fun kakaoLogin(
+        scope: CoroutineScope,
+        context: Context,
+        callback: (OAuthToken?, Throwable?) -> Unit
+    ) {
+        val available = UserApiClient.instance.isKakaoTalkLoginAvailable(context)
+        if (available) {
+            UserApiClient.instance.loginWithKakaoTalk(context) { token, e ->
+                if (e != null) {
+                    // 사용자가 취소한 경우
+                    if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
+                        return@loginWithKakaoTalk
+                    }
+                    UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+                    return@loginWithKakaoTalk
+                }
+
+                token?.accessToken?.let { kakaoAccessToken ->
+                    scope.launch {
+                        remoteDataSource.authKakao(kakaoAccessToken)
+                    }
+                }
+            }
+        } else {
+            // 카카오톡 미설치 기기 browser 로그인
+            UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+        }
+    }
 
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> {
         return remoteDataSource.authKakao(kakaoAccessToken = kakaoAccessToken)

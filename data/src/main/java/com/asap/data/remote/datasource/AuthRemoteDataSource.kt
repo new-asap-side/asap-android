@@ -4,6 +4,7 @@ import com.asap.data.remote.request.PatchAlarmTokenBody
 import com.asap.data.remote.service.AuthService
 import com.asap.domain.entity.remote.AuthKakaoBody
 import com.asap.domain.entity.remote.WhetherResponse
+import com.asap.domain.entity.remote.auth.AuthKakaoResponse
 import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.entity.remote.auth.RefreshTokenResponse
 import com.asap.domain.entity.remote.auth.TokenManager
@@ -24,17 +25,28 @@ class AuthRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> = flow {
-        val response = authService.authKakao(
-            AuthKakaoBody(
-                kakaoAccessToken = kakaoAccessToken,
-                alarmToken = TokenManager.fcmToken
-            )
-        )
-        if (!response.isSuccessful) {
-            throw HttpException(response)
+    suspend fun kakaoLogin(kakaoAccessToken: String): AuthKakaoResponse? {
+        return AuthKakaoBody(
+            kakaoAccessToken = kakaoAccessToken,
+            alarmToken = TokenManager.fcmToken
+        ).let { body ->
+            authService.authKakao(body)
+        }.let { response ->
+            if (!response.isSuccessful) throw HttpException(response)
+            response.body()
         }
-        emit(response.body())
+    }
+
+    suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> = flow {
+        AuthKakaoBody(
+            kakaoAccessToken = kakaoAccessToken,
+            alarmToken = TokenManager.fcmToken
+        ).let { body ->
+            authService.authKakao(body)
+        }.also { response ->
+            if (!response.isSuccessful) throw HttpException(response)
+            emit(response.body())
+        }
     }
 
     suspend fun refreshToken(token: String): RefreshTokenResponse? {

@@ -30,9 +30,12 @@ fun AljyoTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if(isDark) darkScheme else lightScheme
-    CompositionLocalProvider(LocalAljyoTypography provides independentTypography()) {
+    CompositionLocalProvider(
+        LocalAljyoTypography provides independentTypography(),
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
+            shapes = aljyoShapes,
             content = content
         )
     }

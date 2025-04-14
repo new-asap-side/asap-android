@@ -7,6 +7,7 @@ import com.asap.data.remote.datasource.AuthRemoteDataSource
 import com.asap.domain.entity.local.User
 import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.entity.remote.auth.TokenManager
+import com.asap.domain.entity.remote.auth.toKakaoUser
 import com.asap.domain.repository.AuthRepository
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -14,10 +15,11 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -32,13 +34,23 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun kakaoLogin(
         scope: CoroutineScope,
         context: Context,
-        callback: (OAuthToken?, Throwable?) -> Unit
-    ) {
+    ) = callbackFlow {
+        // kakao browser 로그인 callback
+        val callback: (OAuthToken?, Throwable?) -> Unit = { token, _ ->
+            token?.accessToken?.let { accessToken ->
+                scope.launch(Dispatchers.IO) {
+                    remoteDataSource.kakaoLogin(accessToken)?.run {
+                        userDao.insert(toKakaoUser())
+                    }
+                    trySend(true)
+                }
+            } ?: scope.launch(Dispatchers.IO) { trySend(false) }
+        }
         val available = UserApiClient.instance.isKakaoTalkLoginAvailable(context)
         if (available) {
             UserApiClient.instance.loginWithKakaoTalk(context) { token, e ->
                 if (e != null) {
-                    // 사용자가 취소한 경우
+                    // user cancel
                     if (e is ClientError && e.reason == ClientErrorCause.Cancelled) {
                         return@loginWithKakaoTalk
                     }
@@ -47,15 +59,20 @@ class AuthRepositoryImpl @Inject constructor(
                 }
 
                 token?.accessToken?.let { kakaoAccessToken ->
-                    scope.launch {
-                        remoteDataSource.authKakao(kakaoAccessToken)
+                    scope.launch(Dispatchers.IO) {
+                        remoteDataSource.kakaoLogin(kakaoAccessToken)?.run {
+                            // Room DB 내 로그인 정보 저장
+                            userDao.insert(toKakaoUser())
+                        }
+                        send(true)
                     }
-                }
+                } ?: scope.launch(Dispatchers.IO) { send(false) }
             }
         } else {
             // 카카오톡 미설치 기기 browser 로그인
             UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
         }
+        awaitClose()
     }
 
     override suspend fun authKakao(kakaoAccessToken: String): Flow<AuthResponse?> {
@@ -63,7 +80,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun registerToken() {
-        with (sessionLocalDataSource) {
+        with(sessionLocalDataSource) {
             val fcmToken = getFCMToken()
             println("FCM-token: $fcmToken")
             if (fcmToken == null) {

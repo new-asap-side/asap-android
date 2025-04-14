@@ -16,6 +16,8 @@ import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.auth.CheckAuthUseCaseImpl
 import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
+import com.asap.domain.usecase.auth.KakaoLoginUseCase
+import com.asap.domain.usecase.auth.KakaoLoginUseCaseImpl
 import com.asap.domain.usecase.auth.PatchAlarmTokenUseCase
 import com.asap.domain.usecase.auth.PatchAlarmTokenUseCaseImpl
 import com.asap.domain.usecase.auth.RefreshTokenUseCase
@@ -74,6 +76,9 @@ interface UseCaseModule {
 
     @Binds
     fun bindRefreshTokenUseCase(useCaseImpl: RefreshTokenUseCaseImpl): RefreshTokenUseCase
+
+    @Binds
+    fun bindKakaoLoginUseCase(usecaseImpl: KakaoLoginUseCaseImpl): KakaoLoginUseCase
 
     @Binds
     fun bindAuthKakaoUseCase(usecaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase

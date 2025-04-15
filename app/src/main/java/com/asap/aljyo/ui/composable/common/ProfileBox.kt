@@ -26,7 +26,6 @@ import com.asap.domain.entity.local.User
 fun ProfileBox(
     modifier: Modifier = Modifier,
     profileImagePadding: Dp = 0.dp,
-    profileItemPadding: Dp = 0.dp,
     profileImage: String?,
     profileItem: Int? = null,
 ) {
@@ -47,7 +46,6 @@ fun ProfileBox(
         if (profileItem != null) {
             Icon(
                 modifier = modifier
-                    .padding(profileItemPadding)
                     .fillMaxSize(),
                 painter = painterResource(profileItem),
                 contentDescription = "SELECTED CUSTOM ITEM",

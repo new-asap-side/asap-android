@@ -1,9 +1,11 @@
 package com.asap.aljyo.ui.composable.group_ranking
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.asap.aljyo.R
@@ -75,8 +78,7 @@ fun TodayRankingPage(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 16.dp, horizontal = 20.dp)
-                                .height(36.dp),
+                                .padding(vertical = 22.dp, horizontal = 26.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
@@ -94,7 +96,6 @@ fun TodayRankingPage(
                                 profileItem = PictureUtil.getProfileItemByName(rank.profileItem),
                                 profileImage = rank.thumbnail,
                                 profileImagePadding = 5.dp,
-                                profileItemPadding = 2.dp,
                             )
 
                             Spacer(modifier = Modifier.width(11.dp))
@@ -124,4 +125,40 @@ fun TodayRankingPage(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewTodayRanking() {
+    TodayRankingPage(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFFFAF8F8)),
+        ranks = listOf(
+            GroupRanking(
+                nickName = "NICKNAME",
+                thumbnail = "",
+                rankScore = 300,
+                rankNumber = 1,
+                createdAt = "21:30:01",
+                profileItem = "700_000"
+            ),
+            GroupRanking(
+                nickName = "NICKNAME",
+                thumbnail = "",
+                rankScore = 200,
+                rankNumber = 2,
+                createdAt = "21:30:01",
+                profileItem = "400_000"
+            ),
+            GroupRanking(
+                nickName = "NICKNAME",
+                thumbnail = "",
+                rankScore = 100,
+                rankNumber = 3,
+                createdAt = "21:30:01",
+                profileItem = "100_000"
+            )
+        )
+    )
 }

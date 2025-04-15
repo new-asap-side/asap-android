@@ -62,6 +62,9 @@ class GroupDetailsViewModel @AssistedInject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _checkNew = MutableStateFlow(true)
+    val checkNew = _checkNew.asStateFlow()
+
     fun fetchGroupDetails(internal: Boolean = false) {
         viewModelScope.launch {
             if (!internal) {
@@ -206,6 +209,10 @@ class GroupDetailsViewModel @AssistedInject constructor(
         } else {
             false
         }
+    }
+
+    fun toggleCheckNew() {
+        _checkNew.value = false
     }
 
     @AssistedFactory

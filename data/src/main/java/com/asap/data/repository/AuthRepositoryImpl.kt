@@ -5,6 +5,7 @@ import com.asap.data.local.AppDatabase
 import com.asap.data.local.source.SessionLocalDataSource
 import com.asap.data.remote.datasource.AuthRemoteDataSource
 import com.asap.domain.entity.local.User
+import com.asap.domain.entity.local.UserState
 import com.asap.domain.entity.remote.auth.AuthResponse
 import com.asap.domain.entity.remote.auth.TokenManager
 import com.asap.domain.entity.remote.auth.toKakaoUser
@@ -41,10 +42,14 @@ class AuthRepositoryImpl @Inject constructor(
                 scope.launch(Dispatchers.IO) {
                     remoteDataSource.kakaoLogin(accessToken)?.run {
                         userDao.insert(toKakaoUser())
-                    }
-                    trySend(true)
+                        if (isJoinedUser) {
+                            trySend(UserState.ParticipationUser)
+                        } else {
+                            trySend(UserState.NonParticipationUser)
+                        }
+                    } ?: trySend(null)
                 }
-            } ?: scope.launch(Dispatchers.IO) { trySend(false) }
+            } ?: scope.launch(Dispatchers.IO) { trySend(null) }
         }
         val available = UserApiClient.instance.isKakaoTalkLoginAvailable(context)
         if (available) {
@@ -63,10 +68,14 @@ class AuthRepositoryImpl @Inject constructor(
                         remoteDataSource.kakaoLogin(kakaoAccessToken)?.run {
                             // Room DB 내 로그인 정보 저장
                             userDao.insert(toKakaoUser())
-                        }
-                        send(true)
+                            if (isJoinedUser) {
+                                trySend(UserState.ParticipationUser)
+                            } else {
+                                trySend(UserState.NonParticipationUser)
+                            }
+                        } ?: scope.launch(Dispatchers.IO) { trySend(null) }
                     }
-                } ?: scope.launch(Dispatchers.IO) { send(false) }
+                } ?: scope.launch(Dispatchers.IO) { send(null) }
             }
         } else {
             // 카카오톡 미설치 기기 browser 로그인

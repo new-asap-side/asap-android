@@ -29,9 +29,11 @@ import com.asap.aljyo.R
 import com.asap.aljyo.core.components.group_details.GroupDetailsViewModel
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.UiState
+import com.asap.aljyo.ui.composable.common.ProfileBox
 import com.asap.aljyo.ui.composable.common.loading.ShimmerBox
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
+import com.asap.aljyo.util.PictureUtil
 
 @Composable
 fun GroupMembers(
@@ -60,15 +62,15 @@ fun GroupMembers(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                groupDetails?.users?.forEach { participant ->
+                groupDetails?.users?.forEachIndexed { idx, participant ->
                     GroupMemberItem(
                         modifier = Modifier.fillMaxWidth(),
                         thumbnail = participant.user.profileImageUrl,
+                        profileItem = PictureUtil.getProfileItemByName(participant.user.profileItem),
                         nickname = participant.user.nickName,
                         isLeader = participant.isGroupMaster
                     )
-
-                    Spacer(modifier = Modifier.height(14.dp))
+                    if (idx != groupDetails.users.lastIndex) Spacer(modifier = Modifier.height(10.dp))
                 }
             }
 
@@ -143,6 +145,7 @@ private fun GroupMembersShimer(modifier: Modifier) {
 fun GroupMemberItem(
     modifier: Modifier = Modifier,
     thumbnail: String,
+    profileItem: Int?,
     nickname: String,
     isLeader: Boolean,
 ) {
@@ -150,14 +153,11 @@ fun GroupMemberItem(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(30.dp)
-                .clip(CircleShape),
-            model = thumbnail,
-            contentScale = ContentScale.Crop,
-            contentDescription = "Group member thumbnail",
-            error = painterResource(R.drawable.ic_empty_profile)
+        ProfileBox(
+            modifier = Modifier.size(38.dp),
+            profileImagePadding = 4.dp,
+            profileItem = profileItem,
+            profileImage = thumbnail
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
@@ -186,7 +186,8 @@ private fun GroupMemberItemPreview() {
             modifier = Modifier.fillMaxWidth(),
             thumbnail = "",
             nickname = "닉네임",
-            isLeader = true
+            isLeader = true,
+            profileItem = null
         )
     }
 }

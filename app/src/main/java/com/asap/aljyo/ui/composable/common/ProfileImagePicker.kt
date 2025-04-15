@@ -63,7 +63,6 @@ fun ProfileImagePicker(
         ProfileBox(
             modifier = Modifier.fillMaxSize(),
             profileImagePadding = 12.dp,
-            profileItemPadding = 6.dp,
             profileImage = profileImage.toString(),
             profileItem = profileItem
         )

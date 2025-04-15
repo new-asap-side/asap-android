@@ -11,7 +11,9 @@ import com.asap.domain.usecase.user.GetUserInfoUseCase
 import com.asap.domain.usecase.user.SaveProfileItemUseCase
 import com.asap.domain.usecase.user.UnlockProfileItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,6 +27,8 @@ class CustomizeProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(CustomizeProfileScreenState())
     val state = _state.asStateFlow()
+    private val _complete = MutableSharedFlow<Unit>()
+    val complete = _complete.asSharedFlow()
 
     private var userId: String = ""
 
@@ -54,6 +58,8 @@ class CustomizeProfileViewModel @Inject constructor(
     }
 
     fun setProfileItem(selectedItemIdx: Int) {
+        if (selectedItemIdx == _state.value.profileItems.indexOfFirst {it.isUsed}) return
+
         val itemId =
             if (selectedItemIdx == -1) _state.value.profileItems.firstOrNull { it.isUsed }?.profileId ?: return
             else _state.value.profileItems[selectedItemIdx].profileId
@@ -62,6 +68,7 @@ class CustomizeProfileViewModel @Inject constructor(
 
         viewModelScope.launch {
             saveProfileItemUseCase(itemId, itemName, userId.toInt(), resetFlag)
+            _complete.emit(Unit)
         }
     }
 }
@@ -103,12 +110,12 @@ object ProfileItemListDataMapper {
 
         private fun setProfileImage(itemName: String): Int {
             return when (itemName) {
-                "20_000" -> R.drawable.ic_custom_1
-                "50_000" -> R.drawable.ic_custom_2
-                "100_000" -> R.drawable.ic_custom_3
-                "200_000" -> R.drawable.ic_custom_4
-                "400_000" -> R.drawable.ic_custom_5
-                else -> R.drawable.ic_custom_6
+                "20_000" -> R.drawable.img_custom_1
+                "50_000" -> R.drawable.img_custom_2
+                "100_000" -> R.drawable.img_custom_3
+                "200_000" -> R.drawable.img_custom_4
+                "400_000" -> R.drawable.img_custom_5
+                else -> R.drawable.img_custom_6
             }
         }
 

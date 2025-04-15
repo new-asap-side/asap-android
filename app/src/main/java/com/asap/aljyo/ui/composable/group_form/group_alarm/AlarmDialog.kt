@@ -38,6 +38,8 @@ import com.asap.aljyo.ui.composable.common.dialog.DialogButtonType
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black02
+import com.asap.aljyo.ui.theme.Red01
+import com.asap.aljyo.ui.theme.White
 
 @Composable
 fun CustomAlertDialog(
@@ -50,99 +52,111 @@ fun CustomAlertDialog(
     dismissText: String = "",
     @DrawableRes dialogImg: Int? = null
 ) {
-    Dialog(
-        onDismissRequest = {},
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false
-        )
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(1.0f)
-                .padding(top = 44.dp)
-                .background(color = Color.White, shape = RoundedCornerShape(20.dp)),
-            contentAlignment = Alignment.TopCenter
+    AljyoTheme {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
         ) {
-            Column(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 65.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(1.0f)
+                    .padding(top = 44.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(20.dp)),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        color = Black01,
-                        fontSize = 18.fsp,
-                        fontWeight = FontWeight.Bold
+                Column(
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 65.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            color = Black01,
+                            fontSize = 18.fsp,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                )
 
-                Text(
-                    modifier = Modifier.padding(top = 10.dp),
-                    text = content,
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = Black02,
-                        fontSize = 14.fsp,
+                    Text(
+                        modifier = Modifier.padding(top = 10.dp),
+                        text = content,
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            color = Black02,
+                            fontSize = 14.fsp,
+                        )
                     )
-                )
 
-                when(buttonType) {
-                    DialogButtonType.SINGLE -> {
-                        Button(
-                            modifier = Modifier
-                                .padding(vertical = 20.dp)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            onClick = onClickConfirm
-                        ) {
-                            Text(
-                                text = confirmText,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
-                    }
-                    DialogButtonType.DOUBLE -> {
-                        Row(
-                            modifier = Modifier
-                                .padding(vertical = 20.dp)
-                                .fillMaxWidth(),
-                        ) {
+                    when (buttonType) {
+                        DialogButtonType.SINGLE -> {
                             Button(
-                                modifier = Modifier.weight(1f),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                                shape = RoundedCornerShape(10.dp),
-                                colors = ButtonDefaults.outlinedButtonColors(
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                ),
-                                onClick = onDismissRequest
-                            ) {
-                                Text(
-                                    text = dismissText,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Button(
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier
+                                    .padding(vertical = 20.dp)
+                                    .fillMaxWidth(),
                                 shape = RoundedCornerShape(10.dp),
                                 onClick = onClickConfirm
                             ) {
                                 Text(
                                     text = confirmText,
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontSize = 16.fsp,
+                                        color = Color.White
+                                    )
                                 )
+                            }
+                        }
+
+                        DialogButtonType.DOUBLE -> {
+                            Row(
+                                modifier = Modifier
+                                    .padding(vertical = 20.dp)
+                                    .fillMaxWidth(),
+                            ) {
+                                Button(
+                                    modifier = Modifier.weight(1f),
+                                    border = BorderStroke(1.dp, Red01),
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        containerColor = White
+                                    ),
+                                    onClick = onDismissRequest
+                                ) {
+                                    Text(
+                                        text = dismissText,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontSize = 16.fsp,
+                                            color = Red01
+                                        )
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Button(
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(10.dp),
+                                    onClick = onClickConfirm
+                                ) {
+                                    Text(
+                                        text = confirmText,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontSize = 16.fsp,
+                                            color = White
+                                        )
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
-            dialogImg?.let {
-                Image(
-                    modifier = Modifier
-                        .absoluteOffset(y = (-44).dp),
-                    painter = painterResource(it),
-                    contentDescription = "Group Dialog Image"
-                )
+                dialogImg?.let {
+                    Image(
+                        modifier = Modifier
+                            .absoluteOffset(y = (-44).dp),
+                        painter = painterResource(it),
+                        contentDescription = "Group Dialog Image"
+                    )
+                }
             }
         }
     }
@@ -151,7 +165,7 @@ fun CustomAlertDialog(
 @Preview(showBackground = true)
 @Composable
 fun LoadingDialogPreview() {
-    AljyoTheme  {
+    AljyoTheme {
         CustomAlertDialog(
             buttonType = DialogButtonType.DOUBLE,
             title = "새로운 아이템이 해제되었어요!",

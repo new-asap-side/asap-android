@@ -64,12 +64,11 @@ import com.asap.aljyo.ui.theme.Grey01
 import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.Red02
 import com.asap.aljyo.ui.theme.White
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.time.delay
-
-data class ProfileCustom(
-    @DrawableRes val image: Int,
-    val state: CustomItemState,
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,10 +82,16 @@ fun CustomizeProfileScreen(
     val usedItemIdx by remember {
         derivedStateOf { state.profileItems.indexOfFirst { it.isUsed } }
     }
-    var selectedItemIdx by remember { mutableIntStateOf(usedItemIdx) }
+    var selectedItemIdx by remember { mutableIntStateOf(-1) }
 
     LaunchedEffect(usedItemIdx) {
         selectedItemIdx = usedItemIdx
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.complete.collect {
+            onBackClick()
+        }
     }
 
     AljyoTheme {
@@ -115,35 +120,36 @@ fun CustomizeProfileScreen(
                 )
             },
             bottomBar = {
-                Row(
-                    modifier = Modifier
-                        .navigationBarsPadding()
-                        .padding(start = 20.dp, end = 20.dp, top = 16.dp)
-                ) {
-                    IconButton(
-                        onClick = { selectedItemIdx = usedItemIdx },
+                if (selectedItemIdx != usedItemIdx) {
+                    Row(
                         modifier = Modifier
-                            .size(52.dp)
-                            .border(1.dp, Red01, RoundedCornerShape(10.dp))
+                            .navigationBarsPadding()
+                            .padding(start = 20.dp, end = 20.dp, top = 16.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_reset),
-                            contentDescription = "RESET ICON",
-                            tint = Color.Unspecified
+                        IconButton(
+                            onClick = { selectedItemIdx = usedItemIdx },
+                            modifier = Modifier
+                                .size(52.dp)
+                                .border(1.dp, Red01, RoundedCornerShape(10.dp))
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_reset),
+                                contentDescription = "RESET ICON",
+                                tint = Color.Unspecified
+                            )
+                        }
+
+                        CustomButton(
+                            modifier = Modifier
+                                .height(52.dp)
+                                .padding(start = 8.dp),
+                            text = "저장하기",
+                            enable = true,
+                            onClick = {
+                                viewModel.setProfileItem(selectedItemIdx)
+                            }
                         )
                     }
-
-                    CustomButton(
-                        modifier = Modifier
-                            .height(52.dp)
-                            .padding(start = 8.dp),
-                        text = "저장하기",
-                        enable = true,
-                        onClick = {
-                            viewModel.setProfileItem(selectedItemIdx)
-//                            onBackClick()
-                        }
-                    )
                 }
             },
         ) { innerPadding ->
@@ -151,7 +157,7 @@ fun CustomizeProfileScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .background(Color(0xFFE6E6E6)),
+                    .background(Color(0xFFFAF8F8)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -292,7 +298,6 @@ fun CustomizeProfileScreen(
                                 }
                             }
                         }
-
                         ShowUnlockMessage(state)
                     }
                 }

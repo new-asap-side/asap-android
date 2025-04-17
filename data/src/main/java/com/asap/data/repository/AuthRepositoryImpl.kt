@@ -49,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(
                         }
                     } ?: trySend(null)
                 }
-            } ?: scope.launch(Dispatchers.IO) { trySend(null) }
+            } ?: scope.launch(Dispatchers.Default) { trySend(null) }
         }
         val available = UserApiClient.instance.isKakaoTalkLoginAvailable(context)
         if (available) {
@@ -68,14 +68,18 @@ class AuthRepositoryImpl @Inject constructor(
                         remoteDataSource.kakaoLogin(kakaoAccessToken)?.run {
                             // Room DB 내 로그인 정보 저장
                             userDao.insert(toKakaoUser())
+
+                            // session 저장소 내 token 저장
+                            sessionLocalDataSource.updateAccessToken(accessToken)
+                            sessionLocalDataSource.updateRefreshToken(refreshToken)
                             if (isJoinedUser) {
                                 trySend(UserState.ParticipationUser)
                             } else {
                                 trySend(UserState.NonParticipationUser)
                             }
-                        } ?: scope.launch(Dispatchers.IO) { trySend(null) }
+                        } ?: scope.launch(Dispatchers.Default) { trySend(null) }
                     }
-                } ?: scope.launch(Dispatchers.IO) { send(null) }
+                } ?: scope.launch(Dispatchers.Default) { trySend(null) }
             }
         } else {
             // 카카오톡 미설치 기기 browser 로그인
@@ -99,7 +103,7 @@ class AuthRepositoryImpl @Inject constructor(
                             return@OnCompleteListener
                         }
 
-                        // memory cache
+                        // FCM token memory cache
                         TokenManager.fcmToken = task.result.also(::println)
                         CoroutineScope(Dispatchers.Default).launch {
                             // local cache

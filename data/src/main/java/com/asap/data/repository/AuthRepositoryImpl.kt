@@ -159,16 +159,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun patchAlarmToken(token: String): Boolean {
-        return try {
-            val userId = (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
-            remoteDataSource.patchAlarmToken(userId, TokenManager.fcmToken)
-            true
-        } catch (e: HttpException) {
-            false
-        }
-    }
-
     override suspend fun updateToken(accessToken: String, refreshToken: String) {
         val userId = (userDao.selectAll().firstOrNull()?.userId ?: "-1").toInt()
         // Room update

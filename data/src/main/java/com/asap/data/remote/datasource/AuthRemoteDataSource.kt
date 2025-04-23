@@ -16,15 +16,6 @@ import javax.inject.Inject
 class AuthRemoteDataSource @Inject constructor(
     private val authService: AuthService
 ) {
-    suspend fun patchAlarmToken(userId: Int, token: String): Flow<WhetherResponse?> = flow {
-        PatchAlarmTokenBody(userId = userId, alarmToken = token).let { body ->
-            authService.patchAlarmToken(body)
-        }.also { response ->
-            if (!response.isSuccessful) throw HttpException(response)
-            emit(response.body())
-        }
-    }
-
     suspend fun kakaoLogin(kakaoAccessToken: String): AuthKakaoResponse? {
         return AuthKakaoBody(
             kakaoAccessToken = kakaoAccessToken,

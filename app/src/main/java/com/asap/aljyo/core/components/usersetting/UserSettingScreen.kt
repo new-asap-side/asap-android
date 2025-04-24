@@ -91,7 +91,7 @@ fun UserSettingScreen(
                                 text = "내 정보 수정",
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     color = Black01,
-                                    fontSize = 16.sp,
+                                    fontSize = 16.fsp,
                                     fontWeight = FontWeight.Bold
                                 )
                             )

@@ -66,6 +66,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.asap.aljyo.R
 import com.asap.aljyo.core.components.edit.GroupEditViewModel
+import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.CustomButton
 import com.asap.aljyo.ui.composable.common.sheet.BottomSheet
 import com.asap.aljyo.ui.composable.group_form.group_create.GROUP_DESCRIPTION
@@ -126,7 +127,7 @@ fun GroupEditScreen(
                             text = "그룹 수정",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
-                                fontSize = 16.sp,
+                                fontSize = 16.fsp,
                                 fontWeight = FontWeight.Bold
                             ),
                         )
@@ -177,7 +178,7 @@ fun GroupEditScreen(
                     text = "대표 이미지",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Black02,
-                        fontSize = 14.sp,
+                        fontSize = 14.fsp,
                     )
                 )
 
@@ -204,7 +205,7 @@ fun GroupEditScreen(
                                 Text(
                                     text = "이미지 변경",
                                     style = MaterialTheme.typography.headlineMedium.copy(
-                                        fontSize = 18.sp,
+                                        fontSize = 18.fsp,
                                         color = Black01
                                     )
                                 )
@@ -246,7 +247,7 @@ fun GroupEditScreen(
                                 Text(
                                     text = "앨범에서 선택하기",
                                     style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontSize = 16.sp,
+                                        fontSize = 16.fsp,
                                         color = Black02
                                     )
                                 )
@@ -277,7 +278,7 @@ fun GroupEditScreen(
                                 Text(
                                     text = "랜덤으로 바꾸기",
                                     style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontSize = 16.sp,
+                                        fontSize = 16.fsp,
                                         color = Black02
                                     )
                                 )
@@ -299,7 +300,7 @@ fun GroupEditScreen(
                         Text(
                             text = "그룹명을 입력해주세요 (최대 30자 이내)",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                                 color = Black04
                             )
                         )
@@ -318,7 +319,7 @@ fun GroupEditScreen(
                         Text(
                             text = "내용을 입력해세요",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = 15.sp,
+                                fontSize = 15.fsp,
                                 color = Black04
                             )
                         )
@@ -337,7 +338,7 @@ fun GroupEditScreen(
                     text = "현재 인원 이상으로만 변경 가능합니다",
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = Black03,
-                        fontSize = 12.sp
+                        fontSize = 12.fsp
                     )
                 )
 
@@ -371,7 +372,7 @@ fun PublicSelector(
         Text(
             text = "공개 설정",
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black02
             )
         )
@@ -401,7 +402,7 @@ fun AlarmContentSelector(
         Text(
             text = "알람 컨텐츠",
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.sp,
+                fontSize = 14.fsp,
                 color = Black02
             )
         )
@@ -477,7 +478,7 @@ fun RadioButtonWithText(
             text = text,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Black01,
-                fontSize = 15.sp,
+                fontSize = 15.fsp,
             )
         )
     }

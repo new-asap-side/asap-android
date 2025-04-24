@@ -171,7 +171,7 @@ internal fun MyPageScreen(
                                 ),
                             text = "개인정보 처리방침",
                             style = MaterialTheme.typography.labelMedium.copy(
-                                fontSize = 12.sp,
+                                fontSize = 12.fsp,
                                 color = Black02
                             )
                         )

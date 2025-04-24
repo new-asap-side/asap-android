@@ -47,7 +47,7 @@ fun PrivacyPolicyScreen(
                             text = "개인정보 처리방침",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
-                                fontSize = 16.sp,
+                                fontSize = 16.fsp,
                                 fontWeight = Bold
                             ),
                         )

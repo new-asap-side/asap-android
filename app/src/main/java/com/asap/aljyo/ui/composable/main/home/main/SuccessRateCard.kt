@@ -297,7 +297,8 @@ private fun SuccessRate(
                         style = SpanStyle(
                             fontWeight = FontWeight.Bold,
                             fontSize = 26.fsp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            letterSpacing = -(0.02).fsp
                         )
                     ) { append(" ${stringResource(R.string.rate, rate)} ") }
 

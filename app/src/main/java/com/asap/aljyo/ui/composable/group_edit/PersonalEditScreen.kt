@@ -87,7 +87,7 @@ fun PersonalEditScreen(
                             text = if (state.isEditMode) "개인 설정 수정" else "",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = Black01,
-                                fontSize = 16.sp,
+                                fontSize = 16.fsp,
                                 fontWeight = Bold
                             ),
                         )
@@ -154,7 +154,7 @@ fun PersonalEditScreen(
                         text = "알람음",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Black02,
-                            fontSize = 14.sp
+                            fontSize = 14.fsp
                         )
                     )
 
@@ -180,7 +180,7 @@ fun PersonalEditScreen(
                                 text = "노래 선택",
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     color = Black01,
-                                    fontSize = 15.sp,
+                                    fontSize = 15.fsp,
                                 )
                             )
 
@@ -191,7 +191,7 @@ fun PersonalEditScreen(
                                 text = state.musicTitle ?: "노래를 선택해주세요!",
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color = Black03,
-                                    fontSize = 15.sp,
+                                    fontSize = 15.fsp,
                                 ),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
@@ -219,7 +219,7 @@ fun PersonalEditScreen(
                         text = "잠깐",
                         style = MaterialTheme.typography.headlineMedium.copy(
                             color = Red01,
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                             fontWeight = Bold
                         )
                     )
@@ -233,7 +233,7 @@ fun PersonalEditScreen(
                         text = "알람을 설정하기 전 꼭 확인해 주세요!",
                         style = MaterialTheme.typography.headlineMedium.copy(
                             color = Black01,
-                            fontSize = 16.sp,
+                            fontSize = 16.fsp,
                             fontWeight = Bold
                         )
                     )
@@ -257,7 +257,7 @@ fun PersonalEditScreen(
                             text = it,
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = Black02,
-                                fontSize = 12.sp
+                                fontSize = 12.fsp
                             )
                         )
                     }

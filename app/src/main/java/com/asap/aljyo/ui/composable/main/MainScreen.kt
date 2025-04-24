@@ -56,7 +56,7 @@ internal fun MainScreen(
             patchToken(scope)
             networkEvent.collect { event ->
                 if (event is Patch) {
-                    event.process(Unit).also(::println).await().let { success ->
+                    event.process(Unit).await().let { success ->
                         if (!success) {
                             context.shortToast("토큰 갱신에 실패했습니다.")
                         }

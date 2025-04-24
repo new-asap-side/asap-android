@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import asap.aljyo.core.event.Network
 import asap.aljyo.core.event.Patch
-import com.asap.domain.usecase.auth.PatchAlarmTokenUseCase
+import com.asap.domain.usecase.alarm.PatchAlarmTokenUseCase
 import com.asap.domain.usecase.user.DeleteLocalUserInfoUseCase
 import com.asap.domain.usecase.user.FetchProfileItemUseCase
 import com.asap.domain.usecase.user.GetUserInfoUseCase

@@ -10,14 +10,16 @@ import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCase
 import com.asap.domain.usecase.alarm.FetchAlarmOffRateUseCaseImpl
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmListUseCase
 import com.asap.domain.usecase.alarm.GetDeactivatedAlarmlistUseCaseImpl
+import com.asap.domain.usecase.alarm.PatchAlarmTokenUseCase
+import com.asap.domain.usecase.alarm.PatchAlarmTokenUseCaseImpl
 import com.asap.domain.usecase.auth.AuthKakaoUseCase
 import com.asap.domain.usecase.auth.AuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthKakaoUseCaseImpl
 import com.asap.domain.usecase.auth.CacheAuthUseCase
 import com.asap.domain.usecase.auth.CheckAuthUseCaseImpl
 import com.asap.domain.usecase.auth.CheckCachedAuthUseCase
-import com.asap.domain.usecase.auth.PatchAlarmTokenUseCase
-import com.asap.domain.usecase.auth.PatchAlarmTokenUseCaseImpl
+import com.asap.domain.usecase.auth.KakaoLoginUseCase
+import com.asap.domain.usecase.auth.KakaoLoginUseCaseImpl
 import com.asap.domain.usecase.auth.RefreshTokenUseCase
 import com.asap.domain.usecase.auth.RefreshTokenUseCaseImpl
 import com.asap.domain.usecase.auth.RegisterTokenUseCase
@@ -76,6 +78,9 @@ interface UseCaseModule {
     fun bindRefreshTokenUseCase(useCaseImpl: RefreshTokenUseCaseImpl): RefreshTokenUseCase
 
     @Binds
+    fun bindKakaoLoginUseCase(usecaseImpl: KakaoLoginUseCaseImpl): KakaoLoginUseCase
+
+    @Binds
     fun bindAuthKakaoUseCase(usecaseImpl: AuthKakaoUseCaseImpl): AuthKakaoUseCase
 
     @Binds
@@ -83,9 +88,6 @@ interface UseCaseModule {
 
     @Binds
     fun bindCheckCachedAuthUseCase(usecaseImpl: CheckAuthUseCaseImpl): CheckCachedAuthUseCase
-
-    @Binds
-    fun bindPatchAlarmTokenUseCase(usecaseImpl: PatchAlarmTokenUseCaseImpl): PatchAlarmTokenUseCase
 
     /**
      * User usecase
@@ -186,6 +188,9 @@ interface UseCaseModule {
     /**
      * Alarm usecases
      */
+    @Binds
+    fun bindPatchAlarmTokenUseCase(usecaseImpl: PatchAlarmTokenUseCaseImpl): PatchAlarmTokenUseCase
+
     @Binds
     fun bindGetDeactivatedAlarmListUseCase(
         getDeactivatedAlarmlistUseCaseImpl: GetDeactivatedAlarmlistUseCaseImpl

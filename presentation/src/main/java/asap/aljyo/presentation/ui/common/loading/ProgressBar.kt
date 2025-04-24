@@ -1,0 +1,17 @@
+package asap.aljyo.presentation.ui.common.loading
+
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun SmallCircularProgressBar(color: Color = MaterialTheme.colorScheme.primary) {
+    CircularProgressIndicator(
+        modifier = Modifier.size(20.dp),
+        color = color
+    )
+}

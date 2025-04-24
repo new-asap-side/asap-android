@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +69,7 @@ internal fun MyPageScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Grey01)
+                    .background(Color(0xFFFAF8F8))
             ) {
                 Spacer(modifier = Modifier.height(42.dp))
 

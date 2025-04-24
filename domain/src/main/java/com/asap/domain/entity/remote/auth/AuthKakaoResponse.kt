@@ -1,5 +1,6 @@
 package com.asap.domain.entity.remote.auth
 
+import com.asap.domain.entity.local.User
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -19,4 +20,11 @@ data class AuthKakaoResponse(
 
     @Json(name = "isJoinedUser")
     override val isJoinedUser: Boolean
-): AuthResponse
+) : AuthResponse
+
+fun AuthResponse.toKakaoUser(): User = User(
+    userId = this.userId,
+    kakaoId = this.socialLoginId,
+    accessToken = this.accessToken,
+    refreshToken = this.refreshToken,
+)

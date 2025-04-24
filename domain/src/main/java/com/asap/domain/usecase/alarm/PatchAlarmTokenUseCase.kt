@@ -1,7 +1,7 @@
-package com.asap.domain.usecase.auth
+package com.asap.domain.usecase.alarm
 
 import com.asap.domain.entity.remote.auth.TokenManager
-import com.asap.domain.repository.AuthRepository
+import com.asap.domain.repository.AlarmRepository
 import javax.inject.Inject
 
 interface PatchAlarmTokenUseCase {
@@ -9,7 +9,7 @@ interface PatchAlarmTokenUseCase {
 }
 
 class PatchAlarmTokenUseCaseImpl @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AlarmRepository
 ): PatchAlarmTokenUseCase {
     override suspend fun invoke(): Boolean {
         return repository.patchAlarmToken(TokenManager.fcmToken)

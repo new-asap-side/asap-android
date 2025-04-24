@@ -158,6 +158,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":utility"))
     implementation(project(":core"))
+    implementation(project(":presentation"))
 
     // 없애야함
     implementation(project(":data"))

@@ -27,6 +27,7 @@ class AljyoApplication : Application() {
 
         createNotificationChannel(this)
 
+        // Room DB 내 캐싱된 accessToken, refreshToken 값 메모리에 저장
         CoroutineScope(Dispatchers.Default).launch {
             registerTokenUseCase()
         }

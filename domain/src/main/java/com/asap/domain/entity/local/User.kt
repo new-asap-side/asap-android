@@ -22,3 +22,11 @@ data class User(
     @ColumnInfo(name = "nickname")
     val nickname: String? = null,
 )
+
+sealed class UserState {
+    // 프로필 정보가 있는 유저
+    data object ParticipationUser: UserState()
+
+    // 프로필 정보가 없는 유저
+    data object NonParticipationUser: UserState()
+}

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -70,13 +71,12 @@ internal fun UnRankingArea(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            Box(modifier = Modifier.size(36.dp)) {
+                            Box(modifier = Modifier.size(46.dp)) {
                                 ProfileBox(
-                                    modifier = Modifier.size(46.dp),
+                                    modifier = Modifier.fillMaxSize(),
                                     profileItem = PictureUtil.getProfileItemByName(rank.profileItem),
                                     profileImage = rank.thumbnail,
                                     profileImagePadding = 5.dp,
-                                    profileItemPadding = 2.dp,
                                 )
                                 if (mIndex - 3 == index) {
                                     MeBadge(
@@ -183,7 +183,7 @@ private fun Preview() {
                     rankScore = 100,
                     rankNumber = 4,
                     createdAt = "21:30:01",
-                    profileItem = null
+                    profileItem = "700_000"
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
@@ -191,7 +191,7 @@ private fun Preview() {
                     rankScore = 50,
                     rankNumber = 5,
                     createdAt = "21:30:01",
-                    profileItem = null
+                    profileItem = "400_000"
                 ),
                 GroupRanking(
                     nickName = "NICKNAME",
@@ -199,7 +199,7 @@ private fun Preview() {
                     rankScore = 10,
                     rankNumber = 6,
                     createdAt = "21:30:01",
-                    profileItem = null
+                    profileItem = "100_000"
                 )
             ),
             mIndex = 3

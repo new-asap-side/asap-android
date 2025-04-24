@@ -67,12 +67,12 @@ object PictureUtil {
 
     fun getProfileItemByName(profileItemName: String?): Int? {
         return when(profileItemName) {
-            "20_000" -> R.drawable.ic_custom_1
-            "50_000" -> R.drawable.ic_custom_2
-            "100_000" -> R.drawable.ic_custom_3
-            "200_000" -> R.drawable.ic_custom_4
-            "400_000" -> R.drawable.ic_custom_5
-            "700_000" -> R.drawable.ic_custom_6
+            "20_000" -> R.drawable.img_custom_1
+            "50_000" -> R.drawable.img_custom_2
+            "100_000" -> R.drawable.img_custom_3
+            "200_000" -> R.drawable.img_custom_4
+            "400_000" -> R.drawable.img_custom_5
+            "700_000" -> R.drawable.img_custom_6
             else -> null
         }
     }

@@ -71,7 +71,7 @@ internal fun RankingArea(
             ranking = rankings.getOrNull(1)
         ) {
             Text(
-                text = "${DecimalFormat("#,###").format(rankings.getOrNull(0)?.rankScore ?: 0)}점",
+                text = "${DecimalFormat("#,###").format(rankings.getOrNull(1)?.rankScore ?: 0)}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
                     color = Black03,
@@ -106,7 +106,7 @@ internal fun RankingArea(
             ranking = rankings.getOrNull(2)
         ) {
             Text(
-                text = "${DecimalFormat("#,###").format(rankings.getOrNull(0)?.rankScore ?: 0)}점",
+                text = "${DecimalFormat("#,###").format(rankings.getOrNull(2)?.rankScore ?: 0)}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
                     color = Black03,

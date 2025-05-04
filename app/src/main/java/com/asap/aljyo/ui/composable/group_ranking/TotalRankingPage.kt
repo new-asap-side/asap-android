@@ -13,6 +13,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.theme.White
@@ -35,7 +37,7 @@ fun TotalRankingPage(
                     .fillMaxWidth()
                     .padding(
                         horizontal = 20.dp,
-                        vertical = 60.dp
+                        vertical = 55.dp
                     ),
                 rankings = ranks,
                 mIndex = mIndex
@@ -62,7 +64,13 @@ fun TotalRankingPage(
             MyRankingBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
+                    .align(Alignment.BottomCenter)
+                    .dropShadow(
+                        shape = RectangleShape,
+                        offsetY = (-6).dp,
+                        blur = 12.dp,
+                        color = Color(0xFFE5E5E5)
+                    ),
                 rankInfo = myRankInfo
             )
         }

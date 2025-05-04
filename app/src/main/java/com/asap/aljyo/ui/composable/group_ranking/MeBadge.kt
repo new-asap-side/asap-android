@@ -47,7 +47,7 @@ fun MeBadge(
 @Composable
 fun MyRankingBar(
     modifier: Modifier = Modifier,
-    rankInfo: GroupRanking,
+    rankInfo: GroupRanking?,
 ) {
     Row(
         modifier = modifier
@@ -58,7 +58,7 @@ fun MyRankingBar(
         horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         Text(
-            text = rankInfo.rankNumber.toString(),
+            text = rankInfo?.rankNumber.toString(),
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = 14.fsp,
                 color = Black03
@@ -71,8 +71,8 @@ fun MyRankingBar(
             Box(modifier = Modifier.size(46.dp)) {
                 ProfileBox(
                     modifier = Modifier.fillMaxSize(),
-                    profileItem = PictureUtil.getProfileItemByName(rankInfo.profileItem),
-                    profileImage = rankInfo.thumbnail,
+                    profileItem = PictureUtil.getProfileItemByName(rankInfo?.profileItem),
+                    profileImage = rankInfo?.thumbnail,
                     profileImagePadding = 5.dp,
                 )
             }
@@ -96,7 +96,7 @@ fun MyRankingBar(
                 )
             )
             Text(
-                text = rankInfo.nickName,
+                text = rankInfo?.nickName ?: "-",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 14.fsp,
                     color = Black01
@@ -104,7 +104,7 @@ fun MyRankingBar(
             )
         }
         Text(
-            text = "${rankInfo.rankScore}점",
+            text = "${rankInfo?.rankScore}점",
             style = MaterialTheme.typography.labelMedium.copy(
                 fontSize = 14.fsp,
                 color = Black03

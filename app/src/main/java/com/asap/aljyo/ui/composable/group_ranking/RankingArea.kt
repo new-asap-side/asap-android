@@ -1,5 +1,6 @@
 package com.asap.aljyo.ui.composable.group_ranking
 
+import android.graphics.Paint.Align
 import android.icu.text.DecimalFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -22,11 +24,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,9 +43,12 @@ import coil3.compose.AsyncImage
 import com.asap.aljyo.R
 import com.asap.aljyo.core.fsp
 import com.asap.aljyo.ui.composable.common.ProfileBox
+import com.asap.aljyo.ui.composable.common.extension.dropShadow
 import com.asap.aljyo.ui.theme.AljyoTheme
 import com.asap.aljyo.ui.theme.Black01
 import com.asap.aljyo.ui.theme.Black03
+import com.asap.aljyo.ui.theme.Blue
+import com.asap.aljyo.ui.theme.Red01
 import com.asap.aljyo.ui.theme.White
 import com.asap.aljyo.util.PictureUtil
 import com.asap.domain.entity.remote.GroupRanking
@@ -49,83 +61,55 @@ internal fun RankingArea(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         RankingProfile(
+            modifier = Modifier.padding(top = 20.dp),
             painter = painterResource(R.drawable.ic_silver_crown),
-            size = 86.dp,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.fsp,
-                color = Black01,
-            ),
             isShowMeBadge = mIndex == 1,
             ranking = rankings.getOrNull(1)
         ) {
             Text(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(100))
-                    .background(White)
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = 2.dp
-                    ),
-                text = "${rankings.getOrNull(1)?.rankScore ?: 0}점",
+                text = "${DecimalFormat("#,###").format(rankings.getOrNull(0)?.rankScore ?: 0)}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
-                    color = Black03
-                )
-            )
-        }
-        
-        RankingProfile(
-            painter = painterResource(R.drawable.ic_gold_crown),
-            size = 117.dp,
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontSize = 16.fsp,
-                color = Black01,
-            ),
-            isShowMeBadge = mIndex == 0,
-            ranking = rankings.getOrNull(0),
-        ) {
-            Text(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(100))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = 2.dp
-                    ),
-                text = "${DecimalFormat("#,###").format(rankings.getOrNull(0)?.rankScore ?: 0)}점",
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = 14.fsp,
-                    color = White
+                    color = Black03,
                 )
             )
         }
 
         RankingProfile(
-            painter = painterResource(R.drawable.ic_bronze_crown),
-            size = 86.dp,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = 14.fsp,
-                color = Black01,
+            modifier = Modifier.dropShadow(
+                shape = RoundedCornerShape(12.dp),
+                blur = 12.dp,
+                color = Color(0xFFFFECF8),
             ),
+            painter = painterResource(R.drawable.ic_gold_crown),
+            isShowMeBadge = mIndex == 0,
+            ranking = rankings.getOrNull(0),
+        ) {
+            Text(
+                text = "${DecimalFormat("#,###").format(rankings.getOrNull(0)?.rankScore ?: 0)}점",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 14.fsp,
+                    color = Red01,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
+
+        RankingProfile(
+            modifier = Modifier.padding(top = 20.dp),
+            painter = painterResource(R.drawable.ic_bronze_crown),
             isShowMeBadge = mIndex == 2,
             ranking = rankings.getOrNull(2)
         ) {
             Text(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(100))
-                    .background(White)
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = 2.dp
-                    ),
-                text = "${rankings.getOrNull(2)?.rankScore ?: 0}점",
+                text = "${DecimalFormat("#,###").format(rankings.getOrNull(0)?.rankScore ?: 0)}점",
                 style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 12.fsp,
-                    color = Black03
+                    color = Black03,
                 )
             )
         }
@@ -136,65 +120,71 @@ internal fun RankingArea(
 private fun RankingProfile(
     modifier: Modifier = Modifier,
     painter: Painter,
-    size: Dp,
-    style: TextStyle,
     isShowMeBadge: Boolean = false,
     ranking: GroupRanking?,
     score: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier
+            .width(102.dp)
+            .background(color = White, shape = RoundedCornerShape(12.dp)),
+        contentAlignment = Alignment.TopCenter
     ) {
-        Box(
-            contentAlignment = Alignment.Center
+        Icon(
+            modifier = Modifier
+                .offset(y = (-30).dp),
+            painter = painter,
+            tint = Color.Unspecified,
+            contentDescription = "Ranking profile crown"
+        )
+
+        Column(
+            modifier = Modifier
+                .padding(top = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileBox(
-                modifier = Modifier.size(size),
-                profileImagePadding = 12.dp,
+                modifier = Modifier
+                    .size(71.dp),
+                profileImagePadding = 7.dp,
                 profileImage = ranking?.thumbnail ?: "",
                 profileItem = PictureUtil.getProfileItemByName(ranking?.profileItem),
             )
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .offset(y = (-10).dp),
-                painter = painter,
-                tint = Color.Unspecified,
-                contentDescription = "Ranking profile crown"
-            )
-            if (isShowMeBadge) {
-                MeBadge(
-                    modifier = Modifier
-                        .padding(bottom = 13.dp)
-                        .align(Alignment.BottomCenter)
-                        .clip(RoundedCornerShape(100))
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(100)
-                        )
-                        .background(White)
-                        .padding(
-                            horizontal = 6.5.dp,
-                            vertical = 1.5.dp
-                        ),
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 11.fsp
-                    )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = ranking?.nickName ?: "-",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 14.fsp,
+                    color = Black01,
                 )
-            }
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            score()
+            Spacer(modifier = Modifier.height(14.dp))
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = ranking?.nickName ?: "-",
-            style = style
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        score()
     }
-
+//            if (isShowMeBadge) {
+//                MeBadge(
+//                    modifier = Modifier
+//                        .padding(bottom = 13.dp)
+//                        .align(Alignment.BottomCenter)
+//                        .clip(RoundedCornerShape(100))
+//                        .border(
+//                            width = 1.dp,
+//                            color = MaterialTheme.colorScheme.primary,
+//                            shape = RoundedCornerShape(100)
+//                        )
+//                        .background(White)
+//                        .padding(
+//                            horizontal = 6.5.dp,
+//                            vertical = 1.5.dp
+//                        ),
+//                    style = MaterialTheme.typography.labelMedium.copy(
+//                        color = MaterialTheme.colorScheme.primary,
+//                        fontSize = 11.fsp
+//                    )
+//                )
+//            }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFEEF3)

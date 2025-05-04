@@ -37,13 +37,13 @@ fun TotalRankingPage(
         UnRankingArea(
             modifier = Modifier
                 .fillMaxWidth()
-                .dropShadow(
-                    RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                    offsetY = (-1).dp
-                )
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                .background(White)
-                .padding(28.dp)
+//                .dropShadow(
+//                    RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+//                    offsetY = (-1).dp
+//                )
+//                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+//                .background(White)
+                .padding(horizontal = 28.dp)
                 .weight(1f),
             unRankings = unranks,
             mIndex = mIndex

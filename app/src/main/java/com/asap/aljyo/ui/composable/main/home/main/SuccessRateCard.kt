@@ -379,6 +379,16 @@ private fun SuccessRateProgress(
                 }
         )
 
+        Image(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .height(69.dp)
+                .offset(y = (-14).dp),
+            painter = painterResource(R.drawable.ic_park),
+            contentDescription = "park",
+            contentScale = ContentScale.FillHeight
+        )
+
         Box(
             modifier = Modifier.wrapContentWidth()
         ) {
@@ -446,16 +456,6 @@ private fun SuccessRateProgress(
                 )
             }
         }
-
-        Image(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .height(69.dp)
-                .offset(y = (-20).dp),
-            painter = painterResource(R.drawable.ic_park),
-            contentDescription = "park",
-            contentScale = ContentScale.FillHeight
-        )
     }
 }
 

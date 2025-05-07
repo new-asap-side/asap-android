@@ -8,10 +8,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -29,6 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -265,14 +268,16 @@ private fun SuccessRate(
     rate: Float,
     navigateToDescript: () -> Unit
 ) {
-    Row(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
+                modifier = Modifier.weight(1f),
                 text = buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
@@ -290,42 +295,42 @@ private fun SuccessRate(
             )
 
             Text(
-                text = buildAnnotatedString {
-                    append(stringResource(R.string.this_month))
-
-                    withStyle(
-                        style = SpanStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.fsp,
-                            color = MaterialTheme.colorScheme.primary,
-                            letterSpacing = -(0.02).fsp
-                        )
-                    ) { append(" ${stringResource(R.string.rate, rate)} ") }
-
-                    append(stringResource(R.string.success))
-                },
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontSize = 18.fsp,
-                    letterSpacing = -(0.02).fsp,
-                )
-            )
-        }
-
-        TextButton(
-            onClick = { navigateToDescript() },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = White,
-                contentColor = Color(0xFF666666)
-            )
-        ) {
-            Text(
+                modifier = Modifier
+                    .background(
+                        color = White,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { navigateToDescript() }
+                    .padding(8.dp),
                 text = stringResource(R.string.use_information),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 13.fsp,
+                    color = Color(0xFF666666)
                 )
             )
         }
+
+        Text(
+            text = buildAnnotatedString {
+                append(stringResource(R.string.this_month))
+
+                withStyle(
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.fsp,
+                        color = MaterialTheme.colorScheme.primary,
+                        letterSpacing = -(0.02).fsp
+                    )
+                ) { append(" ${stringResource(R.string.rate, rate)} ") }
+
+                append(stringResource(R.string.success))
+            },
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 18.fsp,
+                letterSpacing = -(0.02).fsp,
+            )
+        )
     }
 }
 

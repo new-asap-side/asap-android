@@ -1,5 +1,6 @@
 package com.asap.data.di
 
+import com.asap.data.BuildConfig
 import com.asap.data.remote.HeaderInterceptor
 import com.asap.data.remote.TokenAuthenticator
 import com.asap.data.remote.service.AlarmService
@@ -18,7 +19,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
-internal const val baseUrl = "http://aljo.shop/"
+internal const val prodBaseUrl = "http://aljo.shop/"
+internal const val testBaseUrl = "http://158.179.163.4:8080/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -68,6 +70,7 @@ object NetworkModule {
         moshi: Moshi,
         @AuthOkHttpClient okHttpClient: OkHttpClient
     ): Retrofit {
+        val baseUrl = if (BuildConfig.DEBUG) testBaseUrl else prodBaseUrl
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
@@ -82,6 +85,7 @@ object NetworkModule {
         moshi: Moshi,
         @GenenralOkHttpClient okHttpClient: OkHttpClient
     ): Retrofit {
+        val baseUrl = if (BuildConfig.DEBUG) testBaseUrl else prodBaseUrl
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())

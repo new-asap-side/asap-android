@@ -78,27 +78,27 @@ internal fun UnRankingArea(
                                     profileImage = rank.thumbnail,
                                     profileImagePadding = 5.dp,
                                 )
-                                if (mIndex - 3 == index) {
-                                    MeBadge(
-                                        modifier = Modifier
-                                            .align(Alignment.BottomCenter)
-                                            .clip(RoundedCornerShape(100))
-                                            .border(
-                                                width = 1.dp,
-                                                color = MaterialTheme.colorScheme.primary,
-                                                shape = RoundedCornerShape(100)
-                                            )
-                                            .background(White)
-                                            .padding(
-                                                horizontal = 6.5.dp,
-                                                vertical = 1.5.dp
-                                            ),
-                                        style = MaterialTheme.typography.labelMedium.copy(
-                                            color = MaterialTheme.colorScheme.primary,
-                                            fontSize = 11.fsp
-                                        )
-                                    )
-                                }
+//                                if (mIndex - 3 == index) {
+//                                    MeBadge(
+//                                        modifier = Modifier
+//                                            .align(Alignment.BottomCenter)
+//                                            .clip(RoundedCornerShape(100))
+//                                            .border(
+//                                                width = 1.dp,
+//                                                color = MaterialTheme.colorScheme.primary,
+//                                                shape = RoundedCornerShape(100)
+//                                            )
+//                                            .background(White)
+//                                            .padding(
+//                                                horizontal = 6.5.dp,
+//                                                vertical = 1.5.dp
+//                                            ),
+//                                        style = MaterialTheme.typography.labelMedium.copy(
+//                                            color = MaterialTheme.colorScheme.primary,
+//                                            fontSize = 11.fsp
+//                                        )
+//                                    )
+//                                }
                             }
                             Text(
                                 text = rank.nickName,

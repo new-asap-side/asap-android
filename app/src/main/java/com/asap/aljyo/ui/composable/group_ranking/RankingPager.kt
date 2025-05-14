@@ -29,7 +29,9 @@ fun RankingPager(
     ) { index ->
         when (index) {
             0 -> TotalRankingPage(
-                modifier = modifier,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color(0xFFFAF8F8)),
                 mIndex = mIndex,
                 ranks = ranks,
                 unranks = unranks
